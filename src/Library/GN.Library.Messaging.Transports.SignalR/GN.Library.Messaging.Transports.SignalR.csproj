@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup Label="Globals">
+		<SccProjectName>SAK</SccProjectName>
+		<SccProvider>SAK</SccProvider>
+		<SccAuxPath>SAK</SccAuxPath>
+		<SccLocalPath>SAK</SccLocalPath>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
+	</PropertyGroup>
+
+	<Choose>
+		<When Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+			<ItemGroup>
+				<FrameworkReference Include="Microsoft.AspNetCore.App" />
+				<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.12" />
+			</ItemGroup>
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+				<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.0.0" />
+			</ItemGroup>
+		</Otherwise>
+	</Choose>
+
+	<ItemGroup>
+	  
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\GN.Library\GN.Library.csproj" />
+	</ItemGroup>
+	<!--
+	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp3.1'">
+		<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1' ">
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.12" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' != 'netcoreapp3.1'">
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="1.1.0" />
+	</ItemGroup>
+	-->
+
+</Project>

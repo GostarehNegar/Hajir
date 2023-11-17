@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net5.0;net461</TargetFrameworks>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\GN.Library.Api\GN.Library.Api.csproj" />
+		<ProjectReference Include="..\GN.Library.CommandLine\GN.Library.CommandLines.csproj" />
+		<ProjectReference Include="..\GN.Library.Messaging.Chat\GN.Library.Messaging.Chat.csproj" />
+		<ProjectReference Include="..\GN.Library.Messaging.Transports.SignalR\GN.Library.Messaging.Transports.SignalR.csproj" />
+		<ProjectReference Include="..\GN.Library.Win32\GN.Library.Win32.csproj" />
+		<ProjectReference Include="..\GN.Library.Xrm.Query\GN.Library.Xrm.Query.csproj" />
+		<ProjectReference Include="..\GN.Library.Xrm\GN.Library.Xrm.csproj" />
+		<ProjectReference Include="..\GN.Library\GN.Library.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="3.1.9" />
+	</ItemGroup>
+</Project>

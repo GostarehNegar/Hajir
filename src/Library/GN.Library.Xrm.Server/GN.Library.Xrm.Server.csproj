@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GN.Library.Api\GN.Library.Api.csproj" />
+    <ProjectReference Include="..\GN.Library.Messaging.Transports.SignalR\GN.Library.Messaging.Transports.SignalR.csproj" />
+    <ProjectReference Include="..\GN.Library.Xrm\GN.Library.Xrm.csproj" />
+  </ItemGroup>
+
+</Project>

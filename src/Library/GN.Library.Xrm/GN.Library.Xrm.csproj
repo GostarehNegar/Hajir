@@ -1,0 +1,115 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup Label="Globals">
+		<SccProjectName>SAK</SccProjectName>
+		<SccProvider>SAK</SccProvider>
+		<SccAuxPath>SAK</SccAuxPath>
+		<SccLocalPath>SAK</SccLocalPath>
+	</PropertyGroup>
+
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="Configurations\**" />
+		<Compile Remove="Internals\**" />
+		<Compile Remove="WebApi\NewFolder\**" />
+		<EmbeddedResource Remove="Configurations\**" />
+		<EmbeddedResource Remove="Internals\**" />
+		<EmbeddedResource Remove="WebApi\NewFolder\**" />
+		<None Remove="Configurations\**" />
+		<None Remove="Internals\**" />
+		<None Remove="WebApi\NewFolder\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="Helpers\MessagePumpHelper.cs" />
+		<Compile Remove="Services\Bus\deprecated\XrmSystemMessageService.cs" />
+		<Compile Remove="Services\Bus\RemoteXrmMessageBus.cs" />
+		<Compile Remove="Services\Handlers\CreateEntityHandler.cs" />
+		<Compile Remove="Services\ServiceBus\DynamicWebHookMiddelware.cs" />
+		<Compile Remove="Services\ServiceBus\WebHookExecutionContext.cs" />
+		<Compile Remove="StdSolution\StdSolutionModule.cs" />
+		<Compile Remove="WebApiQueryable\SS.Crm.Linq\Aggregate.cs" />
+		<Compile Remove="WebApiQueryable\SS.Crm.Linq\AnonymousBinding.cs" />
+		<Compile Remove="WebApiQueryable\SS.Crm.Linq\CrmQueryable.cs" />
+		<Compile Remove="WebApiQueryable\SS.Crm.Linq\CrmQueryExecutor.cs" />
+		<Compile Remove="WebApiQueryable\SS.Crm.Linq\CrmQueryFactory.cs" />
+		<Compile Remove="WebApiQueryable\SS.Crm.Linq\CrmQueryModelVisitor.cs" />
+		<Compile Remove="WebApiQueryable\SS.Crm.Linq\ExpressionTreeVisitors\EntityTypeAlias.cs" />
+		<Compile Remove="WebApiQueryable\SS.Crm.Linq\ExpressionTreeVisitors\ExpressionTreeVisitor.cs" />
+		<Compile Remove="WebApiQueryable\SS.Crm.Linq\ExpressionTreeVisitors\SubQueryModelVisitor.cs" />
+		<Compile Remove="WebApiQueryable\SS.Crm.Linq\Helpers\RetrieveHelper.cs" />
+		<Compile Remove="WebApiQueryable\SS.Crm.Linq\ICrmQueryable.cs" />
+		<Compile Remove="WebApiQueryable\SS.Crm.Linq\PublicExtensionMethods.cs" />
+		<Compile Remove="WebApiQueryable\SS.Crm.Linq\sourceExtensionMethods.cs" />
+		<Compile Remove="_Xrm\XrmDbConnectionHelper.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="GnLibSolution\Files\GNLib_0_0_01_managed.zip" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="GnLibSolution\Files\GNLib_0_0_01_managed.zip" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="Helpers\MessagePumpHelper.cs" />
+		<None Include="Services\Bus\deprecated\XrmSystemMessageService.cs" />
+		<None Include="Services\Bus\RemoteXrmMessageBus.cs" />
+		<None Include="Services\Handlers\CreateEntityHandler.cs" />
+		<None Include="Services\ServiceBus\DynamicWebHookMiddelware.cs" />
+		<None Include="Services\ServiceBus\WebHookExecutionContext.cs" />
+		<None Include="StdSolution\StdSolutionModule.cs" />
+		<None Include="WebApiQueryable\SS.Crm.Linq\Aggregate.cs" />
+		<None Include="WebApiQueryable\SS.Crm.Linq\AnonymousBinding.cs" />
+		<None Include="WebApiQueryable\SS.Crm.Linq\CrmQueryable.cs" />
+		<None Include="WebApiQueryable\SS.Crm.Linq\CrmQueryExecutor.cs" />
+		<None Include="WebApiQueryable\SS.Crm.Linq\CrmQueryFactory.cs" />
+		<None Include="WebApiQueryable\SS.Crm.Linq\CrmQueryModelVisitor.cs" />
+		<None Include="WebApiQueryable\SS.Crm.Linq\ExpressionTreeVisitors\EntityTypeAlias.cs" />
+		<None Include="WebApiQueryable\SS.Crm.Linq\ExpressionTreeVisitors\ExpressionTreeVisitor.cs" />
+		<None Include="WebApiQueryable\SS.Crm.Linq\ExpressionTreeVisitors\SubQueryModelVisitor.cs" />
+		<None Include="WebApiQueryable\SS.Crm.Linq\Helpers\RetrieveHelper.cs" />
+		<None Include="WebApiQueryable\SS.Crm.Linq\ICrmQueryable.cs" />
+		<None Include="WebApiQueryable\SS.Crm.Linq\PublicExtensionMethods.cs" />
+		<None Include="WebApiQueryable\SS.Crm.Linq\sourceExtensionMethods.cs" />
+		<None Include="_Xrm\XrmDbConnectionHelper.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.0.7" />
+		<PackageReference Include="Microsoft.CrmSdk.CoreTools" Version="9.1.0.26" />
+		<!--
+		<PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="8.0.0" />
+		<PackageReference Include="Microsoft.CrmSdk.CoreTools" Version="8.0.0" />
+		-->
+		<PackageReference Include="System.ServiceModel.Primitives" Version="4.5.0" />
+		<PackageReference Include="System.ServiceModel.Security" Version="4.5.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\GN.Library.Messaging\GN.Library.Messaging.csproj" />
+		<ProjectReference Include="..\GN.Library.MicroServices\GN.Library.MicroServices.csproj" />
+		<ProjectReference Include="..\GN.Library.Xrm.Plugins\GN.Library.Xrm.Plugins.csproj" />
+		<ProjectReference Include="..\GN.Library\GN.Library.csproj" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<Folder Include="GnLibSolution\XrmEventStore\" />
+		<Folder Include="XrmDb\" />
+		<Folder Include="StdSolution\Activities\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="SS.Crm.Linq">
+			<HintPath>lib\8.0\SS.Crm.Linq.dll</HintPath>
+			<Private>true</Private>
+		</Reference>
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;netcoreapp3.1</TargetFrameworks>
+	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="Contracts\**" />
+	  <Compile Remove="Internals\Implementations\**" />
+	  <Compile Remove="Schema\**" />
+	  <EmbeddedResource Remove="Contracts\**" />
+	  <EmbeddedResource Remove="Internals\Implementations\**" />
+	  <EmbeddedResource Remove="Schema\**" />
+	  <None Remove="Contracts\**" />
+	  <None Remove="Internals\Implementations\**" />
+	  <None Remove="Schema\**" />
+	</ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Storage\ChannelData.cs" />
+    <Compile Remove="Storage\ChannelSubscriptionData.cs" />
+    <Compile Remove="Storage\LiteDb\ChannelLiteRepository_Deprecated.cs" />
+  </ItemGroup>
+	<Choose>
+		<When Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+			<ItemGroup>
+				<FrameworkReference Include="Microsoft.AspNetCore.App" />
+				<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.12" />
+			</ItemGroup>
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+				<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.0.0" />
+			</ItemGroup>
+		</Otherwise>
+	</Choose>
+  <ItemGroup>
+    <PackageReference Include="LiteDB" Version="5.0.10" />
+    <PackageReference Include="MassTransit" Version="7.0.7" />
+    <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.0.7" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\library\GN.Library.CommandLine\GN.Library.CommandLines.csproj" />
+    <ProjectReference Include="..\..\library\GN.Library.Odoo\GN.Library.Odoo.csproj" />
+    <ProjectReference Include="..\..\Library\GN.Library\GN.Library.csproj" />
+    <ProjectReference Include="..\GN.Library.Authorization\GN.Library.Authorization.csproj" />
+  </ItemGroup>
+
+</Project>

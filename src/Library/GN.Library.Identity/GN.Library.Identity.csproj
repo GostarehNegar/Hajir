@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="2.2.0" />
+    <PackageReference Include="System.DirectoryServices" Version="5.0.0" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="5.0.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Remove="deprecated\Extensions.cs" />
+    <Compile Remove="deprecated\IdentityConfiguration.cs" />
+    <Compile Remove="Internals\AuthenticateCommandHandler.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="deprecated\Extensions.cs" />
+    <None Include="deprecated\IdentityConfiguration.cs" />
+    <None Include="Internals\AuthenticateCommandHandler.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Authentication\ActiveDirectory\" />
+    <Folder Include="Authorization\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GN.Library\GN.Library.csproj" />
+  </ItemGroup>
+
+</Project>

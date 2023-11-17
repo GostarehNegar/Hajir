@@ -1,0 +1,132 @@
+﻿using Microsoft.Xrm.Sdk;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web.Script.Serialization;
+
+namespace GN.Library.Xrm.Helpers
+{
+
+#pragma warning disable CS0436 // Type conflicts with imported type
+	/// <summary>
+	/// POCO class for plugin configuration that is used
+	/// to control the behaviour of the plugin while
+	/// activated for a specific processing step.
+	/// A serializtion of it will be stored in the
+	/// configuration field of a proccessing step.
+	/// Upon intstantiation, the plugin recieves a copy 
+	/// of this text in its constructor.
+	/// </summary>
+	public class PluginConfiguration
+	{
+		/// <summary>
+		/// Url of the server that will be used by the
+		/// plugin to send messages to the system.
+		/// e.g. "http://server:5050"
+		/// </summary>
+		public string WebApiUrl { get; set; }
+
+		/// <summary>
+		/// If true the plugin will create a log entry
+		/// as a crm 'Task' activity,
+		/// </summary>
+		public bool Trace { get; set; }
+
+		/// <summary>
+		/// If true the log will be thrown as an 
+		/// exception that may be caought for test
+		/// puproses.
+		/// </summary>
+		public bool TraceThrow { get; set; }
+
+		/// <summary>
+		/// If set, the plugin will throw exceptions
+		/// and roll back changes in case it cannot connet to server. 
+		/// It should be used for critical events that if missed
+		/// will damage the system integrity.
+		/// </summary>
+		public bool IsCritical { get; set; }
+
+
+		public bool IsSynch { get; set; }
+
+		public int TimeOut { get; set; }
+		public Dictionary<string, string> Headers { get; set; }
+		public string Serialize()
+		{
+			return new JavaScriptSerializer().Serialize(this);
+		}
+		public static PluginConfiguration Desrialize(string text)
+		{
+			PluginConfiguration result = null;
+			try
+			{
+				result = new JavaScriptSerializer().Deserialize<PluginConfiguration>(text);
+			}
+			catch { }
+			if (result == null)
+			{
+				result = new PluginConfiguration();
+			}
+			return result;
+		}
+	}
+
+	public class JsonSerializableEntity
+	{
+		public string LogicalName { get; set; }
+		public Guid Id { get; set; }
+		public List<KeyValuePair<string, object>> Attributes { get; set; }
+
+		public JsonSerializableEntity()
+		{
+
+		}
+		public JsonSerializableEntity(Entity entity)
+		{
+			this.SetEntity(entity);
+		}
+
+		public JsonSerializableEntity SetEntity(Entity entity)
+		{
+			if (entity != null)
+			{
+				this.LogicalName = entity.LogicalName;
+				this.Id = entity.Id;
+				this.Attributes = entity.Attributes.ToList();
+			}
+			return this;
+		}
+		public Entity Get()
+		{
+			var result = new Entity(this.LogicalName, this.Id);
+			result.Attributes.AddRange(this.Attributes);
+			return result;
+		}
+
+	}
+	public class EntityWebCommandRequestModel
+	{
+		public string MessageName { get; set; }
+		public JsonSerializableEntity Entity { get; set; }
+		public JsonSerializableEntity PreImage { get; set; }
+		public JsonSerializableEntity PostImage { get; set; }
+		public int Mode { get; set; }
+		public Guid RequestId { get; set; }
+		public int Stage { get; set; }
+		public bool IsSynchronous { get; set; }
+		public string PluginName { get; set; }
+
+
+	}
+	public class EntityWebCommandResponseModel
+	{
+		public string Error { get; set; }
+	}
+#pragma warning restore CS0436 // Type conflicts with imported type
+
+}

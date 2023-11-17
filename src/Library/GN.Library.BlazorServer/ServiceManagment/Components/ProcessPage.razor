@@ -1,0 +1,14 @@
+﻿@inherits Base.ProcessPageBase
+<h3>Process:</h3>
+@if (Process != null)
+{
+    <div>PId: @Process.Process?.Id</div>
+}
+else
+{
+    <div>Not Found</div>
+}
+
+@code {
+
+}

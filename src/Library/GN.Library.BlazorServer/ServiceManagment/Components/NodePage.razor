@@ -1,0 +1,31 @@
+﻿@inherits Base.NodePageBase
+@using GN.Library.ServerManagement
+
+@page "/node/{Id}"
+
+<h3>Node:</h3><span></span>
+
+<button @onclick="OnRefersh">Refresh</button>
+
+@if (Node == null)
+{
+    <div> Node Not Found @Id </div>
+}
+else
+{
+    <div>Name: @Node.Name</div>
+    <div>LastSeen: @Node.LastSeenTime</div>
+
+}
+
+<ProcessPage Process="Process" />
+<input type="text" style="width:100%" @bind-value="Command" />
+<button @onclick="Execute">Execute</button>
+<button @onclick="ClearLog">Clear</button>
+<button @onclick="Ping">Ping</button>
+<pre class="log">@CommandLog</pre>
+
+
+@code {
+
+}

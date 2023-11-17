@@ -1,0 +1,19 @@
+﻿@inherits Base.StatusPageBase
+@page "/status"
+<h3>ServerStatusPage</h3>
+@if (Status == null || Status.Node == null)
+{
+    <div>No Status</div>
+}
+else
+{
+    <div> @Status.Node.FirstName</div>
+    @foreach (var n in Status.Peers.Values)
+    {
+        <NodeStatus Node="@n" />
+
+    }
+}
+@code {
+
+}
