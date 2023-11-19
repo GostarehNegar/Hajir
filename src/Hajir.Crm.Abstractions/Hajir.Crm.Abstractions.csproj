@@ -4,4 +4,8 @@
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Library\GN.Library.Shared\GN.Library.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

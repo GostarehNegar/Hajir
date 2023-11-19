@@ -4,4 +4,21 @@
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hajir.Crm.Abstractions\Hajir.Crm.Abstractions.csproj" />
+    <ProjectReference Include="..\Library\GN.Library.Api\GN.Library.Api.csproj" />
+    <ProjectReference Include="..\Library\GN.Library.Xrm.Query\GN.Library.Xrm.Query.csproj" />
+    <ProjectReference Include="..\Library\GN.Library.Xrm\GN.Library.Xrm.csproj" />
+    <ProjectReference Include="..\Library\GN.Library\GN.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Domain\Products\" />
+    <Folder Include="Infrastructure\Internals\" />
+  </ItemGroup>
+
 </Project>
