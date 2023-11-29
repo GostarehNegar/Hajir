@@ -8,6 +8,7 @@ namespace Hajir.Crm.Products
 	{
 		public int NumberOfRows { get; private set; }
 		public int NumberOfColumns { get; private set; }
+		public int Capacity => NumberOfColumns * NumberOfRows;
 		public CabinetSpec(int numberOfRows, int numberOfColumns)
 		{
 			NumberOfRows = numberOfRows;

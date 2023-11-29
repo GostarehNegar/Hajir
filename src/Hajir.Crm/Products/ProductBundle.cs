@@ -57,7 +57,8 @@ namespace Hajir.Crm.Products
 			if (cabinets.Count() > 0)
 			{
 				var specs = cabinets.Select(x => x.Product.GetCabintSpec());
-				var design = CabinetsDesign.Fill(specs, battry.Quantity);
+				var design = new CabinetsDesign(specs);
+				design.Design(battry.Quantity);
 
 
 
