@@ -39,7 +39,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GN.Library.PDF", "Library\G
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Tests", "Hajir.Crm.Tests\Hajir.Crm.Tests.csproj", "{043A0F7E-8450-4575-A94C-A76EA20814F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Xrm.Tests", "Hajir.Crm.Xrm.Tests\Hajir.Crm.Xrm.Tests.csproj", "{7CFEE6D2-C68C-4526-9A57-3EB4FA3F9404}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Xrm.Tests", "Hajir.Crm.Xrm.Tests\Hajir.Crm.Xrm.Tests.csproj", "{7CFEE6D2-C68C-4526-9A57-3EB4FA3F9404}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Infrastructure.Xrm", "Hajir.Crm.Infrastructure.Xrm\Hajir.Crm.Infrastructure.Xrm.csproj", "{5EB3F34B-9991-4062-845A-CF83D3FDE340}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,6 +121,10 @@ Global
 		{7CFEE6D2-C68C-4526-9A57-3EB4FA3F9404}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CFEE6D2-C68C-4526-9A57-3EB4FA3F9404}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CFEE6D2-C68C-4526-9A57-3EB4FA3F9404}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EB3F34B-9991-4062-845A-CF83D3FDE340}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EB3F34B-9991-4062-845A-CF83D3FDE340}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EB3F34B-9991-4062-845A-CF83D3FDE340}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EB3F34B-9991-4062-845A-CF83D3FDE340}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

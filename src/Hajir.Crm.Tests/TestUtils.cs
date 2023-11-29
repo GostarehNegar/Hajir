@@ -12,21 +12,28 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Hajir.Crm.Tests
 {
-    class TestUtils
-    {
-        public static IHost GetDefaultHost()
-        {
-            return GN.AppHost.GetHostBuilder()
-                .ConfigureAppConfiguration(c => c.AddJsonFile("appsettings.json"))
-                .ConfigureServices((c, s) => {
-                    s.AddGNLib(c.Configuration, cfg => { });
-                    s.AddXrmServices(c.Configuration, cfg => { });
-                    s.AddHajirCrm(c.Configuration, cfg => { });
-                   
-                })
-                .Build()
-                .UseGNLib();
+	class TestUtils
+	{
+		public static IHost GetDefaultHost(Action<IServiceCollection> configurator = null, bool bypassDefaults = false)
+		{
+			return GN.AppHost.GetHostBuilder()
+				.ConfigureAppConfiguration(c => c.AddJsonFile("appsettings.json"))
+				.ConfigureServices((c, s) =>
+				{
+					if (!bypassDefaults)
+					{
+						s.AddGNLib(c.Configuration, cfg => { });
+						s.AddXrmServices(c.Configuration, cfg => { });
+						s.AddHajirCrm(c.Configuration, cfg => { });
+						s.AddHajirInfrastructure(c.Configuration);
+					}
+					configurator?.Invoke(s);
 
-        }
-    }
+
+				})
+				.Build()
+				.UseGNLib();
+
+		}
+	}
 }

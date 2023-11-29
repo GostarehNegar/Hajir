@@ -1,4 +1,4 @@
-﻿using Hajir.Crm.Products;
+﻿using Hajir.Crm.Features.Products;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Hajir.Crm.Tests.Specs.Products
 {
-	[TestClass]
+    [TestClass]
 	public class Products_Spec
 	{
 		[TestMethod]

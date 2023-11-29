@@ -1,5 +1,4 @@
-﻿using Hajir.Crm.Infrastructure.Data;
-using Hajir.Crm.Products;
+﻿using Hajir.Crm.Features.Products;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -9,11 +8,11 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static partial class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddHajirInfrastructure(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddScoped<XrmProductRepository>();
-            services.AddTransient<IProductRepository>(s => s.GetService<XrmProductRepository>());
-            return services;
-        }
+        //public static IServiceCollection AddHajirInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        //{
+        //    services.AddScoped<XrmProductRepository>();
+        //    services.AddTransient<IProductRepository>(s => s.GetService<XrmProductRepository>());
+        //    return services;
+        //}
     }
 }
