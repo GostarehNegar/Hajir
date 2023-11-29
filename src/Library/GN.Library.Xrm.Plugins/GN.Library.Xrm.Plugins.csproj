@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<TargetFrameworks>net452</TargetFrameworks>
+		<TargetFrameworks>net461</TargetFrameworks>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>GN.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>

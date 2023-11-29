@@ -128,7 +128,7 @@ namespace GN.Library.Xrm
     {
         public double Seconds;
         private bool? isOrganizationServiceAvaiable;
-        protected static readonly ILogger logger = typeof(XrmOrganizationService).GetLoggerEx();
+        //protected static readonly ILogger logger = typeof(XrmOrganizationService).GetLoggerEx();
         private static bool? connectionIsOk;
         private Guid? serviceUserId;
         //private ICurrentUser currentUser;

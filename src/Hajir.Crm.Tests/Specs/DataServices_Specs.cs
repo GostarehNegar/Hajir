@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Hajir.Crm.Infrastructure;
 using GN.Library.Xrm;
 using Hajir.Crm.Entities;
+using Hajir.Crm.Products;
 
 namespace Hajir.Crm.Tests.Specs
 {

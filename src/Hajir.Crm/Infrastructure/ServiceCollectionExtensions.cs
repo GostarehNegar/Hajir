@@ -1,4 +1,5 @@
-﻿using Hajir.Crm.Infrastructure;
+﻿using Hajir.Crm.Infrastructure.Data;
+using Hajir.Crm.Products;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;

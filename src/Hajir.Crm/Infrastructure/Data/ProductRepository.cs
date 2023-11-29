@@ -1,18 +1,15 @@
 ﻿using GN.Library.Xrm;
-using Hajir.Crm.Abstractions.Entities;
 using Hajir.Crm.Entities;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using Hajir.Crm.Products;
 
-namespace Hajir.Crm.Infrastructure
+namespace Hajir.Crm.Infrastructure.Data
 {
-    public interface IProductRepository
-    {
-        HajirProductEntity GetProcuct(string id);
-    }
+
     class XrmProductRepository : IProductRepository
     {
         private readonly IXrmDataServices dataServices;
@@ -27,7 +24,7 @@ namespace Hajir.Crm.Infrastructure
         {
             return !Guid.TryParse(id, out var _id)
                 ? null
-                : this.dataServices.GetRepository<XrmHajirProduct>()
+                : dataServices.GetRepository<XrmHajirProduct>()
                     .Queryable
                     .Where(x => x.ProductId == _id)
                     .FirstOrDefault()?

@@ -1,17 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31313.79
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Abstractions", "Hajir.Crm.Abstractions\Hajir.Crm.Abstractions.csproj", "{13E0792C-D14E-4B13-B3AD-E7D3DBD0B136}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Abstractions", "Hajir.Crm.Abstractions\Hajir.Crm.Abstractions.csproj", "{13E0792C-D14E-4B13-B3AD-E7D3DBD0B136}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm", "Hajir.Crm\Hajir.Crm.csproj", "{39A07D54-2C7B-49EB-A2EE-5C81A1C3F559}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm", "Hajir.Crm\Hajir.Crm.csproj", "{39A07D54-2C7B-49EB-A2EE-5C81A1C3F559}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Blazor", "Hajir.Crm.Blazor\Hajir.Crm.Blazor.csproj", "{01723E0C-B75B-4438-B673-1B2D1999C58A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Blazor", "Hajir.Crm.Blazor\Hajir.Crm.Blazor.csproj", "{01723E0C-B75B-4438-B673-1B2D1999C58A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Blazor.Server", "Hajir.Crm.Blazor.Server\Hajir.Crm.Blazor.Server.csproj", "{FA1CBA09-AB13-45EC-96E3-4C9FDFEDA257}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Blazor.Server", "Hajir.Crm.Blazor.Server\Hajir.Crm.Blazor.Server.csproj", "{FA1CBA09-AB13-45EC-96E3-4C9FDFEDA257}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Api", "Hajir.Crm.Api\Hajir.Crm.Api.csproj", "{33D14D57-6BA1-4BB3-9382-5C6E8CCBE6C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Api", "Hajir.Crm.Api\Hajir.Crm.Api.csproj", "{33D14D57-6BA1-4BB3-9382-5C6E8CCBE6C5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{412E5D3F-049E-4723-B7E3-C364876198A2}"
 EndProject
@@ -37,7 +37,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GN.Library.Parnian", "Libra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GN.Library.PDF", "Library\GN.Library.PDF\GN.Library.PDF.csproj", "{FD8692E9-0958-45B6-9B00-5F05719E6535}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Tests", "Hajir.Crm.Tests\Hajir.Crm.Tests.csproj", "{043A0F7E-8450-4575-A94C-A76EA20814F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Tests", "Hajir.Crm.Tests\Hajir.Crm.Tests.csproj", "{043A0F7E-8450-4575-A94C-A76EA20814F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Xrm.Tests", "Hajir.Crm.Xrm.Tests\Hajir.Crm.Xrm.Tests.csproj", "{7CFEE6D2-C68C-4526-9A57-3EB4FA3F9404}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -113,6 +115,10 @@ Global
 		{043A0F7E-8450-4575-A94C-A76EA20814F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{043A0F7E-8450-4575-A94C-A76EA20814F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{043A0F7E-8450-4575-A94C-A76EA20814F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CFEE6D2-C68C-4526-9A57-3EB4FA3F9404}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CFEE6D2-C68C-4526-9A57-3EB4FA3F9404}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CFEE6D2-C68C-4526-9A57-3EB4FA3F9404}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CFEE6D2-C68C-4526-9A57-3EB4FA3F9404}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

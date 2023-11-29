@@ -1,5 +1,5 @@
 ﻿using GN.Library.Xrm.StdSolution;
-using Hajir.Crm.Abstractions.Entities;
+using Hajir.Crm.Entities;
 using Microsoft.Xrm.Sdk.Client;
 using System;
 using System.Collections.Generic;

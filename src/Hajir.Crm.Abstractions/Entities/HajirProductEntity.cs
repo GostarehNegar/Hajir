@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Hajir.Crm.Abstractions.Entities
+namespace Hajir.Crm.Entities
 {
     public class HajirProductEntity : DynamicEntity
     {
@@ -14,5 +14,8 @@ namespace Hajir.Crm.Abstractions.Entities
             public const string Name = "name";
             public const string ProductNumber = "productnumber";
         }
+
+        public string ProductNumber { get => this.GetAttributeValue<string>(Schema.ProductNumber); set=> this.SetAttributeValue(Schema.ProductNumber, value); }
+
     }
 }
