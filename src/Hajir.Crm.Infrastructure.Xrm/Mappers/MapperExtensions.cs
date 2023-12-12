@@ -26,7 +26,9 @@ namespace Hajir.Crm.Infrastructure.Xrm
 
 		public static Product ToProduct(this XrmHajirProduct product)
 		{
+
 			var result = product.ToDynamic().To<Product>();
+			result.ProductType = product.ProductType;
 			return result;
 
 			return mapper.Map<XrmHajirProduct, Product>(product, opt =>
