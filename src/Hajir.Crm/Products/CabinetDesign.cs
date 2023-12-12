@@ -64,6 +64,7 @@ namespace Hajir.Crm.Products
 		public int GetLoad()
 		{
 			var result = 0;
+			return result;
 			
 		}
 		private int Put()
