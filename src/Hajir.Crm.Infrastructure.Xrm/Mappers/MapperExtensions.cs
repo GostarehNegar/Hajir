@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
 using AutoMapper.Configuration;
-
+using GN.Library.Xrm;
 
 namespace Hajir.Crm.Infrastructure.Xrm
 {
@@ -26,6 +26,8 @@ namespace Hajir.Crm.Infrastructure.Xrm
 
 		public static Product ToProduct(this XrmHajirProduct product)
 		{
+			var result = product.ToDynamic().To<Product>();
+			return result;
 
 			return mapper.Map<XrmHajirProduct, Product>(product, opt =>
 			{

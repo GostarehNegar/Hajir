@@ -44,7 +44,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 
 		public Product GetProductById(string id)
 		{
-			return GetXrmProcuct(id)?.ToDynamic().To<Product>();
+			return GetXrmProcuct(id)?.ToProduct();
 
 		}
 	}

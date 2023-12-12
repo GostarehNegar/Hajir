@@ -29,6 +29,11 @@ namespace Hajir.Crm.Features.Products
         {
             return $"{ProductNumber} ({ProductType})";
         }
+		public override void Init()
+		{
+            //this.ProductType = ProductTypes.Ups;
+			base.Init();
+		}
 
-    }
+	}
 }
