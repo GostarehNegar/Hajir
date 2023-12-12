@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hajir.Crm.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,22 +26,22 @@ namespace Hajir.Crm.Features.Products
         }
 
 
-        IEnumerable<BundleRow> GetRows(ProductTypes productType) => Rows.Where(x => x.Product.ProductType == productType);
+        IEnumerable<BundleRow> GetRows(HajirProductEntity.Schema.ProductTypes productType) => Rows.Where(x => x.Product.ProductType == productType);
 
         public string Validate()
         {
             var result = string.Empty;
-            if (GetRows(ProductTypes.Ups).Count() > 1)
+            if (GetRows(HajirProductEntity.Schema.ProductTypes.UPS).Count() > 1)
             {
                 return $"Each bundle should have at most one UPS line.";
             }
-            if (GetRows(ProductTypes.Battery).Count() > 1)
+            if (GetRows(HajirProductEntity.Schema.ProductTypes.Battery).Count() > 1)
             {
                 return $"Each bundle should have at most one Battery line.";
             }
 
-            var ups = GetRows(ProductTypes.Ups).FirstOrDefault();
-            var battry = GetRows(ProductTypes.Battery).FirstOrDefault();
+            var ups = GetRows(HajirProductEntity.Schema.ProductTypes.UPS).FirstOrDefault();
+            var battry = GetRows(HajirProductEntity.Schema.ProductTypes.Battery).FirstOrDefault();
             if (ups != null)
             {
 
@@ -50,23 +51,17 @@ namespace Hajir.Crm.Features.Products
                 var supported = ups.Product.GetSupportedBatteryConfig().Select(x => x.Number).ToList();
                 if (!supported.Contains(battry.Quantity))
                 {
-                    return $" Battery quantity:'{battry.Quantity}' is not supported by this type of UPS. '{ups.Product}'. This type only supports '{ups.Product.SupportedBattries}' ";
+                    return $" Battery quantity:'{battry.Quantity}' is not supported by this type of UPS: '{ups.Product}'. This type only supports '{ups.Product.SupportedBattries}' ";
                 }
             }
-            var cabinets = GetRows(ProductTypes.Cabinet);
+            var cabinets = GetRows(HajirProductEntity.Schema.ProductTypes.Cabinet);
             if (cabinets.Count() > 0)
             {
                 var specs = cabinets.Select(x => x.Product.GetCabintSpec());
                 var design = new CabinetsDesign(specs);
                 design.Design(battry.Quantity);
 
-
-
             }
-
-
-
-
             return result;
 
         }

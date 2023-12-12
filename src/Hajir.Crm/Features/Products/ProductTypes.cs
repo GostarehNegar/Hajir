@@ -4,12 +4,12 @@ using System.Text;
 
 namespace Hajir.Crm.Features.Products
 {
-    public enum ProductTypes
-    {
-        None = 0,
-        Ups = 1,
-        Battery = 2,
-        Cabinet = 3
+    //public enum ProductTypes
+    //{
+    //    None = 0,
+    //    Ups = 1,
+    //    Battery = 2,
+    //    Cabinet = 3
 
-    }
+    //}
 }

@@ -28,13 +28,8 @@ namespace Hajir.Crm.Infrastructure.Xrm
 		{
 
 			var result = product.ToDynamic().To<Product>();
-			result.ProductType = product.ProductType;
+			result.ProductType = product.ProductType ?? HajirProductEntity.Schema.ProductTypes.Other;
 			return result;
-
-			return mapper.Map<XrmHajirProduct, Product>(product, opt =>
-			{
-				opt.ConfigureMap().ForAllMembers(o => o.Ignore());
-			});
 		}
 	}
 }
