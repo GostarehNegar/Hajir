@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Hajir.Crm.Infrastructure;
 using GN.Library.Xrm;
 using Hajir.Crm.Entities;
-using Hajir.Crm.Products;
+using Hajir.Crm.Features.Products;
 
 namespace Hajir.Crm.Tests.Specs
 {
@@ -28,7 +28,7 @@ namespace Hajir.Crm.Tests.Specs
                 .Queryable
                 .Take(1)
                 .FirstOrDefault();
-            var actual = target.GetProcuct(product.Id.ToString());
+            var actual = target.GetProductById(product.Id.ToString());
             Assert.IsNotNull(actual);
 
         }

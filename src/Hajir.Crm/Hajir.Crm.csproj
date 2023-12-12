@@ -18,10 +18,12 @@
 
   <ItemGroup>
     <Folder Include="Domain\Products\" />
+    <Folder Include="Entities\" />
+    <Folder Include="Infrastructure\Data\" />
     <Folder Include="Infrastructure\Internals\" />
-    <Folder Include="Products\Application\" />
-    <Folder Include="Products\Infrastructure\" />
-    <Folder Include="Products\Domain\" />
+    <Folder Include="Features\Products\Application\" />
+    <Folder Include="Features\Products\Infrastructure\" />
+    <Folder Include="Features\Products\Domain\" />
   </ItemGroup>
 
 </Project>

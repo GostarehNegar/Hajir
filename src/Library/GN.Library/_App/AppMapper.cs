@@ -20,6 +20,7 @@ namespace GN.Library
         /// <returns></returns>
         T2 Map<T1, T2>(T1 value);
         void Clear();
+        IMapper GetMapper(bool refersh=false);
 
 
     }
@@ -33,7 +34,8 @@ namespace GN.Library
         {
             Clear();
         }
-        private IMapper GetMapper(bool refresh = false)
+
+        public IMapper GetMapper(bool refresh = false)
         {
             if (mapper == null || refresh)
                 mapper = new Mapper(new MapperConfiguration(mappings));

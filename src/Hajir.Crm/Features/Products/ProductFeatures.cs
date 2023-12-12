@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Hajir.Crm.Products
+namespace Hajir.Crm.Features.Products
 {
-	public class ProductFeatures : DynamicEntity
-	{
-		
-	}
+    public class ProductFeatures : DynamicEntity
+    {
+
+    }
 }

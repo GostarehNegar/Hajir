@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hajir.Crm\Hajir.Crm.csproj" />
+    <ProjectReference Include="..\Library\GN.Library.Xrm.Query\GN.Library.Xrm.Query.csproj" />
+    <ProjectReference Include="..\Library\GN.Library.Xrm\GN.Library.Xrm.csproj" />
+  </ItemGroup>
+
+</Project>

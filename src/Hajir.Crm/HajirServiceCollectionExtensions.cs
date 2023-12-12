@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddHajirCrm(this IServiceCollection services, IConfiguration configuration, Action<HajirCrmOptions> configure )
         {
-            services.AddHajirInfrastructure(configuration);
+            //services.AddHajirInfrastructure(configuration);
             return services;
         }
     }
