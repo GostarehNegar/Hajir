@@ -1,6 +1,7 @@
 ﻿using Hajir.Crm.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Hajir.Crm.Features.Products
@@ -9,5 +10,6 @@ namespace Hajir.Crm.Features.Products
     {
         HajirProductEntity GetProcuct(string id);
         Product GetProductById(string id);
+        IEnumerable<Product> GetAll();
     }
 }

@@ -24,10 +24,7 @@ namespace Hajir.Crm.Features.Products
         {
             rows.Add(new BundleRow { Product = product, Quantity = quantity });
         }
-
-
         IEnumerable<BundleRow> GetRows(HajirProductEntity.Schema.ProductTypes productType) => Rows.Where(x => x.Product.ProductType == productType);
-
         public string Validate()
         {
             var result = string.Empty;
@@ -60,10 +57,27 @@ namespace Hajir.Crm.Features.Products
                 var specs = cabinets.Select(x => x.Product.GetCabintSpec());
                 var design = new CabinetsDesign(specs);
                 design.Design(battry.Quantity);
-
             }
             return result;
 
+        }
+
+        public Product UPS
+        {
+            get
+            {
+                return this.GetRows(HajirProductEntity.Schema.ProductTypes.UPS).FirstOrDefault()?.Product;
+            }
+            set
+            {
+                var row = this.GetRows(HajirProductEntity.Schema.ProductTypes.UPS).FirstOrDefault();
+                if (row == null)
+                {
+                    this.AddRow(value, 1);
+                }
+                else
+                    row.Product = value;
+            }
         }
 
     }

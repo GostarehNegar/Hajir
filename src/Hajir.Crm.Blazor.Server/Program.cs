@@ -1,3 +1,4 @@
+using GN;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -13,7 +14,7 @@ namespace Hajir.Crm.Blazor.Server
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().UseGNLib().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

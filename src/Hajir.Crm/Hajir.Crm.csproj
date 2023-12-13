@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Entities\**" />
+    <EmbeddedResource Remove="Entities\**" />
+    <None Remove="Entities\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.8.0" />
   </ItemGroup>
 
@@ -17,13 +23,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\Products\" />
-    <Folder Include="Entities\" />
     <Folder Include="Infrastructure\Data\" />
     <Folder Include="Infrastructure\Internals\" />
     <Folder Include="Features\Products\Application\" />
     <Folder Include="Features\Products\Infrastructure\" />
     <Folder Include="Features\Products\Domain\" />
+    <Folder Include="Infrastructure\States\" />
+    <Folder Include="Products\" />
   </ItemGroup>
 
 </Project>

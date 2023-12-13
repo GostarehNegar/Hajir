@@ -9,8 +9,11 @@ namespace Microsoft.Extensions.DependencyInjection
 	{
 		public static IServiceCollection AddHajirInfrastructure(this IServiceCollection services, IConfiguration configuration)
 		{
+			
 			services.AddScoped<XrmProductRepository>();
 			services.AddTransient<IProductRepository>(s => s.GetService<XrmProductRepository>());
+			services.AddScoped<InMemoryProductRepository>();
+			services.AddTransient<IProductRepository>(s => s.GetService<InMemoryProductRepository>());
 			return services;
 		}
 	}

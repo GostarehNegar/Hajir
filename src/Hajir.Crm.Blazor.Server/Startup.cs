@@ -1,6 +1,8 @@
 using Hajir.Crm.Blazor.Server.Data;
+using Hajir.Crm.Blazor.Server.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GN;
+using GN.Library.Xrm;
 
 namespace Hajir.Crm.Blazor.Server
 {
@@ -28,6 +32,21 @@ namespace Hajir.Crm.Blazor.Server
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddGNLib(Configuration, cfg => { });
+            services.AddXrmServices(Configuration, cfg =>
+            {
+                cfg.UseHttoClientSynchronouslyDueToUnknownBugInAwaitingInBlazor = true;
+                cfg.ConnectionOptions = ConnectionOptions.WebAPI;
+            });
+            services.AddHajirCrm(Configuration, cfg => { });
+            services.AddHajirInfrastructure(Configuration);
+
+
+            services.AddHajirCrmBlazor(Configuration);
+
+
+            services.AddScoped<CircuitHandler, CircuitHandlerService>();
+
             services.AddSingleton<WeatherForecastService>();
         }
 

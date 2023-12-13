@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.5.33516.290
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31313.79
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Abstractions", "Hajir.Crm.Abstractions\Hajir.Crm.Abstractions.csproj", "{13E0792C-D14E-4B13-B3AD-E7D3DBD0B136}"
 EndProject
@@ -41,7 +41,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Tests", "Hajir.Cr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Xrm.Tests", "Hajir.Crm.Xrm.Tests\Hajir.Crm.Xrm.Tests.csproj", "{7CFEE6D2-C68C-4526-9A57-3EB4FA3F9404}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Infrastructure.Xrm", "Hajir.Crm.Infrastructure.Xrm\Hajir.Crm.Infrastructure.Xrm.csproj", "{5EB3F34B-9991-4062-845A-CF83D3FDE340}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Infrastructure.Xrm", "Hajir.Crm.Infrastructure.Xrm\Hajir.Crm.Infrastructure.Xrm.csproj", "{5EB3F34B-9991-4062-845A-CF83D3FDE340}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

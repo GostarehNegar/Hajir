@@ -24,7 +24,7 @@ namespace Hajir.Crm.Features.Products
         public string SupportedBattries { get; set; }
         public string CabinetSpec { get; set; }
         public IEnumerable<BatterySpec> GetSupportedBatteryConfig() => BatterySpec.ParseCollection(SupportedBattries);
-        public CabinetSpec GetCabintSpec() => ProductType != HajirProductEntity.Schema.ProductTypes.Cabinet ? null : Products.CabinetSpec.Parse(CabinetSpec);
+        public CabinetSpec GetCabintSpec() => ProductType != HajirProductEntity.Schema.ProductTypes.Cabinet ? null : Products.CabinetSpec.Parse(this.Id, CabinetSpec);
 
         public override string ToString()
         {

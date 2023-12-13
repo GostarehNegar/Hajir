@@ -47,5 +47,10 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 			return GetXrmProcuct(id)?.ToProduct();
 
 		}
-	}
+
+        public IEnumerable<Product> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

@@ -121,7 +121,8 @@ namespace Hajir.Crm.Features.Products
     public class CabinetsDesign
     {
         public int RequiredCapacity { get; private set; }
-        private IEnumerable<CabinetSpec> specs;
+        
+        
         public IEnumerable<CabinetDesign> Cabinets { get; private set; }
 
         public int Capacity => Cabinets.Sum(x => x.Capacity);
@@ -130,8 +131,16 @@ namespace Hajir.Crm.Features.Products
 
         public CabinetsDesign(IEnumerable<CabinetSpec> specs)
         {
-            this.specs = specs;
-            Cabinets = specs.Select(x => new CabinetDesign(x)).ToArray();
+            
+            Cabinets = specs ==null
+                ? new CabinetDesign[] { }
+                :specs.Select(x => new CabinetDesign(x)).ToArray();
+        }
+        public void AddCabinet(CabinetSpec spec)
+        {
+            var lst = Cabinets.ToList();
+            lst.Add(new CabinetDesign(spec));
+            this.Cabinets = lst.ToArray();
 
         }
         public void Design(int numberOfBatteries)

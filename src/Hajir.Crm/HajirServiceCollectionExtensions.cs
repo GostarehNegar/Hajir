@@ -1,4 +1,6 @@
 ﻿using Hajir.Crm;
+using Hajir.Crm.Features.Products;
+using Hajir.Crm.Features.Products.Internals;
 using Microsoft.Extensions.Configuration;
 using System;
 
@@ -9,6 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddHajirCrm(this IServiceCollection services, IConfiguration configuration, Action<HajirCrmOptions> configure )
         {
             //services.AddHajirInfrastructure(configuration);
+            services.AddScoped<IProductBundlingService, ProductBundlingService>();
             return services;
         }
     }
