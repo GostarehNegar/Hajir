@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using MudBlazor.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ namespace Hajir.Crm.Blazor
             services.AddScoped<BlazorAppServices>();
             services.AddScoped<IBlazorAppServices>(sp=>sp.GetService<BlazorAppServices>());
             services.AddScoped<IScopedHostedService>(sp => sp.GetService<BlazorAppServices>());
-
+            services.AddMudServices();
             return services;
 
         }

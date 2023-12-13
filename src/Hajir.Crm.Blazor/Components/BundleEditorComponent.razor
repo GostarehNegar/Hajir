@@ -1,4 +1,66 @@
 ﻿@inherits BaseComponent
-<h3>BundleEditorComponent</h3>
+@using MudBlazor
+@using Hajir.Crm.Features.Products
 
-<button @onclick="Design">Go</button>
+<div class="main-container">
+    <div class="form-container">
+        <MudAutocomplete T="Product"
+                         @bind-Value="this.BundleModel.UPS"
+                         SearchFunc="e=>SearchUps(new Input(e))"
+                         ToStringFunc="e=>ProductToString(e)"
+                         OnClearButtonClick="ClearUps"
+                         Label="UPS Model"
+                         OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                         CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
+                         AutoFocus
+                         Immediate
+                         Clearable
+                         ResetValueOnEmptyText
+                         SelectValueOnTab>
+        </MudAutocomplete>
+        <MudSelect T="int"
+                   @bind-Value="this.BundleModel.NumberOfBatteries"
+                   Disabled="@IsUpsEmpty"
+                   OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                   CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
+                   Label="Batteries">
+            @foreach (var i in GetSupportedNumberOfBatteries())
+            {
+                <MudSelectItem Value="i">@i</MudSelectItem>
+            }
+        </MudSelect>
+        <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="Design">Design</MudButton>
+    </div>
+    @if (DesignedBundle?.Cabinets.Count() != 0)
+    {
+        <div class="bundle-container">
+            <div>
+                <MudText>Cabinets.count</MudText>@DesignedBundle?.Cabinets.Count()
+            </div>
+            <div>
+                <MudText>Capacity</MudText>@DesignedBundle?.Capacity
+            </div>
+            <div>
+                <MudText>Free</MudText>@DesignedBundle?.Free
+            </div>
+            <div>
+                <MudText>Quantity</MudText>@DesignedBundle?.Quantity
+            </div>
+            <div>
+                <MudText>Req. Cap.</MudText>@DesignedBundle?.RequiredCapacity
+            </div>
+        </div>
+        <div class="cabinets">
+            @foreach (var cabinet in DesignedBundle.Cabinets)
+            {
+                <div class="cabinet">
+                    @for (int i = 0; i < this.BundleModel.NumberOfBatteries/DesignedBundle?.Cabinets.Count(); i++)
+                    {
+                        <div class="cell"></div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>
+

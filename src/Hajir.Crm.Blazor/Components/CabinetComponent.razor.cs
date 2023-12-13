@@ -1,4 +1,5 @@
 ﻿using Hajir.Crm.Features.Products;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,6 @@ namespace Hajir.Crm.Blazor.Components
     public partial class CabinetComponent
     {
         public CabinetDesign Cabinet;
-
        
     }
 }
