@@ -6,8 +6,17 @@
 
   <ItemGroup>
     <Compile Remove="Entities\**" />
+    <Compile Remove="Features\Products\Application\**" />
+    <Compile Remove="Features\Products\Domain\**" />
+    <Compile Remove="Features\Products\Infrastructure\**" />
     <EmbeddedResource Remove="Entities\**" />
+    <EmbeddedResource Remove="Features\Products\Application\**" />
+    <EmbeddedResource Remove="Features\Products\Domain\**" />
+    <EmbeddedResource Remove="Features\Products\Infrastructure\**" />
     <None Remove="Entities\**" />
+    <None Remove="Features\Products\Application\**" />
+    <None Remove="Features\Products\Domain\**" />
+    <None Remove="Features\Products\Infrastructure\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,9 +34,6 @@
   <ItemGroup>
     <Folder Include="Infrastructure\Data\" />
     <Folder Include="Infrastructure\Internals\" />
-    <Folder Include="Features\Products\Application\" />
-    <Folder Include="Features\Products\Infrastructure\" />
-    <Folder Include="Features\Products\Domain\" />
     <Folder Include="Infrastructure\States\" />
     <Folder Include="Products\" />
   </ItemGroup>

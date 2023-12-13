@@ -10,6 +10,6 @@ namespace Hajir.Crm.Features.Products
         IEnumerable<Product> GetAllUpses();
         IEnumerable<Product> GetAllBatteries();
         IEnumerable<Product> GetAllCabinets();
-        ProductBundle Design(Product UPS, Product Battery, int numberOfBatteries);
+        CabinetsDesign Design(Product UPS, Product Battery, int numberOfBatteries);
     }
 }

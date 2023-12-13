@@ -36,5 +36,11 @@ namespace Hajir.Crm.Blazor.Components
                 ? new int[] { }
                 : this.BundleModel?.Bundle.UPS.GetSupportedBatteryConfig().Select(x => x.Number).ToArray();
         }
+        
+        public async Task Design()
+        {
+            var design = this.BundlingService.Design(this.BundleModel.UPS, null, 24);
+
+        }
     }
 }

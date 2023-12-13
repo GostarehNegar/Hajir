@@ -19,12 +19,8 @@ namespace Hajir.Crm.Features.Products.Internals
                 .Where(x => x.ProductType == Entities.HajirProductEntity.Schema.ProductTypes.UPS).ToArray();
         }
 
-
-
-
-        public ProductBundle Design(Product UPS, Product Battery, int numberOfBatteries)
+        public CabinetsDesign Design(Product UPS, Product Battery, int numberOfBatteries)
         {
-            var result = new ProductBundle();
             var cabinets = this.GetAllCabinets().ToList();
             /// Search for minimum number of cabinets
             /// 
@@ -32,23 +28,16 @@ namespace Hajir.Crm.Features.Products.Internals
             CabinetsDesign design = new CabinetsDesign(null);
             while (remainder > 0)
             {
-                var fff = cabinets.OrderBy(x => x.GetCabintSpec().Capacity).FirstOrDefault(x => x.GetCabintSpec().Capacity >= remainder);
-                if (fff == null)
+                var cabinet = cabinets.OrderBy(x => x.GetCabintSpec().Capacity).FirstOrDefault(x => x.GetCabintSpec().Capacity >= remainder);
+                if (cabinet == null)
                 {
-                    fff = cabinets.OrderByDescending(x => x.GetCabintSpec().Capacity).FirstOrDefault();
+                    cabinet = cabinets.OrderByDescending(x => x.GetCabintSpec().Capacity).FirstOrDefault();
                 }
-                design.AddCabinet(fff.GetCabintSpec());
-                remainder = remainder - fff.GetCabintSpec().Capacity;
-
+                design.AddCabinet(cabinet.GetCabintSpec());
+                remainder = remainder - cabinet.GetCabintSpec().Capacity;
             }
-            var candidates = cabinets.OrderByDescending(x => numberOfBatteries % x.GetCabintSpec().Capacity).ToArray();
             design.Design(numberOfBatteries);
-           
-
-            result.Validate();
-
-
-            return null;
+            return design;
         }
 
         public string ValidateBundle(ProductBundle bundle)
