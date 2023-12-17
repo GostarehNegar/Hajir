@@ -1,2 +1,9 @@
-﻿<h3>CabinetsComponent</h3>
+﻿<h3>@this.Cabinets</h3>
+<div class="cabinets">
+    @foreach (var cabinet in Cabinets.Cabinets)
+    {
+        <CabinetComponent Cabinet="cabinet" />}
+
+
+</div>
 

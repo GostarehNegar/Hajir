@@ -10,7 +10,8 @@ namespace Hajir.Crm.Blazor.Components
 {
     public partial class CabinetComponent
     {
-        public CabinetDesign Cabinet;
+        [Parameter]
+        public CabinetDesign Cabinet { get; set; }
        
     }
 }

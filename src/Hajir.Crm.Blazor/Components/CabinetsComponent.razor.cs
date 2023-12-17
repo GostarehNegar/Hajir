@@ -1,4 +1,5 @@
 ﻿using Hajir.Crm.Features.Products;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,13 @@ namespace Hajir.Crm.Blazor.Components
 {
     public partial class CabinetsComponent
     {
-        public CabinetsDesign Cabinets;
+        [Parameter]
+        public CabinetsDesign Cabinets { get; set; }
+
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+        }
+
     }
 }

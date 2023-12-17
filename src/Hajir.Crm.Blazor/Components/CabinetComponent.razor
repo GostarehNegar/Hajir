@@ -1,3 +1,14 @@
-﻿<h3>CabinetComponent</h3>
+﻿<h4>@this.Cabinet.ToString()</h4>
+<table>
+    @for (int i = 1; i <= this.Cabinet.Spec.NumberOfRows; i++)
+    {
+        <tr>
+            @for (int j = 1; j <= this.Cabinet.Spec.NumberOfColumns; j++)
+            {
+                <td>@(this.Cabinet.GetLocation(i, j).Filled?"x":" ")</td>
+            }
+        </tr>
+    }
+</table>
 
 

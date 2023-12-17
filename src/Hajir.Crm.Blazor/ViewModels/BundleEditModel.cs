@@ -9,6 +9,8 @@ namespace Hajir.Crm.Blazor.Models
     public class BundleEditModel : BaseViewModel
     {
         public ProductBundle Bundle { get; set; } = new ProductBundle();
+        public int Power { get; set; }
+        
         public Product UPS
         {
             get

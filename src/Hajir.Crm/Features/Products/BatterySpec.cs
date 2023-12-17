@@ -5,6 +5,17 @@ using System.Linq;
 
 namespace Hajir.Crm.Features.Products
 {
+    public enum BatteryTypes
+    {
+        Seven,
+        Nine,
+        Tewelve,
+        Eigtheen,
+        TwentyEight,
+        Fourty,
+        SixtyFive,
+        Hundered
+    }
     public class BatterySpec
     {
         public int Number { get; private set; }

@@ -29,8 +29,27 @@
                 <MudSelectItem Value="i">@i</MudSelectItem>
             }
         </MudSelect>
+        <MudSelect T="int"
+                   @bind-Value="this.BundleModel.Power"
+                   Disabled="@IsUpsEmpty"
+                   OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                   CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
+                   Label="Power">
+            @foreach (var i in GetPowers())
+            {
+                <MudSelectItem Value="i">@i</MudSelectItem>
+            }
+        </MudSelect>
+        @*<MudTextField @bind-Value="this.BundleModel.Power" Label="Power"></MudTextField>*@
         <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="Design">Design</MudButton>
     </div>
+
+    @foreach(var des in CabinetDesign)
+            {
+                <CabinetsComponent Cabinets="des"/>
+            }
+
+
     @if (DesignedBundle?.Cabinets.Count() != 0)
     {
         <div class="bundle-container">

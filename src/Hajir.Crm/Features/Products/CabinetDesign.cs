@@ -7,33 +7,6 @@ using System.Text;
 
 namespace Hajir.Crm.Features.Products
 {
-    public class CabinetLocation
-    {
-        public int Row { get; private set; }
-        public int Column { get; private set; } = 0;
-        public bool Filled { get; set; }
-        public int Qty => Filled ? 1 : 0;
-
-        public string Pic => Filled ? "X" : ".";
-
-        public CabinetLocation(int row, int column, bool filled)
-        {
-            Row = row;
-            Column = column;
-            Filled = filled;
-        }
-
-        public bool Fill(bool forced = false)
-        {
-            if (!Filled || forced)
-            {
-                Filled = true;
-                return true;
-            }
-            return false;
-        }
-
-    }
     public class CabinetDesign
     {
 
@@ -85,21 +58,23 @@ namespace Hajir.Crm.Features.Products
             var location = GetLocation(row, col);
             return location != null && location.Fill(force);
         }
-        public int Put(int quantity)
+        public int Fill(int quantity, bool clear = false)
         {
+            if (clear)
+                this.Clear();
             int result = 0;
             Visit(l =>
             {
                 result += l.Fill() ? 1 : 0;
                 return result == quantity;
             });
-            return result;
+            return quantity - result;
         }
 
-        public int Design(int quantity)
+        public int Refill(int quantity)
         {
             Clear();
-            Put(quantity);
+            Fill(quantity);
             return Quantity;
 
         }
@@ -110,60 +85,18 @@ namespace Hajir.Crm.Features.Products
                 string get_row_pic(int row)
                 {
                     return _locations
-                        .Where(x => x.Row == 1)
+                        .Where(x => x.Row == row)
                         .Aggregate("", (c, n) => c + n.Pic);
                 }
-                return Enumerable.Range(1, Spec.NumberOfRows)
+                return Enumerable.Range(1, Spec.NumberOfRows + 1)
                     .Aggregate("", (c, n) => c + get_row_pic(n) + "\r\n");
             }
         }
-    }
-    public class CabinetsDesign
-    {
-        public int RequiredCapacity { get; private set; }
-        
-        
-        public IEnumerable<CabinetDesign> Cabinets { get; private set; }
 
-        public int Capacity => Cabinets.Sum(x => x.Capacity);
-        public int Quantity => Cabinets.Sum(x => x.Quantity);
-        public int Free => Cabinets.Sum(x => x.Free);
-
-        public CabinetsDesign(IEnumerable<CabinetSpec> specs)
+        public override string ToString()
         {
-            
-            Cabinets = specs ==null
-                ? new CabinetDesign[] { }
-                :specs.Select(x => new CabinetDesign(x)).ToArray();
+            return $"{Spec.NumberOfRows}x{Spec.NumberOfColumns}";
         }
-        public void AddCabinet(CabinetSpec spec)
-        {
-            var lst = Cabinets.ToList();
-            lst.Add(new CabinetDesign(spec));
-            this.Cabinets = lst.ToArray();
-
-        }
-        public void Design(int numberOfBatteries)
-        {
-            Cabinets.ToList().ForEach(x => x.Clear());
-            /// Design Cabinets.
-            /// 
-            var requirement = numberOfBatteries;
-            if (Capacity < requirement)
-            {
-
-            }
-            foreach (var cabinet in Cabinets.OrderByDescending(x => x.Capacity).ToArray())
-            {
-                requirement -= cabinet.Design(requirement);
-                if (requirement < 1)
-                    break;
-            }
-
-
-        }
-
-
     }
 }
 

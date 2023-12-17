@@ -22,9 +22,21 @@ namespace Hajir.Crm.Features.Products
         
         public HajirProductEntity.Schema.ProductTypes ProductType { get; set; }
         public string SupportedBattries { get; set; }
-        public string CabinetSpec { get; set; }
+        //public string CabinetSpec { get; set; }
         public IEnumerable<BatterySpec> GetSupportedBatteryConfig() => BatterySpec.ParseCollection(SupportedBattries);
-        public CabinetSpec GetCabintSpec() => ProductType != HajirProductEntity.Schema.ProductTypes.Cabinet ? null : Products.CabinetSpec.Parse(this.Id, CabinetSpec);
+        public int BatteryPower { get; set; }
+        public CabinetVendors Vendor { get; set; }
+
+        public int NumberOfRows { get; set; }
+        public CabinetSpec GetCabintSpec(int power)
+        {
+            /// 
+            var row_cap = HajirBusinessRules.Instance.CabinetCapacityRules.GetRowCapacity(power, this.Vendor);
+            return new CabinetSpec(this, NumberOfRows, row_cap);
+
+            return null;
+        }
+
 
         public override string ToString()
         {

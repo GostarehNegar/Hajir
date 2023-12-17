@@ -6,34 +6,40 @@ namespace Hajir.Crm.Features.Products
 {
     public class CabinetSpec
     {
-        public string ProductId { get; private set; }
+        public Product Cabinet { get; private set; }
+        
         public int NumberOfRows { get; private set; }
         public int NumberOfColumns { get; private set; }
         public int Capacity => NumberOfColumns * NumberOfRows;
-        public CabinetSpec(string productId, int numberOfRows, int numberOfColumns)
+        
+        public CabinetSpec(Product product, int numberOfRows, int numberOfColumns)
         {
             NumberOfRows = numberOfRows;
             NumberOfColumns = numberOfColumns;
-            ProductId = productId;
+            Cabinet = product;
         }
-        public static CabinetSpec Parse(string productId ,string str)
+        //public static CabinetSpec Parse(string productId ,string str)
+        //{
+        //    var items = (str ?? "").Split(new char[] { ',', ';' });
+
+        //    if (int.TryParse(items[0], out var rows))
+        //    {
+        //        if (items.Length > 1 && int.TryParse(items[1], out var columns))
+        //        {
+        //            return new CabinetSpec(productId, rows, columns);
+        //        }
+        //        else
+        //        {
+        //            return new CabinetSpec(productId, rows, 8);
+        //        }
+        //    }
+        //    return null;
+
+        //}
+
+        public CabinetSpec Clone()
         {
-            var items = (str ?? "").Split(new char[] { ',', ';' });
-
-            if (int.TryParse(items[0], out var rows))
-            {
-                if (items.Length > 1 && int.TryParse(items[1], out var columns))
-                {
-                    return new CabinetSpec(productId, rows, columns);
-                }
-                else
-                {
-                    return new CabinetSpec(productId, rows, 8);
-                }
-            }
-            return null;
-
+            return new CabinetSpec(this.Cabinet, this.NumberOfRows, this.NumberOfColumns);
         }
-
     }
 }
