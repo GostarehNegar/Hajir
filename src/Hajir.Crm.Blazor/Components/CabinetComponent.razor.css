@@ -1,0 +1,13 @@
+﻿.filledcell {
+    background-color: mediumaquamarine;
+    width: 20px;
+    height: 20px;
+    border:1px solid black;
+}
+.blankcell {
+    
+    border: 1px solid black;
+    width: 20px;
+    height: 20px;
+}
+

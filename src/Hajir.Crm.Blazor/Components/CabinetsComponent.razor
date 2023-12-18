@@ -1,9 +1,33 @@
-﻿<h3>@this.Cabinets</h3>
-<div class="cabinets">
-    @foreach (var cabinet in Cabinets.Cabinets)
-    {
-        <CabinetComponent Cabinet="cabinet" />}
+﻿@using MudBlazor
+<h3></h3>
+<table>
+    <tr>
+        <td style="padding:7px">
+            <div class="bundle-container">
+                <div>
+                    <MudText>@this.Cabinets</MudText>
+                </div>
+                <div>
+                    <MudText>Capacity: @Cabinets.Capacity</MudText>
+                </div>
+                <div>
+                    <MudText>Free: @Cabinets.Free</MudText>
+                </div>
+                <div>
+                    <MudText>Quantity:@Cabinets.Quantity</MudText>
+                </div>
+            </div>
+
+        </td>
+        <td>
+            <div class="cabinets">
+                @foreach (var cabinet in Cabinets.Cabinets)
+                {
+    <CabinetComponent Cabinet="cabinet" />}
 
 
-</div>
+            </div>
+        </td>
+    </tr>
+</table>
 

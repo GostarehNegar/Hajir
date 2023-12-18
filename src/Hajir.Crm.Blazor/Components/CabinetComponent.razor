@@ -1,11 +1,11 @@
 ﻿<h4>@this.Cabinet.ToString()</h4>
 <table>
-    @for (int i = 1; i <= this.Cabinet.Spec.NumberOfRows; i++)
+    @for (int i = 1; i <= this.NumberOfRows; i++)
     {
         <tr>
-            @for (int j = 1; j <= this.Cabinet.Spec.NumberOfColumns; j++)
+            @for (int j = 1; j <= this.NumberOfColumns; j++)
             {
-                <td>@(this.Cabinet.GetLocation(i, j).Filled?"x":" ")</td>
+                <td class="@GetClass(i,j)"></td>
             }
         </tr>
     }

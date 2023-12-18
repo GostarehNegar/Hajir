@@ -72,6 +72,14 @@ namespace Hajir.Crm.Features.Products.Internals
             var result = new List<CabinetsDesign>();
             foreach (var cab in cabs)
             {
+
+                var _design = c();
+                _design.AddCabinet(cab);
+                _design.Fill(numberOfBatteries);
+                if (_design.Capacity >= numberOfBatteries)
+                {
+                    result.Add(_design);
+                }
                 foreach (var cab2 in cabs)
                 {
                     if (cab2.Capacity <= cab.Capacity)
@@ -87,9 +95,11 @@ namespace Hajir.Crm.Features.Products.Internals
                     }
                 }
             }
-            var cmp = new CabinetComparer();
-            result.OrderBy(x => x, cmp);
-            return result.ToArray();
+
+            return result
+                .OrderBy(x => x, new CabinetComparer())
+                .Where(x => x.Capacity >= numberOfBatteries)
+                .ToArray();
         }
         public CabinetsDesign[] Design(Product UPS, int power, int numberOfBatteries, IEnumerable<Product> cabinets = null)
         {
@@ -97,7 +107,9 @@ namespace Hajir.Crm.Features.Products.Internals
             var hajir = Design(UPS, power, numberOfBatteries, CabinetVendors.Hajir, cabinets);
             var pitlan = Design(UPS, power, numberOfBatteries, CabinetVendors.Piltan, cabinets);
 
-            return hajir.Concat(pitlan).ToArray().OrderByDescending(x => x, new CabinetComparer()).ToArray();
+            var result = hajir.Concat(pitlan).ToArray().OrderByDescending(x => x, new CabinetComparer()).ToArray();
+            result.ToList().ForEach(x => x.Fill(numberOfBatteries));
+            return result;
 
         }
 
@@ -114,6 +126,14 @@ namespace Hajir.Crm.Features.Products.Internals
                 .LastOrDefault();
             if (largest == null)
                 return new CabinetsDesign[] { };
+
+            if (numberOfBatteries % largest.Capacity == 0)
+            {
+                var _res = new CabinetsDesign[]{
+                    new CabinetsDesign(Enumerable.Range(0, numberOfBatteries / largest.Capacity).Select(x => largest.Clone()).ToArray()) };
+                _res.First().Fill(numberOfBatteries);
+            }
+
             CabinetsDesign get_large_cabinets()
             {
                 CabinetsDesign large_cabinetes = new CabinetsDesign(null);
@@ -132,8 +152,7 @@ namespace Hajir.Crm.Features.Products.Internals
             {
                 throw new Exception($"Unexpected Value. ");
             }
-            var res1 = DoDesing(get_large_cabinets, numberOfBatteries, power, _cabinets.Where(x => x.Vendor == vendor));
-            return res1;
+            return DoDesing(get_large_cabinets, numberOfBatteries, power, _cabinets.Where(x => x.Vendor == vendor));
         }
 
         public string ValidateBundle(ProductBundle bundle)

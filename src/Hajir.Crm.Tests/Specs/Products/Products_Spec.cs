@@ -16,6 +16,7 @@ namespace Hajir.Crm.Tests.Specs.Products
         [TestMethod]
         public async Task how_cabinet_design_fill_works()
         {
+            var r = HajirBusinessRules.Instance.CabinetCapacityRules.GetRowCapacity(100, CabinetVendors.Hajir);
             /// Create a 3 by 4 cabinet.
             var design = new CabinetDesign(new CabinetSpec(new Product(), 3, 4));
             Assert.AreEqual(0, design.Fill(12));

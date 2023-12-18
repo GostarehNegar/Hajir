@@ -27,7 +27,7 @@ namespace Hajir.Crm.Features.Products
         }
         public int GetRowCapacity(int power, CabinetVendors vendor)
         {
-            for (var i = 0; i < specs.GetUpperBound(0); i++)
+            for (var i = 0; i <= specs.GetUpperBound(0); i++)
             {
                 if (power == specs[i, 0])
                 {

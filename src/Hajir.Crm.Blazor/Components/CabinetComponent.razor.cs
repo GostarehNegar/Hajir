@@ -12,6 +12,16 @@ namespace Hajir.Crm.Blazor.Components
     {
         [Parameter]
         public CabinetDesign Cabinet { get; set; }
-       
+
+        public int NumberOfColumns => this.Cabinet?.Spec?.NumberOfColumns ?? 0;
+        public int NumberOfRows => this.Cabinet?.Spec?.NumberOfRows ?? 0;
+
+        public string GetClass(int i, int j)
+        {
+            if (this.Cabinet.GetLocation(i, j).Filled)
+                return "filledcell";
+            return "blankcell";
+        }
+
     }
 }
