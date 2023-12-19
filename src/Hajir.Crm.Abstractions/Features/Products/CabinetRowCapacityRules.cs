@@ -5,21 +5,11 @@ namespace Hajir.Crm.Features.Products
 {
     public class CabinetRowCapacityRules
     {
-        public CabinetRowCapacityRules(int[,] specs)
+        private int[,] specs;
+        public CabinetRowCapacityRules()
         {
-            this.specs = specs;
+            this.specs = HajirCrmConstants.CabinetRowCapacityTable;
         }
-        private int[,] specs = {
-            {07,16,12 },
-            {09,16,12 },
-            {12,10,08 },
-            {28,06,04 },
-            {28,06,04 },
-            {40,06,04 },
-            {65,03,02 },
-            {100,03,02}
-        };
-
         public IEnumerable<int> GetKnownPowers()
         {
             var t = specs.GetUpperBound(1) + 1;

@@ -4,20 +4,7 @@ using System.Linq;
 
 namespace Hajir.Crm.Features.Products
 {
-    public class CabinetComparer : IComparer<CabinetsDesign>
-    {
-        public int Compare(CabinetsDesign x, CabinetsDesign y)
-        {
-            return x.CompareTo(y);
-            if (x.Cabinets.Count() != y.Cabinets.Count())
-            {
-                return x.Cabinets.Count() > y.Cabinets.Count() ? 1 : -1;
-            }
-
-            throw new NotImplementedException();
-        }
-    }
-    public class CabinetsDesign : IComparable<CabinetsDesign>
+    public class CabinetsDesign : IComparable<CabinetsDesign>, ICabinetsDesign
     {
         public int RequiredCapacity { get; private set; }
 
@@ -60,6 +47,11 @@ namespace Hajir.Crm.Features.Products
                 return cabinets[1].Quantity - cabinets[0].Quantity;
             }
         }
+
+        public int NumberOfCabinets => this.Cabinets?.Count() ?? 0;
+
+        IEnumerable<ICabinetDesign> ICabinetsDesign.Cabinets => this.Cabinets;
+
         public void AddCabinet(CabinetSpec spec)
         {
             var lst = Cabinets.ToList();
@@ -125,7 +117,7 @@ namespace Hajir.Crm.Features.Products
                 .GroupBy(x => x.Capacity)
                 .Select(x => x.Key)
                 .ToList()
-                .ForEach(x => result = result + ff(x) );
+                .ForEach(x => result = result + ff(x));
 
             return result;
 

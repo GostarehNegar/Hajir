@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Hajir.Crm.Features.Products
 {
-    public class CabinetDesign
+    public class CabinetDesign : ICabinetDesign
     {
 
         private List<CabinetLocation> _locations;
