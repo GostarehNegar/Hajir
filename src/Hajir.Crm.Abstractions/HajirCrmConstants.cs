@@ -16,5 +16,6 @@ namespace Hajir.Crm
             {65,03,02 },
             {100,03,02}
         };
+        public const string RahsamSolutionPerfix = "rhs_";
     }
 }

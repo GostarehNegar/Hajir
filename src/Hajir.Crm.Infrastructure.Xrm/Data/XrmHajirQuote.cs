@@ -7,10 +7,10 @@ using System.Text;
 
 namespace Hajir.Crm.Infrastructure.Xrm.Data
 {
-    [EntityLogicalName(Schema.LogicalName)]
+	[EntityLogicalName(Schema.LogicalName)]
     public class XrmHajirQuote : XrmQuote
     {
-        public new class Schema : HajirQuoteEntity.Schema
+        public new class Schema : XrmQuote.Schema
         {
 
         }
