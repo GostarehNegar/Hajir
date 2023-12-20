@@ -15,7 +15,7 @@
             Column = column;
             Filled = filled;
         }
-
+        public void Clear()=> this.Filled = false;
         public bool Fill(bool forced = false)
         {
             if (!Filled || forced)

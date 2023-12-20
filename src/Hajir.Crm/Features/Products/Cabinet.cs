@@ -34,57 +34,35 @@ namespace Hajir.Crm.Features.Products
 		public int NumberOfColumns => Spec.NumberOfColumns;
 		public CabinetLocation GetLocation(int row, int col)
 		{
-			CabinetLocation result = null;
-			Visit(l =>
-			{
-				result = l.Row == row && l.Column == col ? l : null;
-				return result != null;
-			});
-			return result;
+			return this._locations.FirstOrDefault(x => x.Row == row && x.Column == col);
 		}
+		public CabinetLocation GetNextFreeLocation()
+		{
+			return this._locations.FirstOrDefault(x => !x.Filled);
+		}
+
 		public int Capacity => NumberOfColumns * NumberOfRows;
 		public int Quantity => _locations.Count(x => x.Filled);
 		public int Free => Capacity - Quantity;
 		public int GetRowFilledLocations(int row) => _locations.Count(x => x.Row == row && x.Filled);
 		public int GetRowFreeLocations(int row) => _locations.Count(x => x.Row == row && !x.Filled);
-
-		private void Visit(Func<CabinetLocation, bool> vistor)
-		{
-			var done = false;
-			_locations.ToList()
-				.ForEach(x => done = done || vistor(x));
-		}
-
 		public void Clear()
 		{
-			Visit(l => l.Filled = false);
+			this._locations.ToList().ForEach(x => x.Clear());
 		}
-
-		public bool Fill(int row, int col, bool force = false)
-		{
-			var location = GetLocation(row, col);
-			return location != null && location.Fill(force);
-		}
-		public int Fill(int quantity, bool clear = false)
+		public int Put(int quantity, bool clear = false)
 		{
 			if (clear)
 				this.Clear();
-			int result = 0;
-			Visit(l =>
+			var result = 0;
+			while (result < quantity && GetNextFreeLocation() != null && GetNextFreeLocation().Fill())
 			{
-				result += l.Fill() ? 1 : 0;
-				return result == quantity;
-			});
-			return quantity - result;
+				result++;
+			}
+			return result;
 		}
 
-		public int Refill(int quantity)
-		{
-			Clear();
-			Fill(quantity);
-			return Quantity;
-
-		}
+		
 		public string Picture
 		{
 			get

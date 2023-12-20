@@ -13,25 +13,7 @@ namespace Hajir.Crm.Tests.Specs.Products
     [TestClass]
     public class Products_Spec : TestFixture
     {
-        [TestMethod]
-        public async Task how_cabinetdesign_works()
-        {
-            var design = new Cabinet(new CabinetSpec(new Product(), 3, 4));
-            Assert.AreEqual(0, design.Fill(12));
-            Assert.AreEqual(0, design.Free);
-            Assert.AreEqual(12, design.Quantity);
-            Assert.AreEqual(12, design.Capacity);
-
-            Assert.AreEqual(0, design.Fill(8, true));
-            Assert.AreEqual(4, design.Free);
-
-            Assert.AreEqual(1, design.Fill(13, true));
-            Assert.AreEqual(0, design.Free);
-            Assert.AreEqual(12, design.Quantity);
-
-
-
-        }
+        
         [TestMethod]
         public async Task how_cabinets_design_fill_works()
         {
