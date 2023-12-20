@@ -2,6 +2,7 @@
 using Hajir.Crm.Features.Sales;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Hajir.Crm.Infrastructure.Xrm.Data
@@ -27,7 +28,9 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 					var lines = this.dataServices
 						.GetRepository<XrmHajirQuoteDetail>()
 						.Queryable
-						.GetDetails(xrm_quote.Id);
+						.GetDetails(xrm_quote.Id)
+						.Select(x => new SaleQuoteLine());
+					quote = new SaleQuote(xrm_quote.QuoteId.ToString(), xrm_quote.QuoteNumber, lines);
 				}
 
 			}

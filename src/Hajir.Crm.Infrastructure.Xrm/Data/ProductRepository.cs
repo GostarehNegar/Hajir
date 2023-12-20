@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using Hajir.Crm.Features.Products;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace Hajir.Crm.Infrastructure.Xrm.Data
@@ -48,9 +49,23 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 
 		}
 
-        public IEnumerable<Product> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-    }
+		public IEnumerable<Product> GetAll()
+		{
+			var result = new List<Product>();
+			var repo = this.dataServices
+					.GetRepository<XrmHajirProduct>();
+			var fin = false;
+			var take = 300;
+			var skip = 0;
+			while (!fin)
+			{
+				var items = repo.Queryable.SKIP(skip).Take(take).ToArray();
+				result.AddRange(items.Select(x => x.ToProduct()));
+				fin = items.Length < take;
+				skip += take;
+			}
+			return result;
+		}
+	}
 }
+
