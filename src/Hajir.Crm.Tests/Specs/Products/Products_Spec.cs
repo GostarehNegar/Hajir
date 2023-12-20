@@ -14,10 +14,8 @@ namespace Hajir.Crm.Tests.Specs.Products
     public class Products_Spec : TestFixture
     {
         [TestMethod]
-        public async Task how_cabinet_design_fill_works()
+        public async Task how_cabinetdesign_works()
         {
-            var r = HajirBusinessRules.Instance.CabinetCapacityRules.GetRowCapacity(100, CabinetVendors.Hajir);
-            /// Create a 3 by 4 cabinet.
             var design = new CabinetDesign(new CabinetSpec(new Product(), 3, 4));
             Assert.AreEqual(0, design.Fill(12));
             Assert.AreEqual(0, design.Free);
