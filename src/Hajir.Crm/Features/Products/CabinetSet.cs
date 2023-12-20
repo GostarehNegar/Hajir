@@ -81,8 +81,10 @@ namespace Hajir.Crm.Features.Products
 			return result;
 		}
 
-		public void Fill(int numberOfBatteries)
+		public int Fill(int numberOfBatteries)
 		{
+			return this.Put(numberOfBatteries, true);
+		
 			Cabinets.ToList().ForEach(x => x.Clear());
 			var requirement = numberOfBatteries;
 			foreach (var cabinet in Cabinets.OrderByDescending(x => x.Capacity).ToArray())

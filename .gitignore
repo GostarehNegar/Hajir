@@ -9,6 +9,7 @@
 agent*.zip
 net*.zip
 
+TestResults/
 
 
 [Oo]bj/
