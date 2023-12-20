@@ -569,7 +569,7 @@ namespace GN.Library.Xrm
                                 }
                                 break;
                             case AttributeType.Money:
-                                if (decimal.TryParse(value.ToString(), out var _res))
+                                if (value !=null && decimal.TryParse(value.ToString(), out var _res))
                                 {
                                     result.SetAttribiuteValue(key, new Money(_res));
                                 }

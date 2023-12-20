@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Hajir.Crm.Features.Sales
 {
-    public interface ISaleQuoteRepository
+    public interface IQuoteRepository
     {
         ISaleQuote LoadQuote(string id);
     }
