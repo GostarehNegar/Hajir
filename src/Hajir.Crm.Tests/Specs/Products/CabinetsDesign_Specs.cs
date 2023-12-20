@@ -14,7 +14,8 @@ namespace Hajir.Crm.Tests.Specs.Products
 		[TestMethod]
 		public async Task how_CabinetDesign_works()
 		{
-			var cabinet = new CabinetDesign();
+			var cabinet = new Cabinet(new Product(), 4, 4);
+			
 		}
 	}
 }

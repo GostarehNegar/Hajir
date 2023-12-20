@@ -9,7 +9,7 @@ namespace Hajir.Crm.Features.Products
         public int RequiredCapacity { get; private set; }
 
 
-        public IEnumerable<CabinetDesign> Cabinets { get; private set; }
+        public IEnumerable<Cabinet> Cabinets { get; private set; }
 
         public int Capacity => Cabinets.Sum(x => x.Capacity);
         public int Quantity => Cabinets.Sum(x => x.Quantity);
@@ -19,8 +19,8 @@ namespace Hajir.Crm.Features.Products
         {
 
             Cabinets = specs == null
-                ? new CabinetDesign[] { }
-                : specs.Select(x => new CabinetDesign(x)).ToArray();
+                ? new Cabinet[] { }
+                : specs.Select(x => new Cabinet(x)).ToArray();
         }
         public int Balance
         {
@@ -55,7 +55,7 @@ namespace Hajir.Crm.Features.Products
         public void AddCabinet(CabinetSpec spec)
         {
             var lst = Cabinets.ToList();
-            lst.Add(new CabinetDesign(spec));
+            lst.Add(new Cabinet(spec));
             this.Cabinets = lst.ToArray();
 
         }
@@ -76,10 +76,10 @@ namespace Hajir.Crm.Features.Products
 
                 var last = by_quantity[0];
                 var next_to_last = by_quantity[1];
-                var total_rows = last.Spec.NumberOfRows + next_to_last.Spec.NumberOfRows;
+                var total_rows = last.NumberOfRows + next_to_last.NumberOfRows;
                 var total = last.Quantity + next_to_last.Quantity;
                 var per_row = total * 100 / total_rows;
-                var no2 = (per_row * last.Spec.NumberOfRows) / 100;
+                var no2 = (per_row * last.NumberOfRows) / 100;
                 if (total - no2 < next_to_last.Capacity)
                 {
                     last.Clear();
@@ -112,7 +112,7 @@ namespace Hajir.Crm.Features.Products
             {
                 return $"{this.Cabinets.Count(x => x.Capacity == c)} ({this.Cabinets.FirstOrDefault(x => x.Capacity == c)}) ";
             }
-            var result = this.Cabinets.FirstOrDefault()?.Spec?.Cabinet?.Vendor.ToString() + " ";
+            var result = this.Cabinets.FirstOrDefault()?.CabinetProduct?.Vendor.ToString() + " ";
             this.Cabinets.OrderByDescending(x => x.Capacity)
                 .GroupBy(x => x.Capacity)
                 .Select(x => x.Key)

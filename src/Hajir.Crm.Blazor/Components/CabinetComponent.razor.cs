@@ -11,10 +11,10 @@ namespace Hajir.Crm.Blazor.Components
     public partial class CabinetComponent
     {
         [Parameter]
-        public CabinetDesign Cabinet { get; set; }
+        public Cabinet Cabinet { get; set; }
 
-        public int NumberOfColumns => this.Cabinet?.Spec?.NumberOfColumns ?? 0;
-        public int NumberOfRows => this.Cabinet?.Spec?.NumberOfRows ?? 0;
+        public int NumberOfColumns => this.Cabinet?.NumberOfColumns ?? 0;
+        public int NumberOfRows => this.Cabinet?.NumberOfRows ?? 0;
 
         public string GetClass(int i, int j)
         {
