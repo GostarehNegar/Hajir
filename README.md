@@ -4,7 +4,8 @@ Hajir Sanat is an Iranian UPS Manufacturer.
 The main purpose of this project is to add features that are not usually supported by MS Dynamics and it that sense it is considered as an extension.
 It is supposed to provide follwing features:
 * Product Management
-1. Product 
+* Sales
+
 
 From the code base we will have following C# projects:
 * Hajir.Crm: The main project that implements the rquired features.
