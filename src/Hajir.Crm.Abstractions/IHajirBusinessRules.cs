@@ -15,7 +15,7 @@ namespace Hajir.Crm
         
         public CabinetRowCapacityRules CabinetCapacityRules => new CabinetRowCapacityRules();
 
-        public int Compare(ICabinetsDesign first, ICabinetsDesign second)
+        public int Compare(ICabinetSet first, ICabinetSet second)
         {
             return 0;
         }

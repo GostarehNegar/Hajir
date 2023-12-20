@@ -9,7 +9,6 @@ namespace Hajir.Crm.Features.Products
 {
 	public class Cabinet : ICabinet
 	{
-
 		private List<CabinetLocation> _locations;
 		public CabinetSpec Spec { get; }
 		public Cabinet(CabinetSpec spec)
@@ -50,6 +49,8 @@ namespace Hajir.Crm.Features.Products
 		{
 			this._locations.ToList().ForEach(x => x.Clear());
 		}
+		
+		
 		public int Put(int quantity, bool clear = false)
 		{
 			if (clear)

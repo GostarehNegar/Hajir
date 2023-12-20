@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace Hajir.Crm.Features.Products
 {
-	public class CabinetSet : IComparable<CabinetSet>, ICabinetsDesign
+	public class CabinetSet : IComparable<CabinetSet>, ICabinetSet
 	{
-		public int RequiredCapacity { get; private set; }
+		//public int RequiredCapacity { get; private set; }
 
 
 		public IEnumerable<Cabinet> Cabinets { get; private set; }
@@ -15,7 +15,7 @@ namespace Hajir.Crm.Features.Products
 		public int Quantity => Cabinets.Sum(x => x.Quantity);
 		public int Free => Cabinets.Sum(x => x.Free);
 
-		public CabinetSet(IEnumerable<CabinetSpec> specs)
+		public CabinetSet(IEnumerable<CabinetSpec> specs = null)
 		{
 			Cabinets = specs == null
 				? new Cabinet[] { }
@@ -49,7 +49,7 @@ namespace Hajir.Crm.Features.Products
 
 		public int NumberOfCabinets => this.Cabinets?.Count() ?? 0;
 
-		IEnumerable<ICabinet> ICabinetsDesign.Cabinets => this.Cabinets;
+		IEnumerable<ICabinet> ICabinetSet.Cabinets => this.Cabinets;
 
 		public void AddCabinet(CabinetSpec spec)
 		{
@@ -57,6 +57,28 @@ namespace Hajir.Crm.Features.Products
 			lst.Add(new Cabinet(spec));
 			this.Cabinets = lst.ToArray();
 
+		}
+
+		public Cabinet GetNextCabinet()
+		{
+			return this.Cabinets.OrderByDescending(x => x.Free).FirstOrDefault();
+		}
+		public void Clear()
+		{
+			this.Cabinets.ToList().ForEach(x => x.Clear());
+		}
+		public int Put(int numberOfBatteries, bool clear = false)
+		{
+			if (clear)
+				this.Clear();
+		
+			var result = 0;
+			var next = GetNextCabinet();
+			while (this.Free > 0 && result < numberOfBatteries && GetNextCabinet() != null && GetNextCabinet().Put(1, false) == 1)
+			{
+				result++;
+			}
+			return result;
 		}
 
 		public void Fill(int numberOfBatteries)
