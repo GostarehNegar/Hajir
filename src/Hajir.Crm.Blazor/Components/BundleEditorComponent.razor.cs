@@ -22,8 +22,8 @@ namespace Hajir.Crm.Blazor.Components
 
         public record Input(string Value);
 
-        public CabinetsDesign DesignedBundle { get; set; } = new CabinetsDesign(null);
-        public CabinetsDesign[] CabinetDesign { get; set; } = new CabinetsDesign[] { };
+        public CabinetSet DesignedBundle { get; set; } = new CabinetSet(null);
+        public CabinetSet[] CabinetDesign { get; set; } = new CabinetSet[] { };
 
         protected override void OnInitialized()
         {
@@ -57,7 +57,7 @@ namespace Hajir.Crm.Blazor.Components
         private void ClearUps()
         {
             this.BundleModel = new BundleEditModel();
-            this.DesignedBundle = new CabinetsDesign(null);
+            this.DesignedBundle = new CabinetSet(null);
         }
 
         public int[] GetSupportedNumberOfBatteries()

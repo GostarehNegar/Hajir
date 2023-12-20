@@ -60,7 +60,7 @@ namespace Hajir.Crm.Features.Products
             if (cabinets.Count() > 0)
             {
                 var specs = cabinets.Select(x => x.Product.GetCabintSpec(battery_power));
-                var design = new CabinetsDesign(specs);
+                var design = new CabinetSet(specs);
                 design.Fill(battery.Quantity);
                 if (design.Quantity < battery.Quantity)
                 {
@@ -88,9 +88,9 @@ namespace Hajir.Crm.Features.Products
             }
         }
 
-        public CabinetsDesign Design { get; private set; }
+        public CabinetSet Design { get; private set; }
 
-        public ProductBundle SetDesign(CabinetsDesign design)
+        public ProductBundle SetDesign(CabinetSet design)
         {
             this.Design = design;
             return this;

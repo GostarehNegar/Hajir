@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 namespace Hajir.Crm.Tests.Specs.Products
 {
 	[TestClass]
-	public class CabinetsDesign_Specs : TestFixture
+	public class Cabinet_Specs : TestFixture
 	{
 		[TestMethod]
 		public async Task how_CabinetDesign_works()
 		{
-			var cabinet = new Cabinet(new Product(), 4, 4);
+			var cabinet = new Cabinet(null, 4, 4);
 			
 		}
 	}

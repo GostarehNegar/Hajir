@@ -10,8 +10,8 @@ namespace Hajir.Crm.Features.Products
         IEnumerable<Product> GetAllUpses();
         IEnumerable<Product> GetAllBatteries();
         IEnumerable<Product> GetAllCabinets();
-        CabinetsDesign[] Design(Product UPS, int power, int numberOfBatteries, CabinetVendors vendor, IEnumerable<Product> cabinets = null);
-        CabinetsDesign[] Design(Product UPS, int power, int numberOfBatteries, IEnumerable<Product> cabinets = null);
+        CabinetSet[] Design(Product UPS, int power, int numberOfBatteries, CabinetVendors vendor, IEnumerable<Product> cabinets = null);
+        CabinetSet[] Design(Product UPS, int power, int numberOfBatteries, IEnumerable<Product> cabinets = null);
 
 
     }

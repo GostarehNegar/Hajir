@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Hajir.Crm.Features.Products
 {
-	public class Cabinet : ICabinetDesign
+	public class Cabinet : ICabinet
 	{
 
 		private List<CabinetLocation> _locations;
@@ -26,7 +26,9 @@ namespace Hajir.Crm.Features.Products
 		}
 		public Cabinet(Product product, int rows, int columns) : this(new CabinetSpec(product, rows, columns))
 		{
+
 		}
+		public CabinetVendors Vendor => Spec?.Cabinet?.Vendor ?? CabinetVendors.Hajir;
 		public Product CabinetProduct => Spec.Cabinet;
 		public int NumberOfRows => Spec.NumberOfRows;
 		public int NumberOfColumns => Spec.NumberOfColumns;
@@ -100,7 +102,7 @@ namespace Hajir.Crm.Features.Products
 
 		public override string ToString()
 		{
-			return $"{NumberOfRows}x{NumberOfColumns}";
+			return $"{Vendor} [{NumberOfRows}x{NumberOfColumns}]";
 		}
 	}
 }

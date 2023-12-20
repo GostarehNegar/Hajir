@@ -72,7 +72,7 @@ namespace Hajir.Crm.Tests.Specs.Products
         [TestMethod]
         public async Task cabinets_design_works()
         {
-            var design1 = new CabinetsDesign(null);
+            var design1 = new CabinetSet(null);
             design1.AddCabinet(new CabinetSpec(null, 4, 4));
             design1.AddCabinet(new CabinetSpec(null, 4, 4));
 
@@ -84,7 +84,7 @@ namespace Hajir.Crm.Tests.Specs.Products
 
             /// Another design with only one cabinet
             /// 
-            var design2 = new CabinetsDesign(null);
+            var design2 = new CabinetSet(null);
             design2.AddCabinet(new CabinetSpec(null, 4, 4));
             design2.Fill(16);
             Assert.AreEqual(16, design2.Quantity);
@@ -97,10 +97,10 @@ namespace Hajir.Crm.Tests.Specs.Products
             /// Comparinng two cabinet design, a 4x4 + 1x4
             /// with a 2 (3x4) for 17 batteries.
             /// The latter is better since it has more balance;
-            design1 = new CabinetsDesign(null);
+            design1 = new CabinetSet(null);
             design1.AddCabinet(new CabinetSpec(null, 4, 4));
             design1.AddCabinet(new CabinetSpec(null, 1, 4));
-            design2 = new CabinetsDesign(null);
+            design2 = new CabinetSet(null);
             design2.AddCabinet(new CabinetSpec(null, 3, 4));
             design2.AddCabinet(new CabinetSpec(null, 3, 4));
             design1.Fill(17);

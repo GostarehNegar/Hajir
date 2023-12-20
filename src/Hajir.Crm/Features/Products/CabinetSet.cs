@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Hajir.Crm.Features.Products
 {
-    public class CabinetsDesign : IComparable<CabinetsDesign>, ICabinetsDesign
+    public class CabinetSet : IComparable<CabinetSet>, ICabinetsDesign
     {
         public int RequiredCapacity { get; private set; }
 
@@ -15,9 +15,8 @@ namespace Hajir.Crm.Features.Products
         public int Quantity => Cabinets.Sum(x => x.Quantity);
         public int Free => Cabinets.Sum(x => x.Free);
 
-        public CabinetsDesign(IEnumerable<CabinetSpec> specs)
+        public CabinetSet(IEnumerable<CabinetSpec> specs)
         {
-
             Cabinets = specs == null
                 ? new Cabinet[] { }
                 : specs.Select(x => new Cabinet(x)).ToArray();
@@ -50,7 +49,7 @@ namespace Hajir.Crm.Features.Products
 
         public int NumberOfCabinets => this.Cabinets?.Count() ?? 0;
 
-        IEnumerable<ICabinetDesign> ICabinetsDesign.Cabinets => this.Cabinets;
+        IEnumerable<ICabinet> ICabinetsDesign.Cabinets => this.Cabinets;
 
         public void AddCabinet(CabinetSpec spec)
         {
@@ -93,7 +92,7 @@ namespace Hajir.Crm.Features.Products
             Cabinets = Cabinets.OrderByDescending(x => x.Quantity);
 
         }
-        public int CompareTo(CabinetsDesign other)
+        public int CompareTo(CabinetSet other)
         {
             if (other.Cabinets.Count() != this.Cabinets.Count())
             {

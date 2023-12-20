@@ -9,6 +9,6 @@ namespace Hajir.Crm.Features.Products
         int Capacity { get; }
         int Free { get; }
         int NumberOfCabinets { get; }
-        IEnumerable<ICabinetDesign> Cabinets { get; }
+        IEnumerable<ICabinet> Cabinets { get; }
     }
 }

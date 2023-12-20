@@ -11,7 +11,7 @@ namespace Hajir.Crm.Blazor.Components
     public partial class CabinetsComponent
     {
         [Parameter]
-        public CabinetsDesign Cabinets { get; set; }
+        public CabinetSet Cabinets { get; set; }
 
         protected override void OnParametersSet()
         {

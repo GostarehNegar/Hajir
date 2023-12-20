@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace Hajir.Crm.Features.Products
 {
-    public class CabinetComparer : IComparer<CabinetsDesign>
+    public class CabinetComparer : IComparer<CabinetSet>
     {
-        public int Compare(CabinetsDesign x, CabinetsDesign y)
+        public int Compare(CabinetSet x, CabinetSet y)
         {
             return x.CompareTo(y);
             if (x.Cabinets.Count() != y.Cabinets.Count())

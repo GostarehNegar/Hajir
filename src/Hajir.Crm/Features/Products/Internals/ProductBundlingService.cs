@@ -20,18 +20,18 @@ namespace Hajir.Crm.Features.Products.Internals
                 .Where(x => x.ProductType == Entities.HajirProductEntity.Schema.ProductTypes.UPS).ToArray();
         }
 
-        public void Continue(CabinetsDesign design, int remainder)
+        public void Continue(CabinetSet design, int remainder)
         {
 
         }
 
-        private CabinetsDesign DoDesign(Product UPS, Product Battery, int numberOfBatteries, IEnumerable<Product> _cabinets = null)
+        private CabinetSet DoDesign(Product UPS, Product Battery, int numberOfBatteries, IEnumerable<Product> _cabinets = null)
         {
             /// Search for minimum number of cabinets
             /// 
             var remainder = numberOfBatteries;
             var power = Battery.BatteryPower;
-            CabinetsDesign design = new CabinetsDesign(null);
+            CabinetSet design = new CabinetSet(null);
             while (remainder > 0)
             {
                 var cabinet = _cabinets.OrderBy(x => x.GetCabintSpec(power).Capacity).FirstOrDefault(x => x.GetCabintSpec(power).Capacity >= remainder);
@@ -46,7 +46,7 @@ namespace Hajir.Crm.Features.Products.Internals
             design.Fill(numberOfBatteries);
             return design;
         }
-        private CabinetsDesign DoDesign(CabinetsDesign design, int numberOfBatteries, int power, IEnumerable<Product> _cabinets = null)
+        private CabinetSet DoDesign(CabinetSet design, int numberOfBatteries, int power, IEnumerable<Product> _cabinets = null)
         {
             /// Search for minimum number of cabinets
             /// 
@@ -64,12 +64,12 @@ namespace Hajir.Crm.Features.Products.Internals
             design.Fill(numberOfBatteries);
             return design;
         }
-        private CabinetsDesign[] DoDesing(Func<CabinetsDesign> c, int numberOfBatteries, int power, IEnumerable<Product> _cabinets = null)
+        private CabinetSet[] DoDesing(Func<CabinetSet> c, int numberOfBatteries, int power, IEnumerable<Product> _cabinets = null)
         {
             /// Search for minimum number of cabinets
             /// 
             var cabs = _cabinets.Select(x => x.GetCabintSpec(power)).OrderBy(x => x.Capacity).ToArray();
-            var result = new List<CabinetsDesign>();
+            var result = new List<CabinetSet>();
             foreach (var cab in cabs)
             {
 
@@ -101,7 +101,7 @@ namespace Hajir.Crm.Features.Products.Internals
                 .Where(x => x.Capacity >= numberOfBatteries)
                 .ToArray();
         }
-        public CabinetsDesign[] Design(Product UPS, int power, int numberOfBatteries, IEnumerable<Product> cabinets = null)
+        public CabinetSet[] Design(Product UPS, int power, int numberOfBatteries, IEnumerable<Product> cabinets = null)
         {
             cabinets = cabinets ?? this.GetAllCabinets();
             var hajir = Design(UPS, power, numberOfBatteries, CabinetVendors.Hajir, cabinets);
@@ -113,7 +113,7 @@ namespace Hajir.Crm.Features.Products.Internals
 
         }
 
-        public CabinetsDesign[] Design(Product UPS, int power, int numberOfBatteries, CabinetVendors vendor, IEnumerable<Product> cabinets = null)
+        public CabinetSet[] Design(Product UPS, int power, int numberOfBatteries, CabinetVendors vendor, IEnumerable<Product> cabinets = null)
         {
             var _cabinets = (cabinets ?? this.GetAllCabinets()).Where(x => x.Vendor == vendor).ToArray();
             //var power = Battery.BatteryPower;
@@ -125,18 +125,18 @@ namespace Hajir.Crm.Features.Products.Internals
                 .OrderBy(x => x.Capacity)
                 .LastOrDefault();
             if (largest == null)
-                return new CabinetsDesign[] { };
+                return new CabinetSet[] { };
 
             if (numberOfBatteries % largest.Capacity == 0)
             {
-                var _res = new CabinetsDesign[]{
-                    new CabinetsDesign(Enumerable.Range(0, numberOfBatteries / largest.Capacity).Select(x => largest.Clone()).ToArray()) };
+                var _res = new CabinetSet[]{
+                    new CabinetSet(Enumerable.Range(0, numberOfBatteries / largest.Capacity).Select(x => largest.Clone()).ToArray()) };
                 _res.First().Fill(numberOfBatteries);
             }
 
-            CabinetsDesign get_large_cabinets()
+            CabinetSet get_large_cabinets()
             {
-                CabinetsDesign large_cabinetes = new CabinetsDesign(null);
+                CabinetSet large_cabinetes = new CabinetSet(null);
                 if (numberOfBatteries > 2 * largest.Capacity)
                 {
                     var number_of_larger = numberOfBatteries / largest.Capacity - 1;
