@@ -40,44 +40,48 @@
                 <MudSelectItem Value="i">@i</MudSelectItem>
             }
         </MudSelect>
-        @*<MudTextField @bind-Value="this.BundleModel.Power" Label="Power"></MudTextField>*@
         <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="Design">Design</MudButton>
     </div>
-
-    @foreach(var des in CabinetDesign)
-            {
-                <CabinetsComponent Cabinets="des"/>
-            }
-
-
-    @if (DesignedBundle?.Cabinets.Count() != 0)
+    @if (CabinetDesign.Length != 0)
     {
         <div class="bundle-container">
-            <div>
-                <MudText>Cabinets.count</MudText>@DesignedBundle?.Cabinets.Count()
-            </div>
-            <div>
-                <MudText>Capacity</MudText>@DesignedBundle?.Capacity
-            </div>
-            <div>
-                <MudText>Free</MudText>@DesignedBundle?.Free
-            </div>
-            <div>
-                <MudText>Quantity</MudText>@DesignedBundle?.Quantity
-            </div>
-            
-        </div>
-        <div class="cabinets">
-            @foreach (var cabinet in DesignedBundle.Cabinets)
+            @for (int i = 0; i < CabinetDesign.Length; i++)
             {
-                <div class="cabinet">
-                    @for (int i = 0; i < this.BundleModel.NumberOfBatteries/DesignedBundle?.Cabinets.Count(); i++)
-                    {
-                        <div class="cell"></div>
-                    }
-                </div>
+                <div style="font-weight:bold">Design #@(i+1)</div>
+                <CabinetsComponent Cabinets="CabinetDesign[i]"></CabinetsComponent>
             }
         </div>
     }
+
+
+    @*@if (DesignedBundle?.Cabinets.Count() != 0)
+        {
+            <div class="bundle-container">
+                <div>
+                    <MudText>Cabinets.count</MudText>@DesignedBundle?.Cabinets.Count()
+                </div>
+                <div>
+                    <MudText>Capacity</MudText>@DesignedBundle?.Capacity
+                </div>
+                <div>
+                    <MudText>Free</MudText>@DesignedBundle?.Free
+                </div>
+                <div>
+                    <MudText>Quantity</MudText>@DesignedBundle?.Quantity
+                </div>
+
+            </div>
+            <div class="cabinets">
+                @foreach (var cabinet in DesignedBundle.Cabinets)
+                {
+                    <div class="cabinet">
+                        @for (int i = 0; i < this.BundleModel.NumberOfBatteries / DesignedBundle?.Cabinets.Count(); i++)
+                        {
+                            <div class="cell"></div>
+                        }
+                    </div>
+                }
+            </div>
+        }*@
 </div>
 

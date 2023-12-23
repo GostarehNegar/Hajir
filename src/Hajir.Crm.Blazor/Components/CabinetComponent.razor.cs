@@ -19,8 +19,8 @@ namespace Hajir.Crm.Blazor.Components
         public string GetClass(int i, int j)
         {
             if (this.Cabinet.GetLocation(i, j).Filled)
-                return "filledcell";
-            return "blankcell";
+                return "filled cell";
+            return "cell";
         }
 
     }

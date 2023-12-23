@@ -1,0 +1,47 @@
+﻿.design-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    /*background-color: #fcfcfc;
+    border: 1px solid #ececec;*/
+    background-color: white;
+    border: 1px solid #cdf5e1;
+}
+
+    .design-container:hover {
+        box-shadow: 0 3px 6px -2px #00000025;
+    }
+
+.design-title {
+    font-weight: bold
+}
+
+.design-info {
+    display: grid;
+    grid-template-columns: 1fr 1% 3fr;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.design-specs {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    min-width: 100px
+}
+
+    .design-specs > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+.design-schematic {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

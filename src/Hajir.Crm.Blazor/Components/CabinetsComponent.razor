@@ -1,33 +1,20 @@
 ﻿@using MudBlazor
-<h3></h3>
-<table>
-    <tr>
-        <td style="padding:7px">
-            <div class="bundle-container">
-                <div>
-                    <MudText>@this.Cabinets</MudText>
-                </div>
-                <div>
-                    <MudText>Capacity: @Cabinets.Capacity</MudText>
-                </div>
-                <div>
-                    <MudText>Free: @Cabinets.Free</MudText>
-                </div>
-                <div>
-                    <MudText>Quantity:@Cabinets.Quantity</MudText>
-                </div>
-            </div>
 
-        </td>
-        <td>
-            <div class="cabinets">
-                @foreach (var cabinet in Cabinets.Cabinets)
-                {
-    <CabinetComponent Cabinet="cabinet" />}
-
-
-            </div>
-        </td>
-    </tr>
-</table>
+<div class="design-container">
+    <div class="design-title">@this.Cabinets</div>
+    <div class="design-info">
+        <div class="design-specs">
+            <div>Capacity: <div>@Cabinets.Capacity</div></div>
+            <div>Quantity: <div>@Cabinets.Quantity</div></div>
+            <div>Free: <div>@Cabinets.Free</div></div>
+        </div>
+        <MudDivider Vertical DividerType="DividerType.FullWidth" FlexItem></MudDivider>
+        <div class="design-schematic">
+            @foreach (var cabinet in Cabinets.Cabinets)
+            {
+                <CabinetComponent Cabinet="cabinet" />
+            }
+        </div>
+    </div>
+</div>
 

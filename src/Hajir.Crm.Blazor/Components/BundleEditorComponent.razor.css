@@ -8,17 +8,17 @@
 .form-container,.bundle-container{
     display:flex;
     flex-direction:column;
-    padding:2rem;
     gap:1rem;
     width:50%;
 }
 .form-container {
+    padding:2rem;
     background-color: aliceblue;
     border: 1px solid #d9ecfd;
 }
 .bundle-container {
-    background-color: mintcream;
-    border:1px solid #d6f9e7;
+    /*background-color: mintcream;
+    border:1px solid #d6f9e7;*/
 }
 .bundle-container > div {
     display:flex;
