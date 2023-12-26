@@ -1,13 +1,16 @@
-﻿.filledcell {
-    background-color: mediumaquamarine;
-    width: 20px;
-    height: 20px;
-    border:1px solid black;
+﻿.schematic-container {
+    display: flex;
+    flex-direction: column;
 }
-.blankcell {
-    
-    border: 1px solid black;
+
+.cell {
     width: 20px;
     height: 20px;
+    border: 1px solid white;
+    background-color: #e4e4e4;
+}
+
+.filled{
+    background-color: mediumaquamarine;
 }
 

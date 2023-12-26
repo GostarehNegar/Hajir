@@ -1,14 +1,16 @@
-﻿<h4>@this.Cabinet.ToString()</h4>
-<table>
-    @for (int i = 1; i <= this.NumberOfRows; i++)
-    {
-        <tr>
-            @for (int j = 1; j <= this.NumberOfColumns; j++)
-            {
-                <td class="@GetClass(i,j)"></td>
-            }
-        </tr>
-    }
-</table>
+﻿<div class="schematic-container">
+    <div>@this.Cabinet.ToString()</div>
+    <table>
+        @for (int i = 1; i <= this.NumberOfRows; i++)
+        {
+            <tr>
+                @for (int j = 1; j <= this.NumberOfColumns; j++)
+                {
+                    <td class="@GetClass(i,j)"></td>
+                }
+            </tr>
+        }
+    </table>
+</div>
 
 

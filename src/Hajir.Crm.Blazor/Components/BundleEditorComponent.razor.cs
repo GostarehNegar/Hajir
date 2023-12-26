@@ -23,7 +23,7 @@ namespace Hajir.Crm.Blazor.Components
         public record Input(string Value);
 
         public CabinetSet DesignedBundle { get; set; } = new CabinetSet(null);
-        public CabinetSet[] CabinetDesign { get; set; } = new CabinetSet[] { };
+        public CabinetSet[] CabinetDesign { get; set; } = Array.Empty<CabinetSet>();
 
         protected override void OnInitialized()
         {
@@ -58,6 +58,7 @@ namespace Hajir.Crm.Blazor.Components
         {
             this.BundleModel = new BundleEditModel();
             this.DesignedBundle = new CabinetSet(null);
+            this.CabinetDesign = Array.Empty<CabinetSet>();
         }
 
         public int[] GetSupportedNumberOfBatteries()
@@ -69,19 +70,17 @@ namespace Hajir.Crm.Blazor.Components
         public int[] GetPowers()
         {
             return HajirBusinessRules.Instance.CabinetCapacityRules.GetKnownPowers().ToArray();
-            return this.BundleModel?.Bundle.UPS == null
-                ? new int[] { }
-                : this.BundleModel?.Bundle.UPS.GetSupportedBatteryConfig().Select(x => x.Number).ToArray();
+            //return this.BundleModel?.Bundle.UPS == null
+            //    ? new int[] { }
+            //    : this.BundleModel?.Bundle.UPS.GetSupportedBatteryConfig().Select(x => x.Number).ToArray();
         }
 
         public async Task Design()
         {
-
             if (this.BundleModel.UPS != null && this.BundleModel.NumberOfBatteries != 0 )
             {
                 CabinetDesign = this.BundlingService.Design(this.BundleModel.UPS,this.BundleModel.Power, this.BundleModel.NumberOfBatteries).ToArray();
             }
-
         }
     }
 }
