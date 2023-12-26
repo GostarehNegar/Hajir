@@ -18,6 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
 			services.AddTransient<IProductRepository>(s => s.GetService<XrmProductRepository>());
 			services.AddScoped<InMemoryProductRepository>();
 			services.AddTransient<IProductRepository>(s => s.GetService<InMemoryProductRepository>());
+			services.AddTransient<XrmQuoteRepository>();
 			services.AddTransient<IQuoteRepository, XrmQuoteRepository>();
 			services.AddTransient<IMemoryCache, MemoryCache>();
 			services.AddSingleton<CacheService>();

@@ -24,5 +24,5 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             get => this.GetAttributeValue<string>(Schema.HajirQuoteId);
             set => this.SetAttributeValue(Schema.HajirQuoteId, value);
         }
-    }
+	}
 }

@@ -8,6 +8,7 @@ namespace Hajir.Crm.Features.Sales
     {
         public string Id { get; set; }
         public string ProductId { get; set; }
+        public string AggregateId { get; set; }
         public decimal Quantity { get; set; }
     }
 }

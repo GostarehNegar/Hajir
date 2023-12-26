@@ -1,6 +1,7 @@
 ﻿using Hajir.Crm;
 using Hajir.Crm.Features.Products;
 using Hajir.Crm.Features.Products.Internals;
+using Hajir.Crm.Features.Sales;
 using Microsoft.Extensions.Configuration;
 using System;
 
@@ -12,7 +13,9 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             //services.AddHajirInfrastructure(configuration);
             services.AddScoped<IProductBundlingService, ProductBundlingService>();
-            return services;
+            services.AddScoped<QuoteServies>();
+			services.AddScoped<IQuoteServices>(sp=>sp.GetService<QuoteServies>());
+			return services;
         }
     }
 }

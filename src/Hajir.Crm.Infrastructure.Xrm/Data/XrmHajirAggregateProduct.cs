@@ -1,8 +1,10 @@
 ﻿using GN.Library.Xrm;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Hajir.Crm.Infrastructure.Xrm.Data
@@ -17,6 +19,9 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 			public const string AggregateProductId = LogicalName + "id";
 			public const string Name = SolutionPerfix + "name";
 			public const string QuoteId = SolutionPerfix + "quote";
+			public const string Quantity = SolutionPerfix + "quentity";
+			public const string PricePerUnit = SolutionPerfix + "priceperunit";
+			public const string ManualDiscount = SolutionPerfix + "manualdiscount";
 
 		}
 
@@ -74,6 +79,51 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 			get => this.QuoteReference?.Id;
 			set => this.QuoteReference = value.HasValue ? new EntityReference(XrmHajirQuote.Schema.LogicalName,value.Value) : null;
 		}
+		[AttributeLogicalNameAttribute(Schema.Quantity)]
+		public decimal? Quantity
+		{
+			get => this.GetAttributeValue<decimal?>(Schema.Quantity);
+			set => this.SetAttributeValue(Schema.Quantity, value);
+		}
 
+		[AttributeLogicalName(Schema.PricePerUnit)]
+		public Money PricePerUnitMoney
+		{
+			get { return this.GetAttributeValue<Money>(Schema.PricePerUnit); }
+			set { this.SetAttribiuteValue(Schema.PricePerUnit, value); }
+
+		}
+		[AttributeLogicalName(Schema.PricePerUnit)]
+		public decimal? PricePerUnit
+		{
+			get => this.PricePerUnitMoney?.Value;
+			set => this.PricePerUnitMoney = value.HasValue ? new Money(value.Value) : null;
+		}
+
+		[AttributeLogicalName(Schema.ManualDiscount)]
+		public Money ManualDiscountMoney
+		{
+			get { return this.GetAttributeValue<Money>(Schema.ManualDiscount); }
+			set { this.SetAttribiuteValue(Schema.ManualDiscount, value); }
+
+		}
+		[AttributeLogicalName(Schema.ManualDiscount)]
+		public decimal? ManualDiscount
+		{
+			get => this.ManualDiscountMoney?.Value;
+			set => this.ManualDiscountMoney = value.HasValue ? new Money(value.Value) : null;
+		}
+
+	}
+
+	public static class XrmHajirAggregateProductExtensions
+	{
+		public static IEnumerable<XrmHajirAggregateProduct> GetByquoteId(this IXrmRepository<XrmHajirAggregateProduct> repo, Guid quoteId)
+		{
+			return repo
+				.Queryable
+				.Where(z => z.QuoteId == quoteId)
+				.ToArray();
+		}
 	}
 }

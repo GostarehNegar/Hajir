@@ -41,6 +41,21 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
 			}
 		}
 
+		public IEnumerable<PriceList> PriceLists { 
+			get
+			{
+				return this.cache.GetOrCreate<IEnumerable<PriceList>>("PRICELISTS", entry =>
+				{
+					entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+					using (var scope = this.serviceProvider.CreateScope())
+					{
+						return scope.ServiceProvider.GetService<XrmQuoteRepository>()
+						.LoadAllPriceLists();
+					}
+				});
+			}
+		}
+
 		public CacheService(IServiceProvider serviceProvider, IMemoryCache cache)
 		{
 			this.serviceProvider = serviceProvider;

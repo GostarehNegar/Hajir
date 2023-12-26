@@ -68,6 +68,9 @@ namespace Hajir.Crm.Infrastructure.Xrm
 		{
 			var res = new XrmHajirAggregateProduct
 			{
+				PricePerUnit = p.PricePerUint,
+				Quantity = p.Quantity,
+				ManualDiscount = p.ManualDiscount,
 				//AggregateProductId = Guid.TryParse(p.Id,out var _id)?_id: Guid.Empty
 				//Name = p.Id
 			};

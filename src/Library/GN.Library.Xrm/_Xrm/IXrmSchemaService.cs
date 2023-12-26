@@ -735,7 +735,11 @@ namespace GN.Library.Xrm
                     {
                         result.Add(f.Key, (value as OptionSetValue).Value);
                     }
-                    else
+                    else if (value as Money != null)
+                    {
+						result.Add(f.Key, (value as Money).Value);
+					}
+                    else 
                     {
                         result.Add(f.Key, f.Value);
                     }

@@ -10,5 +10,6 @@ namespace Hajir.Crm.Features.Common
 	{
 		IEnumerable<Product> Products { get; }
 		IEnumerable<UnitOfMeasurements> UnitOfMeasurements { get; }
+		IEnumerable<PriceList> PriceLists { get; }
 	}
 }
