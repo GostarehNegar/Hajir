@@ -1,7 +1,9 @@
 ﻿using GN.Library.Xrm;
+using GN.Library.Xrm.StdSolution;
 using Hajir.Crm.Entities;
 using Hajir.Crm.Features.Common;
 using Hajir.Crm.Features.Products;
+using Hajir.Crm.Features.Sales;
 using Hajir.Crm.Infrastructure.Xrm.Data;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +20,26 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
 		private readonly IMemoryCache cache;
 
 		public IEnumerable<Product> Products => GetProducts();
+
+		public IEnumerable<UnitOfMeasurements> UnitOfMeasurements
+		{
+			get
+			{
+				return this.cache.GetOrCreate<IEnumerable<UnitOfMeasurements>>("UOMS", entry =>
+				{
+					entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+					using(var scope = this.serviceProvider.CreateScope())
+					{
+						return scope.ServiceProvider.GetService<IXrmDataServices>()
+						.GetRepository<XrmUnitOfMeasure>()
+						.Queryable
+						.ToArray()
+						.Select(x => new UnitOfMeasurements { Id = x.Id.ToString(), Name = x.Name })
+						.ToArray();
+					}
+				});
+			}
+		}
 
 		public CacheService(IServiceProvider serviceProvider, IMemoryCache cache)
 		{

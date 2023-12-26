@@ -14,7 +14,7 @@ namespace Hajir.Crm.Entities
 	{
 		public new class Schema : HajirProductEntity.Schema
 		{
-
+			
 		}
 
 		[AttributeLogicalName(Schema.ProductType)]
@@ -25,5 +25,7 @@ namespace Hajir.Crm.Entities
 			get => this.ProductTypeCode == null ? (Schema.ProductTypes?)null : (Schema.ProductTypes)this.ProductTypeCode.Value;
 			set => this.ProductTypeCode = value.HasValue ? new OptionSetValue((int)value.Value) : null;
 		}
+
+		
 	}
 }

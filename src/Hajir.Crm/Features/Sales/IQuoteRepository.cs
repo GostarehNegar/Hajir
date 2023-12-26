@@ -6,6 +6,9 @@ namespace Hajir.Crm.Features.Sales
 {
     public interface IQuoteRepository
     {
-        ISaleQuote LoadQuote(string id);
-    }
+        SaleQuote LoadQuote(string id);
+
+        SaleQuote CreateQuote(SaleQuote quote);
+		SaleQuote UpdateQuote(SaleQuote quote);
+	}
 }

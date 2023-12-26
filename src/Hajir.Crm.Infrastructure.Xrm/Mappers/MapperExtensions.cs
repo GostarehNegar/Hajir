@@ -8,6 +8,9 @@ using System.Text;
 using AutoMapper;
 using AutoMapper.Configuration;
 using GN.Library.Xrm;
+using Hajir.Crm.Features.Sales;
+using Hajir.Crm.Infrastructure.Xrm.Data;
+using Microsoft.Xrm.Sdk;
 
 namespace Hajir.Crm.Infrastructure.Xrm
 {
@@ -29,7 +32,50 @@ namespace Hajir.Crm.Infrastructure.Xrm
 
 			var result = product.ToDynamic().To<Product>();
 			result.ProductType = product.ProductType ?? HajirProductEntity.Schema.ProductTypes.Other;
+			result.UOMId = product.GetAttributeValue<EntityReference>("defaultuomid")?.Id.ToString();
 			return result;
+		}
+
+		public static SaleQuote ToQuote(this XrmHajirQuote q)
+		{
+			return null;
+		}
+		public static XrmHajirQuote ToXrmQuote(this SaleQuote q)
+		{
+			return new XrmHajirQuote
+			{
+				Id = Guid.TryParse(q.QuoteId, out var _id) ? _id : Guid.Empty,
+			};
+		}
+		public static XrmHajirQuoteDetail ToXrmQuoteDetail(this SaleQuoteLine line)
+		{
+			var res =
+			new XrmHajirQuoteDetail
+			{
+				///QuoteDetailId = Guid.TryParse(line.Id, out var _id) ? _id : (Guid?)null,
+				ProductId = Guid.TryParse(line.ProductId, out var _pid) ? _pid : (Guid?)null,
+				Quantity = Convert.ToDouble(line.Quantity)
+			};
+			if (Guid.TryParse(line.Id, out var _id))
+			{
+				res.QuoteDetailId = _id;
+
+			}
+			return res;
+
+		}
+		public static XrmHajirAggregateProduct ToXrmAggergateProduct(this SaleAggergateProduct p)
+		{
+			var res = new XrmHajirAggregateProduct
+			{
+				//AggregateProductId = Guid.TryParse(p.Id,out var _id)?_id: Guid.Empty
+				//Name = p.Id
+			};
+			if (Guid.TryParse(p.Id, out var _id))
+			{
+				res.AggregateProductId = _id;
+			}
+			return res;
 		}
 	}
 }

@@ -16,6 +16,7 @@ namespace Hajir.Crm.Entities
 			public const string Name = "name";
 			public const string ProductNumber = "productnumber";
 			public const string ProductType = RHS_SolutionPerfix + "producttype";
+			public const string TypeProducts_deprecated = "rhs_typeproducts";
 
 			public enum ProductTypes
 			{

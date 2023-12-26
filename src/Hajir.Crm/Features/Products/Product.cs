@@ -19,7 +19,7 @@ namespace Hajir.Crm.Features.Products
 
 
         }
-        
+        public string UOMId { get; set; }
         public HajirProductEntity.Schema.ProductTypes ProductType { get; set; }
         public string SupportedBattries { get; set; }
         //public string CabinetSpec { get; set; }

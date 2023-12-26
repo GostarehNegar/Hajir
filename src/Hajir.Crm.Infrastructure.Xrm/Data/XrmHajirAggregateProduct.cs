@@ -68,5 +68,12 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 			set => this.SetAttribiuteValue(Schema.QuoteId, value);
 		}
 
+		[AttributeLogicalNameAttribute(Schema.QuoteId)]
+		public Guid? QuoteId
+		{
+			get => this.QuoteReference?.Id;
+			set => this.QuoteReference = value.HasValue ? new EntityReference(XrmHajirQuote.Schema.LogicalName,value.Value) : null;
+		}
+
 	}
 }
