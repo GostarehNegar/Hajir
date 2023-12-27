@@ -86,7 +86,9 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 			{
 				var xrm_quote = this.dataServices
 					.GetRepository<XrmHajirQuote>()
-					.Retrieve(_id);
+					.Queryable
+					.FirstOrDefault(x => x.QuoteId == _id);
+					
 				if (xrm_quote != null)
 				{
 					var lines = this.dataServices
@@ -129,6 +131,22 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 			}
 
 			return quote;
+
+		}
+
+		public SaleQuote LoadQuoteByNumber(string quoteNumber)
+		{
+			var id = this.dataServices
+				.GetRepository<XrmHajirQuote>()
+				.Queryable
+				.FirstOrDefault(x => x.HajirQuoteId == quoteNumber)
+				?.Id;
+			if (!id.HasValue)
+			{
+				return null;
+				throw new Exception($"Quote Not Found.");
+			}
+			return LoadQuote(id.ToString());
 
 		}
 

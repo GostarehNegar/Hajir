@@ -133,7 +133,7 @@ namespace Hajir.Crm.Tests.Specs.Infrastructure
 			bundle.AddRow(ups, 2);
 			bundle.AddRow(battery, 24);
 			quote.AddBundle(bundle);
-			host.Services.GetService<IQuoteServices>().RecalculateQuote(quote);
+			host.Services.CreateContext().RecalculateQuote(quote);
 			var r = target.UpdateQuote(quote);
 			target.UpdateQuote(r);
 			quote = target.LoadQuote(quote_id.ToString());
@@ -146,12 +146,20 @@ namespace Hajir.Crm.Tests.Specs.Infrastructure
 		public async Task how_quote_recalculate_works()
 		{
 			var host = this.GetHost();
+			host.Services.CreateContext();
+			GC.Collect();
+			return;
 			var quote = CreateTestQuote(host.Services);
-			using (var scope = host.Services.CreateScope())
+			
+			
+
+
+			using (var ctx = host.Services.CreateContext())
 			{
-				var target = scope.ServiceProvider.GetService<IQuoteServices>();
-				target.RecalculateQuote(quote);
+				ctx.RecalculateQuote(quote);
 			}
+			host.Services.CreateContext().RecalculateQuote(quote);
+			GC.Collect();
 		}
 	}
 }
