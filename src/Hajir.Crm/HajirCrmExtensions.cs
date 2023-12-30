@@ -7,7 +7,7 @@ namespace Hajir.Crm
 {
 	public static partial class HajirCrmExtensions
 	{
-		public static IHajirCrmServiceContext CreateContext(this IServiceProvider serviceProvider)
+		public static IHajirCrmServiceContext CreateHajirServiceContext(this IServiceProvider serviceProvider)
 		{
 			return new HajirCrmServiceContext(serviceProvider);
 		}

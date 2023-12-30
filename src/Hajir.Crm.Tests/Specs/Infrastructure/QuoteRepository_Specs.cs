@@ -133,7 +133,7 @@ namespace Hajir.Crm.Tests.Specs.Infrastructure
 			bundle.AddRow(ups, 2);
 			bundle.AddRow(battery, 24);
 			quote.AddBundle(bundle);
-			host.Services.CreateContext().RecalculateQuote(quote);
+			host.Services.CreateHajirServiceContext().RecalculateQuote(quote);
 			var r = target.UpdateQuote(quote);
 			target.UpdateQuote(r);
 			quote = target.LoadQuote(quote_id.ToString());
@@ -146,7 +146,7 @@ namespace Hajir.Crm.Tests.Specs.Infrastructure
 		public async Task how_quote_recalculate_works()
 		{
 			var host = this.GetHost();
-			host.Services.CreateContext();
+			host.Services.CreateHajirServiceContext();
 			GC.Collect();
 			return;
 			var quote = CreateTestQuote(host.Services);
@@ -154,11 +154,11 @@ namespace Hajir.Crm.Tests.Specs.Infrastructure
 			
 
 
-			using (var ctx = host.Services.CreateContext())
+			using (var ctx = host.Services.CreateHajirServiceContext())
 			{
 				ctx.RecalculateQuote(quote);
 			}
-			host.Services.CreateContext().RecalculateQuote(quote);
+			host.Services.CreateHajirServiceContext().RecalculateQuote(quote);
 			GC.Collect();
 		}
 	}

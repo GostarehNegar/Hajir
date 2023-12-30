@@ -19,7 +19,7 @@ namespace Hajir.Crm.Blazor.Components
 
 		protected override Task OnParametersSetAsync()
 		{
-			using (var ctx = this.ServiceProvider.CreateContext())
+			using (var ctx = this.ServiceProvider.CreateHajirServiceContext())
 			{
 				var quote = ctx.LoadQuoteByQuoteNumber(this.Id);
 			}

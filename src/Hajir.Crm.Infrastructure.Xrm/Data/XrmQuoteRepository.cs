@@ -123,7 +123,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 					//});
 					var pl = cache.PriceLists.FirstOrDefault(x => x.Id == xrm_quote.PriceLevelId?.ToString());
 
-					quote = new SaleQuote(xrm_quote.QuoteId.ToString(), xrm_quote.QuoteNumber, lines, aggregates, pl);
+					quote = new SaleQuote(xrm_quote.QuoteId.ToString(), xrm_quote.HajirQuoteId, lines, aggregates, pl);
 
 
 				}
