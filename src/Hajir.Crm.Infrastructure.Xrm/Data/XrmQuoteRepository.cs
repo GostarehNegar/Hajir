@@ -43,12 +43,6 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 				.GetAggregateDetails(_id)
 				.ToList()
 				.ForEach(x => repo.Delete(x));
-
-
-
-
-
-
                 this.dataServices
 					.GetRepository<XrmHajirAggregateProduct>()
 					.Delete(new XrmHajirAggregateProduct { AggregateProductId = _id });
