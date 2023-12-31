@@ -1,6 +1,7 @@
 ﻿using Hajir.Crm.Features.Products;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Hajir.Crm.Features.Sales
@@ -14,6 +15,7 @@ namespace Hajir.Crm.Features.Sales
 		private List<SaleAggergateProduct> aggergareProducts = new List<SaleAggergateProduct>();
 		public IEnumerable<SaleAggergateProduct> AggregateProducts => aggergareProducts;
 		public PriceList PriceList { get; set; }
+		
 
 		public SaleQuote(string quoteId, string quoteNumber, IEnumerable<SaleQuoteLine> lines, 
 			IEnumerable<SaleAggergateProduct> aggregates, PriceList pl)
@@ -30,7 +32,8 @@ namespace Hajir.Crm.Features.Sales
 			var ag_product = new SaleAggergateProduct()
 			{
 				Quantity = quantity,
-				ManualDiscount = manualDiscount
+				ManualDiscount = manualDiscount,
+				Name = bundle.Name
 			};
 			foreach (var r in bundle.Rows)
 			{
@@ -39,6 +42,11 @@ namespace Hajir.Crm.Features.Sales
 				this._lines.Add(l);
 			}
 			this.aggergareProducts.Add(ag_product);
+		}
+		public void RemoveAggregate(SaleAggergateProduct product)
+		{
+			this.aggergareProducts = this.aggergareProducts.Where(x=>x.Id!= product.Id).ToList();
+
 		}
 
 	}

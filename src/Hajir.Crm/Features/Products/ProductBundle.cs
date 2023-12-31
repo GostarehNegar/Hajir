@@ -1,4 +1,5 @@
 ﻿using Hajir.Crm.Entities;
+using Microsoft.Crm.Sdk.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,6 +71,14 @@ namespace Hajir.Crm.Features.Products
             return result;
         }
 
+        public Product Battery
+        {
+            get
+            {
+                return this.GetRows(HajirProductEntity.Schema.ProductTypes.Battery).FirstOrDefault()?.Product;
+            }
+        }
+
         public Product UPS
         {
             get
@@ -87,6 +96,9 @@ namespace Hajir.Crm.Features.Products
                     row.Product = value;
             }
         }
+
+        public string Name => $"{UPS?.Name} + {Battery.Name}";
+
 
         public CabinetSet Design { get; private set; }
 

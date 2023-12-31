@@ -33,6 +33,9 @@ namespace Hajir.Crm.Infrastructure.Xrm
 			var result = product.ToDynamic().To<Product>();
 			result.ProductType = product.ProductType ?? HajirProductEntity.Schema.ProductTypes.Other;
 			result.UOMId = product.GetAttributeValue<EntityReference>("defaultuomid")?.Id.ToString();
+			result.SupportedBattries = product.SupportedBatteries;
+			result.NumberOfRows = product.GetNumberIfFloors();
+			result.Vendor = CabinetVendors.Hajir;
 			return result;
 		}
 
@@ -71,6 +74,7 @@ namespace Hajir.Crm.Infrastructure.Xrm
 				PricePerUnit = p.PricePerUint,
 				Quantity = p.Quantity,
 				ManualDiscount = p.ManualDiscount,
+				Name = p.Name,
 				//AggregateProductId = Guid.TryParse(p.Id,out var _id)?_id: Guid.Empty
 				//Name = p.Id
 			};

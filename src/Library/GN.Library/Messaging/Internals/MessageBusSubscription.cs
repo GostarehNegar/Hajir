@@ -105,7 +105,7 @@ namespace GN.Library.Messaging.Internals
         }
         private bool IsRemote()
         {
-            return !string.IsNullOrWhiteSpace(this.Properties.Endpoint());
+            return !string.IsNullOrEmpty(this.Properties.RemoteId());// !string.IsNullOrWhiteSpace(this.Properties.Endpoint());
         }
         public bool Matches(IMessageContext message)
         {

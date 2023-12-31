@@ -12,5 +12,6 @@ namespace Hajir.Crm.Features.Sales
 		SaleQuote CreateQuote(SaleQuote quote);
 		SaleQuote UpdateQuote(SaleQuote quote);
         IEnumerable<PriceList> LoadAllPriceLists();
+        void DeleteAggregateProduct(string id);
 	}
 }

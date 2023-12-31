@@ -1,0 +1,75 @@
+﻿@inherits BaseComponent
+@using MudBlazor
+@using Hajir.Crm.Features.Products
+
+<MudDialog>
+    @*<TitleContent>Design and add a bundle</TitleContent>*@
+    <DialogContent>
+        <div class="main-container">
+            <div class="form-container">
+                <MudAutocomplete T="Product"
+                                 @bind-Value="this.BundleModel.UPS"
+                                 SearchFunc="e=>SearchUps(new Input(e))"
+                                 ToStringFunc="e=>ProductToString(e)"
+                                 OnClearButtonClick="ClearUps"
+                                 Label="UPS Model"
+                                 OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                                 CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
+                                                  AutoFocus
+                                                  Immediate
+                                                  Clearable
+                                                  ResetValueOnEmptyText
+                                                  SelectValueOnTab>
+                </MudAutocomplete>
+                @*<MudSelect T="Product"
+                    @bind-Value="this.Battery" >
+                    @foreach (var b in AllBatteries)
+                    {
+                        <MudSelectItem Value="b">@b</MudSelectItem>
+                    }
+
+                </MudSelect>*@
+                <MudSelect T="int"
+                           @bind-Value="this.BundleModel.NumberOfBatteries"
+                           Disabled="@IsUpsEmpty"
+                           OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                           CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
+                           Label="Batteries">
+                    @foreach (var i in GetSupportedNumberOfBatteries())
+                    {
+                        <MudSelectItem Value="i">@i</MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudSelect T="int"
+                           @bind-Value="this.BundleModel.Power"
+                           Disabled="@IsUpsEmpty"
+                           OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                           CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
+                           Label="Power">
+                    @foreach (var i in GetPowers())
+                    {
+                        <MudSelectItem Value="i">@i</MudSelectItem>
+                    }
+                </MudSelect>
+                <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="Design">Design</MudButton>
+            </div>
+            @if (CabinetDesign.Length != 0)
+            {
+                <div class="bundle-container">
+                    @foreach (var cab in CabinetDesign)
+                    {
+                        <div style="cursor:pointer" class=@((cab==SelectedDesign)?"selected":"") @onclick=@(()=>SelectDesign(cab))>
+                            @*<div style="font-weight:bold">Design #@(i+1)</div>*@
+                            <CabinetsComponent Cabinets=@cab></CabinetsComponent>
+                        </div>
+                    }
+                </div>
+            }
+            <div class="actions-container">
+                <MudButton Variant="Variant.Filled" OnClick="AddDesign">Add @SelectedDesign</MudButton>
+                <MudButton Color="Color.Error" OnClick="Cancel">Cancel</MudButton>
+            </div>
+        </div>
+    </DialogContent>
+</MudDialog>

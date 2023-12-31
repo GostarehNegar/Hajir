@@ -1,7 +1,48 @@
-﻿<h3>QuoteComponent</h3>
+﻿@using MudBlazor;
+<div>Quote.QuoteNumber: @Quote.QuoteNumber</div>
+<div class="aggregate-products">
+    <div>aggregate products:</div>
+    @foreach (var product in Quote.AggregateProducts)
+    {
+        <div class="product-line">
+            <div>@product.Name</div>
+            <div>@product.PricePerUint</div>
+            <div>@product.Quantity
+                <div class="arrows">
+                    <div @onclick="()=>Increase(product)">˄</div>
+                    <div @onclick="()=>Decrease(product)">˅</div>
+                </div>
+            </div>
+            <div>
+                <MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Large" OnClick="()=>Delete(product)">Delete</MudButton>
+            </div>
+        </div>
+    }
+</div>
+<div class="quote-lines">
+    <div>Quote.lines:</div>
+    @foreach (var line in Quote.Lines)
+    {
+        <div>@line.ToString()</div>
+    }
+</div>
+<div>Quote.PriceList.Id: @Quote.PriceList.Id</div>
+<div>Quote.PriceList.Name: @Quote.PriceList.Name</div>
+@*@if (AddedBundle != null)
+{
+    <div>
+        <div>@AddedBundle</div>
+        <input type="number">
+    </div>
+}*@
+<MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Large" OnClick="OpenDialog">+</MudButton>
 
-<div>@Id</div>
 
-@code {
+<MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Large" OnClick="Save">Save</MudButton>
 
-}
+
+
+
+
+
+

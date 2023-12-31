@@ -7,6 +7,7 @@ namespace Hajir.Crm.Features.Sales
 	public class SaleAggergateProduct
 	{
 		private List<SaleQuoteLine> lines = new List<SaleQuoteLine>();
+		public string Name { get; set; }
 		public string Id { get; set; }
 		public int Quantity { get; set; }
 		public decimal? ManualDiscount { get; set; }

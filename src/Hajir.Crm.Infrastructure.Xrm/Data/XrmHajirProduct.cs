@@ -14,7 +14,7 @@ namespace Hajir.Crm.Entities
 	{
 		public new class Schema : HajirProductEntity.Schema
 		{
-			
+
 		}
 
 		[AttributeLogicalName(Schema.ProductType)]
@@ -26,6 +26,23 @@ namespace Hajir.Crm.Entities
 			set => this.ProductTypeCode = value.HasValue ? new OptionSetValue((int)value.Value) : null;
 		}
 
-		
-	}
+		[AttributeLogicalName(Schema.SupportedBatteries)]
+		public string SupportedBatteries
+		{
+			get => this.GetAttributeValue<string>(Schema.SupportedBatteries);
+			set => this.SetAttribiuteValue(Schema.SupportedBatteries, value);
+		}
+
+        [AttributeLogicalName(Schema.NumberOfFloors)]
+        public string NumberOfFloors
+        {
+            get => this.GetAttributeValue<string>(Schema.NumberOfFloors);
+            set => this.SetAttribiuteValue(Schema.NumberOfFloors, value);
+        }
+
+		public int GetNumberIfFloors() => int.TryParse(NumberOfFloors, out var _r) ? _r : 0;
+
+
+
+    }
 }

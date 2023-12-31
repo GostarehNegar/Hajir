@@ -48,7 +48,7 @@ namespace Xrm.Tools.WebAPI
             _crmWebAPIConfig = crmWebAPIConfig;
 
             if (_crmWebAPIConfig.NetworkCredential != null)
-                _httpClient = new HttpClient(new HttpClientHandler {Credentials = _crmWebAPIConfig.NetworkCredential});
+                _httpClient = new HttpClient(new HttpClientHandler { Credentials = _crmWebAPIConfig.NetworkCredential });
             else
             {
                 _httpClient = new HttpClient();
@@ -69,7 +69,7 @@ namespace Xrm.Tools.WebAPI
         {
             _crmWebAPIConfig = new CRMWebAPIConfig
             {
-                APIUrl =  apiUrl,
+                APIUrl = apiUrl,
                 AccessToken = accessToken,
                 CallerID = callerID,
                 GetAccessToken = getAccessToken
@@ -117,21 +117,21 @@ namespace Xrm.Tools.WebAPI
             FillPreferHeader(request, QueryOptions);
             /// I do not know why the usual await does not work here in Blazor!!!
             /// 
-            
+
             var results = CRMWebAPIConfig.UseHttpClientSynchronouslyDueToUnknownBugInAwaitingInBlazor
-                ?_httpClient.SendAsync(request).ConfigureAwait(false).GetAwaiter().GetResult()
+                ? _httpClient.SendAsync(request).ConfigureAwait(false).GetAwaiter().GetResult()
                 : await _httpClient.SendAsync(request).ConfigureAwait(false);
             EnsureSuccessStatusCode(results);
             var data = await results.Content.ReadAsStringAsync().ConfigureAwait(false);
             CRMGetListResult<ExpandoObject> resultList = new CRMGetListResult<ExpandoObject>();
             resultList.List = new List<ExpandoObject>();
-            
+
             var values = JObject.Parse(data);
             var valueList = values["value"].ToList();
             foreach (var value in valueList)
             {
-                if(_crmWebAPIConfig.ResolveUnicodeNames)
-                    FormatResultProperties( (JObject) value);
+                if (_crmWebAPIConfig.ResolveUnicodeNames)
+                    FormatResultProperties((JObject)value);
                 resultList.List.Add(value.ToObject<ExpandoObject>());
             }
 
@@ -186,7 +186,7 @@ namespace Xrm.Tools.WebAPI
             FillPreferHeader(request, QueryOptions);
 
             var results = await _httpClient.SendAsync(request);
-            
+
             EnsureSuccessStatusCode(results);
             var data = await results.Content.ReadAsStringAsync();
             var values = JObject.Parse(data);
@@ -195,7 +195,7 @@ namespace Xrm.Tools.WebAPI
 
             foreach (var value in values["value"].ToList())
             {
-                if(_crmWebAPIConfig.ResolveUnicodeNames)
+                if (_crmWebAPIConfig.ResolveUnicodeNames)
                     FormatResultProperties((JObject)value);
                 resultList.List.Add(value.ToObject<ResultType>());
             }
@@ -215,7 +215,7 @@ namespace Xrm.Tools.WebAPI
                 EnsureSuccessStatusCode(nextResults);
                 var nextData = await nextResults.Content.ReadAsStringAsync();
 
-                var nextValues = JObject.Parse(nextData);            
+                var nextValues = JObject.Parse(nextData);
                 foreach (var value in nextValues["value"].ToList())
                 {
                     resultList.List.Add(value.ToObject<ResultType>());
@@ -239,11 +239,11 @@ namespace Xrm.Tools.WebAPI
             await CheckAuthToken();
             if (QueryOptions != null)
                 QueryOptions.IncludeCount = false;
-            string fullUrl = BuildGetUrl(uri+"/$count", QueryOptions);
+            string fullUrl = BuildGetUrl(uri + "/$count", QueryOptions);
             var results = await _httpClient.GetAsync(fullUrl);
             EnsureSuccessStatusCode(results);
             var data = await results.Content.ReadAsStringAsync();
-            
+
             return int.Parse(data);
 
         }
@@ -322,15 +322,20 @@ namespace Xrm.Tools.WebAPI
             var jsonData = JsonConvert.SerializeObject(data);
 
             request.Content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+            var response = CRMWebAPIConfig.UseHttpClientSynchronouslyDueToUnknownBugInAwaitingInBlazor
+                    ? _httpClient.SendAsync(request).ConfigureAwait(false).GetAwaiter().GetResult()
+                    : await _httpClient.SendAsync(request).ConfigureAwait(false);
 
-            var response = await _httpClient.SendAsync(request);
 
-            EnsureSuccessStatusCode(response,jsonData:jsonData);
-            
+
+            //var response = await _httpClient.SendAsync(request);
+
+            EnsureSuccessStatusCode(response, jsonData: jsonData);
+
             Guid idGuid = GetEntityIDFromResponse(response);
 
             return idGuid;
-        }     
+        }
 
         /// <summary>
         /// create multiple records at once using a batch
@@ -424,7 +429,7 @@ namespace Xrm.Tools.WebAPI
             changesetStream.Headers.Add("Content-Type", "application/http; msgtype=response");
 
             return changesetStream;
-            
+
         }
 
         /// <summary>
@@ -454,7 +459,7 @@ namespace Xrm.Tools.WebAPI
             return changesetFixedContent;
         }
 
-    
+
         /// <summary>
         /// Update or Insert based on a match with the entityID
         /// </summary>
@@ -491,9 +496,9 @@ namespace Xrm.Tools.WebAPI
 
             if (!Upsert)
                 request.Headers.Add("If-Match", "*");
-			//request.Headers.Add("Prefer", "return=representation");
+            //request.Headers.Add("Prefer", "return=representation");
 
-			//var response = await _httpClient.SendAsync(request);
+            //var response = await _httpClient.SendAsync(request);
 
             var response = CRMWebAPIConfig.UseHttpClientSynchronouslyDueToUnknownBugInAwaitingInBlazor
                ? _httpClient.SendAsync(request).ConfigureAwait(false).GetAwaiter().GetResult()
@@ -501,8 +506,8 @@ namespace Xrm.Tools.WebAPI
 
 
             result.EntityID = GetEntityIDFromResponse(response);
-           
-          
+
+
             if (!response.IsSuccessStatusCode)
             {
                 if ((response.StatusCode == HttpStatusCode.PreconditionFailed) &&
@@ -510,7 +515,7 @@ namespace Xrm.Tools.WebAPI
                 {
                     return result;
                 }
-                EnsureSuccessStatusCode(response,jsonData:jsonData);
+                EnsureSuccessStatusCode(response, jsonData: jsonData);
             }
 
             return result;
@@ -525,8 +530,9 @@ namespace Xrm.Tools.WebAPI
         public async Task Delete(string entityCollection, Guid entityID)
         {
             await CheckAuthToken();
-
-            var response = await _httpClient.DeleteAsync(_crmWebAPIConfig.APIUrl + entityCollection + "(" + entityID.ToString() + ")");
+            var response = CRMWebAPIConfig.UseHttpClientSynchronouslyDueToUnknownBugInAwaitingInBlazor
+                ? _httpClient.DeleteAsync(_crmWebAPIConfig.APIUrl + entityCollection + "(" + entityID.ToString() + ")").ConfigureAwait(false).GetAwaiter().GetResult()
+                : await _httpClient.DeleteAsync(_crmWebAPIConfig.APIUrl + entityCollection + "(" + entityID.ToString() + ")");
 
             EnsureSuccessStatusCode(response);
 
@@ -548,8 +554,8 @@ namespace Xrm.Tools.WebAPI
             var values = JsonConvert.DeserializeObject<ExpandoObject>(data);
             return values;
         }
-        
-        
+
+
 
         /// <summary>
         /// Execute a bound function using object parameters
@@ -571,7 +577,7 @@ namespace Xrm.Tools.WebAPI
         /// <param name="function"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public async Task<ExpandoObject> ExecuteFunction(string function, object data=null)
+        public async Task<ExpandoObject> ExecuteFunction(string function, object data = null)
         {
             List<KeyValuePair<string, object>> list = ConvertObjectToKeyValuePair(data);
 
@@ -589,7 +595,7 @@ namespace Xrm.Tools.WebAPI
             await CheckAuthToken();
 
             var fullUrl = string.Format("{0}{1}", _crmWebAPIConfig.APIUrl, action);
-                        
+
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("Post"), fullUrl);
 
             var jsonData = JsonConvert.SerializeObject(data);
@@ -598,7 +604,7 @@ namespace Xrm.Tools.WebAPI
 
             var results = await _httpClient.SendAsync(request);
 
-            EnsureSuccessStatusCode(results,jsonData:jsonData);
+            EnsureSuccessStatusCode(results, jsonData: jsonData);
 
             var resultData = await results.Content.ReadAsStringAsync();
             var values = JsonConvert.DeserializeObject<ExpandoObject>(resultData);
@@ -612,25 +618,25 @@ namespace Xrm.Tools.WebAPI
         /// <param name="entityID"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public async Task<ExpandoObject> ExecuteAction(string action, string entityCollection,Guid entityID,object data)
+        public async Task<ExpandoObject> ExecuteAction(string action, string entityCollection, Guid entityID, object data)
         {
-            return await ExecuteAction(string.Format("{0}({1})/{2}", entityCollection, entityID.ToString(), action), data);            
+            return await ExecuteAction(string.Format("{0}({1})/{2}", entityCollection, entityID.ToString(), action), data);
         }
 
-         /// <summary>
-         /// Associate two entities
-         /// </summary>
-         /// <param name="fromEntityCollection"></param>
-         /// <param name="fromEntityID"></param>
-         /// <param name="navProperty"></param>
-         /// <param name="toEntityCollection"></param>
-         /// <param name="toEntityID"></param>
-         /// <returns></returns>
+        /// <summary>
+        /// Associate two entities
+        /// </summary>
+        /// <param name="fromEntityCollection"></param>
+        /// <param name="fromEntityID"></param>
+        /// <param name="navProperty"></param>
+        /// <param name="toEntityCollection"></param>
+        /// <param name="toEntityID"></param>
+        /// <returns></returns>
         public async Task<bool> Associate(string fromEntityCollection, Guid fromEntityID, string navProperty, string toEntityCollection, Guid toEntityID)
         {
             await CheckAuthToken();
 
-            var fullUrl = _crmWebAPIConfig.APIUrl + fromEntityCollection + $"({fromEntityID})/{navProperty}/$ref";            
+            var fullUrl = _crmWebAPIConfig.APIUrl + fromEntityCollection + $"({fromEntityID})/{navProperty}/$ref";
 
             HttpRequestMessage request = new HttpRequestMessage(new HttpMethod("Post"), fullUrl);
 
@@ -640,7 +646,7 @@ namespace Xrm.Tools.WebAPI
 
             var response = await _httpClient.SendAsync(request);
 
-            EnsureSuccessStatusCode(response, jsonData: jsonData);            
+            EnsureSuccessStatusCode(response, jsonData: jsonData);
 
             return true;
         }
@@ -830,7 +836,7 @@ namespace Xrm.Tools.WebAPI
                     BuildExpandQueryURLOptions(queryOptions, ref fullurl, ref firstParam);
 
                 BuildAdvancedQueryURLOptions(queryOptions, ref fullurl, ref firstParam);
-            }            
+            }
 
             return fullurl;
         }
@@ -859,17 +865,17 @@ namespace Xrm.Tools.WebAPI
                     expands.Add(string.Format("{0}({1})", expand.Property, string.Join(";", expandOptions)));
                 else
                     expands.Add(string.Format("{0}", expand.Property));
-                
+
             }
             if (expands.Count > 0)
             {
                 if (firstParam)
-                    fullurl = fullurl + string.Format("?$expand={0}", String.Join(",",expands));
+                    fullurl = fullurl + string.Format("?$expand={0}", String.Join(",", expands));
                 else
                     fullurl = fullurl + string.Format("&$expand={0}", String.Join(",", expands));
                 firstParam = false;
             }
-                
+
         }
 
         private static void BuildAdvancedQueryURLOptions(CRMGetListOptions queryOptions, ref string fullurl, ref bool firstParam)
@@ -962,7 +968,7 @@ namespace Xrm.Tools.WebAPI
             if (QueryOptions.TrackChanges)
                 preferList.Add("odata.track-changes");
 
-           // preferList.Add("odata.maxpagesize=1");
+            // preferList.Add("odata.maxpagesize=1");
 
             if (preferList.Count > 0)
                 Request.Headers.Add("Prefer", string.Join(",", preferList));
@@ -1003,7 +1009,7 @@ namespace Xrm.Tools.WebAPI
         /// Helper method to check the response status and generate a well formatted error
         /// </summary>
         /// <param name="response"></param>
-        private static void EnsureSuccessStatusCode(HttpResponseMessage response,string jsonData = null)
+        private static void EnsureSuccessStatusCode(HttpResponseMessage response, string jsonData = null)
         {
             if (response.IsSuccessStatusCode)
                 return;

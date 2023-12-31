@@ -32,7 +32,30 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 
 		}
 
-		public IEnumerable<PriceList> LoadAllPriceLists()
+        public void DeleteAggregateProduct(string id)
+        {
+            if (Guid.TryParse(id, out var _id))
+			{
+				var repo = this.dataServices
+					.GetRepository<XrmHajirQuoteDetail>();
+				repo
+				.Queryable
+				.GetAggregateDetails(_id)
+				.ToList()
+				.ForEach(x => repo.Delete(x));
+
+
+
+
+
+
+                this.dataServices
+					.GetRepository<XrmHajirAggregateProduct>()
+					.Delete(new XrmHajirAggregateProduct { AggregateProductId = _id });
+			}
+        }
+
+        public IEnumerable<PriceList> LoadAllPriceLists()
 		{
 			var result = new List<PriceList>();
 			var pricelists = this.dataServices
@@ -111,6 +134,10 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 						.Select(x => new SaleAggergateProduct()
 						{
 							Id = x.Id.ToString(),
+							Name = x.Name,
+							Quantity = Convert.ToInt32(x.Quantity),
+							ManualDiscount = x.ManualDiscount
+
 						}).ToArray();
 					foreach(var agg in aggregates)
 					{

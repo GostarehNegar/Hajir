@@ -80,9 +80,9 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 			set => this.QuoteReference = value.HasValue ? new EntityReference(XrmHajirQuote.Schema.LogicalName,value.Value) : null;
 		}
 		[AttributeLogicalNameAttribute(Schema.Quantity)]
-		public decimal? Quantity
+		public double? Quantity
 		{
-			get => this.GetAttributeValue<decimal?>(Schema.Quantity);
+			get => this.GetAttributeValue<double?>(Schema.Quantity);
 			set => this.SetAttributeValue(Schema.Quantity, value);
 		}
 

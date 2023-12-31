@@ -17,8 +17,11 @@ namespace Hajir.Crm.Entities
 			public const string ProductNumber = "productnumber";
 			public const string ProductType = RHS_SolutionPerfix + "producttype";
 			public const string TypeProducts_deprecated = "rhs_typeproducts";
+			public const string SupportedBatteries = "rhs_supportedbattries";
+			public const string NumberOfFloors = "rhs_numberoffloors";
 
-			public enum ProductTypes
+
+            public enum ProductTypes
 			{
 				UPS = BaseOptionSetIndex,
 				Stabilizer = BaseOptionSetIndex + 1,

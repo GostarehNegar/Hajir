@@ -1,0 +1,35 @@
+﻿.aggregate-products {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 1rem;
+	border: 1px solid #ddd
+}
+
+.product-line {
+	display: grid;
+	grid-template-columns: repeat(3,auto);
+	align-items: center;
+}
+
+	.product-line > div {
+		display: flex;
+		gap: 1rem;
+		justify-content: start;
+		align-items: center;
+	}
+
+		.product-line > div > div {
+			cursor: pointer;
+			border: 1px solid #eee;
+			padding-inline: 0.5rem;
+			border-radius: 4px;
+		}
+
+.quote-lines {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 1rem;
+	border: 1px solid #ddd
+}
