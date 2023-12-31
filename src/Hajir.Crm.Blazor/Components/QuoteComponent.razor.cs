@@ -49,11 +49,11 @@ namespace Hajir.Crm.Blazor.Components
             }
         }
 
-        private void Increase(SaleAggergateProduct prod)
+        private static void Increase(SaleAggergateProduct prod)
         {
             prod.Quantity++;
         }
-        private void Decrease(SaleAggergateProduct prod)
+        private static void Decrease(SaleAggergateProduct prod)
         {
             prod.Quantity--;
         }

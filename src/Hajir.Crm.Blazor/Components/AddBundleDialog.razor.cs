@@ -38,7 +38,7 @@ namespace Hajir.Crm.Blazor.Components
 
         protected override void OnInitialized()
         {
-            MudDialog.Options.FullScreen = true;
+            MudDialog.Options.FullWidth = true;
             MudDialog.Options.CloseButton = true;
             MudDialog.SetOptions(MudDialog.Options);
             this.BundleModel = new BundleEditModel();

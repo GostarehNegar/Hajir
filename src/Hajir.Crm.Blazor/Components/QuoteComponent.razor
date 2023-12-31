@@ -1,16 +1,20 @@
 ﻿@inherits BaseComponent
 @using MudBlazor;
+
 <div>Quote.QuoteNumber: @Quote.QuoteNumber</div>
-<div class="aggregate-products">
+
+
+@*<div class="aggregate-products">
     <div>aggregate products:</div>
     @foreach (var product in Quote.AggregateProducts)
     {
         <div class="product-line">
             <div>@product.Name</div>
             <div>@product.PricePerUint</div>
-            <div>@product.Quantity
+            <div>
+                @product.Quantity
                 <div class="arrows">
-                    <div @onclick="()=>Increase(product)">˄</div>
+                    <div @onclick="()=> Increase(product)">˄</div>
                     <div @onclick="()=>Decrease(product)">˅</div>
                 </div>
             </div>
@@ -27,12 +31,68 @@
     @foreach (var line in Quote.Lines)
     {
         <div>@line.Name  | @line.Quantity  | @line.PricePerUnit | @line.Discount | @line.Amount</div>
-        
+
 
     }
-</div>
-<div>Quote.PriceList.Id: @Quote.PriceList.Id</div>
-<div>Quote.PriceList.Name: @Quote.PriceList.Name</div>
+</div>*@
+
+<table class="aggregate-table">
+    <tr>
+        <th>محصول</th>
+        <th>قیمت واحد</th>
+        <th>تعداد</th>
+        <th>تخفیف</th>
+        <th>مبلغ</th>
+        <th></th>
+    </tr>
+    @foreach (var product in Quote.AggregateProducts)
+    {
+        <tr>
+            <td>@product.Name</td>
+            <td>@product.PricePerUint</td>
+            <td>
+                <div class="q-cell">
+                    <div>
+                        @product.Quantity
+                    </div>
+                    <div class="arrows">
+                        <div @onclick="()=> Increase(product)">˄</div>
+                        <div @onclick="()=> Decrease(product)">˅</div>
+                    </div>
+                </div>
+            </td>
+            <td>@product.ManualDiscount</td>
+            <td>@product.Amount</td>
+            <td id="del"><MudButton Variant="Variant.Text" Color="Color.Error" OnClick="()=>Delete(product)">Delete</MudButton></td>
+        </tr>
+    }
+
+</table>
+
+    <MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Large" OnClick="OpenDialog">افزودن bundle جدید</MudButton>
+
+
+
+<table class="products-table">
+    <tr>
+        <th>محصول</th>
+        <th>قیمت واحد</th>
+        <th>تعداد</th>
+        <th>تخفیف</th>
+        <th>مبلغ</th>
+    </tr>
+    @foreach (var line in Quote.Lines)
+    {
+        <tr>
+            <td>@line.Name</td>
+            <td>@line.PricePerUnit</td>
+            <td>@line.Quantity</td>
+            <td>@line.Discount</td>
+            <td>@line.Amount</td>
+        </tr>
+    }
+</table>
+
 @*@if (AddedBundle != null)
 {
     <div>
@@ -40,8 +100,6 @@
         <input type="number">
     </div>
 }*@
-<MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Large" OnClick="OpenDialog">+</MudButton>
-
 
 <MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Large" OnClick="Save">Save</MudButton>
 

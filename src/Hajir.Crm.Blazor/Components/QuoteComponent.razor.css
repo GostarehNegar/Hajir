@@ -33,3 +33,33 @@
 	padding: 1rem;
 	border: 1px solid #ddd
 }
+
+.aggregate-table, .products-table {
+	width: 100%;
+	margin-block: 0.5rem
+}
+
+.q-cell {
+	display: flex;
+	align-items: center;
+	justify-content:space-between;
+}
+
+td, th {
+	padding: 0.5rem 1rem;
+	text-align: start;
+	border: 1px solid lightgrey;
+}
+
+td {
+	background-color: #f7f7f7;
+}
+
+td[id="del"]{
+	text-align:center;
+}
+
+th {
+	font-weight:bolder;
+	background-color: #f3f3f3;
+}
