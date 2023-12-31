@@ -1,12 +1,4 @@
 {
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:26542",
-      "sslPort": 44339
-    }
-  },
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
@@ -18,11 +10,20 @@
     "Hajir.Crm.Blazor.Server": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "http://localhost:80",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": "true",
-      "applicationUrl": "https://localhost:5701;http://localhost:5700"
+      "applicationUrl": "http://localhost:80"
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:26542",
+      "sslPort": 44339
     }
   }
 }

@@ -1,0 +1,17 @@
+﻿@inherits BaseComponent<AlertModel>
+@if (this.Value.HasMessage)
+{
+    <div>@Value.Message</div>
+    <MudBlazor.MudButton OnClick="Close">X</MudBlazor.MudButton>
+}
+
+
+
+@code {
+    public async Task Close()
+    {
+        this.State.SetState(x => x.Clear());
+        await Task.CompletedTask;
+    }
+
+}

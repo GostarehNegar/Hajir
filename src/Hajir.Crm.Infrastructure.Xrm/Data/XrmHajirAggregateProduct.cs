@@ -22,8 +22,10 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 			public const string Quantity = SolutionPerfix + "quentity";
 			public const string PricePerUnit = SolutionPerfix + "priceperunit";
 			public const string ManualDiscount = SolutionPerfix + "manualdiscount";
+			public const string Amount = SolutionPerfix + "amount";
 
-		}
+
+        }
 
 		public XrmHajirAggregateProduct() : base(Schema.LogicalName) { }
 
@@ -114,7 +116,21 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 			set => this.ManualDiscountMoney = value.HasValue ? new Money(value.Value) : null;
 		}
 
-	}
+        [AttributeLogicalName(Schema.Amount)]
+        public Money AmountMoney
+        {
+            get { return this.GetAttributeValue<Money>(Schema.Amount); }
+            set { this.SetAttribiuteValue(Schema.Amount, value); }
+
+        }
+        [AttributeLogicalName(Schema.Amount)]
+        public decimal? Amount
+        {
+            get => this.AmountMoney?.Value;
+            set => this.AmountMoney = value.HasValue ? new Money(value.Value) : null;
+        }
+
+    }
 
 	public static class XrmHajirAggregateProductExtensions
 	{

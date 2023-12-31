@@ -6,14 +6,25 @@ using System.Threading.Tasks;
 
 namespace Hajir.Crm.Blazor.Services
 {
-    public interface IBlazorAppServices
+    public interface IBlazorAppServices : IServiceProvider
     {
     }
     class BlazorAppServices : IBlazorAppServices, IScopedHostedService
     {
+        private readonly IServiceProvider serviceProvider;
+
+        public BlazorAppServices(IServiceProvider serviceProvider)
+        {
+            this.serviceProvider = serviceProvider;
+        }
         public void Dispose()
         {
             //throw new NotImplementedException();
+        }
+
+        public object GetService(Type serviceType)
+        {
+            return this.serviceProvider.GetService(serviceType);
         }
 
         public Task InitializeAsync(IServiceProvider serviceProvider)

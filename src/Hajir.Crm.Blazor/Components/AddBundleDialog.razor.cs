@@ -101,20 +101,23 @@ namespace Hajir.Crm.Blazor.Components
 
         public void AddDesign()
         {
-            var bundle = this.BundleModel.Bundle;
-            var design = SelectedDesign;
-            var ids =  design.Cabinets.GroupBy(x => x.CabinetProduct.Id)
-                .Select(x => x.Key).ToArray();
-            this.Battery = this.Battery ?? AllBatteries.FirstOrDefault();
-            var battery = this.Battery;
-            bundle.AddRow(battery, design.Quantity);
-            foreach(var id in ids)
+            if (this.SelectedDesign != null)
             {
-                var count = design.Cabinets.Count(x => x.CabinetProduct.Id == id);
-                var cabin = design.Cabinets.FirstOrDefault(x => x.CabinetProduct.Id == id)?.CabinetProduct;
-                bundle.AddRow(cabin, count);
+                var bundle = this.BundleModel.Bundle;
+                var design = SelectedDesign;
+                var ids = design.Cabinets.GroupBy(x => x.CabinetProduct.Id)
+                    .Select(x => x.Key).ToArray();
+                this.Battery = this.Battery ?? AllBatteries.FirstOrDefault();
+                var battery = this.Battery;
+                bundle.AddRow(battery, design.Quantity);
+                foreach (var id in ids)
+                {
+                    var count = design.Cabinets.Count(x => x.CabinetProduct.Id == id);
+                    var cabin = design.Cabinets.FirstOrDefault(x => x.CabinetProduct.Id == id)?.CabinetProduct;
+                    bundle.AddRow(cabin, count);
+                }
+                MudDialog.Close(DialogResult.Ok(bundle));
             }
-            MudDialog.Close(DialogResult.Ok(bundle));
         }
 
         void Cancel() => MudDialog.Cancel();

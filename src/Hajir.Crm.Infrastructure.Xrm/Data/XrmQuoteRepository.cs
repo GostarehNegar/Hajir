@@ -1,4 +1,5 @@
 ﻿using GN;
+using GN.Library.Pipelines.WithBlockingCollection;
 using GN.Library.Xrm;
 using GN.Library.Xrm.StdSolution;
 using Hajir.Crm.Features.Common;
@@ -117,7 +118,11 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 							ProductId = x.ProductId?.ToString(),
 							Quantity = Convert.ToDecimal((x.Quantity ?? 0)),
 							AggregateId = x.AggregateProductId?.ToString(),
-							Id = x.Id.ToString()
+							Id = x.Id.ToString(),
+							Name = this.cache.Products.FirstOrDefault(p=>p.Id==x.ProductId?.ToString())?.Name,
+							PricePerUnit = x.PricePerUnit,
+							Discount = x.ManualDiscountAmount ?? 0 ,
+							Amount = x.BaseAmount
 						}); ;
 
 
@@ -130,6 +135,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 							Id = x.Id.ToString(),
 							Name = x.Name,
 							Quantity = Convert.ToInt32(x.Quantity),
+							Amount = x.Amount,
 							ManualDiscount = x.ManualDiscount
 
 						}).ToArray();

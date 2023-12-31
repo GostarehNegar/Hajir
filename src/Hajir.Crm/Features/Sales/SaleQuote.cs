@@ -11,7 +11,7 @@ namespace Hajir.Crm.Features.Sales
 		private List<SaleQuoteLine> _lines;
 		public string QuoteNumber { get; private set; }
 		public string QuoteId { get; }
-		public IEnumerable<ISaleQuoteline> Lines => this._lines;
+		public IEnumerable<SaleQuoteLine> Lines => this._lines;
 		private List<SaleAggergateProduct> aggergareProducts = new List<SaleAggergateProduct>();
 		public IEnumerable<SaleAggergateProduct> AggregateProducts => aggergareProducts;
 		public PriceList PriceList { get; set; }

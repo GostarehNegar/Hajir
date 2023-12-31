@@ -9,6 +9,8 @@ using Hajir.Crm.Features.Sales;
 using MudBlazor;
 using Hajir.Crm.Features.Products;
 using Microsoft.Extensions.DependencyInjection;
+using Hajir.Crm.Internals;
+using Hajir.Crm.Blazor.ViewModels;
 
 namespace Hajir.Crm.Blazor.Components
 {
@@ -52,23 +54,31 @@ namespace Hajir.Crm.Blazor.Components
             prod.Quantity++;
         }
         private void Decrease(SaleAggergateProduct prod)
-        { 
+        {
             prod.Quantity--;
         }
         public async Task Save()
         {
-            this.ServiceProvider.GetService<IQuoteRepository>()
-                .UpdateQuote(this.Quote);
+            this.AppServices.Do(ctx =>
+            {
+                ctx.GetService<IQuoteRepository>()
+                    .UpdateQuote(this.Quote);
+
+            });
+            this.AppServices.SendAlert("Quote Successfully Saved");
             StateHasChanged();
         }
         public async Task Delete(SaleAggergateProduct p)
         {
-            this.ServiceProvider.GetService<IQuoteRepository>()
-                .DeleteAggregateProduct(p.Id);
-            using (var ctx = this.ServiceProvider.CreateHajirServiceContext())
+            this.AppServices.Do(ctx =>
             {
+                ctx.GetService<IQuoteRepository>()
+                    .DeleteAggregateProduct(p.Id);
                 Quote = ctx.LoadQuoteByQuoteNumber(this.Id);
-            }
+
+            });
+            this.AppServices.GetService<State<AlertModel>>().SetState(x => x.Message = "Deleted");
+
             StateHasChanged();
         }
     }

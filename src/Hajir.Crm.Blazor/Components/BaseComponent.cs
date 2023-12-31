@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Hajir.Crm.Infrastructure;
+using Hajir.Crm.Internals;
 
 namespace Hajir.Crm.Blazor.Components
 {

@@ -1,0 +1,17 @@
+﻿@using Hajir.Crm.Blazor.ViewModels;
+@inherits BaseComponent<ErrorModel>
+@if (this.State.Value.HasError)
+{
+   <div>@this.Value?.Error?.Message</div>
+   <MudBlazor.MudButton OnClick="Close">X</MudBlazor.MudButton>
+}
+
+@code {
+
+    public async Task Close()
+    {
+        this.State.SetState(x => x.Clear());
+        await Task.CompletedTask;
+    }
+
+}

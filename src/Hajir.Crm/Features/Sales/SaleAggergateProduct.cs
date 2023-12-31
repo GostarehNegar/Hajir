@@ -11,7 +11,8 @@ namespace Hajir.Crm.Features.Sales
 		public string Id { get; set; }
 		public int Quantity { get; set; }
 		public decimal? ManualDiscount { get; set; }
-		public decimal? PricePerUint { get; set; }
+        public decimal? Amount { get; set; }
+        public decimal? PricePerUint { get; set; }
 		public SaleQuoteLine[] Lines => this.lines.ToArray();
 
 		public SaleAggergateProduct AddLine(SaleQuoteLine line)
