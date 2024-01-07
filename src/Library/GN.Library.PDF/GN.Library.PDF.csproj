@@ -10,4 +10,7 @@
 
 		<PackageReference Include="Syncfusion.HtmlToPdfConverter.Net.Windows" Version="20.3.0.56" />
 	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\GN.Library.Parnian\GN.Library.Parnian.csproj" />
+	</ItemGroup>
 </Project>

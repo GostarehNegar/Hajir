@@ -73,6 +73,7 @@ namespace Hajir.Crm.Blazor.Components
             this.BundleModel = new BundleEditModel();
             this.DesignedBundle = new CabinetSet(null);
             this.CabinetDesign = Array.Empty<CabinetSet>();
+            this.Battery = new Product();
         }
 
         public int[] GetSupportedNumberOfBatteries()

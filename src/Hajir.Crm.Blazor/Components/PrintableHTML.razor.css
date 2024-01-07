@@ -1,0 +1,142 @@
+﻿.header {
+	display: grid;
+	grid-template-columns: 20% 60% 20%;
+	height: 120px;
+	background-image: url('/img/header.png');
+	background-position-x: right;
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+	.header > div {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-weight:bold;
+	}
+
+.date-number {
+	display:flex;
+	flex-direction:column;
+	gap:1rem;
+	padding:1rem;
+}
+
+.date-number-row{
+	display:flex;
+	gap:1rem;
+}	
+
+.date-number-row > div {
+	text-align:start;
+	width:10rem;
+}
+
+.client {
+	display: flex;
+	gap: 1rem;
+	font-weight: bolder;
+	padding: 1rem;
+}
+
+.aggregate-table, .products-table {
+	width: 100%;
+	margin-block: 0.5rem;
+	/**/
+	border-radius: 1rem;
+	background-color: lightgray;
+	border-spacing: 1px;
+	border-collapse: separate;
+	font-size: smaller;
+}
+
+.q-cell {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.arrows {
+	cursor: pointer;
+}
+
+td, th {
+	padding: 0.5rem 1rem;
+}
+
+td {
+	background-color: #f7f7f7;
+	text-align: start;
+}
+
+	td[id="del"] {
+		text-align: center;
+	}
+
+th {
+	font-weight: bolder;
+	background-color: #e3f8fd;
+	text-align: center;
+}
+
+	th:first-child {
+		border-radius: 0 1rem 0 0;
+	}
+
+	th:last-child {
+		border-radius: 1rem 0 0 0;
+	}
+
+tr:last-child > td:first-child {
+	border-radius: 0 0 1rem 0;
+}
+
+tr:last-child > td:last-child {
+	border-radius: 0 0 0 1rem;
+}
+
+.description {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	text-align: start;
+	font-size: smaller;
+	margin-bottom: 2rem;
+	border: 1px solid lightgrey;
+	border-radius: 1rem;
+	padding: 1rem;
+	background-color: #f7f7f7;
+}
+
+	.description > div:first-child {
+		font-size: medium
+	}
+
+	.description > div:nth-child(2) {
+		display: flex;
+		flex-direction:column;
+		gap: 0.5rem;
+	}
+
+		.description > div:nth-child(2) > div::before {
+			content: "◄ "
+		}
+
+	.description > div:last-child {
+		text-align: end
+	}
+
+.footer {
+	height: 120px;
+	background-image: url('/img/footer.png');
+	background-position-x: left;
+	background-size: contain;
+	background-repeat: no-repeat;
+	display: flex;
+	justify-content:start;
+	padding:1rem;
+}
+
+	.footer > img {
+
+	}

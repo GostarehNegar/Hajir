@@ -1,40 +1,7 @@
 ﻿@inherits BaseComponent
 @using MudBlazor;
 
-<div>Quote.QuoteNumber: @Quote.QuoteNumber</div>
-
-
-@*<div class="aggregate-products">
-    <div>aggregate products:</div>
-    @foreach (var product in Quote.AggregateProducts)
-    {
-        <div class="product-line">
-            <div>@product.Name</div>
-            <div>@product.PricePerUint</div>
-            <div>
-                @product.Quantity
-                <div class="arrows">
-                    <div @onclick="()=> Increase(product)">˄</div>
-                    <div @onclick="()=>Decrease(product)">˅</div>
-                </div>
-            </div>
-            <div>@product.ManualDiscount</div>
-            <div>@product.Amount</div>
-            <div>
-                <MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Large" OnClick="()=>Delete(product)">Delete</MudButton>
-            </div>
-        </div>
-    }
-</div>
-<div class="quote-lines">
-    <div>Quote.lines:</div>
-    @foreach (var line in Quote.Lines)
-    {
-        <div>@line.Name  | @line.Quantity  | @line.PricePerUnit | @line.Discount | @line.Amount</div>
-
-
-    }
-</div>*@
+<div class="number">@Quote.QuoteNumber</div>
 
 <table class="aggregate-table">
     <tr>
@@ -90,17 +57,19 @@
             <td>@line.Discount</td>
             <td>@line.Amount</td>
         </tr>
+    }@if(Quote.Lines.Count()==0){
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
     }
 </table>
 
-@*@if (AddedBundle != null)
-{
-    <div>
-        <div>@AddedBundle</div>
-        <input type="number">
-    </div>
-}*@
-
+<MudButton Variant="Variant.Text" Color="Color.Error" Size="Size.Large" OnClick="Test">Test</MudButton>
+<MudButton Variant="Variant.Text" Color="Color.Tertiary" Size="Size.Large" OnClick="Print">Print</MudButton>
 <MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Large" OnClick="Save">Save</MudButton>
 
 

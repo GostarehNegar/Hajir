@@ -7,6 +7,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Hajir.Crm.Blazor\Hajir.Crm.Blazor.csproj" />
     <ProjectReference Include="..\Hajir.Crm.Infrastructure.Xrm\Hajir.Crm.Infrastructure.Xrm.csproj" />
+    <ProjectReference Include="..\Library\GN.Library.PDF\GN.Library.PDF.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\fonts\" />
+    <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
 </Project>

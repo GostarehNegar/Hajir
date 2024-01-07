@@ -1,65 +1,61 @@
-﻿.aggregate-products {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-	padding: 1rem;
-	border: 1px solid #ddd
-}
-
-.product-line {
-	display: grid;
-	grid-template-columns: repeat(3,auto);
-	align-items: center;
-}
-
-	.product-line > div {
-		display: flex;
-		gap: 1rem;
-		justify-content: start;
-		align-items: center;
-	}
-
-		.product-line > div > div {
-			cursor: pointer;
-			border: 1px solid #eee;
-			padding-inline: 0.5rem;
-			border-radius: 4px;
-		}
-
-.quote-lines {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-	padding: 1rem;
-	border: 1px solid #ddd
+﻿.number {
+	 text-align:center;
+	 margin:8px;
+	 font-weight:500;
 }
 
 .aggregate-table, .products-table {
 	width: 100%;
-	margin-block: 0.5rem
+	margin-block: 0.5rem;
+/**/
+	border-radius: 1rem;
+	background-color: lightgray;
+	border-spacing: 1px;
+	border-collapse:separate;
+	font-size:smaller;
 }
 
 .q-cell {
 	display: flex;
 	align-items: center;
-	justify-content:space-between;
+	justify-content: space-between;
+}
+
+.arrows {
+	cursor: pointer;
 }
 
 td, th {
 	padding: 0.5rem 1rem;
-	text-align: start;
-	border: 1px solid lightgrey;
 }
 
 td {
 	background-color: #f7f7f7;
+	text-align: start;
 }
 
-td[id="del"]{
-	text-align:center;
-}
+	td[id="del"] {
+		text-align: center;
+	}
 
 th {
-	font-weight:bolder;
+	font-weight: bolder;
 	background-color: #f3f3f3;
+	text-align: center;
+}
+
+	th:first-child {
+		border-radius: 0 1rem 0 0;
+	}
+
+	th:last-child {
+		border-radius: 1rem 0 0 0;
+	}
+
+tr:last-child > td:first-child {
+	border-radius: 0 0 1rem 0;
+}
+
+tr:last-child > td:last-child {
+	border-radius: 0 0 0 1rem;
 }

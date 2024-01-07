@@ -1,8 +1,13 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@font-face {
+    font-family: 'Sahel';
+    src: url('../fonts/Sahel-FD.ttf') format('truetype');
+}
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: Sahel,'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+
 
 a, .btn-link {
     color: #0366d6;

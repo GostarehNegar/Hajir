@@ -11,6 +11,8 @@ using Hajir.Crm.Features.Products;
 using Microsoft.Extensions.DependencyInjection;
 using Hajir.Crm.Internals;
 using Hajir.Crm.Blazor.ViewModels;
+using Microsoft.JSInterop;
+using System.Security.Policy;
 
 namespace Hajir.Crm.Blazor.Components
 {
@@ -24,6 +26,15 @@ namespace Hajir.Crm.Blazor.Components
 
         [Inject]
         IDialogService DialogService { get; set; }
+
+        [Inject]
+        public ISnackbar Snackbar { get; set; }
+
+        [Inject]
+        public NavigationManager Nav { get; set; }
+
+        [Inject] 
+        public IJSRuntime JS { get; set; }
 
         public SaleQuote Quote { get; set; }
 
@@ -66,6 +77,7 @@ namespace Hajir.Crm.Blazor.Components
 
             });
             this.AppServices.SendAlert("Quote Successfully Saved");
+            Snackbar.Add("پیش فاکتور با موفقیت ذخیره شد.", Severity.Success);
             StateHasChanged();
         }
         public async Task Delete(SaleAggergateProduct p)
@@ -78,8 +90,20 @@ namespace Hajir.Crm.Blazor.Components
 
             });
             this.AppServices.GetService<State<AlertModel>>().SetState(x => x.Message = "Deleted");
-
+            Snackbar.Add("حذف با موفقیت انجام شد.", Severity.Success);
             StateHasChanged();
+        }
+
+        public async void Print()
+        {
+            var url = $"/pdf/{Quote.QuoteNumber}";
+            //await JS.InvokeAsync<object>("open", url, "_blank");
+            Nav.NavigateTo(url,true);
+        }
+
+        public void Test()
+        {
+            Nav.NavigateTo($"/test/{Quote.QuoteNumber}");
         }
     }
 }

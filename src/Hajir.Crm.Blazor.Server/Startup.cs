@@ -48,6 +48,7 @@ namespace Hajir.Crm.Blazor.Server
             services.AddScoped<CircuitHandler, CircuitHandlerService>();
 
             services.AddSingleton<WeatherForecastService>();
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,6 +72,7 @@ namespace Hajir.Crm.Blazor.Server
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });

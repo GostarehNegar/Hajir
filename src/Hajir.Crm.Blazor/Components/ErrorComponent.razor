@@ -1,10 +1,10 @@
 ﻿@using Hajir.Crm.Blazor.ViewModels;
 @inherits BaseComponent<ErrorModel>
-@if (this.State.Value.HasError)
-{
-   <div>@this.Value?.Error?.Message</div>
-   <MudBlazor.MudButton OnClick="Close">X</MudBlazor.MudButton>
-}
+@using MudBlazor
+@inject ISnackbar Snackbar
+
+@if (this.State.Value.HasError) { ShowErrorSnackbar(); }
+
 
 @code {
 
@@ -12,6 +12,11 @@
     {
         this.State.SetState(x => x.Clear());
         await Task.CompletedTask;
+    }
+
+    private void ShowErrorSnackbar()
+    {
+        Snackbar.Add(this.Value?.Error?.Message,Severity.Error) ;
     }
 
 }

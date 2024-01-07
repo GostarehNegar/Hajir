@@ -1,0 +1,101 @@
+﻿@inherits BaseComponent;
+
+<div class="header">
+    <div></div>
+    <div>پیش فاکتور</div>
+    <div class="date-number">
+        <div class="date-number-row">
+            <div>تاریخ</div>
+            <div>1402/06/11</div>
+        </div>
+        <div class="date-number-row">
+            <div>شماره</div>
+            <div>@Quote.QuoteNumber</div>
+        </div>
+    </div>
+</div>
+
+<div class="client">
+    <div>خریدار:</div>
+    <div>شرکت گستره نگار - آقای مهندس محمودی</div>
+</div>
+
+<table class="aggregate-table">
+    <tr>
+        <th>محصول</th>
+        <th>قیمت واحد</th>
+        <th>تعداد</th>
+        <th>تخفیف</th>
+        <th>مبلغ</th>
+    </tr>
+    @foreach (var product in Quote.AggregateProducts)
+    {
+        <tr>
+            <td>@product.Name</td>
+            <td>@product.PricePerUint</td>
+            <td>
+                <div class="q-cell">
+                    <div>
+                        @product.Quantity
+                    </div>
+                    <div class="arrows">
+                    </div>
+                </div>
+            </td>
+            <td>@product.ManualDiscount</td>
+            <td>@product.Amount</td>
+        </tr>
+    }
+
+</table>
+
+<table class="products-table">
+    <tr>
+        <th>محصول</th>
+        <th>قیمت واحد</th>
+        <th>تعداد</th>
+        <th>تخفیف</th>
+        <th>مبلغ</th>
+    </tr>
+    @foreach (var line in Quote.Lines)
+    {
+        <tr>
+            <td>@line.Name</td>
+            <td>@line.PricePerUnit</td>
+            <td>@line.Quantity</td>
+            <td>@line.Discount</td>
+            <td>@line.Amount</td>
+        </tr>
+    }@if (Quote.Lines.Count() == 0)
+    {
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    }
+</table>
+
+<div class="description">
+    <div>توضیحات</div>
+    <div>
+        <div>دستگاه یو پی اس از نوع Online Double Conversion  و باتری ها از نوع درجه یک برند First Power می باشد. کابینت از نوع ماژولار سه طبقه می باشد.</div>
+        <div>دستگاه و باتری دارای 12 ماه گارانتی و 10 سال خدمات پس از فروش می باشد.</div>
+        <div>با خرید همزمان باتری و دستگاه یو پی اس از شرکت هژیر صنعت، کابل باتری، رایگان تقدیم خریدار محترم خواهد شد.</div>
+        <div>در صورت عقد قرارداد نگهداری برای سال دوم تا حداکثر یک ماه از زمان خرید، مشتریان محترم از امتیاز بازدید ادواری رایگان در طول گارانتی (سال اول) نیز بهره مند می شوند.</div>
+        <div>تحویل فوری می باشد (اگر فیلد مدت تحویل صفر باشد)</div>
+        <div>کالا آماده تحویل بوده و مدت ارسال 2 روز کاری پس از تسویه حساب می باشد.</div>
+        <div>تحویل درب کارخانه هژیر صنعت (شهرک صنعتی عباس آباد تهران) می باشد، حمل به عهده خریدار است.</div>
+        <div>نصب در مناطق 22 گانه تهران و شهرک صنعتی عباس آباد رایگان است.</div>
+        <div>اطلاعات حساب جهت پرداخت: شماره حساب 350685888 شماره کارت 6104337841353954 شماره شبا IR030120000000000350685888 بانک ملت شعبه نارمک شمالی به نام شرکت هژیر صنعت. لطفا پس از واریز، رسید خود را ارسال کنید.</div>
+    </div>
+    <div>کارشناس فروش: رضا رحیمی</div>
+</div>
+
+<div class="footer">
+    <img src="/img/danke.png" alt="از انتخاب شما سپاسگزاریم" height=80/>
+</div>
+
+
