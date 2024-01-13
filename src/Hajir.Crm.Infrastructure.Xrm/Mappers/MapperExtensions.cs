@@ -11,6 +11,7 @@ using GN.Library.Xrm;
 using Hajir.Crm.Features.Sales;
 using Hajir.Crm.Infrastructure.Xrm.Data;
 using Microsoft.Xrm.Sdk;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Hajir.Crm.Infrastructure.Xrm
 {
@@ -32,11 +33,21 @@ namespace Hajir.Crm.Infrastructure.Xrm
 
 			var result = product.ToDynamic().To<Product>();
 			result.ProductType = product.ProductType ?? HajirProductEntity.Schema.ProductTypes.Other;
+			result.ProductSeries = product.ProductSerie ?? HajirProductEntity.Schema.ProductSeries.UNKOWN;
 			result.UOMId = product.GetAttributeValue<EntityReference>("defaultuomid")?.Id.ToString();
 			result.SupportedBattries = product.SupportedBatteries;
 			result.NumberOfRows = product.GetNumberIfFloors();
 			result.Vendor = CabinetVendors.Hajir;
 			return result;
+		}
+
+		public static ProductSeries ToProductSeries(this XrmHajirProductSeries series)
+		{
+			return new ProductSeries
+			{
+				Id = series.Id.ToString(),
+				Name = series.Name
+			};
 		}
 
 		public static SaleQuote ToQuote(this XrmHajirQuote q)

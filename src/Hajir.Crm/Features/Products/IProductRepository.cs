@@ -11,5 +11,6 @@ namespace Hajir.Crm.Features.Products
         HajirProductEntity GetProcuct(string id);
         Product GetProductById(string id);
         IEnumerable<Product> GetAll();
+        IEnumerable<ProductSeries> GetAllSeries();
     }
 }

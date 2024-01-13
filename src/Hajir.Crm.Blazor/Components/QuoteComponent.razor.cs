@@ -74,8 +74,11 @@ namespace Hajir.Crm.Blazor.Components
             {
                 ctx.GetService<IQuoteRepository>()
                     .UpdateQuote(this.Quote);
+                Quote = ctx.LoadQuoteByQuoteNumber(this.Id);
 
             });
+
+            
             this.AppServices.SendAlert("Quote Successfully Saved");
             Snackbar.Add("پیش فاکتور با موفقیت ذخیره شد.", Severity.Success);
             StateHasChanged();

@@ -76,7 +76,7 @@ namespace Hajir.Crm.Features.Products.Internals
                 var _design = c();
                 _design.AddCabinet(cab);
                 _design.Fill(numberOfBatteries);
-                if (_design.Capacity >= numberOfBatteries)
+                if (_design.Capacity >= numberOfBatteries && !result.Any(x => x.IsSame(_design)))
                 {
                     result.Add(_design);
                 }
@@ -88,13 +88,14 @@ namespace Hajir.Crm.Features.Products.Internals
                         design.AddCabinet(cab);
                         design.AddCabinet(cab2);
                         design.Fill(numberOfBatteries);
-                        if (design.Quantity >= numberOfBatteries)
+                        if (design.Quantity >= numberOfBatteries && !result.Any(x=> x.IsSame(design)))
                         {
                             result.Add(design);
                         }
                     }
                 }
             }
+            
 
             return result
                 .OrderBy(x => x, new CabinetComparer())

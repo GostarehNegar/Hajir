@@ -42,7 +42,7 @@ namespace GN.Library.PDF
 
                 var method2 = typeof(HHH).GetMethods(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                     .FirstOrDefault(x => x.Name == "CheckLicense");
-                //method2 = getOne.Method;
+                method2 = getOne.Method;
 
 
 

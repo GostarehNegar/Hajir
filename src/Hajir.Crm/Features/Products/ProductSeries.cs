@@ -4,8 +4,11 @@ using System.Text;
 
 namespace Hajir.Crm.Features.Products
 {
-    public interface IProductFeatureProvider
+    public class ProductSeries
     {
-        int[] GetSupportedBatteries(Product product);
+        public string Id { get; set; }  
+        public string Name { get; set; }    
+
+
     }
 }

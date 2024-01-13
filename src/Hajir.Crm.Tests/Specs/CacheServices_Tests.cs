@@ -19,6 +19,8 @@ namespace Hajir.Crm.Tests.Specs
 			var target = host.Services.GetService<ICacheService>();
 			var pl = target.PriceLists;
 			var products = target.Products;
+			var series = target.ProductSeries;
+
 
 
 		}

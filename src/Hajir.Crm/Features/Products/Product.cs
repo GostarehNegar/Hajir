@@ -21,6 +21,7 @@ namespace Hajir.Crm.Features.Products
         }
         public string UOMId { get; set; }
         public HajirProductEntity.Schema.ProductTypes ProductType { get; set; }
+        public HajirProductEntity.Schema.ProductSeries ProductSeries { get; set; }
         public string SupportedBattries { get; set; }
         //public string CabinetSpec { get; set; }
         public IEnumerable<BatterySpec> GetSupportedBatteryConfig() => BatterySpec.ParseCollection(SupportedBattries);

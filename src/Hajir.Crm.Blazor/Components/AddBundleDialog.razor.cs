@@ -36,9 +36,15 @@ namespace Hajir.Crm.Blazor.Components
 
         public CabinetSet SelectedDesign { get; set; }
 
+        public bool HasBattery { get; set; } = false;
+        public bool HasCabinet { get; set; } = false;
+        public bool HasSNMP { get; set; } = false;
+        public bool HasParallel { get; set; } = false;
+
         protected override void OnInitialized()
         {
             MudDialog.Options.FullWidth = true;
+            MudDialog.Options.MaxWidth = MaxWidth.Medium;
             MudDialog.Options.CloseButton = true;
             MudDialog.SetOptions(MudDialog.Options);
             this.BundleModel = new BundleEditModel();
@@ -74,6 +80,7 @@ namespace Hajir.Crm.Blazor.Components
             this.DesignedBundle = new CabinetSet(null);
             this.CabinetDesign = Array.Empty<CabinetSet>();
             this.Battery = new Product();
+            this.HasBattery = this.HasCabinet = this.HasParallel = this.HasSNMP = false;
         }
 
         public int[] GetSupportedNumberOfBatteries()

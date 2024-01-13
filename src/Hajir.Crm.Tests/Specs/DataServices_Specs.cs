@@ -34,51 +34,62 @@ namespace Hajir.Crm.Tests.Specs
 
         }
 
-		[TestMethod]
-		public async Task type_products_repository()
-		{
-			var host = this.GetDefualtHost();
+        [TestMethod]
+        public async Task type_products_repository()
+        {
+            var host = this.GetDefualtHost();
             var productypes = host.Services.GetService<IXrmDataServices>()
                 .GetRepository<XrmHajirTypeProduct>()
                 .Queryable
                 .Take(10)
                 .ToArray();
-			//var actual = target.GetProductById(product.Id.ToString());
-			Assert.IsNotNull(productypes);
+            //var actual = target.GetProductById(product.Id.ToString());
+            Assert.IsNotNull(productypes);
 
-		}
-		[TestMethod]
-		public async Task aggregate_products_repository()
-		{
-			var host = this.GetDefualtHost();
-			var entities = host.Services.GetService<IXrmDataServices>()
-				.GetRepository<XrmHajirAggregateProduct>()
-				.Queryable
-				.Take(10)
-				.ToArray();
-			//var actual = target.GetProductById(product.Id.ToString());
-			Assert.IsNotNull(entities);
+        }
+        [TestMethod]
+        public async Task aggregate_products_repository()
+        {
+            var host = this.GetDefualtHost();
+            var entities = host.Services.GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirAggregateProduct>()
+                .Queryable
+                .Take(10)
+                .ToArray();
+            //var actual = target.GetProductById(product.Id.ToString());
+            Assert.IsNotNull(entities);
 
-		}
-		[TestMethod]
-		public async Task quote_repository()
-		{
-			var host = this.GetDefualtHost();
-			var entities = host.Services.GetService<IXrmDataServices>()
-				.GetRepository<XrmHajirQuote>()
-				.Queryable
-				.Take(10)
-				.ToArray();
+        }
+        [TestMethod]
+        public async Task quote_repository()
+        {
+            var host = this.GetDefualtHost();
+            var entities = host.Services.GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirQuote>()
+                .Queryable
+                .Take(10)
+                .ToArray();
 
-			var lines = host.Services.GetService<IXrmDataServices>()
-				.GetRepository<XrmHajirQuoteDetail>()
-				.Queryable
-				.GetDetails(entities[0].Id)
-				.ToArray();
+            var lines = host.Services.GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirQuoteDetail>()
+                .Queryable
+                .GetDetails(entities[0].Id)
+                .ToArray();
 
-			//var actual = target.GetProductById(product.Id.ToString());
-			Assert.IsNotNull(entities);
+            //var actual = target.GetProductById(product.Id.ToString());
+            Assert.IsNotNull(entities);
 
-		}
-	}
+        }
+        [TestMethod]
+        public async Task productseries_works()
+        {
+            var host = this.GetDefualtHost();
+            var series = host.Services
+                .GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirProductSeries>()
+                .Queryable
+                .ToArray();
+        }
+
+    }
 }

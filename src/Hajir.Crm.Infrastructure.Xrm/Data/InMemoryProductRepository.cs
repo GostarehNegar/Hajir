@@ -106,6 +106,11 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             return this.products;
         }
 
+        public IEnumerable<ProductSeries> GetAllSeries()
+        {
+            throw new NotImplementedException();
+        }
+
         public HajirProductEntity GetProcuct(string id)
         {
             throw new NotImplementedException();
