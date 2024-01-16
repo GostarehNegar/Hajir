@@ -15,7 +15,7 @@ namespace Hajir.Crm.Blazor.Models
         {
             get
             {
-                return this.Bundle.Rows.FirstOrDefault(x => x.Product.ProductType == Entities.HajirProductEntity.Schema.ProductTypes.UPS)?.Product;
+                return this.Bundle.Rows.FirstOrDefault(x => x.Product?.ProductType == Entities.HajirProductEntity.Schema.ProductTypes.UPS)?.Product;
             }
             set
             {
@@ -29,12 +29,12 @@ namespace Hajir.Crm.Blazor.Models
             }
         }
         public int NumberOfBatteries { get; set; }
-        private int ggg;
-        public void TTT()
-        {
+        //private int ggg;
+        //public void TTT()
+        //{
             
 
-            this.SetValue(ref ggg, 1);
-        }
+        //    this.SetValue(ref ggg, 1);
+        //}
     }
 }

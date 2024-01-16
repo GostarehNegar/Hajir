@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using Hajir.Crm.Features.Common;
 
 namespace Hajir.Crm.Features.Products.Internals
 {
@@ -9,13 +10,19 @@ namespace Hajir.Crm.Features.Products.Internals
     internal class ProductBundlingService : IProductBundlingService
     {
         private readonly IProductRepository productRepository;
+        private readonly ICacheService cache;
 
-        public ProductBundlingService(IProductRepository productRepository)
+        public ProductBundlingService(IProductRepository productRepository, ICacheService cache)
         {
             this.productRepository = productRepository;
+            this.cache = cache;
         }
+        public IEnumerable<Product> Products => this.cache.Products;
         public IEnumerable<Product> GetAllUpses()
         {
+            return this.Products
+                .Where(x => x.ProductType == Entities.HajirProductEntity.Schema.ProductTypes.UPS).ToArray();
+
             return this.productRepository.GetAll()
                 .Where(x => x.ProductType == Entities.HajirProductEntity.Schema.ProductTypes.UPS).ToArray();
         }
@@ -163,12 +170,17 @@ namespace Hajir.Crm.Features.Products.Internals
 
         public IEnumerable<Product> GetAllBatteries()
         {
+            return this.Products
+                .Where(x => x.ProductType == Entities.HajirProductEntity.Schema.ProductTypes.Battery).ToArray();
+
             return this.productRepository.GetAll()
                 .Where(x => x.ProductType == Entities.HajirProductEntity.Schema.ProductTypes.Battery).ToArray();
         }
 
         public IEnumerable<Product> GetAllCabinets()
         {
+            return this.Products
+                .Where(x => x.ProductType == Entities.HajirProductEntity.Schema.ProductTypes.Cabinet).ToArray();
             return this.productRepository.GetAll()
                 .Where(x => x.ProductType == Entities.HajirProductEntity.Schema.ProductTypes.Cabinet).ToArray();
         }

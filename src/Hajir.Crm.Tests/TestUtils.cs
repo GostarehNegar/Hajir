@@ -10,6 +10,7 @@ using GN.Library.Xrm;
 using Microsoft.Extensions.DependencyInjection;
 using Hajir.Crm.Features.Products;
 using Hajir.Crm.Entities;
+using Hajir.Crm.Integration.SanadPardaz;
 
 namespace Hajir.Crm.Tests
 {
@@ -70,6 +71,7 @@ namespace Hajir.Crm.Tests
                         s.AddXrmServices(c.Configuration, cfg => { });
                         s.AddHajirCrm(c.Configuration, cfg => { });
                         s.AddHajirInfrastructure(c.Configuration);
+                        s.AddSanadPardazIntegration(c.Configuration, opt => { });
                     }
                     configurator?.Invoke(s);
 

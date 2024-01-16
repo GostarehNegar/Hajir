@@ -6,13 +6,39 @@
 	border-radius: 4px 4px 0 0;
 	border-bottom: 1px solid #ededed;
 }
+
 .main-container {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 1rem;
-	overflow:auto;
-	max-height:78vh;
+	overflow: auto;
+	max-height: 78vh;
+}
+
+.alert-container {
+	display: flex;
+	position: sticky;
+	width: 98%;
+	top: 0;
+	background-color: mintcream;
+	border: 1px solid #c7efdb;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1rem;
+	z-index: 100;
+}
+
+.bundle-name{
+	display:flex;
+	justify-content:flex-start;
+}
+
+.bundle-buttons{
+	display:flex;
+	flex-direction:column;
+	justify-content:flex-end;
+	gap:4px;
 }
 
 .form-container, .bundle-container {
@@ -28,8 +54,35 @@
 	border: 1px solid #d9ecfd;
 }
 
+.battery-container, .cabinet-container {
+	display: flex;
+	flex-direction: column;
+	padding: 1rem;
+	gap: 1rem;
+	background-color: #ffffffaa;
+	border-radius: 0.5rem;
+}
+
+.battery-fields, .cabinet-fields {
+	display: grid;
+	gap:0.5rem;
+}
+
+.battery-fields {
+	grid-template-columns: 1fr 1fr 1fr;
+}
+
+.cabinet-fields {
+	grid-template-columns: 1fr 1fr;
+}
+
+.save-battery, .save-cabinet {
+	display: flex;
+	justify-content:flex-end;
+}
+
 .bundle-container {
-	margin-bottom:1rem;
+	margin-bottom: 1rem;
 	/*background-color: mintcream;
     border:1px solid #d6f9e7;*/
 }
@@ -61,9 +114,10 @@
 .selected {
 	box-shadow: 0 0 0px 5px lightskyblue;
 }
+
 .actions-container {
 	border-top: 1px solid #ededed;
 	width: 110%;
 	padding: 8px;
-	margin:-8px;
+	margin: -8px;
 }

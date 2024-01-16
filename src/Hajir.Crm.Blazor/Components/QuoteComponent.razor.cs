@@ -43,7 +43,14 @@ namespace Hajir.Crm.Blazor.Components
         {
             using (var ctx = this.ServiceProvider.CreateHajirServiceContext())
             {
-                Quote = ctx.LoadQuoteByQuoteNumber(this.Id);
+                try
+                {
+                    Quote = ctx.LoadQuoteByQuoteNumber(this.Id);
+                }
+                catch (Exception err)
+                {
+                    this.SetError(err);
+                }
             }
             return base.OnParametersSetAsync();
         }

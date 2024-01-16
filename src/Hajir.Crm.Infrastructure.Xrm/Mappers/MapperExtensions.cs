@@ -38,6 +38,7 @@ namespace Hajir.Crm.Infrastructure.Xrm
 			result.SupportedBattries = product.SupportedBatteries;
 			result.NumberOfRows = product.GetNumberIfFloors();
 			result.Vendor = CabinetVendors.Hajir;
+			result.BatteryPower = int.TryParse(product.BatteryCurrent, out var p) ? p : 0; 
 			return result;
 		}
 

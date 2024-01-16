@@ -14,6 +14,7 @@ namespace Hajir.Crm.Features.Products
         public int Capacity => Cabinets.Sum(x => x.Capacity);
         public int Quantity => Cabinets.Sum(x => x.Quantity);
         public int Free => Cabinets.Sum(x => x.Free);
+        public int Targetquantity { get; private set; }
 
         public CabinetSet(IEnumerable<CabinetSpec> specs = null)
         {
@@ -83,6 +84,7 @@ namespace Hajir.Crm.Features.Products
 
         public int Fill(int numberOfBatteries)
         {
+            this.Targetquantity = numberOfBatteries;
             return this.Put(numberOfBatteries, true);
 
             Cabinets.ToList().ForEach(x => x.Clear());

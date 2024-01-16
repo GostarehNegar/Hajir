@@ -49,6 +49,14 @@ namespace Hajir.Crm.Entities
             set => this.SetAttribiuteValue(Schema.NumberOfFloors, value);
         }
 
+        [AttributeLogicalName(Schema.BatteryCurrent)]
+        public string BatteryCurrent
+        {
+            get => this.GetAttributeValue<string>(Schema.BatteryCurrent);
+            set => this.SetAttribiuteValue(Schema.BatteryCurrent, value);
+        }
+
+
         public int GetNumberIfFloors() => int.TryParse(NumberOfFloors, out var _r) ? _r : 0;
 
 

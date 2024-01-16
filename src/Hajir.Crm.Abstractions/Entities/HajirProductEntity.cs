@@ -20,6 +20,7 @@ namespace Hajir.Crm.Entities
             public const string ProductSerie = "rhs_productseries";
             public const string SupportedBatteries = "rhs_supportedbattries";
             public const string NumberOfFloors = "rhs_numberoffloors";
+            public const string BatteryCurrent = "rhs_currenta";
 
 
             public enum ProductTypes

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Hajir.Crm.Internals;
+using Hajir.Crm.Blazor.ViewModels;
 
 namespace Hajir.Crm.Blazor.Components
 {
@@ -22,6 +23,10 @@ namespace Hajir.Crm.Blazor.Components
         public void Dispose()
         {
             _disposables.ForEach(x => x.Dispose());
+        }
+        public void SetError(Exception err)
+        {
+            this.ServiceProvider.GetService<State<ErrorModel>>().SetState(new ErrorModel { Error=err });
         }
     }
     public class BaseComponent<T> : BaseComponent where T : class, new()

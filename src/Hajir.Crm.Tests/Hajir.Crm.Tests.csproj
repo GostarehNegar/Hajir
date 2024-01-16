@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hajir.Crm.Infrastructure.Xrm\Hajir.Crm.Infrastructure.Xrm.csproj" />
+    <ProjectReference Include="..\Hajir.Crm.Integration.SanadPardaz\Hajir.Crm.Integration.SanadPardaz.csproj" />
     <ProjectReference Include="..\Hajir.Crm\Hajir.Crm.csproj" />
   </ItemGroup>
 

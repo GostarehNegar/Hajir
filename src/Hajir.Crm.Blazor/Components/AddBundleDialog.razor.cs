@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using Hajir.Crm.Internals;
+using Hajir.Crm.Blazor.ViewModels;
+using System.Reflection.Metadata;
 
 namespace Hajir.Crm.Blazor.Components
 {
@@ -17,13 +20,15 @@ namespace Hajir.Crm.Blazor.Components
         MudDialogInstance MudDialog { get; set; }
 
         public BundleEditModel BundleModel;
+        public string ValidationMessage { get; set; }
 
         public IProductBundlingService BundlingService => this.ServiceProvider.GetService<IProductBundlingService>();
 
         public IEnumerable<Product> AllUpses => this.BundlingService.GetAllUpses();
         public IEnumerable<Product> AllBatteries => this.BundlingService.GetAllBatteries();
+        public IEnumerable<Product> AllCabinets => this.BundlingService.GetAllCabinets();
 
-        public Product Battery { get; set; }
+
 
         public IEnumerable<int> GetAllPowers => HajirBusinessRules.Instance.CabinetCapacityRules.GetKnownPowers().ToArray();
 
@@ -40,6 +45,11 @@ namespace Hajir.Crm.Blazor.Components
         public bool HasCabinet { get; set; } = false;
         public bool HasSNMP { get; set; } = false;
         public bool HasParallel { get; set; } = false;
+        public Product Battery { get; set; }
+        public int NumberOfBatteries { get; set; }
+        public Product Cabinet { get; set; }
+        public int NumberOfCabinets { get; set; }
+        public int LastDesignSuggestion { get; set; }
 
         protected override void OnInitialized()
         {
@@ -102,9 +112,70 @@ namespace Hajir.Crm.Blazor.Components
             }
         }
 
+        public void AddNewRow(Product product, int number)
+        {
+            try
+            {
+                if (number > 0)
+                {
+                    this.BundleModel.Bundle.AddRow(product, number);
+                    if (product.ProductType == Entities.HajirProductEntity.Schema.ProductTypes.Cabinet)
+                    {
+                        /// Resign
+                        /// 
+                        var design = this.BundleModel.Bundle.GetDesign();
+                        this.CabinetDesign = new CabinetSet[] { design };
+                        this.ValidationMessage = this.BundleModel.Bundle.Validate();
+
+
+
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                this.ServiceProvider.GetService<State<ErrorModel>>().SetState(new ErrorModel { Error = err });
+            }
+
+
+            StateHasChanged();
+        }
+
+        public void SuggestCabinet()
+        {
+            try
+            {
+                this.BundleModel.Bundle.Remove(Entities.HajirProductEntity.Schema.ProductTypes.Cabinet);
+                var battery_row = this.BundleModel.Bundle.Rows.FirstOrDefault(x => x.Product?.ProductType == Entities.HajirProductEntity.Schema.ProductTypes.Battery);
+                var designs  = this.BundlingService.Design(this.BundleModel.UPS, battery_row.Product.BatteryPower, battery_row.Quantity).ToArray();
+
+                if (this.LastDesignSuggestion < designs.Length)
+                {
+                    CabinetDesign = new CabinetSet[] { designs[this.LastDesignSuggestion] };
+                    var design = designs[this.LastDesignSuggestion];
+                    this.LastDesignSuggestion++;
+                    if (this.LastDesignSuggestion>= designs.Length)
+                    {
+                        this.LastDesignSuggestion = 0;
+                    }
+                    this.BundleModel.Bundle.Design = design;
+                }
+            }
+            catch (Exception err)
+            {
+                this.SetError(err);
+            }
+            StateHasChanged();
+        }
         public void SelectDesign(CabinetSet selected)
         {
             SelectedDesign = selected;
+        }
+        public void ClearCabinets()
+        {
+            this.BundleModel.Bundle.Remove(Entities.HajirProductEntity.Schema.ProductTypes.Cabinet);
+            this.CabinetDesign = Array.Empty<CabinetSet>();
+            StateHasChanged();
         }
 
         public void AddDesign()
