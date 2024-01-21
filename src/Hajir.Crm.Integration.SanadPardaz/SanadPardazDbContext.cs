@@ -24,6 +24,11 @@ namespace Hajir.Crm.Integration.SanadPardaz
         public DbSet<GoodCategory> GoodCategories { get; set; }
         public DbSet<GoodGroup> GoodGroups { get; set; }
         public DbSet<GoodGroupType> GoodGroupsType { get; set;}
+        public DbSet<DetailCode> DetailCodes { get; set; }
+        public DbSet<DetailType> DetailTypes { get; set; }
+        public DbSet<DetailClass> DetailClasses { get; set; }
+
+
              
     }
 }

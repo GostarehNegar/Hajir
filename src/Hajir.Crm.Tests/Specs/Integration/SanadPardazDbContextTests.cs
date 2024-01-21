@@ -24,11 +24,17 @@ namespace Hajir.Crm.Tests.Specs.Integration
                 var target = scope.ServiceProvider.GetService<SanadPardazDbContext>();
                 var db = target.Database;
                 var f = await db.CanConnectAsync();
+
                 var goods = target.Goods.ToArray();
                 var cats = target.GoodCategories.ToArray();
                 var groups = target.GoodGroups.ToArray();
                 var types = target.GoodGroupsType.ToArray();
                 var ff = goods.Where(x => x.GoodName.Contains("UPS")).ToArray();
+                var detials = target.DetailCodes.Take(1000).ToArray();
+                var _types = target.DetailTypes.ToArray();
+                var classes = target.DetailClasses.ToArray();
+
+
             }
 
         }
