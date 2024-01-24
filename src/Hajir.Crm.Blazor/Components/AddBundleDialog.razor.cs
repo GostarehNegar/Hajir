@@ -147,18 +147,22 @@ namespace Hajir.Crm.Blazor.Components
             {
                 this.BundleModel.Bundle.Remove(Entities.HajirProductEntity.Schema.ProductTypes.Cabinet);
                 var battery_row = this.BundleModel.Bundle.Rows.FirstOrDefault(x => x.Product?.ProductType == Entities.HajirProductEntity.Schema.ProductTypes.Battery);
-                var designs  = this.BundlingService.Design(this.BundleModel.UPS, battery_row.Product.BatteryPower, battery_row.Quantity).ToArray();
-
-                if (this.LastDesignSuggestion < designs.Length)
+                if (battery_row == null)
+                    throw new Exception(message: "باتری انتخاب نشده است");
+                else
                 {
-                    CabinetDesign = new CabinetSet[] { designs[this.LastDesignSuggestion] };
-                    var design = designs[this.LastDesignSuggestion];
-                    this.LastDesignSuggestion++;
-                    if (this.LastDesignSuggestion>= designs.Length)
+                    var designs = this.BundlingService.Design(this.BundleModel.UPS, battery_row.Product.BatteryPower, battery_row.Quantity).ToArray();
+                    if (this.LastDesignSuggestion < designs.Length)
                     {
-                        this.LastDesignSuggestion = 0;
+                        CabinetDesign = new CabinetSet[] { designs[this.LastDesignSuggestion] };
+                        var design = designs[this.LastDesignSuggestion];
+                        this.LastDesignSuggestion++;
+                        if (this.LastDesignSuggestion >= designs.Length)
+                        {
+                            this.LastDesignSuggestion = 0;
+                        }
+                        this.BundleModel.Bundle.Design = design;
                     }
-                    this.BundleModel.Bundle.Design = design;
                 }
             }
             catch (Exception err)

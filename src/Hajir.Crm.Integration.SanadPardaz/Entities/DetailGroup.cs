@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.SqlTypes;
 using System.Text;
 
 namespace Hajir.Crm.Integration.SanadPardaz.Entities
 {
-    [Table("Good")]
-    public class Good
+    [Table("A_detailGroup")]
+    public class DetailGroup
     {
         [Key]
-        public string GoodCode { get; set; }
-        public string GoodName { get; set;}
-        public Int16 CatCode { get; set;}
-        public int Gid { get; set; }
+        public int GroupId { get; set; }
+        public string GroupName { get; set; }
+        public string GroupCode { get; set; }
+
     }
 }

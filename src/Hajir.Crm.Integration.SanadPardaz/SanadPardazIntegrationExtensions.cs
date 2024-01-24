@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Hajir.Crm.Features.Integration.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -12,6 +13,7 @@ namespace Hajir.Crm.Integration.SanadPardaz
             services.AddDbContext<SanadPardazDbContext>((sp, opt) => {
                 opt.UseSqlServer(configuration.GetConnectionString("sanadpardaz"));
             });
+            services.AddScoped<ISanadPardazDbContext>(sp => sp.GetService<SanadPardazDbContext>());
             return services;
         }
     }
