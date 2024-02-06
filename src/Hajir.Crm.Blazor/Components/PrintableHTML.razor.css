@@ -2,35 +2,38 @@
 	display: grid;
 	grid-template-columns: 20% 60% 20%;
 	height: 120px;
-	background-image: url('/img/header.png');
-	background-position-x: right;
-	background-size: contain;
-	background-repeat: no-repeat;
 }
 
 	.header > div {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		font-weight:bold;
+		font-weight: bold;
 	}
 
+.header-bg {
+	background-image: url('/img/header.png');
+	background-position-x: right;
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
 .date-number {
-	display:flex;
-	flex-direction:column;
-	gap:1rem;
-	padding:1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	padding: 1rem;
 }
 
-.date-number-row{
-	display:flex;
-	gap:1rem;
-}	
-
-.date-number-row > div {
-	text-align:start;
-	width:10rem;
+.date-number-row {
+	display: flex;
+	gap: 1rem;
 }
+
+	.date-number-row > div {
+		text-align: start;
+		width: 10rem;
+	}
 
 .client {
 	display: flex;
@@ -39,7 +42,7 @@
 	padding: 1rem;
 }
 
-.aggregate-table, .products-table {
+.aggregate-table, .products-table, .total-table {
 	width: 100%;
 	margin-block: 0.5rem;
 	/**/
@@ -114,7 +117,7 @@ tr:last-child > td:last-child {
 
 	.description > div:nth-child(2) {
 		display: flex;
-		flex-direction:column;
+		flex-direction: column;
 		gap: 0.5rem;
 	}
 
@@ -128,15 +131,17 @@ tr:last-child > td:last-child {
 
 .footer {
 	height: 120px;
+	display: flex;
+	justify-content: start;
+	padding: 1rem;
+}
+
+	.footer > img {
+	}
+
+.footer-bg {
 	background-image: url('/img/footer.png');
 	background-position-x: left;
 	background-size: contain;
 	background-repeat: no-repeat;
-	display: flex;
-	justify-content:start;
-	padding:1rem;
 }
-
-	.footer > img {
-
-	}

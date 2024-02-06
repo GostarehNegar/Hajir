@@ -1,70 +1,86 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using GN;
-using Microsoft.AspNetCore;
+using NLog;
+using NLog.Web;
+using GN.Library.Messaging.Transports.SignalR;
+using GN.Library.Messaging;
 using GN.Library.Win32.Hosting;
 using System.IO;
-using GN.Library.Xrm;
-using GN.Library.Api;
-using GN.Library.Messaging;
-using Microsoft.AspNetCore.Builder;
-using NLog.Web;
-using Microsoft.Extensions.DependencyInjection;
-using GN.Library.Xrm.Services.Bus;
-using Hajir.Crm.Xrm.Service.Handlers;
+using System.Diagnostics;
 
-namespace Hajir.Crm.Xrm.Service
+namespace Hajir.Crm.Infrastructure.Service
 {
     public class Program
     {
         public static void Main(string[] args)
         {
             //CreateHostBuilder(args).Build().UseGNLib().Run();
+            //CreateHostBuilder(args).Build().Run();
+            Console.WriteLine(Process.GetCurrentProcess().MainModule?.FileName);
             CreateWindowsService(args).Run();
-
         }
-
-        public static IWebHostBuilder CreateHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .ConfigureLogging(opt => { opt.ClearProviders(); })
-                .ConfigureAppConfiguration(opt => { opt.AddJsonFile("appsettings.json"); })
-                .ConfigureServices((c, s) =>
-                {
-                    ConfigureNLog(args, c.Configuration);
-                    s.AddGNLib(c.Configuration, opt => { opt.HealthCheck.Enabled = true; });
-                    s.AddMessagingServices(c.Configuration, opt => { });
-                    s.AddXrmServices(c.Configuration, opt => {
-
-                        opt.AddXrmMessageBus = true;
-                        opt.ConnectionOptions = ConnectionOptions.OrganizationService;
-                    });
-                    s.AddLibraryApi();
-                    s.AddSignalRTransport(c.Configuration, opt => { });
-                    s.AddMvc();
-                    s.AddTransient<IXrmMessageHandler, XrmContactHandler>();
-                    
-                })
-
-                .Configure(app => {
-                    app.UseMvc();
-                    
-                })
-                .UseNLog()
-                .UseUrlsEx();
-
         public static IWindowsServiceHost CreateWindowsService(string[] args)
         {
             return WindowsServiceHost.CreateDefaultBuilder(args)
                 .UseWebHostBuilder(CreateHostBuilder(args))
-                .ConfigureWindowsService("Hajir.Xrm.Service", "Hajir Xrm Service", null)
-                .Build(w=>w.UseGNLib());
+                .ConfigureWindowsService("Hajir.Infrastructure.Service", "Hajir Infrastructure Service", null)
+                .Build1(w => w.UseGNLib());
         }
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                //.UseWindowsService()
+                .UseDefaultServiceProvider(s => s.ValidateScopes = false)
+        //.ConfigureAppConfiguration(c => ConfigureAppConfiguration(c, args))
+        //.ConfigureLogging(logging => ConfigureLogging(logging))
+                .ConfigureWebHostDefaults(cfg =>
+                {
+                    cfg.UseUrlsEx();
+                    cfg.UseNLog();
+                    cfg.Configure(app =>
+                    {
+
+                        app.UseRouting();
+                        app.UseStaticFiles();
+                        app.UseEndpoints(endpoints =>
+                        {
+                            endpoints.MapControllers();
+                        });
+                        app.UseSignalREventHub();
+
+
+                        //ConfigureApp(app);
+
+                    });
+                })
+                .ConfigureServices((c, s) =>
+                {
+                    //NetCore = true;
+                    //DefaultConfigureServices(c.Configuration, s, args);
+                    //_configureServices(c.Configuration, s, args);
+                    ConfigureNLog(args, c.Configuration);
+                    s.AddGNLib(c.Configuration, opt => { });
+                    s.AddMessagingServices(c.Configuration, opt => 
+                    {
+                        
+                    });
+                    s.AddSignalRHub(c.Configuration, opt => { opt.Enabled = true; });
+                    var ff = s.AddControllers();
+                    //foreach (var asm in Options.ApplicationParts ?? new Assembly[] { })
+                    //{
+                    //    ff.AddApplicationPart(asm);
+                    //}
+                });
+
         public static NLog.LogFactory ConfigureNLog(string[] args, IConfiguration configuration)
         {
             NLog.LogFactory result = null;
@@ -116,6 +132,12 @@ namespace Hajir.Crm.Xrm.Service
 
         }
 
-
+        public static IHostBuilder CreateHostBuilder1(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }

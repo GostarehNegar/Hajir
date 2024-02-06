@@ -1,7 +1,7 @@
 ﻿@inherits BaseComponent
 @using MudBlazor;
 
-<div class="number">@Quote.QuoteNumber</div>
+<div class="number">@Quote?.QuoteNumber</div>
 
 <table class="aggregate-table">
     <tr>
@@ -67,6 +67,8 @@
         </tr>
     }
 </table>
+
+<QuoteSetting></QuoteSetting>
 
 <MudButton Variant="Variant.Text" Color="Color.Error" Size="Size.Large" OnClick="Test">Test</MudButton>
 <MudButton Variant="Variant.Text" Color="Color.Tertiary" Size="Size.Large" OnClick="Print">Print</MudButton>

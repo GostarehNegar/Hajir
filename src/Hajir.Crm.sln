@@ -43,13 +43,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Xrm.Tests", "Haji
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Infrastructure.Xrm", "Hajir.Crm.Infrastructure.Xrm\Hajir.Crm.Infrastructure.Xrm.csproj", "{5EB3F34B-9991-4062-845A-CF83D3FDE340}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Integration.SanadPardaz", "Hajir.Crm.Integration.SanadPardaz\Hajir.Crm.Integration.SanadPardaz.csproj", "{DDBF98DA-9339-45BF-926A-6C4BD4643BE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Integration.SanadPardaz", "Hajir.Crm.Integration.SanadPardaz\Hajir.Crm.Integration.SanadPardaz.csproj", "{DDBF98DA-9339-45BF-926A-6C4BD4643BE8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{6E5C4971-007F-4C2C-B998-C3D5949F40A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Integration.Service", "Hajir.Crm.Integration.Service\Hajir.Crm.Integration.Service.csproj", "{A2E3DF9B-B6ED-4B0B-9968-D120D8134A63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Integration.Service", "Hajir.Crm.Integration.Service\Hajir.Crm.Integration.Service.csproj", "{A2E3DF9B-B6ED-4B0B-9968-D120D8134A63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Xrm.Service", "Hajir.Crm.Xrm.Service\Hajir.Crm.Xrm.Service.csproj", "{61D72884-0BED-4D03-BE8E-E14052FEAB71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Xrm.Service", "Hajir.Crm.Xrm.Service\Hajir.Crm.Xrm.Service.csproj", "{61D72884-0BED-4D03-BE8E-E14052FEAB71}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GN.Library.Messaging.Transports.SignalR", "Library\GN.Library.Messaging.Transports.SignalR\GN.Library.Messaging.Transports.SignalR.csproj", "{E6D96B04-E9ED-453E-A58A-1FFC5ABCF97A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GN.Library.Win32", "Library\GN.Library.Win32\GN.Library.Win32.csproj", "{F4C13D1D-96C8-492E-ABBA-2493FCD4EB38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Infrastructure.Service", "Hajir.Crm.Infrastructure.Service\Hajir.Crm.Infrastructure.Service.csproj", "{D09DB99E-98CE-4D3C-A006-5C44C56240B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -145,6 +151,18 @@ Global
 		{61D72884-0BED-4D03-BE8E-E14052FEAB71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61D72884-0BED-4D03-BE8E-E14052FEAB71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61D72884-0BED-4D03-BE8E-E14052FEAB71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6D96B04-E9ED-453E-A58A-1FFC5ABCF97A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6D96B04-E9ED-453E-A58A-1FFC5ABCF97A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6D96B04-E9ED-453E-A58A-1FFC5ABCF97A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6D96B04-E9ED-453E-A58A-1FFC5ABCF97A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4C13D1D-96C8-492E-ABBA-2493FCD4EB38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4C13D1D-96C8-492E-ABBA-2493FCD4EB38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4C13D1D-96C8-492E-ABBA-2493FCD4EB38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4C13D1D-96C8-492E-ABBA-2493FCD4EB38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D09DB99E-98CE-4D3C-A006-5C44C56240B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D09DB99E-98CE-4D3C-A006-5C44C56240B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D09DB99E-98CE-4D3C-A006-5C44C56240B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D09DB99E-98CE-4D3C-A006-5C44C56240B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -163,6 +181,9 @@ Global
 		{FD8692E9-0958-45B6-9B00-5F05719E6535} = {412E5D3F-049E-4723-B7E3-C364876198A2}
 		{A2E3DF9B-B6ED-4B0B-9968-D120D8134A63} = {6E5C4971-007F-4C2C-B998-C3D5949F40A6}
 		{61D72884-0BED-4D03-BE8E-E14052FEAB71} = {6E5C4971-007F-4C2C-B998-C3D5949F40A6}
+		{E6D96B04-E9ED-453E-A58A-1FFC5ABCF97A} = {412E5D3F-049E-4723-B7E3-C364876198A2}
+		{F4C13D1D-96C8-492E-ABBA-2493FCD4EB38} = {412E5D3F-049E-4723-B7E3-C364876198A2}
+		{D09DB99E-98CE-4D3C-A006-5C44C56240B9} = {6E5C4971-007F-4C2C-B998-C3D5949F40A6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {30CDE44F-4F30-4755-B9AD-4D13BFD2160F}

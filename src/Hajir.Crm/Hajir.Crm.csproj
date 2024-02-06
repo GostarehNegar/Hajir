@@ -38,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Validation\" />
     <Folder Include="Infrastructure\Data\" />
     <Folder Include="Infrastructure\Integration\" />
     <Folder Include="Products\" />

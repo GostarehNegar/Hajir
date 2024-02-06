@@ -1,6 +1,6 @@
 ﻿@inherits BaseComponent;
 
-<div class="header">
+<div class="@(HasHeader ? "header header-bg" : "header")">
     <div></div>
     <div>پیش فاکتور</div>
     <div class="date-number">
@@ -20,63 +20,85 @@
     <div>شرکت گستره نگار - آقای مهندس محمودی</div>
 </div>
 
-<table class="aggregate-table">
-    <tr>
-        <th>محصول</th>
-        <th>قیمت واحد</th>
-        <th>تعداد</th>
-        <th>تخفیف</th>
-        <th>مبلغ</th>
-    </tr>
-    @foreach (var product in Quote.AggregateProducts)
-    {
+@if (IsAggregated)
+{
+    <table class="aggregate-table">
         <tr>
-            <td>@product.Name</td>
-            <td>@product.PricePerUint</td>
-            <td>
-                <div class="q-cell">
-                    <div>
-                        @product.Quantity
+            <th>محصول</th>
+            <th>قیمت واحد</th>
+            <th>تعداد</th>
+            <th>تخفیف</th>
+            <th>مبلغ</th>
+        </tr>
+        @foreach (var product in Quote.AggregateProducts)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.PricePerUint</td>
+                <td>
+                    <div class="q-cell">
+                        <div>
+                            @product.Quantity
+                        </div>
+                        <div class="arrows">
+                        </div>
                     </div>
-                    <div class="arrows">
-                    </div>
-                </div>
-            </td>
-            <td>@product.ManualDiscount</td>
-            <td>@product.Amount</td>
-        </tr>
-    }
+                </td>
+                <td>@product.ManualDiscount</td>
+                <td>@product.Amount</td>
+            </tr>
+        }
 
-</table>
+    </table>
+}
+else
+{
+    <table class="products-table">
+        <tr>
+            @foreach (var header in ProductTableGenerator())
+            {
+                <th>@header</th>
+            }
+        </tr>
+        @foreach (var line in Quote.Lines)
+        {
+            <tr>
+                <td>@line.Name</td>
+                <td>@line.Quantity</td>
+                <td>@line.PricePerUnit</td>
+                @if (DiscountMode==Discount.INLINE)
+                {
+                    <td>@line.Discount</td>
+                }
+                <td>@line.Amount</td>
+            </tr>
+        }@if (Quote.Lines.Count() == 0)
+        {
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        }
+    </table>
 
-<table class="products-table">
-    <tr>
-        <th>محصول</th>
-        <th>قیمت واحد</th>
-        <th>تعداد</th>
-        <th>تخفیف</th>
-        <th>مبلغ</th>
-    </tr>
-    @foreach (var line in Quote.Lines)
-    {
+    <table class="total-table">
         <tr>
-            <td>@line.Name</td>
-            <td>@line.PricePerUnit</td>
-            <td>@line.Quantity</td>
-            <td>@line.Discount</td>
-            <td>@line.Amount</td>
+            @foreach (var header in TotalTableGenerator())
+            {
+                <th>@header</th>
+            }
         </tr>
-    }@if (Quote.Lines.Count() == 0)
-    {
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            @foreach (var header in TotalTableGenerator())
+            {
+                <td></td>               
+            }
         </tr>
-    }
-</table>
+    </table>
+}
 
 <div class="description">
     <div>توضیحات</div>
@@ -94,8 +116,8 @@
     <div>کارشناس فروش: رضا رحیمی</div>
 </div>
 
-<div class="footer">
-    <img src="/img/danke.png" alt="از انتخاب شما سپاسگزاریم" height=80/>
+<div class="@(HasHeader ? "footer footer-bg" : "footer")">
+    <img src="/img/danke.png" alt="از انتخاب شما سپاسگزاریم" height=80 />
 </div>
 
 

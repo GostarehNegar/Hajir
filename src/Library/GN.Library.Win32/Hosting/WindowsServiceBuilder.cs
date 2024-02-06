@@ -9,38 +9,49 @@ using System.Threading.Tasks;
 
 namespace GN.Library.Win32.Hosting
 {
-	public class WindowsServiceBuilder
-	{
-		private IWebHostBuilder webHostBuilder;
-		private IHostBuilder hostBuilder;
-		public string ServiceName { get; set; }
-		public string ServiceDisplayName { get; set; }
-		public string ServiceArguments { get; set; }
-		internal string[] Args;
+    public class WindowsServiceBuilder
+    {
+        private IWebHostBuilder webHostBuilder;
+        private IHostBuilder hostBuilder;
+        public string ServiceName { get; set; }
+        public string ServiceDisplayName { get; set; }
+        public string ServiceArguments { get; set; }
+        internal string[] Args;
 
-		internal WindowsServiceBuilder(string[] args)
-		{
-			this.Args = args;
-		}
+        internal WindowsServiceBuilder(string[] args)
+        {
+            this.Args = args;
+        }
 
-		public WindowsServiceBuilder UseWebHostBuilder(IWebHostBuilder builder)
-		{
-			this.webHostBuilder = builder;
-			return this;
-		}
-		public WindowsServiceBuilder ConfigureWindowsService(string name, string displayName, string args = null)
-		{
-			
-			this.ServiceName = name;
-			this.ServiceDisplayName = displayName;
-			this.ServiceArguments = args;
-			return this;
+        public WindowsServiceBuilder UseWebHostBuilder(IHostBuilder builder)
+        {
+            this.hostBuilder = builder;
+            return this;
+        }
+        public WindowsServiceBuilder UseWebHostBuilder(IWebHostBuilder builder)
+        {
+            this.webHostBuilder = builder;
+            return this;
+        }
+        public WindowsServiceBuilder ConfigureWindowsService(string name, string displayName, string args = null)
+        {
 
-		}
-		public IWindowsServiceHost Build()
-		{
+            this.ServiceName = name;
+            this.ServiceDisplayName = displayName;
+            this.ServiceArguments = args;
+            return this;
 
-			return new WindowsServiceHost(this, webHostBuilder?.Build(), hostBuilder?.Build());
-		}
-	}
+        }
+        public IWindowsServiceHost Build(Func<IWebHost, IWebHost> func)
+        {
+
+            return new WindowsServiceHost(this, func == null ? webHostBuilder?.Build() : func(webHostBuilder?.Build()), hostBuilder?.Build());
+        }
+        public IWindowsServiceHost Build1(Func<IHost, IHost> func)
+        {
+
+            return new WindowsServiceHost(this,null, func == null ? hostBuilder?.Build() : func(hostBuilder?.Build()));
+        }
+    }
 }
+

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.ServiceModel.Activation.Configuration;
@@ -91,7 +92,9 @@ namespace GN.Library.Win32.Hosting
 				result = WindowsServiceInstaller.ServiceIsInstalled(this.builder.ServiceName);
 				if (!result)
 				{
-					var executable = Environment.GetCommandLineArgs()[0];
+					//var executable = Environment.GetCommandLineArgs()[0].ToLower().Replace(".dll", ".exe");
+					var executable = Process.GetCurrentProcess().MainModule?.FileName;
+					Console.WriteLine(executable);
 					if (!Path.IsPathRooted(executable))
 					{
 						executable = Path.GetFullPath(executable);

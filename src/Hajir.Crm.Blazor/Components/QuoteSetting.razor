@@ -1,0 +1,37 @@
+﻿@inherits BaseComponent
+@using MudBlazor
+
+<div class="quote-setting">
+    <div class="@(Official.IsOfficial ? "toggle-button active" : "toggle-button inactive")" @onclick="Official.Toggle">
+        @Official.Label
+    </div>
+    <div class="@(HeaderOption.HasHeader ? "toggle-button active" : "toggle-button inactive")" @onclick="HeaderOption.Toggle">
+        @HeaderOption.Label
+    </div>
+    <div class="@(Aggregate.IsAggregated ? "toggle-button active" : "toggle-button inactive")" @onclick="Aggregate.Toggle">
+        @Aggregate.Label
+    </div>
+    <div class="@(Data.HasDatasheet ? "toggle-button active" : "toggle-button inactive")" @onclick="Data.Toggle">
+        @Data.Label
+    </div>
+    <MudMenu>
+        <ActivatorContent>
+
+            <div class="@(Discount.Discount!=DiscountControl.DiscountMode.NO_DISCOUNT? "toggle-button active discount": "toggle-button inactive discount")">
+                @Discount.Label
+                <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown"></MudIcon>
+            </div>
+
+        </ActivatorContent>
+        <ChildContent>
+            @*@for (int i = 0; i <= Discount.Labels.Count()-1; i++)
+            {
+            <MudMenuItem OnClick="()=>Discount.Check(i)">@Discount.Labels[i]</MudMenuItem>
+            }*@
+            <MudMenuItem OnClick="()=>Discount.Check(0)">@Discount.Labels[0]</MudMenuItem>
+            <MudMenuItem OnClick="()=>Discount.Check(1)">@Discount.Labels[1]</MudMenuItem>
+            <MudMenuItem OnClick="()=>Discount.Check(2)">@Discount.Labels[2]</MudMenuItem>
+            <MudMenuItem OnClick="()=>Discount.Check(3)">@Discount.Labels[3]</MudMenuItem>
+        </ChildContent>
+    </MudMenu>
+</div>

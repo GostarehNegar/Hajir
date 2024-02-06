@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Hajir.Crm.Integration.Service
+namespace Hajir.Crm.Infrastructure.Service
 {
     public class Startup
     {

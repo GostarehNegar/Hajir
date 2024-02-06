@@ -16,7 +16,7 @@ namespace Hajir.Crm.Xrm.Tests
 
 			var o = new GN.Library.Xrm.XrmOrganizationService(cc);
 			o.TestConnection();
-			var q = o.CreateQuery("systemuser");
+			var q = o.CreateQuery("contact");
 			var contacts = q.Take(10).ToArray();
 			
 		}
