@@ -98,7 +98,7 @@ namespace Hajir.Crm.Tests.Specs.Products
         [TestMethod]
         public async Task can_design_bundles()
         {
-            var host = this.GetHost();
+            var host = this.GetDefaultHost();
             var target = new ProductBundle();
             var ups = new Product();
             ups.ProductType = HajirProductEntity.Schema.ProductTypes.UPS;

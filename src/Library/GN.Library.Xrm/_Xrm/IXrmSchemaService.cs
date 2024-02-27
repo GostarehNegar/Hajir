@@ -165,6 +165,7 @@ namespace GN.Library.Xrm
         Task<IXrmEntitySchema> GetSchemaAsync(string logicalName, Type entityType = null, bool refresh = false);
         Task<IEnumerable<string>> GetLogicalNamesAsync(bool refresh = false);
         void AttachTo(IXrmDataServices dataContext);
+        List<Tuple<int?, string>> GetOptionSetData(string entityName, string propertyName);
     }
     public interface IXrmEntitySchema
     {
@@ -1136,6 +1137,26 @@ namespace GN.Library.Xrm
             return await Task.FromResult(result).ConfigureAwait(false);
         }
 
+        public List<Tuple<int?,string>> GetOptionSetData(string entityName, string propertyName)
+        {
+            var attributeRequest = new RetrieveAttributeRequest
+            {
+                EntityLogicalName = entityName,
+                LogicalName = propertyName,
+                RetrieveAsIfPublished = false
+            };
+            var s = this.dataContext.GetXrmOrganizationService().GetOrganizationService();
+            RetrieveAttributeResponse response = s.Execute(attributeRequest) as RetrieveAttributeResponse;
+
+            EnumAttributeMetadata attributeData = (EnumAttributeMetadata)response.AttributeMetadata;
+
+            var optionList = (from option in attributeData.OptionSet.Options
+                              select new Tuple<int?,string>(
+                                option.Value,
+                                option.Label.UserLocalizedLabel.Label))
+              .ToList();
+            return optionList;
+        }
 
     }
 

@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace Hajir.Crm.Tests.Specs.Infrastructure
 {
@@ -22,7 +21,7 @@ namespace Hajir.Crm.Tests.Specs.Infrastructure
 		[TestMethod]
 		public async Task can_load_quote()
 		{
-			var host = this.GetHost();
+			var host = this.GetDefaultHost();
 			var quote_id = host.Services
 				.GetService<IXrmDataServices>()
 				.GetRepository<XrmQuote>()
@@ -42,7 +41,7 @@ namespace Hajir.Crm.Tests.Specs.Infrastructure
 		[TestMethod]
 		public async Task load_pricelists()
 		{
-			var host = this.GetHost();
+			var host = this.GetDefaultHost();
 			var target = host.Services
 				.GetService<IQuoteRepository>()
 				.LoadAllPriceLists();
@@ -85,7 +84,7 @@ namespace Hajir.Crm.Tests.Specs.Infrastructure
 		[TestMethod]
 		public async Task how_bundles_are_added_to_qoutes()
 		{
-			var host = this.GetHost();
+			var host = this.GetDefaultHost();
 
 
 			/// We can create a new quote.
@@ -145,7 +144,7 @@ namespace Hajir.Crm.Tests.Specs.Infrastructure
 		[TestMethod]
 		public async Task how_quote_recalculate_works()
 		{
-			var host = this.GetHost();
+			var host = this.GetDefaultHost();
 			host.Services.CreateHajirServiceContext();
 			GC.Collect();
 			return;

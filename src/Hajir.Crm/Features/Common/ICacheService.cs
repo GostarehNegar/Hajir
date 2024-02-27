@@ -1,4 +1,5 @@
-﻿using Hajir.Crm.Features.Products;
+﻿using Hajir.Crm.Entities;
+using Hajir.Crm.Features.Products;
 using Hajir.Crm.Features.Sales;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,7 @@ namespace Hajir.Crm.Features.Common
 		IEnumerable<UnitOfMeasurements> UnitOfMeasurements { get; }
 		IEnumerable<PriceList> PriceLists { get; }
 		IEnumerable<ProductSeries> ProductSeries { get; }
+		IEnumerable<HajirCityEntity> Cities {get;}
+		IEnumerable<HajirIndustryEntity> Industries { get;}
 	}
 }

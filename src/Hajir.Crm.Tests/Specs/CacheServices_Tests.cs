@@ -15,11 +15,13 @@ namespace Hajir.Crm.Tests.Specs
 		[TestMethod]
 		public async Task how_cache_services_works()
 		{
-			var host = this.GetHost();
+			var host = this.GetDefaultHost();
 			var target = host.Services.GetService<ICacheService>();
 			var pl = target.PriceLists;
 			var products = target.Products;
 			var series = target.ProductSeries;
+			var cities = target.Cities;
+			var industries = target.Industries;
 
 
 

@@ -59,7 +59,7 @@ namespace Hajir.Crm.Tests
             };
 
         }
-        public static IHost GetDefaultHost(Action<IServiceCollection> configurator = null, bool bypassDefaults = false)
+        public static IHost GetDefaultHost(Action<IConfiguration,IServiceCollection> configurator = null, bool bypassDefaults = false)
         {
             return GN.AppHost.GetHostBuilder()
                 .ConfigureAppConfiguration(c => c.AddJsonFile("appsettings.json"))
@@ -68,12 +68,12 @@ namespace Hajir.Crm.Tests
                     if (!bypassDefaults)
                     {
                         s.AddGNLib(c.Configuration, cfg => { });
-                        s.AddXrmServices(c.Configuration, cfg => { });
+                        s.AddXrmServices(c.Configuration, cfg => { cfg.ConnectionOptions = ConnectionOptions.OrganizationService; });
                         s.AddHajirCrm(c.Configuration, cfg => { });
                         s.AddHajirInfrastructure(c.Configuration);
                         s.AddSanadPardazIntegration(c.Configuration, opt => { });
                     }
-                    configurator?.Invoke(s);
+                    configurator?.Invoke(c.Configuration, s);
 
 
                 })

@@ -1,8 +1,10 @@
 ﻿using Hajir.Crm.Features.Common;
+using Hajir.Crm.Features.Integration.Infrastructure;
 using Hajir.Crm.Features.Products;
 using Hajir.Crm.Features.Sales;
 using Hajir.Crm.Infrastructure.Xrm.Cache;
 using Hajir.Crm.Infrastructure.Xrm.Data;
+using Hajir.Crm.Infrastructure.Xrm.Integration;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -23,7 +25,10 @@ namespace Microsoft.Extensions.DependencyInjection
 			services.AddTransient<IMemoryCache, MemoryCache>();
 			services.AddSingleton<CacheService>();
 			services.AddSingleton<ICacheService>(sp => sp.GetService<CacheService>());
-			return services;
+            services.AddScoped<ILegacyCrmStore, XrmLegacyContactRepository>();
+			services.AddTransient<IIntegrationStore, XrmIntegrationStore>();
+
+            return services;
 		}
 	}
 }

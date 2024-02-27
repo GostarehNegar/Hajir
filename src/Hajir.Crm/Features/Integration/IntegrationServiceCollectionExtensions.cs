@@ -14,6 +14,9 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddHajirIntegrationServices(this IServiceCollection services, IConfiguration configuration, Action<HajirIntegrationOptions> configure)
         {
             //services.AddHajirInfrastructure(configuration);
+            var opt = new HajirIntegrationOptions();
+            configure?.Invoke(opt);
+            services.AddSingleton(opt.Validate());
             services.AddSingleton<IntegrationBackgroundService>();
             services.AddHostedService(sp=> sp.GetService<IntegrationBackgroundService>());
 

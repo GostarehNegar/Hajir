@@ -4,7 +4,11 @@ using System.Text;
 
 namespace Hajir.Crm.Features.Integration.Infrastructure
 {
-    internal class ILegacyCrmStore
+    public interface ILegacyCrmStore : IDisposable
     {
+        IEnumerable< IntegrationContact> ReadContacts(int skip, int take);
+        IEnumerable<IntegrationAccount> ReadAccounts(int skip, int take);
+        IntegrationAccount GetAccount(string id);
+        int GetContatCount();
     }
 }

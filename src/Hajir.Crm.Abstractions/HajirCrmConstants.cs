@@ -17,5 +17,6 @@ namespace Hajir.Crm
             {100,03,02}
         };
         public const string RahsamSolutionPerfix = "rhs_";
+        public const string DefaultLegacyCrmConnectionString = "Url=http://192.168.20.15:5555/hajircrm;UserName=CRMIMPU01;Password=%H@ZH!r_1402&$;Domain=hsco";
     }
 }

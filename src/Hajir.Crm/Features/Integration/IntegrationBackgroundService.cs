@@ -20,13 +20,14 @@ namespace Hajir.Crm.Features.Integration
             this.serviceProvider = serviceProvider;
         }
 
+
+
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            var tasks = new List<Task>();
+            tasks.Add(new IntegrationServiceContext(this.serviceProvider,"ImportLegacyContacts",stoppingToken).ImportContacts().ContinueWith(ctx => ctx.Dispose()));
+            return Task.WhenAll(tasks);
 
-            return Task.Run(async () =>
-            {
-                await Task.CompletedTask;
-            });
 
         }
 

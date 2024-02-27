@@ -1,4 +1,6 @@
 
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,7 +12,7 @@ namespace Hajir.Crm.Tests
 	public class TestFixture
 	{
 		IHost host;
-		protected IHost GetHost(Action<IServiceCollection> configurator=null, bool bypassDefaults = false)
+		protected IHost GetDefaultHost(Action<IConfiguration, IServiceCollection> configurator=null, bool bypassDefaults = false)
 		{
 			if (this.host == null || configurator != null)
 			{

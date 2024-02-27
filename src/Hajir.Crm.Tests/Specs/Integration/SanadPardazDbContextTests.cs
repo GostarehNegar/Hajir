@@ -19,7 +19,7 @@ namespace Hajir.Crm.Tests.Specs.Integration
         [TestMethod]
         public async Task DbContextWorks()
         {
-            var host = this.GetHost();
+            var host = this.GetDefaultHost();
             using (var scope = host.Services.CreateScope())
             {
                 var target = scope.ServiceProvider.GetService<SanadPardazDbContext>();
@@ -44,7 +44,7 @@ namespace Hajir.Crm.Tests.Specs.Integration
         [TestMethod]
         public async Task dbcontext_should_support_getaccounts()
         {
-            var host = this.GetHost();
+            var host = this.GetDefaultHost();
             using (var scope = host.Services.CreateScope())
             {
                 var target = scope.ServiceProvider.GetService<ISanadPardazDbContext>();
@@ -57,7 +57,7 @@ namespace Hajir.Crm.Tests.Specs.Integration
         [TestMethod]
         public async Task dbcontext_should_support_getcontacts()
         {
-            var host = this.GetHost();
+            var host = this.GetDefaultHost();
             using (var scope = host.Services.CreateScope())
             {
                 var target = scope.ServiceProvider.GetService<ISanadPardazDbContext>();
@@ -70,7 +70,7 @@ namespace Hajir.Crm.Tests.Specs.Integration
         [TestMethod]
         public async Task dbcontext_should_support_getproducts()
         {
-            var host = this.GetHost();
+            var host = this.GetDefaultHost();
             using (var scope = host.Services.CreateScope())
             {
                 var target = scope.ServiceProvider.GetService<ISanadPardazDbContext>();
