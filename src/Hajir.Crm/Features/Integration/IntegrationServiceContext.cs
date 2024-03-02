@@ -15,8 +15,8 @@ namespace Hajir.Crm.Features.Integration
         public IServiceProvider ServiceProvider => this._scope.ServiceProvider;
         public ILogger Logger { get; private set; }
         public System.Collections.Concurrent.ConcurrentDictionary<string, object> jobs = new System.Collections.Concurrent.ConcurrentDictionary<string, object>();
-            
-        public IntegrationServiceContext(IServiceProvider serviceProvider,string name, CancellationToken cancellationToken)
+
+        public IntegrationServiceContext(IServiceProvider serviceProvider, string name, CancellationToken cancellationToken)
         {
             this._scope = serviceProvider.CreateScope();
             this.CancellationToken = cancellationToken;
@@ -30,7 +30,7 @@ namespace Hajir.Crm.Features.Integration
             this._scope?.Dispose();
         }
         public bool JobExists(string id) => this.jobs.TryGetValue(id, out var _job);
-        public void AddJob(string id) => this.jobs.TryAdd(id, id);
+        public bool AddJob(string id) => JobExists(id) ? false : this.jobs.TryAdd(id, id);
         public void RemoveJob(string id) => this.jobs.TryRemove(id, out _);
 
     }

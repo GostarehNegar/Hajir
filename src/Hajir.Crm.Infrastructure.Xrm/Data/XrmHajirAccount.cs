@@ -16,6 +16,8 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             public const string Description = "description";
             public const string rhs_companytype = "rhs_companytype";
             public const string rhs_industry = "rhs_industry";
+            public const string rhs_connectiontype = "rhs_connectiontype";
+            public const string MethodIntroduction = "rhs_methodintroduction";
         }
 
         [AttributeLogicalName(Schema.ExternalId)]
@@ -85,6 +87,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                 this.SetAttributeValue(Schema.rhs_industry, value);
             }
         }
+        
         [AttributeLogicalName(Schema.rhs_industry)]
         public Guid? IndustryId
         {
@@ -99,5 +102,45 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             }
         }
 
+        [AttributeLogicalName(Schema.rhs_companytype)]
+        public OptionSetValue ConectionType
+        {
+            get => this.GetAttributeValue<OptionSetValue>(Schema.rhs_connectiontype);
+            set => this.SetAttributeValue(Schema.rhs_connectiontype, value);
+        }
+        [AttributeLogicalName(Schema.rhs_companytype)]
+        public int? ConectionTypeCode
+        {
+            get => this.ConectionType?.Value;
+            set => this.ConectionType = value.HasValue ? new OptionSetValue(value.Value) : null;
+        }
+
+        [AttributeLogicalName(Schema.MethodIntroduction)]
+        public EntityReference MethodIntroduction
+        {
+            get
+            {
+
+                return this.GetAttributeValue<EntityReference>(Schema.MethodIntroduction);
+            }
+            set
+            {
+                this.SetAttributeValue(Schema.MethodIntroduction, value);
+            }
+        }
+
+        [AttributeLogicalName(Schema.rhs_industry)]
+        public Guid? MethodIntroductionId
+        {
+            get
+            {
+
+                return this.MethodIntroduction?.Id;
+            }
+            set
+            {
+                this.MethodIntroduction = value.HasValue ? new EntityReference(XrmHajirMethodIntroduction.Schema.LogicalName, value.Value) : null;
+            }
+        }
     }
 }

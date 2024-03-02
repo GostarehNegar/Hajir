@@ -25,6 +25,7 @@ namespace Hajir.Crm.Features.Integration
         public string Category { get; set; }
         public string Industry { get; set; }
         public string RelationShipType { get; set; }
+        public string Description { get; set; }
 
         public override string ToString()
         {

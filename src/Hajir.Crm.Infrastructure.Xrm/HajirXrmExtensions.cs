@@ -11,5 +11,11 @@ namespace Hajir.Crm.Infrastructure.Xrm
         {
             return entity.FormattedValues.TryGetValue(key, out var res) ? res : null;
         }
+
+        internal static string RemoveArabic(this string str)
+        {
+            return str == null ? str : str.Replace("ك", "ک").Replace("ي", "ی");
+
+        }
     }
 }

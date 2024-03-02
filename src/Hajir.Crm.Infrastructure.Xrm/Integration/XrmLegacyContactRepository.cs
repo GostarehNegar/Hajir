@@ -26,10 +26,18 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         private List<PicklistValue> _salutions;
         private List<PicklistValue> _accounttypes;
         XrmOrganizationService organizationService;
+        private Lazy<List<Entity>> Users;
         public XrmLegacyContactRepository(HajirIntegrationOptions options)
         {
 
             this.organizationService = new GN.Library.Xrm.XrmOrganizationService(new XrmConnectionString(options.LegacyConnectionString));
+            this.Users = new Lazy<List<Entity>>(() =>
+            {
+
+                return this.organizationService.CreateQuery("systemuser")
+                .ToList();
+
+            }, true);
         }
 
         public void Dispose()
@@ -106,12 +114,20 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             var a = e.GetAttributeValue<EntityReference>("parentcustomerid");
             return a != null && a.LogicalName == "account" ? a.Id.ToString() : null;
         }
+        public string GetOwnerLoginName(Entity e)
+        {
+            var owner =e.GetAttributeValue<EntityReference>("ownerid");
+            var user = this.Users.Value.FirstOrDefault(x => x.Id == owner.Id);
+            return user?.GetAttributeValue<string>("domainname");
+            
+        }
+        
 
         public IEnumerable<IntegrationContact> ReadContacts(int skip, int take)
         {
             var query = this.organizationService.CreateQuery("contact");
             return query.Skip(skip).Take(take).ToArray()
-                .Select(x => new IntegrationContact
+                .Select(x => new IntegrationContact(x.Attributes)
                 {
                     Id = x.GetAttributeValue<Guid>("contactid").ToString(),
                     FirstName = x.GetAttributeValue<string>("firstname"),
@@ -127,6 +143,8 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                     Address = x.GetAttributeValue<string>("address1_name"),
                     BusinessPhone = x.GetAttributeValue<string>("telephone1"),
                     Email = x.GetAttributeValue<string>(XrmContact.Schema.EmailAddress1),
+                    OwnerLoginName = GetOwnerLoginName(x),
+                    ModifiedOn = x.GetAttributeValue<DateTime>(XrmEntity.Schema.ModifiedOn)
                     //Attributes = new GN.Library.Shared.Entities.DynamicAttributeCollection(x.Attributes.ToDictionary(x => x.Key))
 
                 })
@@ -148,11 +166,12 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             result.gn_hesab_no = GetAccountType(entity);
             result.City = entity.GetAttributeValue<string>("address1_city");
             result.address1_postalcode = entity.GetAttributeValue<string>("address1_postalcode");
-            result.Daraje_Ahamiat = entity.GetFormattedValue("gn_type");
-            result.Nahve_Ahnaei = entity.GetFormattedValue("gn_ashnayi");
-            result.Category = entity.GetFormattedValue("accountcategorycode");
-            result.Industry = entity.GetFormattedValue("industrycode");
-            result.RelationShipType = entity.GetFormattedValue("customertypecode");
+            result.Daraje_Ahamiat = entity.GetFormattedValue("gn_type").RemoveArabic();
+            result.Nahve_Ahnaei = entity.GetFormattedValue("gn_ashnayi").RemoveArabic();
+            result.Category = entity.GetFormattedValue("accountcategorycode").RemoveArabic();
+            result.Industry = entity.GetFormattedValue("industrycode").RemoveArabic();
+            result.RelationShipType = entity.GetFormattedValue("customertypecode").RemoveArabic();
+            result.Description = entity.GetAttributeValue<string>("description");
 
             return result;
 
@@ -192,6 +211,13 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 ? ToAccount(this.organizationService.CreateQuery("account").FirstOrDefault(x => (Guid)x[XrmAccount.Schema.AccountId] == _id))
                 : null;
 
+        }
+
+        public int GetAccountsCount()
+        {
+            var query = this.organizationService.CreateQuery("account");
+            var a = query.Select(x => x["accountid"]).ToArray();
+            return a.Length;
         }
     }
 }

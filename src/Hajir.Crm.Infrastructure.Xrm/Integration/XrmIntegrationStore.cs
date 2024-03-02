@@ -4,9 +4,11 @@ using Hajir.Crm.Features.Common;
 using Hajir.Crm.Features.Integration;
 using Hajir.Crm.Features.Integration.Infrastructure;
 using Hajir.Crm.Infrastructure.Xrm.Data;
+using Microsoft.Extensions.Logging;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +21,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
     {
         private readonly IXrmDataServices dataServices;
         private readonly ICacheService cache;
+        private readonly ILogger<XrmIntegrationStore> logger;
 
         internal class PicklistValue
         {
@@ -30,12 +33,14 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         }
         private List<PicklistValue> _salutions;
         private List<PicklistValue> _accountTypes;
+        private List<PicklistValue> _connectiontypes;
 
 
-        public XrmIntegrationStore(IXrmDataServices dataServices, ICacheService cache)
+        public XrmIntegrationStore(IXrmDataServices dataServices, ICacheService cache, ILogger<XrmIntegrationStore> logger)
         {
             this.dataServices = dataServices;
             this.cache = cache;
+            this.logger = logger;
         }
         public void Dispose()
         {
@@ -69,7 +74,8 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             }
             catch (Exception err)
             {
-                
+                this.logger.LogError(
+                    $"An error occred while trying to read picklist values. Entity:{entityName}, Field:{propertyName}, Error:{err.Message}");
             }
             return new List<PicklistValue>();
         }
@@ -81,6 +87,15 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             }
             return this._salutions;
 
+        }
+
+        private List<PicklistValue> GetConnectionTypes()
+        {
+            if (this._connectiontypes == null)
+            {
+                this._connectiontypes = GetOptionSetData("account", XrmHajirAccount.Schema.rhs_connectiontype);
+            }
+            return this._connectiontypes;
         }
         private OptionSetValue GetSalutaion(string salutaion)
         {
@@ -120,21 +135,48 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         }
         private Guid? GetIndustry(string value)
         {
-            var f = this.cache.Industries
+            Guid? result = null;
+
+            if (!string.IsNullOrEmpty(value) && HajirCrmConstants.LegacyMaps.IndustryMap.TryGetValue(value, out var _value))
+            {
+                var f = this.cache.Industries
                 .Select(x => new PicklistValue
                 {
                     GUID = Guid.TryParse(x.Id, out var _i) ? _i : Guid.Empty,
                     Name = x.Name,
-                    Distance = CalcLevenshteinDistance(x.Name, value)
+                    Distance = CalcLevenshteinDistance(x.Name, _value)
                 })
                 .OrderBy(x => x.Distance)
                 .Where(x => x.Distance < value.Length / 2)
                 .ToArray()
                 .FirstOrDefault();
+                result = f == null ? (Guid?)null : f.GUID;
 
+            }
+            return result;
+        }
 
-            return f == null ? (Guid?)null : f.GUID;
+        private Guid? GetMetodIntroduction(string value)
+        {
+            Guid? result = null;
 
+            if (!string.IsNullOrEmpty(value) && HajirCrmConstants.LegacyMaps.NahveAshnaeiMap.TryGetValue(value, out var _value))
+            {
+                var f = this.cache.MethodIntrduction
+                .Select(x => new PicklistValue
+                {
+                    GUID = Guid.TryParse(x.Id, out var _i) ? _i : Guid.Empty,
+                    Name = x.Name,
+                    Distance = CalcLevenshteinDistance(x.Name, _value)
+                })
+                .OrderBy(x => x.Distance)
+                .Where(x => x.Distance < value.Length / 2)
+                .ToArray()
+                .FirstOrDefault();
+                result = f == null ? (Guid?)null : f.GUID;
+
+            }
+            return result;
         }
         private List<PicklistValue> GetAccountTypes()
         {
@@ -235,13 +277,31 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 .ToIntegrationAccount()
                 : null;
         }
+
+        public int? GetConnectionType(string connectionType)
+        {
+            int? result = null;
+            if (HajirCrmConstants.LegacyMaps.RelationShipMap.TryGetValue(connectionType, out var _res))
+            {
+                var item = this.GetConnectionTypes()
+                    .Select(x => new PicklistValue
+                    {
+                        Code = x.Code,
+                        Name = x.Name,
+                        Distance = CalcLevenshteinDistance(x.Name, _res)
+                    })
+                .OrderBy(x => x.Distance)
+                .Where(x => x.Distance < connectionType.Length / 2)
+                .ToArray()
+                .FirstOrDefault();
+                result = item?.Code;
+            }
+            return result;
+
+        }
+
         public IntegrationAccount ImportLegacyAccount(IntegrationAccount account)
         {
-
-            //var xrm_account1 = this.dataServices.GetXrmOrganizationService()
-            //   .CreateQuery<XrmAccount>()
-            //   .FirstOrDefault(x => (string)x[XrmHajirAccount.Schema.ExternalId] == account.Id) ?? new XrmAccount();
-            //var xrm_account = xrm_account1.ToEntity<XrmHajirAccount>();
             var xrm_account = this.dataServices
                 .GetRepository<XrmHajirAccount>()
                 .Queryable
@@ -250,26 +310,47 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             xrm_account[XrmHajirAccount.Schema.ExternalId] = account.Id;
             xrm_account.AccountType = GetAccountType(account.gn_hesab_no);
             xrm_account.IndustryId = GetIndustry(account.Industry);
+            xrm_account.ConectionTypeCode = GetConnectionType(account.RelationShipType);
+            xrm_account.MethodIntroductionId = GetMetodIntroduction(account.Nahve_Ahnaei);
+            
+
             var desc = xrm_account.Description;
-            /// Fixing Description
-            /// 
+
             var import_start = "==== Import Start ====";
-            if (!string.IsNullOrWhiteSpace(desc))
-            {
-
-                var idx1 = desc.IndexOf(import_start);
-                if (idx1 > -1)
-                {
-                    desc = desc.Remove(idx1);
-                }
-            }
-
-
-            xrm_account.Description = desc + import_start + "\r\n" + account.GetImportantIntegrationValuesAsText();
+            xrm_account.Description = account.Description + import_start + "\r\n" + account.GetImportantIntegrationValuesAsText();
 
             var id = this.dataServices
                 .GetRepository<XrmHajirAccount>()
                 .Upsert(xrm_account);
+            xrm_account = this.dataServices
+                .GetRepository<XrmHajirAccount>()
+                .Queryable
+                .FirstOrDefault(x => x.AccountId == id);
+            xrm_account.Services.GetAnnotationService().UpdateObject("import_data",account);
+
+            //this.dataServices.WithImpersonatedSqlConnection(db => {
+            //    db.Open();
+            //    var transaction = db.BeginTransaction();
+            //    var cmd = db.CreateCommand();
+            //    cmd.Transaction = transaction;
+            //    var command_text = @"
+            //        update accountbase
+            //        set modifiedon='$date'
+            //        where accountid = '$id'
+            //    ";
+            //    cmd.CommandText = command_text;
+            //    try
+            //    {
+            //        cmd.ExecuteNonQuery();
+            //    }
+            //    catch (Exception err)
+            //    {
+
+            //    }
+                
+            
+            //});
+
             return LoadAccount(id.ToString());
 
 

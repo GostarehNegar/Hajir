@@ -110,6 +110,30 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
             }
         }
 
+        public IEnumerable<HajirMethodIntroductionEntity> MethodIntrduction
+        {
+            get
+            {
+                return this.cache.GetOrCreate<IEnumerable<HajirMethodIntroductionEntity>>("MethodIntrduction", entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+                    using (var scope = this.serviceProvider.CreateScope())
+                    {
+                        return scope.ServiceProvider.GetService<IXrmDataServices>()
+                        .GetRepository<XrmHajirMethodIntroduction>()
+                        .Queryable
+                        .ToArray()
+                        .Select(x => new HajirMethodIntroductionEntity
+                        {
+                            Id = x.Id.ToString(),
+                            Name = x.Name
+                        })
+                        .ToArray();
+
+                    }
+                });
+            }
+        }
         public CacheService(IServiceProvider serviceProvider, IMemoryCache cache)
         {
             this.serviceProvider = serviceProvider;

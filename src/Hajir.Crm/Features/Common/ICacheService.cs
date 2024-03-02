@@ -1,4 +1,5 @@
-﻿using Hajir.Crm.Entities;
+﻿using GN.Library.Shared.Entities;
+using Hajir.Crm.Entities;
 using Hajir.Crm.Features.Products;
 using Hajir.Crm.Features.Sales;
 using System;
@@ -15,5 +16,6 @@ namespace Hajir.Crm.Features.Common
 		IEnumerable<ProductSeries> ProductSeries { get; }
 		IEnumerable<HajirCityEntity> Cities {get;}
 		IEnumerable<HajirIndustryEntity> Industries { get;}
+		IEnumerable<HajirMethodIntroductionEntity> MethodIntrduction { get;  }
 	}
 }

@@ -22,6 +22,7 @@ namespace Hajir.Crm.Tests.Specs
 			var series = target.ProductSeries;
 			var cities = target.Cities;
 			var industries = target.Industries;
+			var mm = target.MethodIntrduction;
 
 
 

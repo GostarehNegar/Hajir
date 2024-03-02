@@ -10,5 +10,6 @@ namespace Hajir.Crm.Features.Integration.Infrastructure
         IEnumerable<IntegrationAccount> ReadAccounts(int skip, int take);
         IntegrationAccount GetAccount(string id);
         int GetContatCount();
+        int GetAccountsCount();
     }
 }

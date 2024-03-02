@@ -15,23 +15,27 @@ namespace Hajir.Crm.Features.Integration
         {
             if (contact != null)
             {
-                if (!string.IsNullOrWhiteSpace(contact.AccontId))
+                if (context.AddJob(contact.Id))
                 {
-                    var account = context.Store.GetAccountByExternalId(contact.AccontId);
-                    if (account == null && !context.JobExists(contact.AccontId))
+                    if (!string.IsNullOrWhiteSpace(contact.AccontId))
                     {
-                        account = await context.ImportAccountById(contact.AccontId);
+                        var account = context.Store.GetAccountByExternalId(contact.AccontId);
+                        if (account == null && !context.JobExists(contact.AccontId))
+                        {
+                            account = await context.ImportAccountById(contact.AccontId);
+                        }
                     }
+                    var cities = context.ServiceProvider.GetService<ICacheService>().Cities.OrderBy(x => x.Name).ToArray();
+                    var city = cities.FirstOrDefault(x => x.Name == contact.City);
+                    context.Store.ImportLegacyContact(contact);
+                    context.RemoveJob(contact.Id);
                 }
-                var cities = context.ServiceProvider.GetService<ICacheService>().Cities.OrderBy(x => x.Name).ToArray();
-                var city = cities.FirstOrDefault(x => x.Name == contact.City);
-                context.Store.ImportLegacyContact(contact);
             }
             return context;
         }
         public static async Task<IntegrationServiceContext> ImportContacts(this IntegrationServiceContext context)
         {
-            await Task.Delay(10);
+            await Task.Delay(100);
             var store = context.LegacyCrmStore;
             var skip = 0;
             var take = 100;
@@ -55,6 +59,7 @@ namespace Hajir.Crm.Features.Integration
                         try
                         {
                             await context.ImportLegacyContact(contact);
+                            context.Logger.LogInformation($"Contact {contact} successfully imported.");
                             success++;
                         }
                         catch (Exception err)

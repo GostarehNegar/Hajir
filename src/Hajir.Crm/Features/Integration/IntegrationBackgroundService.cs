@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,11 +14,13 @@ namespace Hajir.Crm.Features.Integration
     {
         private readonly ILogger<IntegrationBackgroundService> logger;
         private readonly IServiceProvider serviceProvider;
+        private readonly HajirIntegrationOptions options;
 
-        public IntegrationBackgroundService(ILogger<IntegrationBackgroundService> logger, IServiceProvider serviceProvider)
+        public IntegrationBackgroundService(ILogger<IntegrationBackgroundService> logger, IServiceProvider serviceProvider, HajirIntegrationOptions options)
         {
             this.logger = logger;
             this.serviceProvider = serviceProvider;
+            this.options = options;
         }
 
 
@@ -25,7 +28,25 @@ namespace Hajir.Crm.Features.Integration
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var tasks = new List<Task>();
-            tasks.Add(new IntegrationServiceContext(this.serviceProvider,"ImportLegacyContacts",stoppingToken).ImportContacts().ContinueWith(ctx => ctx.Dispose()));
+            
+
+            if (this.options.LegacyContactImportEnabled)
+            {
+                tasks.Add(new IntegrationServiceContext(this.serviceProvider, "ImportLegacyContacts", stoppingToken).ImportContacts());//.ContinueWith(ctx => ctx.Dispose()));
+            }
+            if (this.options.LegacyAccountImportEnabled)
+            {
+
+                tasks.Add(new IntegrationServiceContext(this.serviceProvider, "ImportLegacyAccounts", stoppingToken).ImportAccounts());// _.ContinueWith(ctx => ctx.Dispose()));;
+            }
+            tasks.Add(Task.Run(async () => {
+
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    await Task.Delay(100);
+                }
+                Console.WriteLine("here");
+            }));
             return Task.WhenAll(tasks);
 
 

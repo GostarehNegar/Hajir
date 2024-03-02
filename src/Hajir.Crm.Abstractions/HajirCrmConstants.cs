@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Hajir.Crm
 {
-    public class HajirCrmConstants
+    public partial class HajirCrmConstants
     {
         public static int[,] CabinetRowCapacityTable = {
             {07,16,12 },
@@ -18,5 +18,22 @@ namespace Hajir.Crm
         };
         public const string RahsamSolutionPerfix = "rhs_";
         public const string DefaultLegacyCrmConnectionString = "Url=http://192.168.20.15:5555/hajircrm;UserName=CRMIMPU01;Password=%H@ZH!r_1402&$;Domain=hsco";
+
+        
+
+
+        public static string MAP1 = @"
+شرکت	شرکت
+-	شرکت
+فروشگاه	فروشگاه
+موسسه	موسسه
+آموزشگاه	آموزشگاه
+سازمان	سازمان
+اداره کل	اداره کل
+اداره	اداره
+کارخانه	کارخانه
+وزارتخانه	وزارتخانه
+";
+        
     }
 }

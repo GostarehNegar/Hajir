@@ -46,6 +46,18 @@ namespace Hajir.Crm.Tests.Specs.Integration
             var accounts = ctx.LegacyCrmStore.ReadAccounts(10, 100).ToArray();
             await ctx.ImportAccountById(accounts[0].Id);
         }
+        [TestMethod]
+        public async Task Mappping()
+        {
+            var host = GetHostEx();
+            var ctx = new IntegrationServiceContext(host.Services, "test", default);
+
+            var lines = HajirCrmConstants.LegacyMaps.RelationShipMap;
+            var industry = HajirCrmConstants.LegacyMaps.IndustryMap;
+            var salutaion = HajirCrmConstants.LegacyMaps.SalutaionMap;
+            
+                
+        }
 
     }
 }
