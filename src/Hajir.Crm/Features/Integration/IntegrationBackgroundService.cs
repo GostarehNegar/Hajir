@@ -45,7 +45,6 @@ namespace Hajir.Crm.Features.Integration
                 {
                     await Task.Delay(100);
                 }
-                Console.WriteLine("here");
             }));
             return Task.WhenAll(tasks);
 

@@ -98,6 +98,9 @@ Mr	جناب آقای
 سرکار خانم مهندس	خانم مهندس
 سرکار خانم دکتر	خانم دکتر
 ";
+            private const string _roles = @"Employee;کارمند
+ِInfluencer;تاثیرگذار
+Decision Maker;تصمیم گیرنده";
 
             private const string _nahve_ashnaei_map = @"سایر	سایر
 همکاران و آشنایان	همکاران و آشنایان
@@ -114,13 +117,13 @@ Mr	جناب آقای
 خرید قبلی	خرید قبلی
 خبرنامه	خبرنامه
 ";
-            private  static Dictionary<string,string> ToDictionary(string input)
+            private static Dictionary<string, string> ToDictionary(string input)
             {
                 return input
                     .Split('\n')
                     .Select(x => x.Trim())
-                    .Where(x => !string.IsNullOrWhiteSpace(x) && x.Split('\t').Length > 1)
-                    .Select(x => x.Split('\t'))
+                    .Where(x => !string.IsNullOrWhiteSpace(x) && x.Split('\t', ';').Length > 1)
+                    .Select(x => x.Split('\t', ';'))
                     .ToDictionary(x => x[0], x => x[1]);
 
             }
@@ -131,6 +134,12 @@ Mr	جناب آقای
             public static Dictionary<string, string> SalutaionMap => ToDictionary(_Salutaion);
 
             public static Dictionary<string, string> NahveAshnaeiMap => ToDictionary(_nahve_ashnaei_map);
+            public static Dictionary<string, string> Roles => new Dictionary<string, string> {
+                {"Employee","کارمند" },
+                {"Decision Maker","تصمیم گیرنده" },
+                {"Influencer","تاثیر گذار" }
+            };
+
         }
     }
 }

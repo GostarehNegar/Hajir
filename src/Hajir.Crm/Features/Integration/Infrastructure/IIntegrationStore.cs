@@ -11,5 +11,6 @@ namespace Hajir.Crm.Features.Integration.Infrastructure
         IntegrationAccount ImportLegacyAccount(IntegrationAccount account);
         IntegrationContact LoadContact(string contactId);
         IntegrationAccount GetAccountByExternalId(string externalId);
+        IntegrationQuote ImportLegacyQuote(IntegrationQuote quote);
     }
 }

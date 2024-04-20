@@ -18,6 +18,14 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             public const string rhs_industry = "rhs_industry";
             public const string rhs_connectiontype = "rhs_connectiontype";
             public const string MethodIntroduction = "rhs_methodintroduction";
+            public const string EconomicCode = "rhs_economiccode";
+            public const string NationalCode = "rhs_nationalcode";
+            public const string RegistrationNauber = "rhs_registrationnumber";
+            public const string rhs_city = "rhs_city";
+            public const string rhs_state = "rhs_state";
+            public const string DegreeImportance = "rhs_degreeimportance";
+            public const string rhs_MainPhone = "rhs_mainphone";
+            public const string rhs_MainCityCode = "rhs_maincitycode";
         }
 
         [AttributeLogicalName(Schema.ExternalId)]
@@ -33,6 +41,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                 this.SetAttributeValue(Schema.ExternalId, value);
             }
         }
+
         [AttributeLogicalName(Schema.Description)]
         public string Description
         {
@@ -73,7 +82,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                 this.AccountType = value.HasValue ? new OptionSetValue(value.Value) : null;
             }
         }
-        
+
         [AttributeLogicalName(Schema.rhs_industry)]
         public EntityReference Industry
         {
@@ -87,7 +96,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                 this.SetAttributeValue(Schema.rhs_industry, value);
             }
         }
-        
+
         [AttributeLogicalName(Schema.rhs_industry)]
         public Guid? IndustryId
         {
@@ -142,5 +151,24 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                 this.MethodIntroduction = value.HasValue ? new EntityReference(XrmHajirMethodIntroduction.Schema.LogicalName, value.Value) : null;
             }
         }
+        [AttributeLogicalName(Schema.EconomicCode)]
+        public string EconomicCode
+        {
+            get => this.GetAttributeValue<string>(Schema.EconomicCode);
+            set => this.SetAttributeValue(Schema.EconomicCode, value);
+        }
+        [AttributeLogicalName(Schema.NationalCode)]
+        public string NationalCode
+        {
+            get => this.GetAttributeValue<string>(Schema.NationalCode);
+            set => this.SetAttributeValue(Schema.NationalCode, value);
+        }
+        [AttributeLogicalName(Schema.RegistrationNauber)]
+        public string RegistrationNauber
+        {
+            get => this.GetAttributeValue<string>(Schema.RegistrationNauber);
+            set => this.SetAttributeValue(Schema.RegistrationNauber, value);
+        }
+
     }
 }

@@ -1,13 +1,19 @@
-﻿using System;
+﻿using GN.Library.Shared.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Hajir.Crm.Entities
 {
-    public class HajirCityEntity
+    public class HajirCityEntity:DynamicEntity
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public string ProvinceId { get; set; }
+        public HajirCityEntity()
+        {
+            this.LogicalName = "rhs_city";
+        }
         public override string ToString()
         {
             return $"{Name}";

@@ -1,0 +1,1 @@
+"C:\Program Files\Odoo\python\python.exe" "C:\Program Files\Odoo\server\odoo-bin" --config .\odoo.conf

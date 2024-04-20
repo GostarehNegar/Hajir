@@ -116,12 +116,12 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         }
         public string GetOwnerLoginName(Entity e)
         {
-            var owner =e.GetAttributeValue<EntityReference>("ownerid");
+            var owner = e.GetAttributeValue<EntityReference>("ownerid");
             var user = this.Users.Value.FirstOrDefault(x => x.Id == owner.Id);
             return user?.GetAttributeValue<string>("domainname");
-            
+
         }
-        
+
 
         public IEnumerable<IntegrationContact> ReadContacts(int skip, int take)
         {
@@ -130,22 +130,36 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 .Select(x => new IntegrationContact(x.Attributes)
                 {
                     Id = x.GetAttributeValue<Guid>("contactid").ToString(),
-                    FirstName = x.GetAttributeValue<string>("firstname"),
-                    LastName = x.GetAttributeValue<string>("lastname"),
+                    FirstName = x.GetAttributeValue<string>("firstname")?.RemoveArabic(),
+                    LastName = x.GetAttributeValue<string>("lastname")?.RemoveArabic(),
                     MobilePhone = x.GetAttributeValue<string>("mobilephone"),
-                    City = x.GetAttributeValue<string>("address1_city"),
-                    Salutation = this.GetSalution(x),
+                    City = x.GetAttributeValue<string>("address1_city")?.RemoveArabic(),
+                    Salutation = this.GetSalution(x)?.RemoveArabic(),
                     JobTitle = x.GetAttributeValue<string>("jobtitle"),
                     Province = x.GetAttributeValue<EntityReference>("gn_province")?.Name,
-                    Hadaya = x.GetAttributeValue<bool?>("new_hadaya") ?? false,
+                    Hadaya = x.GetAttributeValue<bool?>("new_hadaya"),
                     Role = GetRole(x),
                     AccontId = GetAccountId(x),
                     Address = x.GetAttributeValue<string>("address1_name"),
                     BusinessPhone = x.GetAttributeValue<string>("telephone1"),
                     Email = x.GetAttributeValue<string>(XrmContact.Schema.EmailAddress1),
                     OwnerLoginName = GetOwnerLoginName(x),
-                    ModifiedOn = x.GetAttributeValue<DateTime>(XrmEntity.Schema.ModifiedOn)
-                    //Attributes = new GN.Library.Shared.Entities.DynamicAttributeCollection(x.Attributes.ToDictionary(x => x.Key))
+                    ModifiedOn = x.GetAttributeValue<DateTime>(XrmEntity.Schema.ModifiedOn),
+                    State = x.GetAttributeValue<OptionSetValue>("statecode")?.Value ?? 0,
+                    BirthDate = x.GetAttributeValue<DateTime?>("birthdate"),
+                    Description = x.GetAttributeValue<string>("description"),
+                    DoNotEmail = x.GetAttributeValue<bool?>("donotemail") ?? false,
+                    DoNotBulkEmail = x.GetAttributeValue<bool?>("donotbulkemail") ?? false,
+                    DoNotFax = x.GetAttributeValue<bool?>("donotfax") ?? false,
+                    DoNotPhone = x.GetAttributeValue<bool?>("donotphone") ?? false,
+                    DoNotPost = x.GetAttributeValue<bool?>("new_dontpost") ?? false,
+                    DoNotPostalMail = x.GetAttributeValue<bool?>("donotpostalmail") ?? false,
+                    DonotSendMarketingMaterial = x.GetAttributeValue<bool?>("donotsendmm") ?? false,
+                    PostalCode = x.GetAttributeValue<string>("address1_postalcode"),
+                    
+
+
+
 
                 })
                 .ToArray();
@@ -155,7 +169,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         {
             var result = entity.ToDynamic().To<IntegrationAccount>();
             result.Id = entity.Id.ToString();
-            result.Name = (string)entity[XrmAccount.Schema.Name];
+            result.Name = ((string)entity[XrmAccount.Schema.Name]).RemoveArabic();
             result.MainPhone = entity.GetAttributeValue<string>("telephone1");
             result.Fax = entity.GetAttributeValue<string>("fax");
             result.gn_shenasemeli = entity.GetAttributeValue<string>("gn_shenasemeli");
@@ -172,6 +186,17 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             result.Industry = entity.GetFormattedValue("industrycode").RemoveArabic();
             result.RelationShipType = entity.GetFormattedValue("customertypecode").RemoveArabic();
             result.Description = entity.GetAttributeValue<string>("description");
+            result.State = entity.GetAttributeValue<OptionSetValue>("statecode")?.Value ?? 0;
+            result.DonotBulkEmail = entity.GetAttributeValue<bool?>("donotbulkemail") ?? false;
+            result.DoNotFax = entity.GetAttributeValue<bool?>("donotfax") ?? false;
+            result.DonotEmail = entity.GetAttributeValue<bool?>("donotemail") ?? false;
+            result.DoNotPhone = entity.GetAttributeValue<bool?>("donotphone") ?? false;
+            result.DoNotPost = entity.GetAttributeValue<bool?>("new_dontpost") ?? false;
+            result.DoNotPostalMail = entity.GetAttributeValue<bool?>("donotpostalmail") ?? false;
+            result.WebSite = entity.GetAttributeValue<string>("websiteurl");
+            result.Email = entity.GetAttributeValue<string>("emailaddress1");
+            
+
 
             return result;
 
@@ -218,6 +243,43 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             var query = this.organizationService.CreateQuery("account");
             var a = query.Select(x => x["accountid"]).ToArray();
             return a.Length;
+        }
+
+        public IntegrationQuote ToQuote(Entity q)
+        {
+            var result = q.ToDynamic().To<IntegrationQuote>();
+            return result;
+        }
+        public IntegrationQuoteProduct ToQuoteProduct(Entity e)
+        {
+            var result = e.ToDynamic().To<IntegrationQuoteProduct>();
+
+            return result;
+        }
+        public IntegrationQuote LoadLines(IntegrationQuote quote)
+        {
+            if (Guid.TryParse(quote.Id, out var _id))
+            {
+                this.organizationService
+                    .CreateQuery(XrmQuoteDetail.Schema.LogicalName)
+                    .Where(x => (Guid)x["quoteid"] == _id)
+                    .ToArray()
+                    .Select(x => ToQuoteProduct(x))
+                    .ToList()
+                    .ForEach(x => quote.AddProducts(x));
+            }
+            return quote;
+        }
+        public IEnumerable<IntegrationQuote> ReadQuotes(int skip, int take)
+        {
+            var query = this.organizationService.CreateQuery(XrmQuote.Schema.LogicalName);
+            var result = query.Skip(10).Take(10)
+               .ToArray()
+               .Select(x => ToQuote(x))
+               .Select(x => LoadLines(x))
+               .ToArray();
+            return result;
+
         }
     }
 }

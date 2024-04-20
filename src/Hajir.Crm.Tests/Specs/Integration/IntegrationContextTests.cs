@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Hajir.Crm.Features.Integration;
 using GN.Library.Xrm;
+using Hajir.Crm.Infrastructure.Xrm.Data;
 
 namespace Hajir.Crm.Tests.Specs.Integration
 {
@@ -30,11 +31,11 @@ namespace Hajir.Crm.Tests.Specs.Integration
             var host = GetHostEx();
             var ctx = new IntegrationServiceContext(host.Services,"test", default);
             var contacts = ctx.LegacyCrmStore.ReadContacts(0, 100);
+            foreach (var contact in contacts.Skip(1))
+            {
+                await ctx.ImportLegacyContact(contact);
+            }
 
-            var accounts = ctx.LegacyCrmStore.ReadAccounts(10, 100);
-            var ffff = ctx.LegacyCrmStore.ReadContacts(100, 100).Where(x => x.Province != null).ToList();
-
-            var c = await ctx.ImportLegacyContact(new IntegrationContact { Id = "test", LastName="Majdabadi", Salutation="جناب آقای" });
             
 
         }
@@ -57,6 +58,22 @@ namespace Hajir.Crm.Tests.Specs.Integration
             var salutaion = HajirCrmConstants.LegacyMaps.SalutaionMap;
             
                 
+        }
+        [TestMethod]
+        public async Task quote_integration_works()
+        {
+            var host = GetHostEx();
+
+            host.Services.GetService<IXrmDataServices>()
+                .WithImpersonatedSqlConnection(db => {
+                    db.Open();
+                });
+            var ctx = new IntegrationServiceContext(host.Services, "test", default);
+            var quotes = ctx.LegacyCrmStore.ReadQuotes(0,10);
+            await ctx.ImportQuote(quotes.First());
+            
+            
+
         }
 
     }

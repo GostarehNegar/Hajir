@@ -1,9 +1,14 @@
-﻿using GN.Library.Xrm;
+﻿using GN.Library.Data;
+using GN.Library.Xrm;
 using GN.Library.Xrm.StdSolution;
+using Hajir.Crm.Entities;
 using Hajir.Crm.Features.Common;
 using Hajir.Crm.Features.Integration;
 using Hajir.Crm.Features.Integration.Infrastructure;
 using Hajir.Crm.Infrastructure.Xrm.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
@@ -34,6 +39,8 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         private List<PicklistValue> _salutions;
         private List<PicklistValue> _accountTypes;
         private List<PicklistValue> _connectiontypes;
+        private List<PicklistValue> _roles;
+        private List<PicklistValue> _importanceDegrees;
 
 
         public XrmIntegrationStore(IXrmDataServices dataServices, ICacheService cache, ILogger<XrmIntegrationStore> logger)
@@ -88,6 +95,24 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             return this._salutions;
 
         }
+        private List<PicklistValue> GetImportanceDegrees()
+        {
+            if (this._importanceDegrees == null)
+            {
+                this._importanceDegrees = this.GetOptionSetData("account", XrmHajirAccount.Schema.DegreeImportance);
+            }
+            return this._importanceDegrees;
+
+        }
+        private List<PicklistValue> GetRoles()
+        {
+            if (this._roles == null)
+            {
+                this._roles = this.GetOptionSetData("contact", "accountrolecode");
+            }
+            return this._roles;
+
+        }
 
         private List<PicklistValue> GetConnectionTypes()
         {
@@ -126,6 +151,24 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 })
                 .OrderBy(x => x.Distance)
                 .Where(x => x.Distance < salutaion.Length / 2)
+                .ToArray()
+                .FirstOrDefault();
+
+
+            return f == null ? null : new OptionSetValue(f.Code);
+
+        }
+        private OptionSetValue GetDegreeImportance(string importance)
+        {
+            var f = this.GetImportanceDegrees()
+                .Select(x => new PicklistValue
+                {
+                    Code = x.Code,
+                    Name = x.Name,
+                    Distance = CalcLevenshteinDistance(x.Name, importance)
+                })
+                .OrderBy(x => x.Distance)
+                .Where(x => x.Distance < importance.Length / 2)
                 .ToArray()
                 .FirstOrDefault();
 
@@ -226,12 +269,55 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
 
             return distances[lengthA, lengthB];
         }
+        private OptionSetValue GetRole(IntegrationContact contact)
+        {
+            if (!string.IsNullOrWhiteSpace(contact.Role) && HajirCrmConstants.LegacyMaps.Roles.TryGetValue(contact.Role, out var role))
+            {
+                var _role = this.GetRoles()
+                    .Select(x => new PicklistValue
+                    {
+                        Distance = CalcLevenshteinDistance(x.Name, contact.Role),
+                        Code = x.Code,
+                        Name = x.Name,
+                    })
+                    .OrderBy(x => x.Distance)
+                    .ToArray()
+                    .FirstOrDefault();
+                if (_role != null)
+                {
+                    return new OptionSetValue(_role.Code);
+                }
 
+            }
+            return null;
+
+        }
+        private HajirCityEntity GetCity(string city)
+        {
+            if (!string.IsNullOrWhiteSpace(city))
+            {
+                var _city = this.cache.Cities
+                    .Select(x => new PicklistValue
+                    {
+                        GUID = Guid.TryParse(x.Id, out var _i) ? _i : Guid.Empty,
+                        Name = x.Name,
+                        Distance = CalcLevenshteinDistance(x.Name, city)
+                    })
+                    .OrderBy(x => x.Distance)
+                    .FirstOrDefault();
+                if (_city != null)
+                {
+                    return this.cache.Cities.FirstOrDefault(x => x.Id == _city.GUID.ToString());
+                }
+            }
+            return null;
+
+        }
         public IntegrationContact ImportLegacyContact(IntegrationContact contact)
         {
-            var xrm_contact = this.dataServices.GetXrmOrganizationService()
-                .CreateQuery<XrmContact>()
-                .FirstOrDefault(x => (string)x["rhs_externalid"] == contact.Id) ?? new XrmContact();
+            var xrm_contact = this.dataServices.GetXrmOrganizationService<XrmHajirContact>()
+                .CreateQuery<XrmHajirContact>()
+                .FirstOrDefault(x => (string)x["rhs_externalid"] == contact.Id) ?? new XrmHajirContact();
             xrm_contact.FirstName = contact.FirstName;
             xrm_contact.LastName = contact.LastName;
             xrm_contact["rhs_externalid"] = contact.Id;
@@ -240,8 +326,41 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             xrm_contact["jobtitle"] = contact.JobTitle;
             xrm_contact[XrmHajirContact.Schema.RHSAddress] = contact.Address;
             xrm_contact["telephone1"] = contact.BusinessPhone;
+            xrm_contact["rhs_businessphone1"] = contact.BusinessPhone;
+            xrm_contact["rhs_address"] = contact.Address;
             xrm_contact.Telephone1 = contact.BusinessPhone;
             xrm_contact.EmailAddress1 = contact.Email;
+            xrm_contact["accountrolecode"] = GetRole(contact);
+            xrm_contact["rhs_dateofbirth"] = contact.BirthDate;
+            xrm_contact["rhs_gifts"] = contact.Hadaya;
+            xrm_contact["description"] = contact.Description;
+            xrm_contact["rhs_sendemail"] = !contact.DoNotEmail;
+            xrm_contact["rhs_sendfax"] = !contact.DoNotFax;
+            xrm_contact["donotemail"] = contact.DoNotEmail;
+            xrm_contact["donotfax"] = contact.DoNotFax;
+            xrm_contact["donotbulkemail"] = contact.DoNotBulkEmail;
+            xrm_contact["donotphone"] = contact.DoNotPhone;
+            xrm_contact["donotpostalmail"] = contact.DoNotPostalMail;
+            xrm_contact["rhs_call"] = !contact.DoNotPhone;
+            xrm_contact["rhs_sendpost"] = !contact.DoNotPost;
+            xrm_contact["rhs_sendmessage"] = !contact.DonotSendMarketingMaterial;
+            xrm_contact["rhs_postalcode"] = contact.PostalCode;
+
+            var city_phone_code = this.GetCityPhoneCode(contact.MobilePhone, out var _phone);
+            if (city_phone_code.HasValue)
+            {
+                xrm_contact[XrmHajirContact.Schema.RHSCityPhoneCode] = new EntityReference(XrmHajirCityPhoneCode.Schema.LogicalName, city_phone_code.Value);
+
+                xrm_contact["rhs_businessphone1"] = _phone;
+            }
+
+
+            var city = this.GetCity(contact.City);
+            if (city != null && Guid.TryParse(city.Id, out var cityId))
+            {
+                xrm_contact[XrmHajirContact.Schema.RHSCity] = new EntityReference(XrmHajirCity.Schema.LogicalName, cityId);
+            }
+
 
 
             var account = this.GetAccountByExternalId(contact.AccontId);
@@ -249,7 +368,6 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             {
                 xrm_contact[XrmContact.Schema.ParentCustomerId] = new EntityReference(XrmAccount.Schema.LogicalName, acc_id);
             }
-
 
             var id = this.dataServices
                 .GetRepository<XrmContact>()
@@ -299,6 +417,23 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             return result;
 
         }
+        public Guid? GetCityPhoneCode(string phoneNumber, out string newPhoneNumber)
+        {
+            newPhoneNumber = phoneNumber;
+            if (!string.IsNullOrWhiteSpace(phoneNumber))
+            {
+                var item = this.cache.CityPhoneCodes
+                    .FirstOrDefault(x => phoneNumber.StartsWith(x.Name));
+                if (item != null && Guid.TryParse(item.Id,out var _id))
+                {
+                    newPhoneNumber = phoneNumber.Substring(item.Name.Length);
+                    return _id;
+                }
+            }
+
+            return null;
+
+        }
 
         public IntegrationAccount ImportLegacyAccount(IntegrationAccount account)
         {
@@ -306,13 +441,50 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 .GetRepository<XrmHajirAccount>()
                 .Queryable
                 .FirstOrDefault(x => x.ExternalId == account.Id) ?? new XrmHajirAccount();
-            xrm_account.Name = account.Name;
+            xrm_account.Name = account.Name?.RemoveArabic();
             xrm_account[XrmHajirAccount.Schema.ExternalId] = account.Id;
             xrm_account.AccountType = GetAccountType(account.gn_hesab_no);
             xrm_account.IndustryId = GetIndustry(account.Industry);
             xrm_account.ConectionTypeCode = GetConnectionType(account.RelationShipType);
             xrm_account.MethodIntroductionId = GetMetodIntroduction(account.Nahve_Ahnaei);
-            
+            xrm_account.NationalCode = account.gn_shenasemeli;
+            xrm_account.EconomicCode = account.gn_eco_code;
+            xrm_account.RegistrationNauber = account.gn_sabt;
+            xrm_account.Telephone1 = account.MainPhone;
+            xrm_account["rhs_address"] = account.address1_name;
+            xrm_account[XrmHajirAccount.Schema.DegreeImportance] = GetDegreeImportance(account.Daraje_Ahamiat);
+            xrm_account["address1_postalcode"] = account.address1_postalcode;
+
+            xrm_account["donotbulkemail"] = account.DonotBulkEmail;
+            xrm_account["donotemail"] = account.DonotEmail;
+            xrm_account["donotfax"] = account.DoNotFax;
+            xrm_account["donotphone"] = account.DoNotPhone;
+            xrm_account["donotpostalmail"] = account.DoNotPostalMail;
+            xrm_account["rhs_sendfax"] = !account.DoNotFax;
+            xrm_account["rhs_sendpost"] = !account.DoNotPost;
+            xrm_account["rhs_sendemail"] = !account.DonotEmail;
+
+
+            //account.Daraje_Ahamiat
+
+
+
+            var city = this.GetCity(account.City);
+            if (city != null && Guid.TryParse(city.Id, out var cityId))
+            {
+                xrm_account[XrmHajirAccount.Schema.rhs_city] = new EntityReference(XrmHajirCity.Schema.LogicalName, cityId);
+            }
+            if (city != null && Guid.TryParse(city.ProvinceId, out var provinceId))
+            {
+                xrm_account[XrmHajirAccount.Schema.rhs_state] = new EntityReference(XrmHajirProvince.Schema.LogicalName, provinceId);
+            }
+            xrm_account[XrmHajirAccount.Schema.rhs_MainPhone] = account.MainPhone;
+            var phoneCityCode = this.GetCityPhoneCode(account.MainPhone, out var _phone);
+            if (phoneCityCode.HasValue)
+            {
+                xrm_account[XrmHajirAccount.Schema.rhs_MainCityCode] = new EntityReference(XrmHajirCityPhoneCode.Schema.LogicalName,phoneCityCode.Value);
+                xrm_account[XrmHajirAccount.Schema.rhs_MainPhone] = _phone;
+            }
 
             var desc = xrm_account.Description;
 
@@ -326,7 +498,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 .GetRepository<XrmHajirAccount>()
                 .Queryable
                 .FirstOrDefault(x => x.AccountId == id);
-            xrm_account.Services.GetAnnotationService().UpdateObject("import_data",account);
+            xrm_account.Services.GetAnnotationService().UpdateObject("import_data", account);
 
             //this.dataServices.WithImpersonatedSqlConnection(db => {
             //    db.Open();
@@ -347,8 +519,8 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             //    {
 
             //    }
-                
-            
+
+
             //});
 
             return LoadAccount(id.ToString());
@@ -363,6 +535,95 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 .Queryable
                 .FirstOrDefault(x => x.ExternalId == externalId)
                 .ToIntegrationAccount();
+        }
+
+
+        public IntegrationQuote LoadQuote(string id)
+        {
+            var result = id != null && Guid.TryParse(id, out var _id)
+               ? this.dataServices
+               .GetRepository<XrmHajirQuote>()
+               .Queryable
+               .FirstOrDefault(x => x.QuoteId == _id)
+               .ToIntegrationQuote()
+               : null;
+            if (result != null)
+            {
+                var lines = this.dataServices
+                    .GetRepository<XrmHajirQuoteDetail>()
+                    .Queryable
+                    .Where(x => x.QuoteId == _id)
+                    .ToArray()
+                    .Select(x => x.ToIntegrationQuoteProduct())
+                    .ToArray();
+                result.AddProducts(lines);
+
+            }
+            return result;
+
+        }
+        public IntegrationQuoteProduct ImportLegacryQuoteProduct(IntegrationQuoteProduct product, Guid quoteid)
+        {
+            var line = (product.Id != null && Guid.TryParse(product.Id, out var _id)
+                ? this.dataServices
+                .GetRepository<XrmHajirQuoteDetail>()
+                .Queryable
+                .FirstOrDefault(x => x.QuoteDetailId == _id)
+                : null) ?? new XrmHajirQuoteDetail();
+
+            line.QuoteId = quoteid;
+            line.SetAttribiuteValue("isproductoverridden", true);
+            line.SetAttribiuteValue("productdescription", product.GetAttributeValue("productdescription"));
+            line.SetAttribiuteValue("priceperunit", product.GetAttributeValue<double>("priceperuint"));
+            line.SetAttribiuteValue("priceperunit_base", product.GetAttributeValue<double>("priceperuint_base"));
+
+            if (line.Id == Guid.Empty)
+            {
+                _id = this.dataServices
+                    .GetRepository<XrmHajirQuoteDetail>()
+                    .Insert(line);
+            }
+            else
+            {
+                _id = this.dataServices
+                    .GetRepository<XrmHajirQuoteDetail>()
+                    .Upsert(line);
+            }
+
+            return this.dataServices
+                .GetRepository<XrmHajirQuoteDetail>()
+                .Queryable
+                .FirstOrDefault(x => x.QuoteDetailId == _id)?
+                .ToIntegrationQuoteProduct();
+
+
+
+        }
+        public IntegrationQuote ImportLegacyQuote(IntegrationQuote quote)
+        {
+            var xrm_quote = this.dataServices
+                .GetRepository<XrmHajirQuote>()
+                .Queryable
+                .FirstOrDefault(x => x.ExternalId == quote.Id) ?? new XrmHajirQuote();
+            if (quote.AccountId != null)
+            {
+                var account = this.GetAccountByExternalId(quote.AccountId);
+                xrm_quote.AccountId = Guid.TryParse(account?.Id, out var _t) ? _t : (Guid?)null;
+            }
+            xrm_quote.ExternalId = quote.Id;
+            xrm_quote.Name = quote.GetAttributeValue("name");
+            xrm_quote.QuoteNumber = quote.GetAttributeValue("quotenumber");
+
+            var id = this.dataServices
+                .GetRepository<XrmQuote>()
+                .Upsert(xrm_quote);
+
+            foreach (var line in quote.Products)
+            {
+                ImportLegacryQuoteProduct(line, id);
+            }
+            return LoadQuote(id.ToString());
+
         }
     }
 }

@@ -26,6 +26,15 @@ namespace Hajir.Crm.Features.Integration
         public string Industry { get; set; }
         public string RelationShipType { get; set; }
         public string Description { get; set; }
+        public int State { get; set; }
+        public bool DonotBulkEmail { get; set; }
+        public bool DoNotFax { get; set; }
+        public bool DonotEmail { get; set; }
+        public bool DoNotPhone { get; set; }
+        public bool DoNotPost { get; set; }
+        public bool DoNotPostalMail { get; set; }
+        public string WebSite { get; set; }
+        public string Email { get; set; }
 
         public override string ToString()
         {

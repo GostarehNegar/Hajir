@@ -46,7 +46,7 @@ namespace Hajir.Crm.Features.Integration
                 try
                 {
                     total_accounts = total_accounts == 0 ? context.LegacyCrmStore.GetAccountsCount() : total_accounts;
-                    var accounts = store.ReadAccounts(skip, take).ToArray();
+                    var accounts = store.ReadAccounts(skip, take).ToArray().Where(x => x.State == 0).ToArray();
                     total += accounts.Length;
 
                     foreach (var account in accounts)

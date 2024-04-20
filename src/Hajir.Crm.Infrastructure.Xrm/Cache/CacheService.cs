@@ -7,6 +7,7 @@ using Hajir.Crm.Features.Sales;
 using Hajir.Crm.Infrastructure.Xrm.Data;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -99,12 +100,13 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
                         .GetRepository<XrmHajirIndustry>()
                         .Queryable
                         .ToArray()
-                        .Select(x => new HajirIndustryEntity {
+                        .Select(x => new HajirIndustryEntity
+                        {
                             Id = x.Id.ToString(),
                             Name = x.Name
                         })
                         .ToArray();
-                        
+
                     }
                 });
             }
@@ -134,6 +136,15 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
                 });
             }
         }
+
+        public IEnumerable<HajirCityPhoneCode> CityPhoneCodes =>
+             this.cache.GetOrCreate<IEnumerable<HajirCityPhoneCode>>("CITY_PHONE_CODES", entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+                    return this.LoadCityPhoneCodes();
+                });
+
+
         public CacheService(IServiceProvider serviceProvider, IMemoryCache cache)
         {
             this.serviceProvider = serviceProvider;
@@ -146,6 +157,33 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
                 return scope.ServiceProvider.GetService<XrmProductRepository>().GetAll();
             }
         }
+        private IEnumerable<HajirCityPhoneCode> LoadCityPhoneCodes()
+        {
+            var result = new List<HajirCityPhoneCode>();
+            using (var scope = this.serviceProvider.CreateScope())
+            {
+                var repo = scope.ServiceProvider.GetService<IXrmDataServices>().GetRepository<XrmHajirCityPhoneCode>();
+                var skip = 0;
+                var take = 1000;
+                while (true)
+                {
+                    var entries = repo.Queryable.Skip(skip).Take(take).ToArray().Select(x => new HajirCityPhoneCode
+                    {
+                        Id = x.Id.ToString(),
+                        Name = x.Name,
+                        ProvinceId = x.GetAttributeValue<EntityReference>(XrmHajirCityPhoneCode.Schema.ProvinceId)?.Id.ToString(),
+                    });
+                    result.AddRange(entries);
+                    if (entries.Count() < take)
+                        break;
+                    skip += take;
+
+
+                }
+
+            }
+            return result;
+        }
         private IEnumerable<HajirCityEntity> LoadCities()
         {
             var result = new List<HajirCityEntity>();
@@ -156,15 +194,20 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
                 var take = 1000;
                 while (true)
                 {
-                    var entries = repo.Queryable.Skip(skip).Take(take).ToArray().Select(x => new HajirCityEntity { Id = x.Id.ToString(), Name = x.Name });
+                    var entries = repo.Queryable.Skip(skip).Take(take).ToArray().Select(x => new HajirCityEntity
+                    {
+                        Id = x.Id.ToString(),
+                        Name = x.Name,
+                        ProvinceId = x.GetAttributeValue<EntityReference>(XrmHajirCity.Schema.rhs_state)?.Id.ToString(),
+                    });
                     result.AddRange(entries);
-                    if (entries.Count()<take)
+                    if (entries.Count() < take)
                         break;
                     skip += take;
-                        
+
 
                 }
-                
+
             }
             return result;
         }

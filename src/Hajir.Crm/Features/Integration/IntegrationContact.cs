@@ -15,9 +15,10 @@ namespace Hajir.Crm.Features.Integration
             attribs.ToList().ForEach(x => this.SetAttributeValue(x.Key, x.Value));
         }
         public string Id { get; set; }
-
+        public int State { get; set; }
         public string Salutation { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int Type { get; set; }
@@ -34,14 +35,21 @@ namespace Hajir.Crm.Features.Integration
         public string ExternalId { get; set; }
         public string JobTitle { get; set; }
         public string Province { get; set; }
-        public bool Hadaya { get; set; }
+        public bool? Hadaya { get; set; }
         public string Role { get; set; }
         public string AccontId { get; set; }
         public string Address { get; set; }
         public string BusinessPhone { get; set; }
         public string Email { get; set; }
-
-
+        public bool DoNotEmail { get; set; }
+        public bool DoNotBulkEmail { get; set; }
+        public bool DoNotFax { get; set; }
+        public bool DoNotPhone { get; set; }
+        public bool DoNotPost { get; set; }
+        public bool DoNotPostalMail { get; set; }
+        public bool DonotSendMarketingMaterial { get; set; }
+        public string PostalCode { get; set; }
+        public string DegreeImportance { get; set; }
 
         public override string ToString()
         {

@@ -90,12 +90,24 @@ namespace Hajir.Crm.Infrastructure.Xrm
                 Id = c.Id.ToString()
             };
         }
+        public static IntegrationQuote ToIntegrationQuote(this XrmHajirQuote quote)
+        {
+            var result = quote.ToDynamic()
+                .To<IntegrationQuote>();
+            return result;
+        }
+        public static IntegrationQuoteProduct ToIntegrationQuoteProduct(this XrmHajirQuoteDetail quote)
+        {
+            var result = quote == null ? null : quote.ToDynamic()
+                .To<IntegrationQuoteProduct>();
+            return result;
+        }
         public static IntegrationAccount ToIntegrationAccount(this XrmHajirAccount c)
         {
             return c == null ? null : new IntegrationAccount
             {
                 Name = c.Name,
-                
+
                 Id = c.Id.ToString()
             };
         }

@@ -1,37 +1,35 @@
 ﻿using GN.Library.Xrm;
-using Hajir.Crm.Entities;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Hajir.Crm.Infrastructure.Xrm.Data
 {
     [EntityLogicalName(Schema.LogicalName)]
-    public class XrmHajirCity : XrmEntity<XrmHajirCity, DefaultStateCodes, DefaultStatusCodes>
+    public class XrmHajirCityPhoneCode : XrmEntity<XrmHajirCity, DefaultStateCodes, DefaultStatusCodes>
     {
         public new class Schema : XrmEntity.Schema
         {
             public const string SolutionPerfix = HajirCrmConstants.RahsamSolutionPerfix;
-            public const string LogicalName = SolutionPerfix + "city";
-            public const string CityId = LogicalName + "id";
+            public const string LogicalName = SolutionPerfix + "codecityphone";
+            public const string CityPhoneId = LogicalName + "id";
             public const string Name = SolutionPerfix + "name";
-            public const string rhs_state = "rhs_state";
+            public const string CityId = "rhs_city";
+            public const string ProvinceId = "rhs_province";
+            
         }
 
-        public XrmHajirCity() : base(Schema.LogicalName) { }
+        public XrmHajirCityPhoneCode() : base(Schema.LogicalName) { }
 
-        [AttributeLogicalName(Schema.CityId)]
-        public System.Nullable<System.Guid> CityId
+        [AttributeLogicalName(Schema.CityPhoneId)]
+        public System.Nullable<System.Guid> CityPhoneId
         {
             get
             {
-                return this.GetAttributeValue<System.Nullable<System.Guid>>(Schema.CityId);
+                return this.GetAttributeValue<System.Nullable<System.Guid>>(Schema.CityPhoneId);
             }
             set
             {
-                this.SetAttributeValue(Schema.CityId, value);
+                this.SetAttributeValue(Schema.CityPhoneId, value);
                 if (value.HasValue)
                 {
                     base.Id = value.Value;
@@ -45,7 +43,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 
 
 
-        [AttributeLogicalNameAttribute(Schema.CityId)]
+        [AttributeLogicalNameAttribute(Schema.CityPhoneId)]
         public override System.Guid Id
         {
             get
@@ -54,7 +52,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             }
             set
             {
-                this.CityId = value;
+                this.CityPhoneId = value;
             }
         }
 

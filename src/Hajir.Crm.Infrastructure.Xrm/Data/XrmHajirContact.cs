@@ -12,7 +12,11 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
         public new class Schema : XrmContact.Schema
         {
             public const string RHSAddress="rhs_address";
+            public const string RHSCity = "rhs_city";
+            public const string RHSCityPhoneCode = "rhs_codecityphone";
 
         }
+
+        
     }
 }

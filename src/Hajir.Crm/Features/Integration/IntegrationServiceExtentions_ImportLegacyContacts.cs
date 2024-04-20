@@ -25,8 +25,6 @@ namespace Hajir.Crm.Features.Integration
                             account = await context.ImportAccountById(contact.AccontId);
                         }
                     }
-                    var cities = context.ServiceProvider.GetService<ICacheService>().Cities.OrderBy(x => x.Name).ToArray();
-                    var city = cities.FirstOrDefault(x => x.Name == contact.City);
                     context.Store.ImportLegacyContact(contact);
                     context.RemoveJob(contact.Id);
                 }
@@ -47,7 +45,7 @@ namespace Hajir.Crm.Features.Integration
                 try
                 {
                     total_contacts = total_contacts > 0 ? total_contacts : store.GetContatCount();
-                    var contacts = store.ReadContacts(skip, take).ToArray();
+                    var contacts = store.ReadContacts(skip, take).ToArray().Where(x => x.State == 0).ToArray();
                     total += contacts.Length;
 
                     foreach (var contact in contacts)
