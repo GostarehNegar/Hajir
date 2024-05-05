@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Hajir.Crm.Features.Common;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -11,25 +13,37 @@ namespace Hajir.Crm.Features.Integration
 {
     internal static partial class IntegrationServiceExtentions
     {
-        public static async Task<IntegrationServiceContext> ImportLegacyContact(this IntegrationServiceContext context, IntegrationContact contact)
+        public static async Task<IntegrationServiceContext> ImportLegacyContact(this IntegrationServiceContext context, IntegrationContact contact, bool shallow = false)
         {
             if (contact != null)
             {
-                if (context.AddJob(contact.Id))
+                try
                 {
                     if (!string.IsNullOrWhiteSpace(contact.AccontId))
                     {
                         var account = context.Store.GetAccountByExternalId(contact.AccontId);
-                        if (account == null && !context.JobExists(contact.AccontId))
+                        if (account == null && !shallow)
                         {
                             account = await context.ImportAccountById(contact.AccontId);
                         }
                     }
                     context.Store.ImportLegacyContact(contact);
-                    context.RemoveJob(contact.Id);
+                    context.Logger.LogInformation($"{Thread.CurrentThread.ManagedThreadId} Contact {contact} Successfully Imported.");
+                }
+                catch (Exception err)
+                {
+                    context.Logger.LogError(
+                        $"An error occured while trying to import this contact:{contact}. Err:{err.Message}");
                 }
             }
             return context;
+        }
+        public static async Task<IntegrationContact> ImportContactById(this IntegrationServiceContext context, string contactId, bool shallow = false)
+        {
+            var contact = context.LegacyCrmStore.GetContact(contactId);
+            await context.ImportLegacyContact(contact, shallow);
+            return contact;
+
         }
         public static async Task<IntegrationServiceContext> ImportContacts(this IntegrationServiceContext context)
         {

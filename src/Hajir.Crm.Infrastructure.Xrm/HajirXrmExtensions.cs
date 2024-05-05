@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using GN.Library.Xrm;
+using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,6 +17,29 @@ namespace Hajir.Crm.Infrastructure.Xrm
         {
             return str == null ? str : str.Replace("ك", "ک").Replace("ي", "ی");
 
+        }
+        internal static bool SetDates(this IXrmDataServices dataServices, string entityname, Guid id, DateTime createdOn, DateTime modifiedon)
+        {
+            var result = false;
+            var tableName = entityname + "base";
+            var idcolumn = entityname + "id";
+            dataServices.WithImpersonatedSqlConnection(con => {
+                try
+                {
+                    con.Open();
+                    var cmd = con.CreateCommand();
+                    cmd.CommandText = $"update {tableName} set " +
+                              $"  modifiedon = CAST('{modifiedon.ToString("yyyy-MM-dd'T'HH:mm:ss")}' AS DATETIME)  " +
+                              $", createdon =  CAST('{createdOn.ToString("yyyy-MM-dd'T'HH:mm:ss")}' AS DATETIME) " +
+                              $" where {idcolumn}='{id.ToString()}'";
+                    result = cmd.ExecuteNonQuery() == 1;
+                }
+                catch (Exception ex)
+                {
+
+                }
+            });
+            return result;
         }
     }
 }

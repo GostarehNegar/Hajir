@@ -19,6 +19,8 @@ namespace Hajir.Crm.Tests
 				this.host = TestUtils.GetDefaultHost(configurator, bypassDefaults);
 			}
 			return this.host;
+			
+			
 		}
 	}
 }

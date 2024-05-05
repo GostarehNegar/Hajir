@@ -37,8 +37,11 @@ namespace GN.Library.Xrm.StdSolution
 			public const string Address1_Telehone2 = "address1_telephone2";
 			public const string Address1_Telehone3 = "address1_telephone3";
 			public const string WebSiteUrl = "websiteurl";
-			public const string AccountNumber = "accountnumber";
-			public class ColumnSelectors : XrmColumnSelector<XrmAccount>
+            public const string Email1 = "emailaddress1";
+            public const string AccountNumber = "accountnumber";
+			public const string PrimaryContactId = "primarycontactid";
+
+            public class ColumnSelectors : XrmColumnSelector<XrmAccount>
 			{
 				public static Expression<Func<XrmAccount, XrmAccount>> Default => x => new XrmAccount
 				{

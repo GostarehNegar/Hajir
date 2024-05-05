@@ -18,5 +18,6 @@ namespace Hajir.Crm.Features.Common
 		IEnumerable<HajirIndustryEntity> Industries { get;}
 		IEnumerable<HajirMethodIntroductionEntity> MethodIntrduction { get;  }
 		IEnumerable<HajirCityPhoneCode> CityPhoneCodes { get; }
+		IEnumerable<HajirCountryEntity> Countries { get; }
 	}
 }

@@ -26,6 +26,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             public const string DegreeImportance = "rhs_degreeimportance";
             public const string rhs_MainPhone = "rhs_mainphone";
             public const string rhs_MainCityCode = "rhs_maincitycode";
+            public const string BrandName = "rhs_brandname";
         }
 
         [AttributeLogicalName(Schema.ExternalId)]

@@ -14,6 +14,7 @@ using GN.Library.Xrm;
 using GN.Library.Api;
 using GN.Library.Messaging;
 using Microsoft.Extensions.DependencyInjection;
+using Hajir.Crm.Integration.SanadPardaz;
 
 namespace Hajir.Crm.Xrm.Service
 {
@@ -39,6 +40,7 @@ namespace Hajir.Crm.Xrm.Service
                     s.AddHajirIntegrationServices(c.Configuration, opt => { });
                     s.AddSignalRTransport(c.Configuration, opt => { });
                     s.AddHajirInfrastructure(c.Configuration);
+                    s.AddSanadPardazIntegration(c.Configuration, opt => { });
 
 
 

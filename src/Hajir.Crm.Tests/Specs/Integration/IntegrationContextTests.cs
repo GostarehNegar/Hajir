@@ -45,6 +45,7 @@ namespace Hajir.Crm.Tests.Specs.Integration
             var host = GetHostEx();
             var ctx = new IntegrationServiceContext(host.Services, "test", default);
             var accounts = ctx.LegacyCrmStore.ReadAccounts(10, 100).ToArray();
+            var ff = accounts.Where(x=>x.AccountNumber!=null).ToArray();
             await ctx.ImportAccountById(accounts[0].Id);
         }
         [TestMethod]
@@ -73,6 +74,69 @@ namespace Hajir.Crm.Tests.Specs.Integration
             await ctx.ImportQuote(quotes.First());
             
             
+
+        }
+        public bool SetDates(IXrmDataServices dataServices, string entityname, Guid id, DateTime createdOn, DateTime modifiedon)
+        {
+            var result = false;
+            var tableName = entityname + "base";
+            var idcolumn = entityname + "id";
+            dataServices.WithImpersonatedSqlConnection(con => {
+                try
+                {
+                    con.Open();
+                    var cmd = con.CreateCommand();
+                    cmd.CommandText = $"update {tableName} set " +
+                              $"  modifiedon = CAST('{modifiedon.ToString("yyyy-MM-dd'T'HH:mm:ss")}' AS DATETIME)  " +
+                              $", createdon =  CAST('{createdOn.ToString("yyyy-MM-dd'T'HH:mm:ss")}' AS DATETIME) " +
+                              $" where {idcolumn}='{id.ToString()}'";
+                    result = cmd.ExecuteNonQuery() == 1;
+                }
+                catch (Exception ex)
+                {
+
+                }
+            });
+            return result;
+        }
+        [TestMethod]
+        public async Task set_created_on()
+        {
+            var host = GetHostEx();
+            var account = host.Services.GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirAccount>()
+                .Queryable
+                .FirstOrDefault();
+            SetDates(host.Services.GetService<IXrmDataServices>(), "account", account.Id, DateTime.UtcNow, DateTime.UtcNow.AddDays(-1));
+
+
+            var date = DateTime.UtcNow;
+            var createdon = DateTime.UtcNow.AddDays(-5);
+            //var st = date.ToString("yyyy-MM-dd'T'HH:mm:ss");
+
+            //host.Services.GetService<IXrmDataServices>()
+            //    .WithImpersonatedSqlConnection(db => {
+            //        db.Open();
+            //        var sql = $"update accountbase set " +
+            //                  $"modifiedon = CAST('{date.ToString("yyyy-MM-dd'T'HH:mm:ss")}' AS DATETIME)  " +
+            //                  $", createdon =  CAST('{createdon.ToString("yyyy-MM-dd'T'HH:mm:ss")}' AS DATETIME)" +
+            //                  $" where accountid='{account.Id.ToString()}'";
+            //        //var sql = $"select modifiedon from accountbase where accountid='{account.Id.ToString()}'";// + "'{" + account.Id.ToString() + "}'";
+            //        var cmd = db.CreateCommand();
+            //        cmd.CommandText = sql;
+            //        var res = cmd.ExecuteNonQuery();
+            //        //var ffff =cmd.ExecuteReader();
+            //        //ffff.Read();
+            //    });
+
+            var account2 = host.Services.GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirAccount>()
+                .Queryable
+                .Where(x=>x.AccountId==account.Id)
+                .FirstOrDefault();
+
+
+
 
         }
 

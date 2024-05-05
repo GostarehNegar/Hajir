@@ -108,7 +108,10 @@ namespace Hajir.Crm.Infrastructure.Xrm
             {
                 Name = c.Name,
 
-                Id = c.Id.ToString()
+                Id = c.Id.ToString(),
+                ModifiedOn = c.ModifiedOn.Value,
+                CreatedOn = c.CreatedOn.Value
+
             };
         }
         public static XrmHajirAggregateProduct ToXrmAggergateProduct(this SaleAggergateProduct p)

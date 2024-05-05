@@ -14,6 +14,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using Newtonsoft.Json.Linq;
+using NLog.Targets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         {
             //throw new NotImplementedException();
         }
+
 
         private List<PicklistValue> GetOptionSetData(string entityName, string propertyName)
         {
@@ -142,6 +144,8 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         }
         private OptionSetValue GetAccountType(string salutaion)
         {
+            if (string.IsNullOrWhiteSpace(salutaion))
+                return null;
             var f = this.GetAccountTypes()
                 .Select(x => new PicklistValue
                 {
@@ -160,7 +164,8 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         }
         private OptionSetValue GetDegreeImportance(string importance)
         {
-            var f = this.GetImportanceDegrees()
+
+            var f = string.IsNullOrWhiteSpace(importance) ? null : this.GetImportanceDegrees()
                 .Select(x => new PicklistValue
                 {
                     Code = x.Code,
@@ -313,6 +318,27 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             return null;
 
         }
+        private HajirCountryEntity GetCountry(string country)
+        {
+            if (!string.IsNullOrWhiteSpace(country))
+            {
+                var _country = this.cache.Countries
+                    .Select(x => new PicklistValue
+                    {
+                        GUID = Guid.TryParse(x.Id, out var _i) ? _i : Guid.Empty,
+                        Name = x.Name,
+                        Distance = CalcLevenshteinDistance(x.Name, country)
+                    })
+                    .OrderBy(x => x.Distance)
+                    .FirstOrDefault();
+                if (_country != null)
+                {
+                    return this.cache.Countries.FirstOrDefault(x => x.Id == _country.GUID.ToString());
+                }
+            }
+            return null;
+
+        }
         public IntegrationContact ImportLegacyContact(IntegrationContact contact)
         {
             var xrm_contact = this.dataServices.GetXrmOrganizationService<XrmHajirContact>()
@@ -345,6 +371,19 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             xrm_contact["rhs_sendpost"] = !contact.DoNotPost;
             xrm_contact["rhs_sendmessage"] = !contact.DonotSendMarketingMaterial;
             xrm_contact["rhs_postalcode"] = contact.PostalCode;
+            xrm_contact[XrmContact.Schema.Address1_Line1] = contact.GetAttributeValue<string>(XrmContact.Schema.Address1_Line1);
+            xrm_contact[XrmContact.Schema.Address1_Line2] = contact.GetAttributeValue<string>(XrmContact.Schema.Address1_Line2);
+            xrm_contact[XrmContact.Schema.Address1_Line3] = contact.GetAttributeValue<string>(XrmContact.Schema.Address1_Line3);
+            xrm_contact[XrmContact.Schema.Fax] = contact.GetAttributeValue<string>(XrmContact.Schema.Fax);
+            xrm_contact["address1_country"] = contact.GetAttributeValue<string>("address1_country");
+            var country = this.GetCountry(contact.GetAttributeValue<string>("address1_country"))
+                ?? this.cache.Countries.Where(x => x.Name == "ایران").FirstOrDefault();
+
+            if (country != null && Guid.TryParse(country.Id, out var _countryid))
+            {
+                xrm_contact["rhs_country"] = new EntityReference(XrmHajirCountry.Schema.LogicalName, _countryid);
+            }
+
 
             var city_phone_code = this.GetCityPhoneCode(contact.MobilePhone, out var _phone);
             if (city_phone_code.HasValue)
@@ -353,8 +392,6 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
 
                 xrm_contact["rhs_businessphone1"] = _phone;
             }
-
-
             var city = this.GetCity(contact.City);
             if (city != null && Guid.TryParse(city.Id, out var cityId))
             {
@@ -372,6 +409,18 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             var id = this.dataServices
                 .GetRepository<XrmContact>()
                 .Upsert(xrm_contact);
+
+            try
+            {
+                this.dataServices.SetDates(XrmContact.Schema.LogicalName, id, contact.CreatedOn, contact.ModifiedOn);
+
+            }
+            catch (Exception err)
+            {
+                this.logger.LogWarning(
+                    $"An error occured while trying to update CreardOn/ModifiedOn for this contact. Err:{err.Message}");
+            }
+
             return LoadContact(id.ToString());
         }
 
@@ -424,7 +473,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             {
                 var item = this.cache.CityPhoneCodes
                     .FirstOrDefault(x => phoneNumber.StartsWith(x.Name));
-                if (item != null && Guid.TryParse(item.Id,out var _id))
+                if (item != null && Guid.TryParse(item.Id, out var _id))
                 {
                     newPhoneNumber = phoneNumber.Substring(item.Name.Length);
                     return _id;
@@ -450,10 +499,18 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             xrm_account.NationalCode = account.gn_shenasemeli;
             xrm_account.EconomicCode = account.gn_eco_code;
             xrm_account.RegistrationNauber = account.gn_sabt;
+
             xrm_account.Telephone1 = account.MainPhone;
+            xrm_account["telephone2"] = account.Telephone2;
+            xrm_account[XrmHajirAccount.Schema.rhs_MainPhone] = account.MainPhone;
+            xrm_account["rhs_subphone"] = account.Telephone2;
+            xrm_account[XrmHajirAccount.Schema.BrandName] = account.AccountNumber;
+
             xrm_account["rhs_address"] = account.address1_name;
             xrm_account[XrmHajirAccount.Schema.DegreeImportance] = GetDegreeImportance(account.Daraje_Ahamiat);
             xrm_account["address1_postalcode"] = account.address1_postalcode;
+            xrm_account[XrmHajirAccount.Schema.WebSiteUrl] = account.WebSite;
+            xrm_account[XrmHajirAccount.Schema.Email1] = account.Email;
 
             xrm_account["donotbulkemail"] = account.DonotBulkEmail;
             xrm_account["donotemail"] = account.DonotEmail;
@@ -467,7 +524,13 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
 
             //account.Daraje_Ahamiat
 
+            var country = this.GetCountry(account.GetAttributeValue<string>("address1_country"))
+                ?? this.cache.Countries.Where(x => x.Name == "ایران").FirstOrDefault();
 
+            if (country != null && Guid.TryParse(country.Id, out var _countryid))
+            {
+                xrm_account["rhs_country"] = new EntityReference(XrmHajirCountry.Schema.LogicalName, _countryid);
+            }
 
             var city = this.GetCity(account.City);
             if (city != null && Guid.TryParse(city.Id, out var cityId))
@@ -478,11 +541,10 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             {
                 xrm_account[XrmHajirAccount.Schema.rhs_state] = new EntityReference(XrmHajirProvince.Schema.LogicalName, provinceId);
             }
-            xrm_account[XrmHajirAccount.Schema.rhs_MainPhone] = account.MainPhone;
             var phoneCityCode = this.GetCityPhoneCode(account.MainPhone, out var _phone);
             if (phoneCityCode.HasValue)
             {
-                xrm_account[XrmHajirAccount.Schema.rhs_MainCityCode] = new EntityReference(XrmHajirCityPhoneCode.Schema.LogicalName,phoneCityCode.Value);
+                xrm_account[XrmHajirAccount.Schema.rhs_MainCityCode] = new EntityReference(XrmHajirCityPhoneCode.Schema.LogicalName, phoneCityCode.Value);
                 xrm_account[XrmHajirAccount.Schema.rhs_MainPhone] = _phone;
             }
 
@@ -490,6 +552,12 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
 
             var import_start = "==== Import Start ====";
             xrm_account.Description = account.Description + import_start + "\r\n" + account.GetImportantIntegrationValuesAsText();
+
+            var contact = this.GetContactByExternalId(account.PrimaryContactId);
+            if (contact != null && Guid.TryParse(contact.Id, out var _primaryContact))
+            {
+                xrm_account[XrmHajirAccount.Schema.PrimaryContactId] = new EntityReference(XrmContact.Schema.LogicalName, _primaryContact);
+            }
 
             var id = this.dataServices
                 .GetRepository<XrmHajirAccount>()
@@ -499,6 +567,16 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 .Queryable
                 .FirstOrDefault(x => x.AccountId == id);
             xrm_account.Services.GetAnnotationService().UpdateObject("import_data", account);
+
+            try
+            {
+                this.dataServices.SetDates("account", id, account.CreatedOn, account.ModifiedOn);
+            }
+            catch (Exception exp)
+            {
+                this.logger.LogWarning(
+                    $"An error occured while tryng to set CreatedOn,ModifiedOn on this account. Err:{exp.Message} ");
+            }
 
             //this.dataServices.WithImpersonatedSqlConnection(db => {
             //    db.Open();
@@ -535,6 +613,13 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 .Queryable
                 .FirstOrDefault(x => x.ExternalId == externalId)
                 .ToIntegrationAccount();
+        }
+        public IntegrationContact GetContactByExternalId(string externalId)
+        {
+            return string.IsNullOrWhiteSpace(externalId) ? null : this.dataServices.GetRepository<XrmHajirContact>()
+                .Queryable
+                .FirstOrDefault(x => x.ExternalId == externalId)
+                .ToIntegrationContact();
         }
 
 

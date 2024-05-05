@@ -13,7 +13,7 @@ namespace Hajir.Crm.Integration.SanadPardaz.Entities
         [Key]
         public string GoodCode { get; set; }
         public string GoodName { get; set;}
-        public Int16 CatCode { get; set;}
-        public int Gid { get; set; }
+        public Int16? CatCode { get; set;}
+        public int? Gid { get; set; }
     }
 }

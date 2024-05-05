@@ -19,6 +19,9 @@ namespace Hajir.Crm.Integration.SanadPardaz.Entities
         public string LName { get; set; }
         public byte? Typee { get; set; }
         public Int16? DetailClass { get;set; }
+        public string MobileNo { get; set; }
+        public string EconomicCode { get;set; }
+        public string RegNo { get; set; }
 
 
 

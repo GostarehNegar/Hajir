@@ -122,55 +122,64 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
 
         }
 
+        private IntegrationContact ToContact(Entity x)
+        {
+            return x == null ? null : new IntegrationContact(x.Attributes)
+            {
+                Id = x.GetAttributeValue<Guid>("contactid").ToString(),
+                FirstName = x.GetAttributeValue<string>("firstname")?.RemoveArabic(),
+                LastName = x.GetAttributeValue<string>("lastname")?.RemoveArabic(),
+                MobilePhone = x.GetAttributeValue<string>("mobilephone"),
+                City = x.GetAttributeValue<string>("address1_city")?.RemoveArabic(),
+                Salutation = this.GetSalution(x)?.RemoveArabic(),
+                JobTitle = x.GetAttributeValue<string>("jobtitle"),
+                Province = x.GetAttributeValue<EntityReference>("gn_province")?.Name,
+                Hadaya = x.GetAttributeValue<bool?>("new_hadaya"),
+                Role = GetRole(x),
+                AccontId = GetAccountId(x),
+                Address = x.GetAttributeValue<string>("address1_name"),
+                BusinessPhone = x.GetAttributeValue<string>("telephone1"),
+                Email = x.GetAttributeValue<string>(XrmContact.Schema.EmailAddress1),
+                //OwnerLoginName = GetOwnerLoginName(x),
+                ModifiedOn = x.GetAttributeValue<DateTime>(XrmEntity.Schema.ModifiedOn),
+                CreatedOn = x.GetAttributeValue<DateTime>(XrmEntity.Schema.CreatedOn),
+                State = x.GetAttributeValue<OptionSetValue>("statecode")?.Value ?? 0,
+                BirthDate = x.GetAttributeValue<DateTime?>("birthdate"),
+                Description = x.GetAttributeValue<string>("description"),
+                DoNotEmail = x.GetAttributeValue<bool?>("donotemail") ?? false,
+                DoNotBulkEmail = x.GetAttributeValue<bool?>("donotbulkemail") ?? false,
+                DoNotFax = x.GetAttributeValue<bool?>("donotfax") ?? false,
+                DoNotPhone = x.GetAttributeValue<bool?>("donotphone") ?? false,
+                DoNotPost = x.GetAttributeValue<bool?>("new_dontpost") ?? false,
+                DoNotPostalMail = x.GetAttributeValue<bool?>("donotpostalmail") ?? false,
+                DonotSendMarketingMaterial = x.GetAttributeValue<bool?>("donotsendmm") ?? false,
+                PostalCode = x.GetAttributeValue<string>("address1_postalcode"),
+                
+
+
+            };
+        }
 
         public IEnumerable<IntegrationContact> ReadContacts(int skip, int take)
         {
             var query = this.organizationService.CreateQuery("contact");
             return query.Skip(skip).Take(take).ToArray()
-                .Select(x => new IntegrationContact(x.Attributes)
-                {
-                    Id = x.GetAttributeValue<Guid>("contactid").ToString(),
-                    FirstName = x.GetAttributeValue<string>("firstname")?.RemoveArabic(),
-                    LastName = x.GetAttributeValue<string>("lastname")?.RemoveArabic(),
-                    MobilePhone = x.GetAttributeValue<string>("mobilephone"),
-                    City = x.GetAttributeValue<string>("address1_city")?.RemoveArabic(),
-                    Salutation = this.GetSalution(x)?.RemoveArabic(),
-                    JobTitle = x.GetAttributeValue<string>("jobtitle"),
-                    Province = x.GetAttributeValue<EntityReference>("gn_province")?.Name,
-                    Hadaya = x.GetAttributeValue<bool?>("new_hadaya"),
-                    Role = GetRole(x),
-                    AccontId = GetAccountId(x),
-                    Address = x.GetAttributeValue<string>("address1_name"),
-                    BusinessPhone = x.GetAttributeValue<string>("telephone1"),
-                    Email = x.GetAttributeValue<string>(XrmContact.Schema.EmailAddress1),
-                    OwnerLoginName = GetOwnerLoginName(x),
-                    ModifiedOn = x.GetAttributeValue<DateTime>(XrmEntity.Schema.ModifiedOn),
-                    State = x.GetAttributeValue<OptionSetValue>("statecode")?.Value ?? 0,
-                    BirthDate = x.GetAttributeValue<DateTime?>("birthdate"),
-                    Description = x.GetAttributeValue<string>("description"),
-                    DoNotEmail = x.GetAttributeValue<bool?>("donotemail") ?? false,
-                    DoNotBulkEmail = x.GetAttributeValue<bool?>("donotbulkemail") ?? false,
-                    DoNotFax = x.GetAttributeValue<bool?>("donotfax") ?? false,
-                    DoNotPhone = x.GetAttributeValue<bool?>("donotphone") ?? false,
-                    DoNotPost = x.GetAttributeValue<bool?>("new_dontpost") ?? false,
-                    DoNotPostalMail = x.GetAttributeValue<bool?>("donotpostalmail") ?? false,
-                    DonotSendMarketingMaterial = x.GetAttributeValue<bool?>("donotsendmm") ?? false,
-                    PostalCode = x.GetAttributeValue<string>("address1_postalcode"),
-                    
-
-
-
-
-                })
+                .Select(x => ToContact(x))
                 .ToArray();
         }
 
         private IntegrationAccount ToAccount(Entity entity)
         {
+            if (entity == null)
+            {
+                return null;
+            }
             var result = entity.ToDynamic().To<IntegrationAccount>();
             result.Id = entity.Id.ToString();
             result.Name = ((string)entity[XrmAccount.Schema.Name]).RemoveArabic();
+            result.AccountNumber = entity.GetAttributeValue<string>("accountnumber");
             result.MainPhone = entity.GetAttributeValue<string>("telephone1");
+            result.Telephone2 = entity.GetAttributeValue<string>("telephone2");
             result.Fax = entity.GetAttributeValue<string>("fax");
             result.gn_shenasemeli = entity.GetAttributeValue<string>("gn_shenasemeli");
             result.gn_sabt = entity.GetAttributeValue<string>("gn_sabt");
@@ -195,7 +204,10 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             result.DoNotPostalMail = entity.GetAttributeValue<bool?>("donotpostalmail") ?? false;
             result.WebSite = entity.GetAttributeValue<string>("websiteurl");
             result.Email = entity.GetAttributeValue<string>("emailaddress1");
-            
+            result.PrimaryContactId = entity.GetAttributeValue<EntityReference>("primarycontactid")?.Id.ToString();
+            result.CreatedOn = entity.GetAttributeValue<DateTime>(XrmEntity.Schema.CreatedOn);
+            result.ModifiedOn = entity.GetAttributeValue<DateTime>(XrmEntity.Schema.ModifiedOn);
+
 
 
             return result;
@@ -279,6 +291,14 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                .Select(x => LoadLines(x))
                .ToArray();
             return result;
+
+        }
+
+        public IntegrationContact GetContact(string id)
+        {
+            return id != null && Guid.TryParse(id, out var _id)
+               ? ToContact(this.organizationService.CreateQuery("contact").FirstOrDefault(x => (Guid)x[XrmContact.Schema.ContactId] == _id))
+               : null;
 
         }
     }

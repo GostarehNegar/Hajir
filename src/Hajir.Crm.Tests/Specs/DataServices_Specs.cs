@@ -90,6 +90,27 @@ namespace Hajir.Crm.Tests.Specs
                 .Queryable
                 .ToArray();
         }
+        [TestMethod]
+        public async Task DbContext_Test()
+        {
+            var host = this.GetDefualtHost();
+            var target = host.Services
+                .GetService<IXrmDataServices>();
+            target.WithImpersonatedDbContext(dbx => {
+                var data =dbx.AddEntity<XrmHajirContact>()
+                .Query<XrmHajirContact>()
+                .Take(10)
+                .ToArray();
+                
+            });
+            target.WithImpersonatedSqlConnection(db => {
+                var f = db;
+                db.Open();
+                
+                
+            });
+
+        }
 
     }
 }

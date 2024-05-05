@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Hajir.Crm.Entities
 {
-    public class HajirCityEntity:DynamicEntity
+    public class HajirCityEntity : DynamicEntity
     {
         public string Id { get; set; }
         public string Name { get; set; }

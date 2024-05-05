@@ -11,22 +11,36 @@ namespace Hajir.Crm.Features.Integration
 {
     internal static partial class IntegrationServiceExtentions
     {
-        public static async Task<IntegrationAccount> ImportAccountById(this IntegrationServiceContext context, string accountId)
+        public static async Task<IntegrationAccount> ImportAccountById(this IntegrationServiceContext context, string accountId, bool shallow = false)
         {
 
             return await context.ImportAccount(context.LegacyCrmStore.GetAccount(accountId));
 
 
         }
-        public static async Task<IntegrationAccount> ImportAccount(this IntegrationServiceContext context, IntegrationAccount account)
+        public static async Task<IntegrationAccount> ImportAccount(this IntegrationServiceContext context, IntegrationAccount account, bool shallow = false)
         {
             await Task.CompletedTask;
-
-            if (context.AddJob(account.Id))
+            try
             {
-                var result = context.Store.ImportLegacyAccount(account);
-                context.RemoveJob(account.Id);
-                return result;
+
+                if (account != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(account.PrimaryContactId) && !shallow && context.Store.GetContactByExternalId(account.PrimaryContactId) == null)
+                    {
+                        await context.ImportContactById(account.PrimaryContactId, true);
+                    }
+                    var result = context.Store.ImportLegacyAccount(account);
+                    context.Logger.LogInformation(
+                        $"Account:{account} Successfully Imported.");
+                    return result;
+                }
+            }
+            catch (Exception err)
+            {
+                context.Logger.LogError(
+                    $"An error occured while trying to import Account:{account}, Err:{err.Message}");
+                throw;
             }
             return null;
         }

@@ -20,9 +20,11 @@ namespace Microsoft.Extensions.DependencyInjection
             configure?.Invoke(opt.Validate()); ;
             services.AddSingleton(opt.Validate());
             services.AddSingleton<IntegrationBackgroundService>();
-            services.AddHostedService(sp=> sp.GetService<IntegrationBackgroundService>());
+            //services.AddHostedService(sp=> sp.GetService<IntegrationBackgroundService>());
+            services.AddSingleton<IntegrationBackgroundServiceEx>();
+            services.AddHostedService(sp => sp.GetService<IntegrationBackgroundServiceEx>());
 
-            
+
             return services;
         }
     }

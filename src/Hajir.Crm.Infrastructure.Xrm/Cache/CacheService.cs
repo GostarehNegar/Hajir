@@ -80,7 +80,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
             {
                 return this.cache.GetOrCreate<IEnumerable<HajirCityEntity>>("CITIES", entry =>
                 {
-                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
                     return this.LoadCities();
                 });
 
@@ -140,9 +140,31 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
         public IEnumerable<HajirCityPhoneCode> CityPhoneCodes =>
              this.cache.GetOrCreate<IEnumerable<HajirCityPhoneCode>>("CITY_PHONE_CODES", entry =>
                 {
-                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
                     return this.LoadCityPhoneCodes();
                 });
+
+        public IEnumerable<HajirCountryEntity> Countries =>
+             this.cache.GetOrCreate<IEnumerable<HajirCountryEntity>>("COUNTRIES", entry =>
+             {
+                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
+                 using (var scope = this.serviceProvider.CreateScope())
+                 {
+                     return scope.ServiceProvider.GetService<IXrmDataServices>()
+                     .GetRepository<XrmHajirCountry>()
+                     .Queryable
+                     .ToArray()
+                     .Where(x => x.StateCode == 0)
+                     .Select(x => new HajirCountryEntity
+                     {
+                         Id = x.Id.ToString(),
+                         Name = x.Name
+                     })
+                     .ToArray();
+
+                 }
+
+             });
 
 
         public CacheService(IServiceProvider serviceProvider, IMemoryCache cache)

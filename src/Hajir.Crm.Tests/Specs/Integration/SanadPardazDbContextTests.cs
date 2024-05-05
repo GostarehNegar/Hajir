@@ -31,7 +31,7 @@ namespace Hajir.Crm.Tests.Specs.Integration
                 var groups = target.GoodGroups.ToArray();
                 var types = target.GoodGroupsType.ToArray();
                 var ff = goods.Where(x => x.GoodName.Contains("UPS")).ToArray();
-                var detials = target.DetailCodes.Where(x=>x.Typee==0) .Take(1000).ToArray();
+                var detials = target.DetailCodes.Where(x=>x.Typee==0 && x.DetailClass==10 && x.NationalId!=null) .Take(1000).ToArray();
                 var _types = target.DetailTypes.ToArray();
                 var classes = target.DetailClasses.ToArray();
 

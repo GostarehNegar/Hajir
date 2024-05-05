@@ -12,6 +12,7 @@ namespace Hajir.Crm.Features.Integration
         public int Type { get; set; }
 
         public string MainPhone { get; set; }
+        public string Telephone2 { get; set; }
         public string Fax { get; set; }
         public string gn_shenasemeli { get; set; }
         public string gn_sabt { get; set; }
@@ -35,6 +36,10 @@ namespace Hajir.Crm.Features.Integration
         public bool DoNotPostalMail { get; set; }
         public string WebSite { get; set; }
         public string Email { get; set; }
+        public string PrimaryContactId { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime ModifiedOn { get; set; }
+        public string AccountNumber { get; set; }
 
         public override string ToString()
         {

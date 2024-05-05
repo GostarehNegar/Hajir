@@ -50,6 +50,7 @@ namespace Hajir.Crm.Features.Integration
         public bool DonotSendMarketingMaterial { get; set; }
         public string PostalCode { get; set; }
         public string DegreeImportance { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         public override string ToString()
         {
