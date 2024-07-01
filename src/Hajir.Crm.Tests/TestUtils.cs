@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Hajir.Crm.Features.Products;
 using Hajir.Crm.Entities;
 using Hajir.Crm.Integration.SanadPardaz;
+using GN.Library.Odoo;
+using GostarehNegarBot;
 
 namespace Hajir.Crm.Tests
 {
@@ -72,6 +74,9 @@ namespace Hajir.Crm.Tests
                         s.AddHajirCrm(c.Configuration, cfg => { });
                         s.AddHajirInfrastructure(c.Configuration);
                         s.AddSanadPardazIntegration(c.Configuration, opt => { });
+                        s.AddOdoo(c.Configuration, opt => { opt.ConnectionString= "Url=http://localhost:8069,DbName=HajirAI,UserName=babak@gnco.ir,Password=zry2352KAB"; });
+                        s.AddHajirAIBot(c.Configuration, opt => { });
+
                     }
                     configurator?.Invoke(c.Configuration, s);
 

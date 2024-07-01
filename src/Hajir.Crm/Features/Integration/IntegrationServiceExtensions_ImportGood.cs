@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Hajir.Crm.Features.Integration
 {
-    internal class IntegrationServiceExtensions_ImportGood
+    internal static partial class IntegrationServiceExtentions
     {
+
     }
 }

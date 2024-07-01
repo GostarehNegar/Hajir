@@ -16,7 +16,7 @@ namespace Hajir.Crm.Features.Integration
 {
     public class IntegrationBackgroundServiceEx : BackgroundMultiBlockingTaskHostedService
     {
-        private readonly ILogger<IntegrationBackgroundService> logger;
+        private readonly ILogger<IntegrationBackgroundServiceEx> logger;
         private readonly IServiceProvider serviceProvider;
         private readonly HajirIntegrationOptions options;
         private int _total;
@@ -24,7 +24,7 @@ namespace Hajir.Crm.Features.Integration
         private int _failure;
 
 
-        public IntegrationBackgroundServiceEx(ILogger<IntegrationBackgroundService> logger, IServiceProvider serviceProvider, HajirIntegrationOptions options)
+        public IntegrationBackgroundServiceEx(ILogger<IntegrationBackgroundServiceEx> logger, IServiceProvider serviceProvider, HajirIntegrationOptions options)
             : base(4, 100)
         {
             this.logger = logger;

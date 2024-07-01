@@ -11,6 +11,8 @@ using GN.Library.Xrm;
 using Hajir.Crm.Entities;
 using Hajir.Crm.Features.Products;
 using Hajir.Crm.Infrastructure.Xrm.Data;
+using GN.Library.Odoo;
+using Hajir.AI.Bot.Internals;
 
 namespace Hajir.Crm.Tests.Specs
 {
@@ -91,23 +93,61 @@ namespace Hajir.Crm.Tests.Specs
                 .ToArray();
         }
         [TestMethod]
+        public async Task odoo_test()
+        {
+            var host = this.GetDefualtHost();
+            var odoo = host.Services.GetService<IOdooConnection>();
+
+            var m1 = odoo.CreateQuery<OdooMail>()
+                .Execute(q =>
+                {
+                    q.AddField(OdooMail.Schema.Receipients, OdooMessage.Schema.Body).AddAllFields();
+                    
+                })
+                .ToArray();
+            var email = odoo.New<OdooMail>();
+            email.Body = "hi there";
+            email.Receipients = new int[] { 33 };
+            email.MessageType = "comment";
+            email.Subject = "sub";
+            email.Save();
+
+
+            var m = odoo.CreateQuery<OdooMessage>()
+                .Execute(q =>
+                {
+                    q.AddField(OdooMessage.Schema.AUthor_Id, OdooMessage.Schema.Body, OdooMessage.Schema.MessageType, OdooMessage.Schema.PartnerIds);
+                })
+                .ToArray();
+            var msg = odoo.New<OdooMessage>();
+            msg.AuthorId = 33;
+            msg.Body = "hi there";
+            msg.MessageType = "email";
+            msg.Save();
+
+            odoo.IsConnected();
+            host.Services.GetService<IContactStore>().GetContactById("31");
+        }
+        [TestMethod]
         public async Task DbContext_Test()
         {
             var host = this.GetDefualtHost();
             var target = host.Services
                 .GetService<IXrmDataServices>();
-            target.WithImpersonatedDbContext(dbx => {
-                var data =dbx.AddEntity<XrmHajirContact>()
+            target.WithImpersonatedDbContext(dbx =>
+            {
+                var data = dbx.AddEntity<XrmHajirContact>()
                 .Query<XrmHajirContact>()
                 .Take(10)
                 .ToArray();
-                
+
             });
-            target.WithImpersonatedSqlConnection(db => {
+            target.WithImpersonatedSqlConnection(db =>
+            {
                 var f = db;
                 db.Open();
-                
-                
+
+
             });
 
         }

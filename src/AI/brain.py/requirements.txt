@@ -1,0 +1,14 @@
+openai
+langchain
+transformers
+python-telegram-bot
+python-dotenv
+nats-py
+chromadb
+tiktoken
+pydantic==1.*
+uvicorn
+fastapi
+duckduckgo-search
+langchain-chroma
+langchain-community

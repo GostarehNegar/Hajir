@@ -1,0 +1,15 @@
+{
+  "memory": "ConversationBufferMemory",
+  "dataPath": "../db",
+  "node_name": "kk",
+  "chroma": {
+    "host": "localhost",
+    "port": "8009",
+    "persist_directory": "db"
+  },
+  "bus": {
+    "nats_connection_string": "nats://localhost:4222",
+    "node_name": "no_name",
+    "domain": "public"
+  }
+}

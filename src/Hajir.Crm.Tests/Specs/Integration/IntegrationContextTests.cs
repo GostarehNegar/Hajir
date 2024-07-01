@@ -49,6 +49,14 @@ namespace Hajir.Crm.Tests.Specs.Integration
             await ctx.ImportAccountById(accounts[0].Id);
         }
         [TestMethod]
+        public async Task product_integration_works()
+        {
+            var host = GetHostEx();
+            var ctx = new IntegrationServiceContext(host.Services, "test", default);
+            var products = ctx.SanadPardaz.GetProducts(0, 1000);
+
+        }
+        [TestMethod]
         public async Task Mappping()
         {
             var host = GetHostEx();

@@ -32,9 +32,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AI\Hajir.AI.Bot\Hajir.AI.Bot.csproj" />
     <ProjectReference Include="..\Hajir.Crm.Infrastructure.Xrm\Hajir.Crm.Infrastructure.Xrm.csproj" />
     <ProjectReference Include="..\Hajir.Crm.Integration.SanadPardaz\Hajir.Crm.Integration.SanadPardaz.csproj" />
     <ProjectReference Include="..\Hajir.Crm\Hajir.Crm.csproj" />
+    <ProjectReference Include="..\Library\GN.Library.Odoo\GN.Library.Odoo.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="temp.jpeg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
