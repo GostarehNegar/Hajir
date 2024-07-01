@@ -20,7 +20,8 @@ class Utils:
         pass
 
     def get_openai_key():
-        return None
+        return "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"
+    
         try:
 
             with open('.env') as f:
