@@ -28,7 +28,7 @@ namespace Hajir.Crm.Features.Integration
                         }
                     }
                     context.Store.ImportLegacyContact(contact);
-                    context.Logger.LogInformation($"{Thread.CurrentThread.ManagedThreadId} Contact {contact} Successfully Imported.");
+                    context.Logger.LogInformation($"Contact {contact} Successfully Imported.");
                 }
                 catch (Exception err)
                 {

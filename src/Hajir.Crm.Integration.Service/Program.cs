@@ -40,7 +40,7 @@ namespace Hajir.Crm.Xrm.Service
                     s.AddHajirIntegrationServices(c.Configuration, opt => { });
                     s.AddSignalRTransport(c.Configuration, opt => { });
                     s.AddHajirInfrastructure(c.Configuration);
-                    s.AddSanadPardazIntegration(c.Configuration, opt => { });
+                    //s.AddSanadPardazIntegration(c.Configuration, opt => { });
 
 
 

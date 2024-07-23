@@ -160,6 +160,7 @@ namespace Hajir.Crm.Features.Integration
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var tasks = new List<Task>();
+            await Task.Delay(1000);
             using (var scope = this.serviceProvider.CreateScope())
             {
                 var store = scope.ServiceProvider.GetService<ILegacyCrmStore>();
