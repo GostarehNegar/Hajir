@@ -40,6 +40,7 @@ namespace Hajir.Crm.Features.Integration
         public DateTime CreatedOn { get; set; }
         public DateTime ModifiedOn { get; set; }
         public string AccountNumber { get; set; }
+        public string OwningLoginName { get; set; }
 
         public override string ToString()
         {

@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using GN.Library.Shared.Entities;
 
 namespace Hajir.Crm.Features.Integration
 {
@@ -26,6 +27,11 @@ namespace Hajir.Crm.Features.Integration
 
                 if (account != null)
                 {
+                    var primary = account.GetAttributeValue<DynamicEntityReference>("parentaccountid");
+                    if (primary!=null && Guid.TryParse(primary.Id, out var _primaryId))
+                    {
+                        await context.ImportAccountById(primary.Id, true);
+                    }
                     if (!string.IsNullOrWhiteSpace(account.PrimaryContactId) && !shallow && context.Store.GetContactByExternalId(account.PrimaryContactId) == null)
                     {
                         await context.ImportContactById(account.PrimaryContactId, true);

@@ -26,11 +26,33 @@ namespace Hajir.Crm.Tests.Specs.Integration
             });
         }
         [TestMethod]
+        public async Task contact_address_works()
+        {
+            var host = GetHostEx();
+            var ctx = new IntegrationServiceContext(host.Services, "test", default);
+            
+            var contacts = ctx.LegacyCrmStore.ReadContacts(0, 1000).ToArray();
+
+
+
+
+            foreach (var contact in contacts.Skip(1))
+            {
+                await ctx.ImportLegacyContact(contact);
+            }
+
+
+
+        }
+
+        [TestMethod]
         public async Task contact_integration_works()
         {
             var host = GetHostEx();
             var ctx = new IntegrationServiceContext(host.Services,"test", default);
             var contacts = ctx.LegacyCrmStore.ReadContacts(0, 100);
+            
+
             foreach (var contact in contacts.Skip(1))
             {
                 await ctx.ImportLegacyContact(contact);
@@ -44,7 +66,9 @@ namespace Hajir.Crm.Tests.Specs.Integration
         {
             var host = GetHostEx();
             var ctx = new IntegrationServiceContext(host.Services, "test", default);
-            var accounts = ctx.LegacyCrmStore.ReadAccounts(10, 100).ToArray();
+            var accounts = ctx.LegacyCrmStore.ReadAccounts(10, 1000).ToArray();
+            var acc = accounts.Where(x=>x.GetAttributeValue<object>("parentaccountid")!=null).ToArray();
+            await ctx.ImportAccountById(acc[0].Id);
             var ff = accounts.Where(x=>x.AccountNumber!=null).ToArray();
             await ctx.ImportAccountById(accounts[0].Id);
         }

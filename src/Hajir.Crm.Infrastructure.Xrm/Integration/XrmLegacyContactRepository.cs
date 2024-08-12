@@ -140,7 +140,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 Address = x.GetAttributeValue<string>("address1_name"),
                 BusinessPhone = x.GetAttributeValue<string>("telephone1"),
                 Email = x.GetAttributeValue<string>(XrmContact.Schema.EmailAddress1),
-                //OwnerLoginName = GetOwnerLoginName(x),
+                OwnerLoginName = GetOwnerLoginName(x),
                 ModifiedOn = x.GetAttributeValue<DateTime>(XrmEntity.Schema.ModifiedOn),
                 CreatedOn = x.GetAttributeValue<DateTime>(XrmEntity.Schema.CreatedOn),
                 State = x.GetAttributeValue<OptionSetValue>("statecode")?.Value ?? 0,
@@ -207,6 +207,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             result.PrimaryContactId = entity.GetAttributeValue<EntityReference>("primarycontactid")?.Id.ToString();
             result.CreatedOn = entity.GetAttributeValue<DateTime>(XrmEntity.Schema.CreatedOn);
             result.ModifiedOn = entity.GetAttributeValue<DateTime>(XrmEntity.Schema.ModifiedOn);
+            result.OwningLoginName = this.GetOwnerLoginName(entity);
 
 
 

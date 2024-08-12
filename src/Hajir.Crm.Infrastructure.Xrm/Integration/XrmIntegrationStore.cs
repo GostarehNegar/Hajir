@@ -1,4 +1,5 @@
 ﻿using GN.Library.Data;
+using GN.Library.Shared.Entities;
 using GN.Library.Xrm;
 using GN.Library.Xrm.StdSolution;
 using Hajir.Crm.Entities;
@@ -354,6 +355,9 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             xrm_contact["telephone1"] = contact.BusinessPhone;
             xrm_contact["rhs_businessphone1"] = contact.BusinessPhone;
             xrm_contact["rhs_address"] = contact.Address;
+            xrm_contact["rhs_address2"] = contact.GetAttributeValue("address1_line1");
+            xrm_contact["rhs_address3"] = contact.GetAttributeValue("address1_line2");
+
             xrm_contact.Telephone1 = contact.BusinessPhone;
             xrm_contact.EmailAddress1 = contact.Email;
             xrm_contact["accountrolecode"] = GetRole(contact);
@@ -371,11 +375,18 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             xrm_contact["rhs_sendpost"] = !contact.DoNotPost;
             xrm_contact["rhs_sendmessage"] = !contact.DonotSendMarketingMaterial;
             xrm_contact["rhs_postalcode"] = contact.PostalCode;
+            xrm_contact["rhs_internalphone"] = contact.GetAttributeValue<string>("thr_foriegnmobile");
             xrm_contact[XrmContact.Schema.Address1_Line1] = contact.GetAttributeValue<string>(XrmContact.Schema.Address1_Line1);
             xrm_contact[XrmContact.Schema.Address1_Line2] = contact.GetAttributeValue<string>(XrmContact.Schema.Address1_Line2);
             xrm_contact[XrmContact.Schema.Address1_Line3] = contact.GetAttributeValue<string>(XrmContact.Schema.Address1_Line3);
             xrm_contact[XrmContact.Schema.Fax] = contact.GetAttributeValue<string>(XrmContact.Schema.Fax);
             xrm_contact["address1_country"] = contact.GetAttributeValue<string>("address1_country");
+
+            var owner = string.IsNullOrEmpty(contact.OwnerLoginName) ? null : this.cache.Users.FirstOrDefault(x => x.GetAttributeValue("domainname")?.ToLowerInvariant() == contact.OwnerLoginName?.ToLowerInvariant());
+            if (owner != null && Guid.TryParse(owner.Id, out var _ownerid))
+            {
+                xrm_contact.Owner = new EntityReference(XrmSystemUser.Schema.LogicalName, _ownerid);
+            }
             var country = this.GetCountry(contact.GetAttributeValue<string>("address1_country"))
                 ?? this.cache.Countries.Where(x => x.Name == "ایران").FirstOrDefault();
 
@@ -507,8 +518,12 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             xrm_account[XrmHajirAccount.Schema.BrandName] = account.AccountNumber;
 
             xrm_account["rhs_address"] = account.address1_name;
+            xrm_account["rhs_address2"] = account.GetAttributeValue("address1_line1");
+            xrm_account["rhs_address3"] = account.GetAttributeValue("address1_line2");
+
             xrm_account[XrmHajirAccount.Schema.DegreeImportance] = GetDegreeImportance(account.Daraje_Ahamiat);
             xrm_account["address1_postalcode"] = account.address1_postalcode;
+            xrm_account["rhs_postalcode"] = account.address1_postalcode;
             xrm_account[XrmHajirAccount.Schema.WebSiteUrl] = account.WebSite;
             xrm_account[XrmHajirAccount.Schema.Email1] = account.Email;
 
@@ -520,6 +535,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             xrm_account["rhs_sendfax"] = !account.DoNotFax;
             xrm_account["rhs_sendpost"] = !account.DoNotPost;
             xrm_account["rhs_sendemail"] = !account.DonotEmail;
+
 
 
             //account.Daraje_Ahamiat
@@ -547,6 +563,25 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 xrm_account[XrmHajirAccount.Schema.rhs_MainCityCode] = new EntityReference(XrmHajirCityPhoneCode.Schema.LogicalName, phoneCityCode.Value);
                 xrm_account[XrmHajirAccount.Schema.rhs_MainPhone] = _phone;
             }
+            var owner = string.IsNullOrEmpty(account.OwningLoginName) ? null : this.cache.Users.FirstOrDefault(x => x.GetAttributeValue("domainname")?.ToLowerInvariant() == account.OwningLoginName?.ToLowerInvariant());
+            if (owner != null && Guid.TryParse(owner.Id, out var _ownerid))
+            {
+                xrm_account.Owner = new EntityReference(XrmSystemUser.Schema.LogicalName, _ownerid);
+            }
+            var parent = account.GetAttributeValue<DynamicEntityReference>("parentaccountid");
+            if (parent != null )
+            {
+                var parent_account = this.GetAccountByExternalId(parent.Id);
+                if (parent_account != null && Guid.TryParse(parent_account.Id, out var _parentid))
+                {
+                    xrm_account[XrmAccount.Schema.ParentAccount] = new EntityReference(XrmAccount.Schema.LogicalName, _parentid);
+                }
+                
+            }
+
+
+            //this.cache.UnitOfMeasurements
+            //xrm_account.Owner
 
             var desc = xrm_account.Description;
 

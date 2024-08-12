@@ -49,6 +49,7 @@ namespace Hajir.Crm.Features.Integration
         public bool DoNotPostalMail { get; set; }
         public bool DonotSendMarketingMaterial { get; set; }
         public string PostalCode { get; set; }
+        
         public string DegreeImportance { get; set; }
         public DateTime CreatedOn { get; set; }
 

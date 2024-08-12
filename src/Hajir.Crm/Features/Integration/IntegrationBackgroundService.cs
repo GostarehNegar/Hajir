@@ -167,16 +167,6 @@ namespace Hajir.Crm.Features.Integration
                 var total = store.GetContatCount() + store.GetAccountsCount();
                 tasks.Add(ImportAccounts(store, stoppingToken));
                 tasks.Add(ImportContacts(store, stoppingToken));
-                //tasks.Add(Task.Run(() => { 
-
-                //    for(var i = 0; i < 1000; i++)
-                //    {
-                //        this.DoEnqueue(i, 1000*60, stoppingToken);
-                //        Console.WriteLine("****************");
-                //    }
-
-
-                //}));
                 tasks.Add(Task.Run(async () =>
                 {
                     var a = new System.Diagnostics.Stopwatch();

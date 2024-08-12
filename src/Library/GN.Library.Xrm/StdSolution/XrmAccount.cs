@@ -40,6 +40,7 @@ namespace GN.Library.Xrm.StdSolution
             public const string Email1 = "emailaddress1";
             public const string AccountNumber = "accountnumber";
 			public const string PrimaryContactId = "primarycontactid";
+			public const string ParentAccount = "parentaccountid";
 
             public class ColumnSelectors : XrmColumnSelector<XrmAccount>
 			{

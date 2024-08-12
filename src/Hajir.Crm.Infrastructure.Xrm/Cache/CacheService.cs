@@ -166,6 +166,22 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
 
              });
 
+        public IEnumerable<HajirUserEntity> Users =>
+            this.cache.GetOrCreate<IEnumerable<HajirUserEntity>>("USERS", entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
+                using (var scope = this.serviceProvider.CreateScope())
+                {
+                    return scope.ServiceProvider.GetService<IXrmDataServices>()
+                    .GetRepository<XrmSystemUser>()
+                    .Queryable
+                    .ToArray()
+                    .Select(x => x.ToDynamic().To<HajirUserEntity>())
+                    .ToArray();
+
+                }
+
+            });
 
         public CacheService(IServiceProvider serviceProvider, IMemoryCache cache)
         {
