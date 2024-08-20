@@ -48,7 +48,8 @@ namespace Hajir.Crm.Xrm.Service
                     s.AddSignalRTransport(c.Configuration, opt => { });
                     s.AddMvc();
                     s.AddTransient<IXrmMessageHandler, XrmContactHandler>();
-                    
+                    s.AddTransient<IXrmMessageHandler, XrmQuoteProductHandler>();
+
                 })
 
                 .Configure(app => {

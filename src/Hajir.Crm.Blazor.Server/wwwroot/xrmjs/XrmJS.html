@@ -1,0 +1,72 @@
+﻿<html>
+<head>
+<title></title>
+</head>
+<body style="overflow-wrap: break-word;" onfocusout="parent.setEmailRange();">
+    <script src="../ClientGlobalContext.js.aspx" type="text/javascript"></script>
+    <div id="XrmJSContainer" style="margin:3px; width:96%">
+        Loading...
+    </div>
+    <script>
+       window.addEventListener("message", (event) => {
+           console.log("message", event.data);
+           if (event.data != null) {
+               var result = "";
+               var err = "";
+               var status = 0;
+               try {
+                   switch (event.data.subject) {
+                       case "eval":
+                           result = eval(event.data.expression);
+                           break;
+                       default:
+                           break;
+
+                   }
+               }
+               catch (_err) {
+                   status = -1;
+               }
+               event.source.postMessage({ status: status, result: result, replyTo: event.data.id }, "*")
+           }
+            
+        },false);
+
+        bootOptions = {
+            /**
+            * The start up boot command, can be:
+            * 'Test': to run a test. TestModule should point to a valid test module.
+            *
+            */
+            Command: '',
+            TestModuleName: '',
+            EntityLogicalName: "",
+            EntityId: "",
+            ContainerElementId: "#XrmJSContainer",
+        };
+
+        function IsDeveloper() {
+            return true;
+            try {
+                if (typeof GetGlobalContext != "undefined") {
+                    return GetGlobalContext().getUserLcid() != 1065;
+                    //GetGlobalContext().getOrgUniqueName().toLowerCase() != "tpmis" ||
+
+                }
+            }
+            catch (err) { }
+
+            return true;
+        }
+        var _loc = window.location.href;
+       var _baseUrl= "http://localhost/xrmjs/"
+
+//        document.write('<script type="text/javascript" data-main="' + _baseUrl + 'boot.js?Ver=2.0' + '" src="' + _baseUrl + 'start.js' + '"><' + '/script>');
+    </script>
+
+    <iframe src="http://localhost/xrmjs/test.html"></iframe>
+
+
+
+</body>
+</html>

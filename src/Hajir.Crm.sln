@@ -59,9 +59,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Infrastructure.Se
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AI", "AI", "{C6722FD3-3E4E-4844-A655-813F86DF206C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.AI.Bot", "AI\Hajir.AI.Bot\Hajir.AI.Bot.csproj", "{D88DD3BA-22E4-4D91-B032-836D86A7C57D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.AI.Bot", "AI\Hajir.AI.Bot\Hajir.AI.Bot.csproj", "{D88DD3BA-22E4-4D91-B032-836D86A7C57D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.AI.Bot.Service", "Hajir.AI.Bot.Service\Hajir.AI.Bot.Service.csproj", "{C0416DD3-D3B0-4AF0-9BD6-A28D7A2099D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.AI.Bot.Service", "Hajir.AI.Bot.Service\Hajir.AI.Bot.Service.csproj", "{C0416DD3-D3B0-4AF0-9BD6-A28D7A2099D6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GN.Library.Odoo", "Library\GN.Library.Odoo\GN.Library.Odoo.csproj", "{151E172A-1DB7-466B-BA35-0008C0B54721}"
 EndProject

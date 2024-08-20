@@ -25,8 +25,8 @@ namespace Microsoft.Extensions.DependencyInjection
 			services.AddTransient<IMemoryCache, MemoryCache>();
 			services.AddSingleton<CacheService>();
 			services.AddSingleton<ICacheService>(sp => sp.GetService<CacheService>());
-            services.AddScoped<ILegacyCrmStore, XrmLegacyContactRepository>();
-			services.AddScoped<IIntegrationStore, XrmIntegrationStore>();
+            //services.AddScoped<ILegacyCrmStore, XrmLegacyContactRepository>();
+			//services.AddScoped<IIntegrationStore, XrmIntegrationStore>();
 
             return services;
 		}

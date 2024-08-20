@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@using Hajir.Crm.Blazor.XrmFrames;
 @using MudBlazor;
 <MudRTLProvider RightToLeft>
     <MudThemeProvider Theme="MyCustomTheme" />
@@ -6,13 +7,12 @@
     <MudSnackbarProvider />
 
     <div class="page">
-        @if (!URL.Contains("/quote/") && !URL.Contains("/test/") && !URL.Contains("/print/"))
+        @if (!URL.Contains("/quote/") && !XrmFrameBase.IsXrmPage(URL) && !URL.Contains("/print/"))
         {
             <div class="sidebar">
                 <NavMenu />
             </div>
         }
-
         <div class="main">
             @*<div class="top-row px-4">
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>

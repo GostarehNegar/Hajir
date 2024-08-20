@@ -48,6 +48,7 @@ namespace Hajir.Crm.Blazor.Server
             services.AddScoped<CircuitHandler, CircuitHandlerService>();
 
             services.AddSingleton<WeatherForecastService>();
+            
             services.AddControllers();
         }
 

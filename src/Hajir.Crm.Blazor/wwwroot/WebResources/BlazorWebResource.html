@@ -1,0 +1,109 @@
+﻿<!--
+	
+	XrmPage_WebResource.html
+	This is an html file that can be uploaded to MSCRM as a web resource.
+	It will dynamically insert an IFrame that will host a page from a blazor server 
+	application. Then it starts its services by listening to events posted, there are
+	two set of messages:
+		1.	Those sent by the blazor page: These are usually some commands that should be
+			executed in the context of the crm form. For example suppose we want to get the
+			value of an attribute, this is normaly done by 'Xrm.page.attributes.get("test").getValue()',
+			since we are in an IFRAME, we do not have access to Xrm.Page. The blazor page sends a command 
+			like {subject:'eval',expression:'parent.Xrm.page.getAttribure('test').getvalue())'}, this page
+			scripts evaluates this expression and returns it. 
+		2.	Xrm.Page Events: These are events like "onchange","onsave",... We will subscribe to these events and
+			will pipe them to the Blazor page on the IFrame.
+
+	USAGE:
+		1.	Add this html filr to CRM.
+		2.	Insert the web resource in to a CRM Form.
+		3. 
+
+				
+	
+	
+
+
+
+
+-->
+
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+</head>
+<body style="overflow-wrap: break-word;" onfocusout="parent.setEmailRange();">
+	<iframe src="" id="_IFRAME_" style="width:100%; height:100%;margin:0px; border:0px; padding:0px;"></iframe>
+	<script>
+		function getJsonFromUrl(url) {
+			if (!url) url = location.search;
+			var query = url.substr(1);
+			var result = {};
+			query.split("&").forEach(function (part) {
+				var item = part.split("=");
+				result[item[0]] = decodeURIComponent(item[1]);
+			});
+			return result;
+		}
+		var params = getJsonFromUrl(location.search);
+		document.getElementById("_IFRAME_").src = "http://localhost/WebResource" + location.search;
+
+		function setUpEvents() {
+			var iframe = document.getElementById("_IFRAME_").contentWindow;
+			var attribs = parent.Xrm.Page.data.entity.attributes.get()
+			parent.Xrm.Page.data.entity.addOnSave(dv => {
+				try {
+					iframe.postMessage({ subject: 'onsave', body: {} }, "*");
+				} catch { }
+			});
+			for (let i = 0; i < attribs.length; i++) {
+				attribs[i].addOnChange(ev => {
+					var attribute = attribs[i];
+					console.log("OnChange Event Received. We will bridge it to the IFrame. Attribute:" + attribute.getName());
+					try {
+						iframe.postMessage({ subject: 'onchange', body: { attribute: ev.getEventSource().getName() } }, "*");
+					} catch { }
+				});
+
+			}
+		}
+		setUpEvents();
+
+
+		window.addEventListener("message", (event) => {
+			console.log("message", event.data);
+			if (event.data != null) {
+				var result = "";
+				var err = "";
+				var status = 0;
+				try {
+					switch (event.data.subject) {
+						case "eval":
+							result = eval(event.data.expression);
+							break;
+						case "function":
+							result = Function(event.data.expression);
+							break;
+						default:
+							break;
+
+					}
+				}
+				catch (_err) {
+					status = -1;
+					err = _err;
+				}
+				event.source.postMessage({ status: status, err: err, result: result, replyTo: event.data.id }, "*")
+			}
+
+		}, false);
+
+	</script>
+
+
+
+
+
+</body>
+</html>

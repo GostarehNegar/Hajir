@@ -284,13 +284,16 @@ namespace GN.Library.Xrm.StdSolution
 							imageType = 1;
 							messagePropertyName = "id";
 							break;
-					}
+                        //case XrmSdkMessageProcessingStep.Schema.MessageStage.PreOpertaion:
+                        //    imageType = 0;
+                        //    break;
+                    }
 					break;
 				case "update":
 					switch (stage)
 					{
 						case XrmSdkMessageProcessingStep.Schema.MessageStage.PreOpertaion:
-							imageType = 1;
+							imageType = 0;
 							break;
 						case XrmSdkMessageProcessingStep.Schema.MessageStage.PostOperation:
 							imageType = 2;

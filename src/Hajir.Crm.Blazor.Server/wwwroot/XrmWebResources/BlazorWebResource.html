@@ -1,0 +1,43 @@
+﻿<html>
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+</head>
+<body style="overflow-wrap: break-word;" onfocusout="parent.setEmailRange();">
+	<script>
+		window.addEventListener("message", (event) => {
+			console.log("message", event.data);
+			if (event.data != null) {
+				var result = "";
+				var err = "";
+				var status = 0;
+				try {
+					switch (event.data.subject) {
+						case "eval":
+							result = eval(event.data.expression);
+							break;
+						case "function":
+							result = Function(event.data.expression);
+							break;
+						default:
+							break;
+
+					}
+				}
+				catch (_err) {
+					status = -1;
+					err = _err;
+				}
+				event.source.postMessage({ status: status, err: err, result: result, replyTo: event.data.id }, "*")
+			}
+
+		}, false);
+
+	</script>
+
+	<iframe src="http://localhost/xrmjs/test.html"></iframe>
+
+
+
+</body>
+</html>
