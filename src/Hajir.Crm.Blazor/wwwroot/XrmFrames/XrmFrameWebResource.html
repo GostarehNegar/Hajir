@@ -121,8 +121,10 @@
 				catch (_err) {
 					status = -1;
 					err = _err;
+					try { result = _err.toString(); } catch { }
+					
 				}
-				event.source.postMessage({ status: status, err: err, result: result, replyTo: event.data.id }, "*")
+				event.source.postMessage({ status: status, body: result, replyTo: event.data.id }, "*")
 			}
 
 		}, false);

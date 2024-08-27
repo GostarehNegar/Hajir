@@ -1,4 +1,5 @@
-﻿using Microsoft.Crm.Sdk.Messages;
+﻿using GN.Library.Helpers;
+using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
 using System;
@@ -8,6 +9,7 @@ using System.Data.Entity.Core.Common.EntitySql;
 using System.Linq;
 using System.ServiceModel.Channels;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hajir.Crm.Blazor.XrmFrames
@@ -18,15 +20,24 @@ namespace Hajir.Crm.Blazor.XrmFrames
     }
     public class XrmFrameMessage
     {
+        public int Status { get; set; }
         public string Id { get; set; }
         public string Subject { get; set; }
-        public string Result { get; set; }
+        public object Result { get; set; }
         public string ReplyTo { get; set; }
         public object Body { get; set; }
         public T GetBody<T>()
         {
             try
             {
+                if (typeof(T) == typeof(string))
+                {
+                    return (T)(object)this.Body.ToString();
+                }
+                if (typeof(T) == typeof(Guid) && Guid.TryParse(this.Body.ToString(), out var __id))
+                {
+                    return (T)(object)__id;
+                }
                 return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(this.Body?.ToString());
             }
             catch
@@ -52,6 +63,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
         private ConcurrentDictionary<string, TaskCompletionSource<XrmFrameMessage>> tasks = new ConcurrentDictionary<string, TaskCompletionSource<XrmFrameMessage>>();
         private List<Func<XrmFrameMessage, Task>> handlers = new List<Func<XrmFrameMessage, Task>>();
         private string JSName;
+        public const int DEFAULT_TIMEOUT = 15000;
         XrmFrameAdapterOptions Options;
 
         public XrmFrameAdapter(IServiceProvider serviceProvider)
@@ -73,7 +85,14 @@ namespace Hajir.Crm.Blazor.XrmFrames
         {
             if (!string.IsNullOrWhiteSpace(message?.ReplyTo) && this.tasks.TryGetValue(message.ReplyTo, out var tsk))
             {
-                tsk.SetResult(message);
+                if (message.Status != 0)
+                {
+                    tsk.SetException(new Exception(message.GetBody<string>()));
+                }
+                else
+                {
+                    tsk.SetResult(message);
+                }
             }
             foreach (var handler in this.handlers)
             {
@@ -106,7 +125,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
 
         }
 
-        public async Task<XrmFrameMessage> Evaluate(string expression)
+        private async Task<XrmFrameMessage> Evaluate(string expression)
         {
             var task = new TaskCompletionSource<XrmFrameMessage>();
             var id = Guid.NewGuid().ToString();
@@ -114,9 +133,49 @@ namespace Hajir.Crm.Blazor.XrmFrames
             var adapter = await this.GetAdapter();
             var result = adapter.InvokeAsync<string>("evaluate", id, expression);
             return await task.Task;
-
-
         }
+        public static async Task<TResult> TimeoutAfter<TResult>(Task<TResult> task, int millisecondsTimeout, CancellationToken token, bool Throw = true)
+        {
+            if (task == await Task.WhenAny(task, Task.Delay(millisecondsTimeout, token)))
+                return await task.ConfigureAwait(false);
+            else if (Throw)
+                throw new TimeoutException();
+            return default(TResult);
+        }
+        public async Task<T> Evaluate<T>(string expression, int timeOut=DEFAULT_TIMEOUT)
+        {
+            var result = await TimeoutAfter(Evaluate(expression), timeOut, default);
+            if (result.Status != 0)
+            {
+                throw new Exception(result.GetBody<string>());
+            }
+            return result.GetBody<T>();
+        }
+        public Task<T> EvaluateAttibuteMethod<T>(string attributeName, string method, int timeOut = DEFAULT_TIMEOUT)
+        {
+            if (string.IsNullOrWhiteSpace(method))
+                throw new ArgumentNullException("method");
+            method = method.Trim();
+            if (!method.EndsWith("()") && !method.EndsWith("();"))
+            {
+                method = method + "()";
+            }
+            return Evaluate<T>($"parent.Xrm.Page.getAttribute('{attributeName}').{method}", timeOut = DEFAULT_TIMEOUT);
+        }
+        public Task<T> EvaluateEntityMethod<T>(string method, int timeOut)
+        {
+            if (string.IsNullOrWhiteSpace(method))
+                throw new ArgumentNullException("method");
+            method = method.Trim();
+            if (!method.EndsWith("()") && !method.EndsWith("();"))
+            {
+                method = method + "()";
+            }
+            return Evaluate<T>($"parent.Xrm.Page.data.entity.{method}", timeOut);
+        }
+
+
+
         public async Task Test()
         {
             try
@@ -133,7 +192,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
 
         }
 
-       
+
 
         public async ValueTask DisposeAsync()
         {

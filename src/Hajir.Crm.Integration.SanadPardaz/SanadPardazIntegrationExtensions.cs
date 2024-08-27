@@ -10,10 +10,18 @@ namespace Hajir.Crm.Integration.SanadPardaz
     {
         public static IServiceCollection AddSanadPardazIntegration(this IServiceCollection services, IConfiguration configuration, Action<SanadPardazIntegrationOptions> configure)
         {
-            services.AddDbContext<SanadPardazDbContext>((sp, opt) => {
+            var options = configuration.GetSection("sanadpardaz")?.Get<SanadPardazIntegrationOptions>() ?? new SanadPardazIntegrationOptions();
+            configure?.Invoke(options);
+            services.AddSingleton(options.Validate());
+
+
+            services.AddDbContext<SanadPardazDbContext>((sp, opt) =>
+            {
                 opt.UseSqlServer(configuration.GetConnectionString("sanadpardaz"));
             });
             services.AddScoped<ISanadPardazDbContext>(sp => sp.GetService<SanadPardazDbContext>());
+            services.AddScoped<SanadPardazApiClient>();
+            services.AddScoped<ISanadPardazApiClient>(sp => sp.GetService<SanadPardazApiClient>());
             return services;
         }
     }

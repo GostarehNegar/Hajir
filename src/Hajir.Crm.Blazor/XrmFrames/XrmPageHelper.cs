@@ -31,7 +31,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
         }
         public async Task Initialize()
         {
-            var res = await this.bus.Evaluate("2*2");
+            var res = await this.bus.Evaluate<int>("2*2",15000);
             this.bus.Subscribe(m=> this.Handle(m));
         }
     }

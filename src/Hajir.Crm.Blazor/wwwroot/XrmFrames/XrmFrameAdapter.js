@@ -22,8 +22,8 @@
 		return true;
 
 	}
-	async evaluate(id,expression) {
-		parent.postMessage({ subject: "eval", expression: "parent.Xrm.Page.data.entity.getId()", id: id }, "*");
+	async evaluate(id, expression) {
+		parent.postMessage({ subject: "eval", expression: expression, id: id }, "*");
 	}
 }
 
