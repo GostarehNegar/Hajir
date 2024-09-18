@@ -1,4 +1,5 @@
 ﻿using FastReport;
+using System.Collections;
 
 namespace Hajir.Crm.Reporting
 {
@@ -9,6 +10,27 @@ namespace Hajir.Crm.Reporting
     }
     public static class HajirCrmReportingExtensions
     {
+        public static IReportGenerator ReportGenerator(this IServiceProvider serviceProvider)=> new ReportGenerator(serviceProvider);
+
+        public static Task<Stream> GenerateReport(this IReportGenerator This, IEnumerable data, string reportName)
+        {
+            return Task.Run(() =>
+            {
+                using (var report = new Report())
+                {
+                    if (File.Exists(reportName))
+                        report.Load(reportName);
+                    report.Dictionary.RegisterBusinessObject(data, "Data", 4, true);
+                    var p = new FastReport.Export.PdfSimple.PDFSimpleExport();
+                    report.Prepare();
+                    var stream = new MemoryStream();
+                    //var p = new FastReport.Export.PdfSimple.PDFSimpleExport();
+                    report.Save(reportName);
+                    report.Export(p, stream);
+                    return stream as Stream;
+                }
+            });
+        }
         public static void Test1()
         {
             var report = new Report();

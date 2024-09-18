@@ -15,15 +15,15 @@ namespace Hajir.Crm.Reporting.Quotes
            
             var report = new Report();
             report.Load("qq.frx");
-            var data = new QuoteReportingModel { CustomerName = "ahmad" };
-            data.Items = new QuoteLineReportingModel[]
+            var data = new QuoteReportData { CustomerName = "ahmad" };
+            data.Items = new QuoteLineReportData[]
             {
-                new QuoteLineReportingModel {Name="l1", Price=12},
-                new QuoteLineReportingModel {Name="l2", Price=12}
+                new QuoteLineReportData {Name="l1", UnitPrice=12},
+                new QuoteLineReportData {Name="l2", UnitPrice=12}
 
             };
 
-            report.Dictionary.RegisterBusinessObject(new QuoteReportingModel[]{data },"ll",4,true);
+            report.Dictionary.RegisterBusinessObject(new QuoteReportData[]{data },"ll",4,true);
             report.Save("qq.frx");
             var p = new FastReport.Export.PdfSimple.PDFSimpleExport();
             report.Prepare();
@@ -41,13 +41,13 @@ namespace Hajir.Crm.Reporting.Quotes
             report.Dictionary.RegisterData(fff, "ak", true);
             report.SetParameterValue("babak", "m");
             report.Dictionary.RegisterBusinessObject(
-                          new List<QuoteReportingModel>(), // a (empty) list of objects
+                          new List<QuoteReportData>(), // a (empty) list of objects
                           "Invoices",          // name of dataset
                           3,                   // depth of navigation into properties
                           true                 // enable data source
                    );
             report.Dictionary.RegisterBusinessObject(
-                          new List<QuoteLineReportingModel>(), // a (empty) list of objects
+                          new List<QuoteLineReportData>(), // a (empty) list of objects
                           "Lines",          // name of dataset
                           3,                   // depth of navigation into properties
                           true                 // enable data source
@@ -62,13 +62,13 @@ namespace Hajir.Crm.Reporting.Quotes
             
             var e = new FastReport.Export.Image.ImageExport();
             report.Dictionary.RegisterBusinessObject(
-                         new List<QuoteReportingModel>() { new QuoteReportingModel {CustomerName="gostareh negar" } }, // a (empty) list of objects
+                         new List<QuoteReportData>() { new QuoteReportData {CustomerName="gostareh negar" } }, // a (empty) list of objects
                          "Invoices",          // name of dataset
                          3,                   // depth of navigation into properties
                          true                 // enable data source
                   );
             report.Dictionary.RegisterBusinessObject(
-                         new List<QuoteLineReportingModel>() { new QuoteLineReportingModel { Name = "tt", Price = 12 } }, // a (empty) list of objects
+                         new List<QuoteLineReportData>() { new QuoteLineReportData { Name = "tt", UnitPrice = 12 } }, // a (empty) list of objects
                          "Lines",          // name of dataset
                          3,                   // depth of navigation into properties
                          true);
