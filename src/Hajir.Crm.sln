@@ -65,6 +65,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.AI.Bot.Service", "Haj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GN.Library.Odoo", "Library\GN.Library.Odoo\GN.Library.Odoo.csproj", "{151E172A-1DB7-466B-BA35-0008C0B54721}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Report.Server", "Hajir.Crm.Report.Server\Hajir.Crm.Report.Server.csproj", "{B17D3C40-B46A-4D5A-A4D5-8D95991724FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Reporting", "Hajir.Crm.Reporting\Hajir.Crm.Reporting.csproj", "{4B83FBFD-877E-4D45-B3D3-8DA0F0B35B95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -183,6 +187,14 @@ Global
 		{151E172A-1DB7-466B-BA35-0008C0B54721}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{151E172A-1DB7-466B-BA35-0008C0B54721}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{151E172A-1DB7-466B-BA35-0008C0B54721}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B17D3C40-B46A-4D5A-A4D5-8D95991724FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B17D3C40-B46A-4D5A-A4D5-8D95991724FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B17D3C40-B46A-4D5A-A4D5-8D95991724FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B17D3C40-B46A-4D5A-A4D5-8D95991724FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B83FBFD-877E-4D45-B3D3-8DA0F0B35B95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B83FBFD-877E-4D45-B3D3-8DA0F0B35B95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B83FBFD-877E-4D45-B3D3-8DA0F0B35B95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B83FBFD-877E-4D45-B3D3-8DA0F0B35B95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -206,6 +218,7 @@ Global
 		{D09DB99E-98CE-4D3C-A006-5C44C56240B9} = {6E5C4971-007F-4C2C-B998-C3D5949F40A6}
 		{C0416DD3-D3B0-4AF0-9BD6-A28D7A2099D6} = {6E5C4971-007F-4C2C-B998-C3D5949F40A6}
 		{151E172A-1DB7-466B-BA35-0008C0B54721} = {412E5D3F-049E-4723-B7E3-C364876198A2}
+		{B17D3C40-B46A-4D5A-A4D5-8D95991724FF} = {6E5C4971-007F-4C2C-B998-C3D5949F40A6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {30CDE44F-4F30-4755-B9AD-4D13BFD2160F}

@@ -162,7 +162,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
             }
             return Evaluate<T>($"parent.Xrm.Page.getAttribute('{attributeName}').{method}", timeOut = DEFAULT_TIMEOUT);
         }
-        public Task<T> EvaluateEntityMethod<T>(string method, int timeOut)
+        public Task<T> EvaluateEntityMethod<T>(string method, int timeOut=DEFAULT_TIMEOUT)
         {
             if (string.IsNullOrWhiteSpace(method))
                 throw new ArgumentNullException("method");
