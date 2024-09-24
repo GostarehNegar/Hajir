@@ -15,7 +15,10 @@ namespace Hajir.Crm.Features.Sales
 		private List<SaleAggergateProduct> aggergareProducts = new List<SaleAggergateProduct>();
 		public IEnumerable<SaleAggergateProduct> AggregateProducts => aggergareProducts;
 		public PriceList PriceList { get; set; }
-		
+		public SaleQuote()
+		{
+
+		}
 
 		public SaleQuote(string quoteId, string quoteNumber, IEnumerable<SaleQuoteLine> lines, 
 			IEnumerable<SaleAggergateProduct> aggregates, PriceList pl)

@@ -1,0 +1,61 @@
+﻿@page "/xrmframes/quote"
+@using Hajir.Crm.Features.Sales;
+@inherits XrmFrameBase<SaleQuote>
+<div style="width:100%">
+    <MudGrid>
+        @foreach (var item in Value.Lines.Select(x => new State<SaleQuoteLine>(x)))
+        {
+            <div style="border:double;padding:10px;">
+                <MudItem xs="12" style="">
+                    <QuoteProductLineFrameComponent State="@item" QuoteState="this.State" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="()=>InsertLine(item.Value)">Add</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="Test">Delete</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="()=>SaveLine(item.Value)">Save</MudButton>
+                </MudItem>
+            </div>
+            <div></div>
+
+        }
+
+    </MudGrid>
+    
+</div>
+@*<table  >
+    <thead>
+        <tr>
+            <td>نام</td>
+            <td>تعداد</td>
+            <td>تعداد</td>
+            <td>No</td>
+            <td>control</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var line in Value.Lines)
+        {
+            <tr>
+                <td><input /></td>
+                <td><input /></td>
+                <td><input /></td>
+                <td><input /></td>
+                <td>
+                    <button >Remove</button>
+                </td>
+
+            </tr>
+
+        }
+    </tbody>
+</table>
+<button>Add</button>
+
+<QuoteRemarksComponent State="@RemarksState" />
+<div>
+    <button>Ok</button>
+</div>
+*@
+@code {
+
+}

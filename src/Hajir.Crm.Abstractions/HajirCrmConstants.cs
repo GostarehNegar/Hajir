@@ -20,6 +20,13 @@ namespace Hajir.Crm
         public const string DefaultLegacyCrmConnectionString = "Url=http://192.168.20.15:5555/hajircrm;UserName=CRMIMPU01;Password=%H@ZH!r_1402&$;Domain=hsco";
 
         
+        public class Reporting
+        {
+            public class ReportNames
+            {
+                public const string QuoteStandardReport = "QuoteStandardReport.frx";
+            }
+        }
 
 
         public static string MAP1 = @"

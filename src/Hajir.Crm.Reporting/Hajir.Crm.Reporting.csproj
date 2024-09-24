@@ -11,7 +11,22 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Hajir.Crm.Abstractions\Hajir.Crm.Abstractions.csproj" />
+    <ProjectReference Include="..\Hajir.Crm.Infrastructure.Xrm\Hajir.Crm.Infrastructure.Xrm.csproj" />
     <ProjectReference Include="..\Hajir.Crm\Hajir.Crm.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Reports\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Reports\QuoteStandardReport.frx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\QuoteStandardReport01.frx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\QuoteStandardReport02.frx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 

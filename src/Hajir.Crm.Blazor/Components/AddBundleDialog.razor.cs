@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using Hajir.Crm.Internals;
+
 using Hajir.Crm.Blazor.ViewModels;
 using System.Reflection.Metadata;
 

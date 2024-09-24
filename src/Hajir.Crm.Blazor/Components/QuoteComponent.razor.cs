@@ -9,7 +9,7 @@ using Hajir.Crm.Features.Sales;
 using MudBlazor;
 using Hajir.Crm.Features.Products;
 using Microsoft.Extensions.DependencyInjection;
-using Hajir.Crm.Internals;
+
 using Hajir.Crm.Blazor.ViewModels;
 using Microsoft.JSInterop;
 using System.Security.Policy;

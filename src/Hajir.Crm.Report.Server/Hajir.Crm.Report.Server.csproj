@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hajir.Crm.Abstractions\Hajir.Crm.Abstractions.csproj" />
+    <ProjectReference Include="..\Hajir.Crm.Infrastructure.Xrm\Hajir.Crm.Infrastructure.Xrm.csproj" />
     <ProjectReference Include="..\Hajir.Crm.Reporting\Hajir.Crm.Reporting.csproj" />
     <ProjectReference Include="..\Hajir.Crm\Hajir.Crm.csproj" />
     <ProjectReference Include="..\Library\GN.Library.Messaging.Transports.SignalR\GN.Library.Messaging.Transports.SignalR.csproj" />

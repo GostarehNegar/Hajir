@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Hajir.Crm.Internals;
+using Hajir.Crm;
 using Hajir.Crm.Blazor.ViewModels;
 
 namespace Hajir.Crm.Blazor.Components

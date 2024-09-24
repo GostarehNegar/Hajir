@@ -1,8 +1,14 @@
 ﻿
+
+
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -12,6 +18,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
 {
     public class XrmFrameBase : ComponentBase, IAsyncDisposable
     {
+        protected List<IDisposable> _disposables = new List<IDisposable>();
         [Inject]
         public IServiceProvider ServiceProvider { get; set; }
 
@@ -48,6 +55,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
         {
             if (firstRender && !this._adapterInitialized)
             {
+                var id = this.EntityId;
                 await this.Adapter.Evaluate<int>("2*2");
                 this._adapterInitialized = true;
                 await base.OnAfterRenderAsync(firstRender);
@@ -59,6 +67,29 @@ namespace Hajir.Crm.Blazor.XrmFrames
             }
 
         }
+        protected string TypeName => GetQueryParameters().Get("typename");
+        protected string OrgName => GetQueryParameters().Get("orgname");
+        protected string DataParam => GetQueryParameters().Get("data");
+
+        protected Guid? EntityId
+        {
+            get
+            {
+                return Guid.TryParse(GetQueryParameters().Get("id"), out var _id)
+                    ? _id
+                    : null;
+            }
+        }
+        protected NameValueCollection GetQueryParameters()
+        {
+            try
+            {
+                var uri = new Uri(this.ServiceProvider.GetService<NavigationManager>().Uri);
+                return System.Web.HttpUtility.ParseQueryString(uri.Query);
+            }
+            catch { }
+            return new NameValueCollection();
+        }
         public async Task SetAttributeValue(string attributeName, string value)
         {
 
@@ -68,6 +99,13 @@ namespace Hajir.Crm.Blazor.XrmFrames
             var result = await this
                 .Adapter
                 .Evaluate<string>($"parent.Xrm.Page.getAttribute('{attributeName}').getAttributeType();");
+            return result;
+        }
+        public async Task<string> GetControlType(string name)
+        {
+            var result = await this
+                .Adapter
+                .Evaluate<string>($"parent.Xrm.Page.getAttribute('{name}').getControlType();");
             return result;
         }
         public async Task<T> GetAttributeValue<T>(string attributeName)
@@ -102,6 +140,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
         {
             if (this.Adapter != null)
                 await this.Adapter.DisposeAsync();
+            this._disposables.ForEach(x => x.Dispose());
         }
         public Task<T> Evaluate<T>(string expression, int Timeout = DEFAULT_TIMEOUT)
         {
@@ -132,6 +171,18 @@ namespace Hajir.Crm.Blazor.XrmFrames
                 this.LastError = err.GetBaseException();
             }
 
+        }
+
+        protected void AddDisposable(IDisposable disp) => this._disposables.Add(disp);
+    }
+    public class XrmFrameBase<T> : XrmFrameBase where T : class, new()
+    {
+        public State<T> State { get; set; } = new State<T>();
+        public T Value => this.State.Value;
+        protected void SetState(State<T> state)
+        {
+            this.State = state;
+            AddDisposable(state.On((x) => InvokeAsync(StateHasChanged)));
         }
     }
 }

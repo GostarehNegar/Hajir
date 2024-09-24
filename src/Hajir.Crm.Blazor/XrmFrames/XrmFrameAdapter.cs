@@ -32,7 +32,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
             {
                 if (typeof(T) == typeof(string))
                 {
-                    return (T)(object)this.Body.ToString();
+                    return (T)(object)this.Body?.ToString();
                 }
                 if (typeof(T) == typeof(Guid) && Guid.TryParse(this.Body.ToString(), out var __id))
                 {

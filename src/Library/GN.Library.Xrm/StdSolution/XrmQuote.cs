@@ -210,10 +210,8 @@ namespace GN.Library.Xrm.StdSolution
 			public const string ManualDiscountAmount = "manualdiscountamount";
 			public const string VolumeDiscountAmount = "volumediscountamount";
 			public const string UnitOfMeasureId = "uomid";
-
-
-
-		}
+			public const string IsProductOverridden = "isproductoverridden";
+        }
 
 		public XrmQuoteDetail() : base(Schema.LogicalName) { }
 		[AttributeLogicalName(Schema.QuoteDetailId)]
@@ -385,9 +383,16 @@ namespace GN.Library.Xrm.StdSolution
 			get { return this.GetAttributeValue<double?>(Schema.Quantity); }
 			set { this.SetAttribiuteValue(Schema.Quantity, value); }
 		}
-	}
+        [AttributeLogicalName(Schema.IsProductOverridden)]
+        public bool? IsProductOverridden
+        {
+            get { return this.GetAttributeValue<bool?>(Schema.IsProductOverridden); }
+            set { this.SetAttribiuteValue(Schema.IsProductOverridden, value); }
+        }
 
-	public static class XrmQouteExtensions
+    }
+
+    public static class XrmQouteExtensions
 	{
 		private static IXrmDataServices GetDataService(this XrmQuote quote, IXrmDataServices services=null)
 		{

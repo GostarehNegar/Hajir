@@ -10,9 +10,13 @@ namespace Hajir.Crm.Reporting
     }
     public static class HajirCrmReportingExtensions
     {
-        public static IReportGenerator ReportGenerator(this IServiceProvider serviceProvider)=> new ReportGenerator(serviceProvider);
+        public static IReportGenerator ReportGenerator(this IServiceProvider serviceProvider) => new ReportGenerator(serviceProvider);
 
-        public static Task<Stream> GenerateReport(this IReportGenerator This, IEnumerable data, string reportName)
+        public static Task GenerateReport(this IReportGenerator This,
+                                          string reportName,
+                                          IEnumerable data,
+                                          Dictionary<string, string> parameters,
+                                          Stream outStream, bool update = false)
         {
             return Task.Run(() =>
             {
@@ -21,13 +25,11 @@ namespace Hajir.Crm.Reporting
                     if (File.Exists(reportName))
                         report.Load(reportName);
                     report.Dictionary.RegisterBusinessObject(data, "Data", 4, true);
-                    var p = new FastReport.Export.PdfSimple.PDFSimpleExport();
+                    var pdf = new FastReport.Export.PdfSimple.PDFSimpleExport();
                     report.Prepare();
-                    var stream = new MemoryStream();
-                    //var p = new FastReport.Export.PdfSimple.PDFSimpleExport();
-                    report.Save(reportName);
-                    report.Export(p, stream);
-                    return stream as Stream;
+                    if (update)
+                        report.Save(reportName);
+                    report.Export(pdf, outStream);
                 }
             });
         }

@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="09/18/2024 21:36:32" ReportInfo.Modified="09/18/2024 21:40:40" ReportInfo.CreatorVersion="2024.2.14.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="09/20/2024 08:14:46" ReportInfo.Modified="09/21/2024 09:05:52" ReportInfo.CreatorVersion="2024.2.0.0">
   <Dictionary>
-    <BusinessObjectDataSource Name="Data" ReferenceName="Data" DataType="Hajir.Crm.Reporting.QuoteReportData[], Hajir.Crm.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" Enabled="true">
-      <BusinessObjectDataSource Name="Items" DataType="Hajir.Crm.Reporting.QuoteLineReportData[], Hajir.Crm.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" Enabled="true">
+    <BusinessObjectDataSource Name="Data" ReferenceName="Data" DataType="System.Int32" Enabled="true">
+      <BusinessObjectDataSource Name="Items" DataType="System.Int32" Enabled="true">
         <Column Name="Name" DataType="System.String"/>
         <Column Name="Quantity" DataType="System.Decimal"/>
         <Column Name="UnitPrice" DataType="System.Decimal"/>
@@ -16,27 +16,40 @@
       <Column Name="TotalTax" DataType="System.Decimal"/>
       <Column Name="Discount" DataType="System.Decimal"/>
       <Column Name="FormattedValidityDate" DataType="System.String"/>
+      <Column Name="QuoteNumber" DataType="System.String"/>
     </BusinessObjectDataSource>
   </Dictionary>
   <ReportPage Name="Page1" Watermark.Font="Arial, 60pt">
-    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="37.8">
-      <TextObject Name="Text1" Left="567" Width="94.5" Height="18.9" Text="[Data.CustomerName]" Font="Arial, 10pt"/>
-      <TextObject Name="Text2" Left="85.05" Top="9.45" Width="94.5" Height="18.9" Text="[Data.FormattedDate]" Font="Arial, 10pt"/>
+    <ReportTitleBand Name="ReportTitle1" Width="718.2" Height="113.4">
+      <TextObject Name="Text4" Left="28.35" Top="37.8" Width="122.85" Height="18.9" Text="[Data.QuoteNumber]" Font="Arial, 10pt"/>
+      <TextObject Name="Text5" Left="28.35" Top="56.7" Width="122.85" Height="18.9" Text="[Data.FormattedDate]" Font="Arial, 10pt"/>
+      <TextObject Name="Text6" Left="302.4" Top="9.45" Width="94.5" Height="18.9" Text="پیش فاکتور" HorzAlign="Center" Font="Arial, 14pt"/>
+      <TextObject Name="Text7" Left="160.65" Top="37.8" Width="94.5" Height="18.9" Text="شماره" HorzAlign="Center" Font="Arial, 12pt"/>
+      <TextObject Name="Text8" Left="160.65" Top="56.7" Width="94.5" Height="18.9" Text="تاریخ" HorzAlign="Center" Font="Arial, 12pt"/>
+      <TextObject Name="Text15" Left="614.25" Top="37.8" Width="94.5" Height="18.9" Text="خریدار" RightToLeft="true" Font="Arial, 10pt"/>
+      <TextObject Name="Text1" Left="463.05" Top="56.7" Width="217.35" Height="37.8" Border.Lines="All" Text="[Data.CustomerName]" RightToLeft="true" Font="Arial, 10pt"/>
     </ReportTitleBand>
-    <PageHeaderBand Name="PageHeader1" Top="41.8" Width="718.2" Height="28.35">
-      <TextObject Name="Text4" Left="567" Width="94.5" Height="18.9" Text="Name" Font="Arial, 10pt"/>
-      <TextObject Name="Text6" Left="453.6" Width="94.5" Height="18.9" Text="Quantity" Font="Arial, 10pt"/>
-      <TextObject Name="Text8" Left="340.2" Width="94.5" Height="18.9" Text="UnitPrice" Font="Arial, 10pt"/>
-      <TextObject Name="Text10" Left="217.35" Width="94.5" Height="18.9" Text="Discount" Font="Arial, 10pt"/>
-      <TextObject Name="Text12" Left="75.6" Width="94.5" Height="18.9" Text="Amount" Font="Arial, 10pt"/>
-    </PageHeaderBand>
-    <DataBand Name="Data1" Top="74.15" Width="718.2" Height="75.6" DataSource="Items">
-      <TextObject Name="Text3" Left="567" Top="18.9" Width="94.5" Height="18.9" Text="[Data.Items.Name]" Font="Arial, 10pt"/>
-      <TextObject Name="Text5" Left="453.6" Top="18.9" Width="94.5" Height="18.9" Text="[Data.Items.Quantity]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" WordWrap="false" Font="Arial, 10pt" Trimming="EllipsisCharacter"/>
-      <TextObject Name="Text7" Left="340.2" Top="9.45" Width="94.5" Height="18.9" Text="[Data.Items.UnitPrice]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" WordWrap="false" Font="Arial, 10pt" Trimming="EllipsisCharacter"/>
-      <TextObject Name="Text9" Left="217.35" Top="9.45" Width="94.5" Height="18.9" Text="[Data.Items.Discount]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" WordWrap="false" Font="Arial, 10pt" Trimming="EllipsisCharacter"/>
-      <TextObject Name="Text11" Left="75.6" Top="9.45" Width="94.5" Height="18.9" Text="[Data.Items.Amount]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" WordWrap="false" Font="Arial, 10pt" Trimming="EllipsisCharacter"/>
+    <PageHeaderBand Name="PageHeader1" Top="117.4" Width="718.2" Height="18.9"/>
+    <ColumnHeaderBand Name="ColumnHeader1" Top="140.3" Width="718.2" Height="18.9">
+      <TextObject Name="Text2" Left="415.8" Width="264.6" Height="18.9" Border.Lines="All" Text="کالا/خدمات" HorzAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text3" Left="321.3" Width="94.5" Height="18.9" Border.Lines="All" Text="تعداد" HorzAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text9" Left="226.8" Width="94.5" Height="18.9" Border.Lines="All" Text="قیمت واحد" HorzAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text10" Left="132.3" Width="94.5" Height="18.9" Border.Lines="All" Text="تخفیف" HorzAlign="Center" Font="Arial, 10pt"/>
+      <TextObject Name="Text11" Left="37.8" Width="94.5" Height="18.9" Border.Lines="All" Text="مبلغ" HorzAlign="Center" Font="Arial, 10pt"/>
+    </ColumnHeaderBand>
+    <DataBand Name="Data1" Top="163.2" Width="718.2" Height="18.9" DataSource="Items">
+      <TextObject Name="Text24" Left="415.8" Width="264.6" Height="18.9" Border.Lines="All" Text="[Data.Items.Name]" RightToLeft="true" Font="Arial, 10pt"/>
+      <TextObject Name="Text26" Left="321.3" Width="94.5" Height="18.9" Border.Lines="All" Text="[Data.Items.Quantity]" Format="Number" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" RightToLeft="true" WordWrap="false" Font="Arial, 10pt" Trimming="EllipsisCharacter"/>
+      <TextObject Name="Text27" Left="226.8" Width="94.5" Height="18.9" Border.Lines="All" Text="[Data.Items.UnitPrice]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" WordWrap="false" Font="Arial, 10pt" Trimming="EllipsisCharacter"/>
+      <TextObject Name="Text28" Left="132.3" Width="94.5" Height="18.9" Border.Lines="All" Text="[Data.Items.Discount]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" WordWrap="false" Font="Arial, 10pt" Trimming="EllipsisCharacter"/>
+      <TextObject Name="Text29" Left="37.8" Width="94.5" Height="18.9" Border.Lines="All" Text="[Data.Items.Amount]" Format="Currency" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" WordWrap="false" Font="Arial, 10pt" Trimming="EllipsisCharacter"/>
     </DataBand>
-    <PageFooterBand Name="PageFooter1" Top="153.75" Width="718.2" Height="18.9"/>
+    <ColumnFooterBand Name="ColumnFooter1" Top="186.1" Width="718.2" Height="94.5">
+      <TextObject Name="Text30" Left="37.8" Top="28.35" Width="94.5" Height="18.9" Border.Lines="All" Text="[Data.TotalAmount]" Format="Number" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" WordWrap="false" Font="Arial, 10pt" Trimming="EllipsisCharacter"/>
+      <TextObject Name="Text31" Left="37.8" Top="9.45" Width="94.5" Height="18.9" Border.Lines="All" Text="[Data.TotalTax]" Format="Number" Format.UseLocale="true" Format.DecimalDigits="2" HorzAlign="Right" WordWrap="false" Font="Arial, 10pt" Trimming="EllipsisCharacter"/>
+      <TextObject Name="Text21" Left="132.3" Top="9.45" Width="94.5" Height="18.9" Border.Lines="All" Text="مالیات" Font="Arial, 10pt"/>
+      <TextObject Name="Text32" Left="132.3" Top="28.35" Width="94.5" Height="18.9" Border.Lines="All" Text="قابل پرداخت" HorzAlign="Center" Font="Arial, 12pt"/>
+    </ColumnFooterBand>
+    <PageFooterBand Name="PageFooter1" Top="284.6" Width="718.2" Height="368.55"/>
   </ReportPage>
 </Report>

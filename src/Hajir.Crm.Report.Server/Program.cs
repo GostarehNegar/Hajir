@@ -18,6 +18,7 @@ using GN.Library.Win32.Hosting;
 using System.IO;
 using System.Diagnostics;
 using Hajir.Crm.Report.Server.Services;
+using GN.Library.Xrm;
 
 namespace Hajir.Crm.Infrastructure.Service
 {
@@ -74,8 +75,11 @@ namespace Hajir.Crm.Infrastructure.Service
                     {
 
                     });
+                    s.AddXrmServices(c.Configuration, opt => { opt.ConnectionOptions = ConnectionOptions.WebAPI; });
+                    s.AddHajirInfrastructure(c.Configuration);
+                    s.AddHajirReportingServices(c.Configuration, opt => { });
                     s.AddHostedService<TestService>();
-                    var ff = s.AddControllers();
+                    var ff = s.AddControllers().AddApplicationPart(typeof(Hajir.Crm.Reporting.HajirCrmReportingExtensions).Assembly);
                     //foreach (var asm in Options.ApplicationParts ?? new Assembly[] { })
                     //{
                     //    ff.AddApplicationPart(asm);

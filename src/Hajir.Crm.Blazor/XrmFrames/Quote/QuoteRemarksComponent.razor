@@ -1,0 +1,26 @@
+﻿
+
+<MudBlazor.MudGrid>
+    <MudBlazor.MudItem xs="6">
+        <textarea @bind="Value.Text" @bind:event="oninput" style="width:300px;"></textarea>
+    </MudBlazor.MudItem>
+    <MudBlazor.MudItem xs="6">
+        @foreach (var l in Value.Lines)
+        {
+            <div>
+                <input type="checkbox" @onclick="()=> Clicked(l)" checked="@l.Selected" @onchange="()=>Changed(l)" /> @l.Left
+                @if(l.HasInput)
+                {
+                    <input @bind-value=l.Input>
+                }
+                <span>@l.Right</span>
+            </div>
+        }
+    </MudBlazor.MudItem>
+
+</MudBlazor.MudGrid>
+
+
+@code {
+
+}

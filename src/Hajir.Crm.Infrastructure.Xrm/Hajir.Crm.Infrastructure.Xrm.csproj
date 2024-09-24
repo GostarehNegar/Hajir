@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Library\GN.Library.Xrm\GN.Library.Xrm.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="XrmFrames\" />
+  </ItemGroup>
+
 </Project>

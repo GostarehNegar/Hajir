@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Hajir.Crm.Internals
+namespace Hajir.Crm
 {
     public class State<T> where T : class, new()
     {

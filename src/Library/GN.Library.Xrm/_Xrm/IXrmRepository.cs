@@ -223,7 +223,7 @@ namespace GN.Library.Xrm
 
         }
 
-        private bool OrganizationServiceUpdate(TEntity entity)
+        private bool OrganizationServiceUpdate(TEntity entity, bool Throw = true    )
         {
             var result = false;
             var service = this.GetOrganizationService();
@@ -239,12 +239,14 @@ namespace GN.Library.Xrm
             {
                 this.logger.LogError(
                     "An error occured while trying to update entity: '{0}', Err: '{1}'", entity, err.GetBaseException().Message);
+                if (Throw)
+                    throw;
             }
 
             return result;
 
         }
-        private bool WebApiUpdate(TEntity entity)
+        private bool WebApiUpdate(TEntity entity, bool Throw = true)
         {
             var result = false;
             var api = this.GetWebApiService();
@@ -259,6 +261,8 @@ namespace GN.Library.Xrm
                 {
                     this.logger.LogError(
                         "An error occured while trying to update entity: '{0}', Err: '{1}'", entity, err.GetBaseException().Message);
+                    if (Throw)
+                        throw;
                 }
             }
             return result;
@@ -273,7 +277,7 @@ namespace GN.Library.Xrm
                     success = WebApiUpdate(entity);
                     break;
                 case ConnectionOptions.PreferOrganizationServices:
-                    success = OrganizationServiceUpdate(entity) || WebApiUpdate(entity);
+                    success = OrganizationServiceUpdate(entity, false) || WebApiUpdate(entity);
                     break;
 
                 case ConnectionOptions.OrganizationService:
@@ -281,14 +285,14 @@ namespace GN.Library.Xrm
                     break;
                 case ConnectionOptions.PreferWebApi:
                 default:
-                    success = OrganizationServiceUpdate(entity) || WebApiUpdate(entity);
+                    success = OrganizationServiceUpdate(entity, false) || WebApiUpdate(entity);
                     break;
             }
             if (!success)
                 throw new Exception("Faild to update entity.");
         }
 
-        public Guid? WebApiInsert(TEntity entity)
+        public Guid? WebApiInsert(TEntity entity, bool Throw = true)
         {
             Guid? result = null;
             try
@@ -308,10 +312,12 @@ namespace GN.Library.Xrm
             {
                 this.logger.LogError(
                     "An error occured while trying to update entity: '{0}', Err: '{1}'", entity, err.GetBaseException().Message);
+                if (Throw)
+                    throw;
             }
             return result;
         }
-        public Guid? OrganizationServiceInsert(TEntity entity)
+        public Guid? OrganizationServiceInsert(TEntity entity, bool Throw = true)
         {
             Guid? result = null;
             try
@@ -326,7 +332,8 @@ namespace GN.Library.Xrm
             {
                 this.logger.LogError(
                     "An error occured while trying to update entity: '{0}', Err: '{1}'", entity, err.GetBaseException().Message);
-                throw;
+                if (Throw)
+                    throw;
             }
             return result;
         }
@@ -339,10 +346,10 @@ namespace GN.Library.Xrm
                 switch (this.ConnectionOptions)
                 {
                     case ConnectionOptions.WebAPI:
-                        result = WebApiInsert(entity);
+                        result = WebApiInsert(entity, true);
                         break;
                     case ConnectionOptions.PreferOrganizationServices:
-                        result = OrganizationServiceInsert(entity) ?? WebApiInsert(entity);
+                        result = OrganizationServiceInsert(entity, false) ?? WebApiInsert(entity);
                         break;
                     case ConnectionOptions.OrganizationService:
                         result = OrganizationServiceInsert(entity);
@@ -350,7 +357,7 @@ namespace GN.Library.Xrm
 
                     case ConnectionOptions.PreferWebApi:
                     default:
-                        result = WebApiInsert(entity) ?? OrganizationServiceInsert(entity);
+                        result = WebApiInsert(entity, false) ?? OrganizationServiceInsert(entity);
                         break;
                 }
             }
@@ -589,7 +596,7 @@ namespace GN.Library.Xrm
             {
 
             }
-            
+
 
             return result; ;
         }

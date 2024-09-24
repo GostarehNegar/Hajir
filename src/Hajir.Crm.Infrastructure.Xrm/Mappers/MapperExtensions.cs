@@ -14,6 +14,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Hajir.Crm.Features.Integration;
 using GN.Library.Xrm.StdSolution;
+using Hajir.Crm.Reporting;
 
 namespace Hajir.Crm.Infrastructure.Xrm
 {
@@ -64,19 +65,39 @@ namespace Hajir.Crm.Infrastructure.Xrm
                 Id = Guid.TryParse(q.QuoteId, out var _id) ? _id : Guid.Empty,
             };
         }
+        //public static SaleQuoteLine ToQuoteLine(this XrmHajirQuoteDetail )
+        //{
+        //    var res = new SaleQuoteLine()
+        //    {
+        //        ProductId = x.ProductId?.ToString(),
+        //        Quantity = Convert.ToDecimal((x.Quantity ?? 0)),
+        //        AggregateId = x.AggregateProductId?.ToString(),
+        //        Id = x.Id.ToString(),
+        //        Name = this.cache.Products.FirstOrDefault(p => p.Id == x.ProductId?.ToString())?.Name,
+        //        PricePerUnit = x.PricePerUnit,
+        //        Discount = x.ManualDiscountAmount ?? 0,
+        //        Amount = x.BaseAmount
+        //    })
+
+        //}
         public static XrmHajirQuoteDetail ToXrmQuoteDetail(this SaleQuoteLine line)
         {
             var res =
-            new XrmHajirQuoteDetail
+                new XrmHajirQuoteDetail
+                {
+                    QuoteId = Guid.TryParse(line.QuoteId, out var __iid) ? __iid : (Guid?)null,
+                    QuoteDetailId = Guid.TryParse(line.Id, out var _id) ? _id : (Guid?)null,
+                    ProductId = Guid.TryParse(line.ProductId, out var _pid) ? _pid : (Guid?)null,
+                    Quantity = Convert.ToDouble(line.Quantity),
+                    BaseAmount = line.BaseAmount,
+                    ManualDiscountAmount = line.Discount,
+                    ExtendedAmount = line.ExtendedAmount,
+                    IsProductOverridden = line.IsProductOverriden,
+                    
+                };
+            if (!res.ProductId.HasValue)
             {
-                ///QuoteDetailId = Guid.TryParse(line.Id, out var _id) ? _id : (Guid?)null,
-                ProductId = Guid.TryParse(line.ProductId, out var _pid) ? _pid : (Guid?)null,
-                Quantity = Convert.ToDouble(line.Quantity)
-            };
-            if (Guid.TryParse(line.Id, out var _id))
-            {
-                res.QuoteDetailId = _id;
-
+                res.ProductDescription = line.Name;
             }
             return res;
 
@@ -131,5 +152,6 @@ namespace Hajir.Crm.Infrastructure.Xrm
             }
             return res;
         }
+
     }
 }

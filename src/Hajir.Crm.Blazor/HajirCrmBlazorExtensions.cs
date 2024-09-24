@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Hajir.Crm.Features;
-using Hajir.Crm.Internals;
+using Hajir.Crm;
 using Hajir.Crm.Blazor.ViewModels;
 
 namespace Hajir.Crm.Blazor
