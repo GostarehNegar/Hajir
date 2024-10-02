@@ -13,10 +13,15 @@ namespace Hajir.Crm.Features.Sales
 
 		SaleQuote CreateQuote(SaleQuote quote);
 		SaleQuote UpdateQuote(SaleQuote quote);
+        SaleQuote UpsertQuote(SaleQuote quote);
         IEnumerable<PriceList> LoadAllPriceLists();
         void DeleteAggregateProduct(string id);
 
         Task Test(QuoteEditModel q);
         Task<SaleQuoteLine> SaveLine(SaleQuoteLine line);
-	}
+        Task<IEnumerable<SaleAccount>> SearchAccount(string text);
+        Task<IEnumerable<SaleContact>> GetAccountContacts(string accountId);
+        Task<IEnumerable<PriceList>> SearchPriceList(string text);
+        Task DeleteQuoteDetailLine(string id);
+    }
 }

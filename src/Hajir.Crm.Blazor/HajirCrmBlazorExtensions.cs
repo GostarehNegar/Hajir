@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Hajir.Crm.Features;
 using Hajir.Crm;
 using Hajir.Crm.Blazor.ViewModels;
+using Hajir.Crm.Blazor.XrmFrames;
 
 namespace Hajir.Crm.Blazor
 {
@@ -23,10 +24,13 @@ namespace Hajir.Crm.Blazor
             services.AddSingleton<CircuitService>();
             services.AddSingleton<ICircuitService>(sp => sp.GetService<CircuitService>());
             services.AddScoped<BlazorAppServices>();
-            services.AddScoped<IBlazorAppServices>(sp=>sp.GetService<BlazorAppServices>());
+            services.AddScoped<IBlazorAppServices>(sp => sp.GetService<BlazorAppServices>());
             services.AddScoped<IScopedHostedService>(sp => sp.GetService<BlazorAppServices>());
             services.AddScoped<WebResourceBus>();
             services.AddScoped<XrmPageHelper>();
+            services.AddScoped<XrmFrameAdapter>();
+            services.AddScoped<StateManager>()
+                .AddScoped<IStateManager>(sp => sp.GetService<StateManager>());
             services.AddScoped(typeof(State<>), typeof(State<>));
             services.AddScoped(typeof(StateCollection<>), typeof(StateCollection<>));
 
@@ -46,16 +50,21 @@ namespace Hajir.Crm.Blazor
                 }
                 catch (Exception err)
                 {
-                    services.GetService<State<ErrorModel>>().SetState(e => e.Error = err);
+                    services.GetState<ErrorModel>().SetState(e => e.Error = err);
                 }
                 return false;
             }
         }
         public static void SendAlert(this IBlazorAppServices services, string message)
         {
-            services.GetService<State<AlertModel>>().SetState(x => x.Message = message);
+            services.GetState<AlertModel>().SetState(x => x.Message = message);
         }
+
+        public static IStateManager GetStateManage(this IServiceProvider services) => services.GetService<IStateManager>();
+        public static State<T> GetState<T>(this IServiceProvider services, string name = null, Func<State<T>> constructor = null) where T : class, new() =>
+            services.GetService<IStateManager>().GetState<T>(name, constructor);
+
     }
 
-    
+
 }

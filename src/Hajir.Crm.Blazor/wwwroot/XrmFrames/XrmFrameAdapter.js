@@ -1,6 +1,7 @@
 ﻿class XrmFrameAdapter {
 	name = "";
 	options = {}
+	_inited = false;
 	constructor(name, options) {
 		this.name = name;
 		this.options = options;
@@ -10,6 +11,9 @@
 		return "pong";
 	}
 	initialize() {
+		if (this._inited)
+			return;
+		this._inited = true;
 		console.log("Initializing XrmFrameAdapter", this.name, this.options.id);
 		window.addEventListener("message", event => {
 			console.log("ll", event.data);

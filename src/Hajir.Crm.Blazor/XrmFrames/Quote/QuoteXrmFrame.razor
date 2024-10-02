@@ -1,26 +1,92 @@
 ﻿@page "/xrmframes/quote"
 @using Hajir.Crm.Features.Sales;
-@inherits XrmFrameBase<SaleQuote>
+@inherits XrmFrameBaseEx<SaleQuote>
+
 <div style="width:100%">
+    <ErrorComponent />
     <MudGrid>
+
+        <MudItem xs="12">
+            <MudButton Link="@GetPrintLink()" Target="_blank" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Print" Color="Color.Info" Size="Size.Small">Print </MudButton>
+            <MudButton Variant="Variant.Filled" @onclick="DoSave" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small">Save</MudButton>
+
+        </MudItem>
+        <MudItem xs="8">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudAutocomplete T="SaleAccount" Label="خریدار" @bind-Value="Value.Customer" SearchFunc="@Search1" Variant="Variant.Outlined" ShowProgressIndicator="true" ProgressIndicatorColor="SelectedColor" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudAutocomplete T="SaleContact" Label="شخص" @bind-Value="Value.Contact" SearchFunc="@SearchContact" Variant="Variant.Outlined" ShowProgressIndicator="true" ProgressIndicatorColor="SelectedColor" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudAutocomplete T="PriceList"  Label="لیست قیمت" @bind-Value="Value.PriceList" SearchFunc="@SearchPriceList" Variant="Variant.Outlined" ShowProgressIndicator="true" ProgressIndicatorColor="SelectedColor" />
+                </MudItem>
+            </MudGrid>
+            <MudText></MudText>
+        </MudItem>
+        <MudItem xs="4">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTextField T="string" Label="شماره " Text="@Value.QuoteNumber" style="direction:ltr;font-family:Arial"></MudTextField>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudDatePicker Label="Basic example" @bind-Date="Value.ExpirationDate" Culture="@GetPersianCulture()" />
+                   @* <MudDatePicker @ref="_picker" Label="تاریخ اعتبار" @bind-Date="Value.ExpirationDate" Culture="@GetPersianCulture()" TitleDateFormat="dddd, dd MMMM">
+                        <PickerActions>
+                            <MudButton Class="mr-auto align-self-start" OnClick="TodayAsync">Today</MudButton>
+                        </PickerActions>
+                    </MudDatePicker>*@
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField T="double?" @bind-Value="Value.PyamentDeadline" Label="مهلت پرداخت (روز)" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="false" />
+                </MudItem>
+
+                <MudItem xs="6" style="text-align:right">
+                    <MudCheckBox T="bool" @bind-Checked="Value.IsOfficial" Color="Color.Primary" Label="رسمی" style="text-align:right"></MudCheckBox>
+                </MudItem>
+                <MudItem xs="6" style="text-align:right">
+                    <MudCheckBox T="bool" @bind-Checked="Value.NonCash" Color="Color.Primary" Label="غیر نقدی" style="text-align:right"></MudCheckBox>
+                </MudItem>
+            </MudGrid>
+
+        </MudItem>
+    
+        <MudItem xs="12">
+
+        </MudItem>
+    </MudGrid>
+    <MudGrid>
+
         @foreach (var item in Value.Lines.Select(x => new State<SaleQuoteLine>(x)))
         {
-            <div style="border:double;padding:10px;">
+            <div style="border:solid;padding:3px;">
                 <MudItem xs="12" style="">
                     <QuoteProductLineFrameComponent State="@item" QuoteState="this.State" />
                 </MudItem>
                 <MudItem xs="12">
                     <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="()=>InsertLine(item.Value)">Add</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="Test">Delete</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="()=> RemoveLine(item.Value)">Delete</MudButton>
                     <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="()=>SaveLine(item.Value)">Save</MudButton>
                 </MudItem>
             </div>
             <div></div>
+            <MudDivider/>
 
         }
 
+
     </MudGrid>
-    
+
+
+
+    <MudDivider style="height:20px;" />
+   <MudGrid>
+       <MudItem xs="8">
+            <MudTextField T="string" Label="توضیحات" Variant="Variant.Outlined" @bind-Text="State.Value.Remarks" Lines="8" style="width:100%" />
+       </MudItem>
+   </MudGrid>
+
 </div>
 @*<table  >
     <thead>

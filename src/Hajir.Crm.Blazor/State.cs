@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -113,4 +114,35 @@ namespace Hajir.Crm
 
     }
 
+    public interface IStateManager
+    {
+        State<T> GetState<T>(string name = null, Func<State<T>> constructor = null) where T : class, new();
+    }
+    internal class StateManager : IStateManager
+    {
+        private ConcurrentDictionary<string, object> items = new ConcurrentDictionary<string, object>();
+        private string GetKey<T>(string name) => typeof(T).FullName + "-" + name ?? "noname";
+        public State<T> GetState<T>(string name = null, Func<State<T>> constructor = null) where T : class, new()
+        {
+            var key = this.GetKey<T>(name);
+            if (items.TryGetValue(key, out var state) && state is State<T> result)
+            {
+                return result;
+            }
+            result = constructor == null
+                ? new State<T>()
+                : constructor();
+            items.TryAdd(key, result);
+            return result;
+        }
+        public State<T> SetState<T>(string name = null, Func<State<T>> constructor = null) where T : class, new()
+        {
+            var key = this.GetKey<T>(name);
+            var result = constructor == null
+                ? new State<T>()
+                : constructor();
+            items.AddOrUpdate(key, result, (a, b) => result);
+            return result;
+        }
+    }
 }

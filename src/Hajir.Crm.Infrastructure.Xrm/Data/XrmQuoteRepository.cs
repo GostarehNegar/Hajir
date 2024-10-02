@@ -5,6 +5,7 @@ using GN.Library.Xrm.StdSolution;
 using Hajir.Crm.Features.Common;
 using Hajir.Crm.Features.Sales;
 using Hajir.Crm.Sales;
+using Microsoft.AspNetCore.Http.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -166,8 +167,38 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                     var pl = cache.PriceLists.FirstOrDefault(x => x.Id == xrm_quote.PriceLevelId?.ToString());
 
                     quote = new SaleQuote(xrm_quote.QuoteId.ToString(), xrm_quote.HajirQuoteId, lines, aggregates, pl);
-
-
+                    quote.PyamentDeadline = xrm_quote.PaymentDeadLine;
+                    quote.IsOfficial = xrm_quote.QuoteType;
+                    quote.ExpirationDate = xrm_quote.ValidityPeriod;
+                    quote.NonCash = !xrm_quote.Cash;
+                    if (xrm_quote.AccountId.HasValue)
+                    {
+                        var acc = this.dataServices.GetRepository<XrmAccount>()
+                            .Queryable
+                            .FirstOrDefault(x => x.AccountId == xrm_quote.AccountId);
+                        if (acc != null)
+                        {
+                            quote.Customer = new SaleAccount
+                            {
+                                Id = acc.Id.ToString(),
+                                Name = acc.Name
+                            };
+                        }
+                    }
+                    if (xrm_quote.HajirContactId.HasValue)
+                    {
+                        var acc = this.dataServices.GetRepository<XrmContact>()
+                            .Queryable
+                            .FirstOrDefault(x => x.ContactId == xrm_quote.HajirContactId);
+                        if (acc != null)
+                        {
+                            quote.Contact = new SaleContact
+                            {
+                                Id = acc.Id.ToString(),
+                                Name = acc.FullName
+                            };
+                        }
+                    }
                 }
 
             }
@@ -246,15 +277,134 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 
         public async Task<SaleQuoteLine> SaveLine(SaleQuoteLine line)
         {
+           
+
             var l = line.ToXrmQuoteDetail();
-            
-            l.IsProductOverridden = l.ProductId==null;
-            this.dataServices
+
+            l.IsProductOverridden = l.ProductId == null;
+            var _id = this.dataServices
                 .GetRepository<XrmHajirQuoteDetail>()
                 .Upsert(l);
             await Task.CompletedTask;
-
+            line.Id = _id.ToString();
             return line;
+        }
+
+
+        public async Task<IEnumerable<SaleAccount>> SearchAccount(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return new SaleAccount[] { };
+            var a = this.dataServices
+                .WithImpersonatedDbContext(ctx =>
+                {
+
+                    var items = text.Split(' ');
+                    var q = ctx.AddEntity<XrmAccount>()
+                    .Query<XrmAccount>();
+                    foreach (var item in text.Split(' '))
+                    {
+                        q = q.Where(x => x.Name.Contains(item));
+                    }
+                    return q.ToArray();
+                    ; return ctx.AddEntity<XrmAccount>()
+                                        .Query<XrmAccount>()
+                                        .Where(x => x.Name.Contains(text))
+                                        .ToArray();
+
+
+                });
+            return a.Select(x => new SaleAccount
+            {
+                Name = x.Name,
+                Id = x.Id.ToString(),
+            }).ToArray();
+            return this.dataServices
+                .GetRepository<XrmHajirAccount>()
+                .Queryable
+                .Where(x => x.Contains(text))
+                .ToArray()
+                .Select(x => new SaleAccount
+                {
+                    Name = x.Name,
+                    Id = x.Id.ToString()
+                })
+                .ToArray();
+
+        }
+
+        public async Task<IEnumerable<SaleContact>> GetAccountContacts(string accountId)
+        {
+            if (Guid.TryParse(accountId, out var _accountId))
+            {
+                return this.dataServices
+                    .GetRepository<XrmContact>()
+                    .Queryable
+                    .Where(x => x.AccountId == _accountId)
+                    .ToArray()
+                    .Select(x => new SaleContact
+                    {
+                        Id = x.Id.ToString(),
+                        Name = x.FullName
+                    })
+                    .ToArray();
+
+            }
+            return new SaleContact[] { };
+
+        }
+
+        public async Task<IEnumerable<PriceList>> SearchPriceList(string text)
+        {
+            return this.dataServices
+                .GetRepository<XrmPriceList>()
+                .Queryable
+                .ToArray()
+                .Select(x => new PriceList
+                {
+                    Id = x.Id.ToString(),
+                    Name = x.Name,
+                });
+
+        }
+
+        public SaleQuote UpsertQuote(SaleQuote quote)
+        {
+            var x = new XrmHajirQuote();
+            if (Guid.TryParse(quote.QuoteId, out var _quoteId))
+            {
+                x.Id = _quoteId;
+            }
+            if (quote.Customer != null && Guid.TryParse(quote.Customer.Id, out var _accid))
+            {
+                x.AccountId = _accid;
+            }
+            if (quote.PriceList != null && Guid.TryParse(quote.PriceList.Id, out var _priceListId))
+            {
+                x.PriceLevelId = _priceListId;
+            }
+            x.QuoteType = quote.IsOfficial;
+            //x["rhs_type"] = quote.NoOfficial;
+            x["rhs_paymentdeadline"] = quote.PyamentDeadline ?? 0;
+
+            this.dataServices
+                .GetRepository<XrmHajirQuote>()
+                .Upsert(x);
+            return quote;
+
+
+            //throw new NotImplementedException();
+        }
+
+        public Task DeleteQuoteDetailLine(string id)
+        {
+            if (!string.IsNullOrWhiteSpace(id) && Guid.TryParse(id, out var _id))
+            {
+                this.dataServices
+                    .GetRepository<XrmQuoteDetail>()
+                    .Delete(new XrmQuoteDetail { Id = _id });
+            }
+            return Task.CompletedTask;
         }
     }
 }

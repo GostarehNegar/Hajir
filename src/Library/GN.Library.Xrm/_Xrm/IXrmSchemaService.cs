@@ -5,6 +5,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -95,7 +96,7 @@ namespace GN.Library.Xrm
 
         public string GetNavigationPropertyName()
         {
-            if (this.MetdaData1!=null && this.MetdaData1.Relationships!=null && this.MetdaData1.Relationships.Count() > 0)
+            if (this.MetdaData1 != null && this.MetdaData1.Relationships != null && this.MetdaData1.Relationships.Count() > 0)
             {
                 return this.MetdaData1.Relationships.FirstOrDefault().ReferencingEntityNavigationPropertyName;
             }
@@ -570,7 +571,7 @@ namespace GN.Library.Xrm
                                 }
                                 break;
                             case AttributeType.Money:
-                                if (value !=null && decimal.TryParse(value.ToString(), out var _res))
+                                if (value != null && decimal.TryParse(value.ToString(), out var _res))
                                 {
                                     result.SetAttribiuteValue(key, new Money(_res));
                                 }
@@ -679,6 +680,11 @@ namespace GN.Library.Xrm
                         default:
                             break;
                     }
+                    if (attribute.Type == AttributeType.Customer && value == null)
+                    {
+                        throw new NotImplementedException(
+                            $"Disassociate is not implemented see: https://learn.microsoft.com/en-us/power-apps/developer/data-platform/webapi/associate-disassociate-entities-using-web-api#using-single-valued-navigation-properties");
+                    }
                     if (value as EntityReference != null)
                     {
                         var refrence = value as EntityReference;
@@ -701,7 +707,7 @@ namespace GN.Library.Xrm
                             /// We need to set based on NavigationProperty to be used here.
                             /// The only way is to use http://gndevcrm01/Develop/api/data/v8.0/EntityDefinitions(LogicalName='phonecall')/ManyToOneRelationships
                             /// 
-                            var navigatiob_property_name = attribute?.GetNavigationPropertyName()?? (attribute?.SchemaName ?? f.Key);
+                            var navigatiob_property_name = attribute?.GetNavigationPropertyName() ?? (attribute?.SchemaName ?? f.Key);
                             //if (f.Key == "bmsd_subserviceitemid")
                             //{
                             //    navigatiob_property_name = "bmsd_SubServiceItemId_PhoneCall";
@@ -738,9 +744,9 @@ namespace GN.Library.Xrm
                     }
                     else if (value as Money != null)
                     {
-						result.Add(f.Key, (value as Money).Value);
-					}
-                    else 
+                        result.Add(f.Key, (value as Money).Value);
+                    }
+                    else
                     {
                         result.Add(f.Key, f.Value);
                     }
@@ -1137,7 +1143,7 @@ namespace GN.Library.Xrm
             return await Task.FromResult(result).ConfigureAwait(false);
         }
 
-        public List<Tuple<int?,string>> GetOptionSetData(string entityName, string propertyName)
+        public List<Tuple<int?, string>> GetOptionSetData(string entityName, string propertyName)
         {
             var attributeRequest = new RetrieveAttributeRequest
             {
@@ -1151,7 +1157,7 @@ namespace GN.Library.Xrm
             EnumAttributeMetadata attributeData = (EnumAttributeMetadata)response.AttributeMetadata;
 
             var optionList = (from option in attributeData.OptionSet.Options
-                              select new Tuple<int?,string>(
+                              select new Tuple<int?, string>(
                                 option.Value,
                                 option.Label.UserLocalizedLabel.Label))
               .ToList();

@@ -65,9 +65,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.AI.Bot.Service", "Haj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GN.Library.Odoo", "Library\GN.Library.Odoo\GN.Library.Odoo.csproj", "{151E172A-1DB7-466B-BA35-0008C0B54721}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Report.Server", "Hajir.Crm.Report.Server\Hajir.Crm.Report.Server.csproj", "{B17D3C40-B46A-4D5A-A4D5-8D95991724FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Report.Server", "Hajir.Crm.Report.Server\Hajir.Crm.Report.Server.csproj", "{B17D3C40-B46A-4D5A-A4D5-8D95991724FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.Crm.Reporting", "Hajir.Crm.Reporting\Hajir.Crm.Reporting.csproj", "{4B83FBFD-877E-4D45-B3D3-8DA0F0B35B95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.Crm.Reporting", "Hajir.Crm.Reporting\Hajir.Crm.Reporting.csproj", "{4B83FBFD-877E-4D45-B3D3-8DA0F0B35B95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

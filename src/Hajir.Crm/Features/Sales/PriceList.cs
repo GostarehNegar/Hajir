@@ -20,7 +20,12 @@ namespace Hajir.Crm.Features.Sales
 			this.items.AddRange(items);
 			return this;
 		}
-	}
+        public override string ToString()
+        {
+			return $"{Name}";
+
+		}
+    }
 	public class PriceListItem
 	{
 		public string Id { get; set; }

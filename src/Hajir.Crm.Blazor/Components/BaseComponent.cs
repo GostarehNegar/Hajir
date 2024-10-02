@@ -26,18 +26,33 @@ namespace Hajir.Crm.Blazor.Components
         }
         public void SetError(Exception err)
         {
-            this.ServiceProvider.GetService<State<ErrorModel>>().SetState(new ErrorModel { Error=err });
+            this.ServiceProvider.GetState<ErrorModel>().SetState(new ErrorModel { Error=err });
         }
     }
     public class BaseComponent<T> : BaseComponent where T : class, new()
     {
-        [Inject]
+        [Parameter]
         public State<T> State { get; set; }
 
         public T Value => State.Value;
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
+            //AddDisposable(State.On((x) => InvokeAsync(StateHasChanged)));
+        }
+        protected override async Task OnParametersSetAsync()
+        {
+            this.SetState(await LoadState());
+
+            await base.OnParametersSetAsync();
+        }
+        public virtual Task<State<T>> LoadState()
+        {
+            return Task.FromResult(this.State?? this.ServiceProvider.GetState<T>());
+        }
+        protected void SetState(State<T> state)
+        {
+            this.State = state;
             AddDisposable(State.On((x) => InvokeAsync(StateHasChanged)));
         }
 

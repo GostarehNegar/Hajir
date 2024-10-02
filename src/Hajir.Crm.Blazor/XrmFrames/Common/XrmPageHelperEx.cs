@@ -11,11 +11,11 @@ namespace Hajir.Crm.Blazor.XrmFrames
 
     }
 
-    public class XrmPageHelper
+    public class XrmPageHelperEx
     {
         private readonly XrmFrameAdapter bus;
         public event EventHandler<OnChageEventArgs> OnChange;
-        public XrmPageHelper(XrmFrameAdapter bus)
+        public XrmPageHelperEx(XrmFrameAdapter bus)
         {
             this.bus = bus;
         }

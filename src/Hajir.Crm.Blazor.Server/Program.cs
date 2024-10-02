@@ -1,4 +1,5 @@
 using GN;
+using GN.Library.Win32.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -14,7 +15,8 @@ namespace Hajir.Crm.Blazor.Server
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().UseGNLib().Run();
+            //CreateHostBuilder(args).Build().UseGNLib().Run();
+            CreateWindowsService(args).Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -24,5 +26,12 @@ namespace Hajir.Crm.Blazor.Server
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+        public static IWindowsServiceHost CreateWindowsService(string[] args)
+        {
+            return WindowsServiceHost.CreateDefaultBuilder(args)
+                .UseWebHostBuilder(CreateHostBuilder(args))
+                .ConfigureWindowsService("Hajir.Blazor.Server", "Hajir Blazor Server", null)
+                .Build1(w => w.UseGNLib());
+        }
     }
 }

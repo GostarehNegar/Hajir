@@ -99,7 +99,7 @@ namespace Hajir.Crm.Blazor.Components
                 Quote = ctx.LoadQuoteByQuoteNumber(this.Id);
 
             });
-            this.AppServices.GetService<State<AlertModel>>().SetState(x => x.Message = "Deleted");
+            this.AppServices.GetState<AlertModel>().SetState(x => x.Message = "Deleted");
             Snackbar.Add("حذف با موفقیت انجام شد.", Severity.Success);
             StateHasChanged();
         }

@@ -12,8 +12,8 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
 {
     public partial class QuoteProductLineFrameComponent
     {
-        [Parameter]
-        public State<SaleQuoteLine> State { get; set; }
+        //[Parameter]
+        //public State<SaleQuoteLine> State { get; set; }
         [Parameter]
         public State<SaleQuote> QuoteState { get; set; }
 

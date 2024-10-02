@@ -60,12 +60,12 @@ namespace Hajir.Crm.Blazor.XrmFrames
         private readonly IServiceProvider serviceProvider;
         private IJSObjectReference _module;
         private IJSObjectReference _adapter;
-        private ConcurrentDictionary<string, TaskCompletionSource<XrmFrameMessage>> tasks = new ConcurrentDictionary<string, TaskCompletionSource<XrmFrameMessage>>();
+        private static ConcurrentDictionary<string, TaskCompletionSource<XrmFrameMessage>> tasks = new ConcurrentDictionary<string, TaskCompletionSource<XrmFrameMessage>>();
         private List<Func<XrmFrameMessage, Task>> handlers = new List<Func<XrmFrameMessage, Task>>();
         private string JSName;
-        public const int DEFAULT_TIMEOUT = 15000;
+        public const int DEFAULT_TIMEOUT = 35000;
         XrmFrameAdapterOptions Options;
-
+        private Guid Id = Guid.NewGuid();
         public XrmFrameAdapter(IServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider;
@@ -83,7 +83,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
         [JSInvokable]
         public async Task OnMessageReceived(XrmFrameMessage message)
         {
-            if (!string.IsNullOrWhiteSpace(message?.ReplyTo) && this.tasks.TryGetValue(message.ReplyTo, out var tsk))
+            if (!string.IsNullOrWhiteSpace(message?.ReplyTo) && tasks.TryRemove(message.ReplyTo, out var tsk))
             {
                 if (message.Status != 0)
                 {
@@ -93,6 +93,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
                 {
                     tsk.SetResult(message);
                 }
+
             }
             foreach (var handler in this.handlers)
             {
@@ -110,16 +111,36 @@ namespace Hajir.Crm.Blazor.XrmFrames
                 }
             }
         }
+        private static object temp = new object();
+        static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
         private async Task<IJSObjectReference> GetAdapter(bool refresh = false)
 
         {
+
             if (this._adapter == null || refresh)
             {
+                /// https://blazor-university.com/components/multi-threaded-rendering/
+                /// https://blog.cdemi.io/async-waiting-inside-c-sharp-locks/
+                /// 
+
+                // Make sure only one adapter is created
+                // in nested components;
+                await semaphoreSlim.WaitAsync();
                 this.runtime = this.serviceProvider.GetService<IJSRuntime>();
-                //var js = $"/_content/{this.GetType().Assembly.GetName().Name}/WebResources/WebResourceBus.js";
-                this._module = await runtime.InvokeAsync<IJSObjectReference>("import", this.JSName);
-                this._adapter = await this._module.InvokeAsync<IJSObjectReference>("createInstance", "", this.Options);
-                var result = await this._adapter.InvokeAsync<bool>("initialize");
+                try
+                {
+                    if (this._adapter == null)
+                    {
+                        //var js = $"/_content/{this.GetType().Assembly.GetName().Name}/WebResources/WebResourceBus.js";
+                        this._module = await runtime.InvokeAsync<IJSObjectReference>("import", this.JSName).ConfigureAwait(false);
+                        this._adapter = await this._module.InvokeAsync<IJSObjectReference>("createInstance", "", this.Options).ConfigureAwait(false);
+                        var result = await this._adapter.InvokeAsync<bool>("initialize");
+                    }
+                }
+                finally
+                {
+                    semaphoreSlim.Release();
+                }
             }
             return this._adapter;
 
@@ -129,7 +150,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
         {
             var task = new TaskCompletionSource<XrmFrameMessage>();
             var id = Guid.NewGuid().ToString();
-            this.tasks.AddOrUpdate(id, task, (a, b) => task);
+            tasks.AddOrUpdate(id, task, (a, b) => task);
             var adapter = await this.GetAdapter();
             var result = adapter.InvokeAsync<string>("evaluate", id, expression);
             return await task.Task;
@@ -142,7 +163,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
                 throw new TimeoutException();
             return default(TResult);
         }
-        public async Task<T> Evaluate<T>(string expression, int timeOut=DEFAULT_TIMEOUT)
+        public async Task<T> Evaluate<T>(string expression, int timeOut = DEFAULT_TIMEOUT)
         {
             var result = await TimeoutAfter(Evaluate(expression), timeOut, default);
             if (result.Status != 0)
@@ -162,7 +183,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
             }
             return Evaluate<T>($"parent.Xrm.Page.getAttribute('{attributeName}').{method}", timeOut = DEFAULT_TIMEOUT);
         }
-        public Task<T> EvaluateEntityMethod<T>(string method, int timeOut=DEFAULT_TIMEOUT)
+        public Task<T> EvaluateEntityMethod<T>(string method, int timeOut = DEFAULT_TIMEOUT)
         {
             if (string.IsNullOrWhiteSpace(method))
                 throw new ArgumentNullException("method");

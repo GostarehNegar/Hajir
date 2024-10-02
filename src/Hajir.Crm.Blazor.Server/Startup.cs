@@ -40,6 +40,7 @@ namespace Hajir.Crm.Blazor.Server
             });
             services.AddHajirCrm(Configuration, cfg => { });
             services.AddHajirInfrastructure(Configuration);
+            services.AddHajirReportingServices(Configuration, cfg => { });
 
 
             services.AddHajirCrmBlazor(Configuration);

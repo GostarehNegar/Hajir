@@ -8,18 +8,36 @@ namespace Hajir.Crm.Features.Sales
 {
 	public class SaleQuote : ISaleQuote
 	{
+		public SaleAccount Customer { get; set; }
+		public SaleContact Contact { get; set; }
+		
 		private List<SaleQuoteLine> _lines;
 		public string QuoteNumber { get; private set; }
+		public bool IsOfficial { get; set; }
+		public bool NonCash { get; set; }
+		public double? PyamentDeadline { get; set; }
 		public string QuoteId { get; }
 		public IEnumerable<SaleQuoteLine> Lines => this._lines;
 		private List<SaleAggergateProduct> aggergareProducts = new List<SaleAggergateProduct>();
 		public IEnumerable<SaleAggergateProduct> AggregateProducts => aggergareProducts;
 		public PriceList PriceList { get; set; }
+		public DateTime? ExpirationDate { get;set; }
+		public string Remarks { get; set; }
 		public SaleQuote()
 		{
-
+			this._lines = new List<SaleQuoteLine>();
 		}
-
+		public SaleQuote AddLine(SaleQuoteLine line)
+		{
+			//line = line ?? new SaleQuoteLine();
+			this._lines.Add(line ?? new SaleQuoteLine());
+			return this;
+		}
+		public SaleQuote RemoveLine(SaleQuoteLine line)
+		{
+			this._lines.Remove(line);
+			return this;
+		}
 		public SaleQuote(string quoteId, string quoteNumber, IEnumerable<SaleQuoteLine> lines, 
 			IEnumerable<SaleAggergateProduct> aggregates, PriceList pl)
 		{

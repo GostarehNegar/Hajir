@@ -1,41 +1,6 @@
-﻿
-<MudGrid style="" Spacing="3">
-    <MudItem xs="12" style="text-align:right">
-        <MudTextField T="string" Label="کالا/خدمات" Variant="Variant.Outlined" @bind-Text="State.Value.Name" Lines="2" />
-    </MudItem>
-    <MudItem xs="3" style="text-align:right">
-        <MudTextField T="decimal?" @bind-Value="Value.Quantity" Label="تعداد" Variant="Variant.Outlined" Margin="Margin.Dense" @onfocusout="Recalculate" />
-    </MudItem>
-    <MudItem xs="3" style="text-align:right">
-        <MudTextField T="decimal?" @bind-Value="Value.PricePerUnit" Label="قیمت" Variant="Variant.Outlined" Margin="Margin.Dense" @onfocusout="Recalculate" />
-    </MudItem>
-    @*    <MudItem xs="2" style="text-align:right">
-    <MudTextField T="decimal?" @bind-Value="Value.Discount" Label="تخفیف"
-    Variant="Variant.Outlined" Margin="Margin.Dense" Adornment="Adornment.End" AdornmentText="%" @onfocusout="Recalculate" />
-    </MudItem>
-    *@    <MudItem xs="3" style="text-align:right">
-        <MudTextField T="decimal?" @bind-Value="Value.BaseAmount" Label="مبلغ پایه" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="true" />
-    </MudItem>
-    <MudItem xs="3" style="text-align:right">
-        <MudTextField T="decimal?" @bind-Value="Value.PercentDiscount" Label="تخفیف"
-                      Variant="Variant.Outlined" Margin="Margin.Dense" Adornment="Adornment.End" AdornmentText="%" @onfocusout="Recalculate" Disabled="true" />
-    </MudItem>
-    <MudItem xs="3" style="text-align:right">
-        <MudTextField T="decimal?" @bind-Value="Value.Discount" Label="تخفیف"
-                      Variant="Variant.Outlined" Margin="Margin.Dense" @onfocusout="Recalculate" />
-
-    </MudItem>
-    <MudItem xs="3" style="text-align:right">
-        <MudTextField T="decimal?" @bind-Value="Value.Tax" Label="مالیات" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="true" />
-    </MudItem>
-    <MudItem xs="3" style="text-align:right">
-        <MudTextField T="decimal?" @bind-Value="Value.ExtendedAmount" Label="مبلغ" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="true" />
-    </MudItem>
-    <MudItem xs="3" style="text-align:right">
-    </MudItem>
-
-
-</MudGrid>
+﻿@using Hajir.Crm.Features.Sales;
+@inherits XrmFrameBaseEx<SaleQuoteLine>
+<QuoteProductComponent State="State"></QuoteProductComponent>
 
 @code {
 

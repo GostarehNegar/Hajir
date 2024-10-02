@@ -52,7 +52,9 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                             Name = x.GetAttributeValue<string>("quotedetailname"),
                             UnitPrice = x.PricePerUnit??0,
                             Amount = x.ExtendedAmount?? 0,
-                            Discount = x.ManualDiscountAmount??0
+                            Discount = x.ManualDiscountAmount??0,
+                            Quantity = Convert.ToDecimal( x.Quantity??0),
+                            
                         })
                         .ToArray()
                     

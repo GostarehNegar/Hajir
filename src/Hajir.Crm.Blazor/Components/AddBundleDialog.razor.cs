@@ -134,7 +134,7 @@ namespace Hajir.Crm.Blazor.Components
             }
             catch (Exception err)
             {
-                this.ServiceProvider.GetService<State<ErrorModel>>().SetState(new ErrorModel { Error = err });
+                this.ServiceProvider.GetState<ErrorModel>().SetState(new ErrorModel { Error = err });
             }
 
 

@@ -86,19 +86,31 @@ namespace Hajir.Crm.Infrastructure.Xrm
                 new XrmHajirQuoteDetail
                 {
                     QuoteId = Guid.TryParse(line.QuoteId, out var __iid) ? __iid : (Guid?)null,
-                    QuoteDetailId = Guid.TryParse(line.Id, out var _id) ? _id : (Guid?)null,
-                    ProductId = Guid.TryParse(line.ProductId, out var _pid) ? _pid : (Guid?)null,
+                    //QuoteDetailId = Guid.TryParse(line.Id, out var _id) ? _id : (Guid?)null,
+                    //ProductId = Guid.TryParse(line.ProductId, out var _pid) ? _pid : (Guid?)null,
                     Quantity = Convert.ToDouble(line.Quantity),
                     BaseAmount = line.BaseAmount,
                     ManualDiscountAmount = line.Discount,
                     ExtendedAmount = line.ExtendedAmount,
                     IsProductOverridden = line.IsProductOverriden,
-                    
+                    PricePerUnit = line.PricePerUnit,
+                    Tax = line.Tax,
+
                 };
+            if (Guid.TryParse(line.Id, out var _quote_detail_id))
+            {
+                res.QuoteDetailId = _quote_detail_id;
+            }
+            var _ProductId = Guid.TryParse(line.ProductId, out var _pid) ? _pid : (Guid?)null;
+            if (_ProductId.HasValue)
+            {
+                res.ProductId = _ProductId.Value;
+            }
             if (!res.ProductId.HasValue)
             {
                 res.ProductDescription = line.Name;
             }
+
             return res;
 
         }
