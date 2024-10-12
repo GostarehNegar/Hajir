@@ -117,6 +117,10 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                 Discount = x.ManualDiscountAmount ?? 0,
                 ExtendedAmount = x.ExtendedAmount,
                 BaseAmount = x.BaseAmount,
+                GuaranteeMonth = x.GuaranteeMonths,
+                PercentDiscount = x.PercentDiscount,
+                PercentTax = x.PercentTax,
+                Tax = x.Tax,
             };
             if (x.IsProductOverridden.HasValue && x.IsProductOverridden.Value)
             {
@@ -171,6 +175,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                     quote.IsOfficial = xrm_quote.QuoteType;
                     quote.ExpirationDate = xrm_quote.ValidityPeriod;
                     quote.NonCash = !xrm_quote.Cash;
+                    quote.Remarks = xrm_quote.GetAttributeValue<string>("hajir_remarks");
                     if (xrm_quote.AccountId.HasValue)
                     {
                         var acc = this.dataServices.GetRepository<XrmAccount>()

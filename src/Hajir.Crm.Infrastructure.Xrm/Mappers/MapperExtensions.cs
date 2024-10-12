@@ -95,6 +95,9 @@ namespace Hajir.Crm.Infrastructure.Xrm
                     IsProductOverridden = line.IsProductOverriden,
                     PricePerUnit = line.PricePerUnit,
                     Tax = line.Tax,
+                    PercentTax = line.PercentTax,
+                    PercentDiscount = line.PercentDiscount,
+                    GuaranteeMonths = line.GuaranteeMonth
 
                 };
             if (Guid.TryParse(line.Id, out var _quote_detail_id))

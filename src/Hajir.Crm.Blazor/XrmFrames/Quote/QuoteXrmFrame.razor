@@ -8,19 +8,20 @@
 
         <MudItem xs="12">
             <MudButton Link="@GetPrintLink()" Target="_blank" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Print" Color="Color.Info" Size="Size.Small">Print </MudButton>
-            <MudButton Variant="Variant.Filled" @onclick="DoSave" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small">Save</MudButton>
+            <MudButton Variant="Variant.Filled" @onclick="DoSave" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small">ذخیره</MudButton>
 
         </MudItem>
         <MudItem xs="8">
             <MudGrid>
                 <MudItem xs="12">
-                    <MudAutocomplete T="SaleAccount" Label="خریدار" @bind-Value="Value.Customer" SearchFunc="@Search1" Variant="Variant.Outlined" ShowProgressIndicator="true" ProgressIndicatorColor="SelectedColor" />
+                    <MudAutocomplete T="SaleAccount" Label="خریدار" @bind-Value="Value.Customer" @ondblclick="CustomerDblClick" 
+                    SearchFunc="@Search1" Variant="Variant.Outlined" ShowProgressIndicator="true"  />
                 </MudItem>
                 <MudItem xs="12">
-                    <MudAutocomplete T="SaleContact" Label="شخص" @bind-Value="Value.Contact" SearchFunc="@SearchContact" Variant="Variant.Outlined" ShowProgressIndicator="true" ProgressIndicatorColor="SelectedColor" />
+                    <MudAutocomplete T="SaleContact" Label="شخص" @bind-Value="Value.Contact" SearchFunc="@SearchContact" Variant="Variant.Outlined" ShowProgressIndicator="true"  />
                 </MudItem>
                 <MudItem xs="12">
-                    <MudAutocomplete T="PriceList"  Label="لیست قیمت" @bind-Value="Value.PriceList" SearchFunc="@SearchPriceList" Variant="Variant.Outlined" ShowProgressIndicator="true" ProgressIndicatorColor="SelectedColor" />
+                    <MudAutocomplete T="PriceList"  Label="لیست قیمت" @bind-Value="Value.PriceList" SearchFunc="@SearchPriceList" Variant="Variant.Outlined" ShowProgressIndicator="true"  />
                 </MudItem>
             </MudGrid>
             <MudText></MudText>
@@ -67,7 +68,7 @@
                 <MudItem xs="12">
                     <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="()=>InsertLine(item.Value)">Add</MudButton>
                     <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="()=> RemoveLine(item.Value)">Delete</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="()=>SaveLine(item.Value)">Save</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="()=>SaveLine(item.Value)">ذخیره</MudButton>
                 </MudItem>
             </div>
             <div></div>
@@ -83,6 +84,7 @@
     <MudDivider style="height:20px;" />
    <MudGrid>
        <MudItem xs="8">
+            <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="()=>RebuildComments()">Rebuild</MudButton>
             <MudTextField T="string" Label="توضیحات" Variant="Variant.Outlined" @bind-Text="State.Value.Remarks" Lines="8" style="width:100%" />
        </MudItem>
    </MudGrid>

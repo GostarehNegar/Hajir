@@ -100,6 +100,11 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
 
             });
         }
+        public  Task RebuildComments()
+        {
+            this.State.SetState(x => x.Remarks = x.RebuildRemarks());
+            return Task.CompletedTask;
+        }
         public async Task SaveLine(SaleQuoteLine q)
         {
             await this.SafeExecute(async () =>
@@ -226,7 +231,7 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
                     {
                         await this.SetLookupValue(XrmHajirQuote.Schema.Contact, _contactId.ToString(), XrmContact.Schema.LogicalName);
                     }
-
+                    await this.SetAttributeValue("hajir_remarks", this.Value.Remarks?.Replace("\r\n", ""));
                     await this.SetAttributeValue("rhs_paymentdeadline", this.Value.PyamentDeadline ?? 0);
                     await this.SetAttributeValue(XrmHajirQuote.Schema.QuoteType, this.Value.IsOfficial);
                     await this.SetAttributeValue(XrmHajirQuote.Schema.ValidityPeriod, this.Value.ExpirationDate);
@@ -235,12 +240,14 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
                     //await this.SetAttributeValue("", this.Value.PyamentDeadline ?? 0);
                     await this.SaveData().TimeOutAfter(3000);
                     var id = await this.GetDataEntityId();
-
-                    foreach(var line in this.Value.Lines)
+                    if (id.HasValue)
                     {
-                        line.QuoteId = this.Value.QuoteId;
-                        await this.ServiceProvider.GetService<IQuoteRepository>()
-                            .SaveLine(line);
+                        foreach (var line in this.Value.Lines)
+                        {
+                            line.QuoteId = id.Value.ToString();
+                            await this.ServiceProvider.GetService<IQuoteRepository>()
+                                .SaveLine(line);
+                        }
                     }
                     await this.Evaluate<string>("parent.Xrm.Page.getControl('quotedetailsGrid').refresh()");
                     var st = await this.LoadState(id);
@@ -261,6 +268,10 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
 
 
             });
+        }
+        private async Task CustomerDblClick()
+        {
+
         }
         private async Task TodayAsync()
         {

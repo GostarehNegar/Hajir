@@ -46,7 +46,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                 {
                     CustomerName = account?.Name,
                     QuoteNumber = q.HajirQuoteId,
-                    Remarks = "shauiuhdisahdihisa",
+                    Remarks =q.GetAttributeValue<string>("hajir_remarks"),
                     Items = lines
                         .Select(x => new QuoteLineReportData {
                             Name = x.GetAttributeValue<string>("quotedetailname"),
