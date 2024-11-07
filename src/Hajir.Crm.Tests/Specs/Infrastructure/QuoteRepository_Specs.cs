@@ -145,20 +145,20 @@ namespace Hajir.Crm.Tests.Specs.Infrastructure
 		public async Task how_quote_recalculate_works()
 		{
 			var host = this.GetDefaultHost();
-			host.Services.CreateHajirServiceContext();
-			GC.Collect();
-			return;
-			var quote = CreateTestQuote(host.Services);
+			var txt = HajirCrmExtensions.NumberToString(135248);
+			var quote = host.Services
+				.GetService<IXrmDataServices>()
+				.GetRepository<XrmHajirQuote>()
+				.Queryable
+				.FirstOrDefault(x => x.HajirQuoteId == "03-00163-SAHX");
+
+            //_quote = target.LoadQuote(quote_id.ToString());
+
+            return;
 			
 			
 
 
-			using (var ctx = host.Services.CreateHajirServiceContext())
-			{
-				ctx.RecalculateQuote(quote);
-			}
-			host.Services.CreateHajirServiceContext().RecalculateQuote(quote);
-			GC.Collect();
 		}
 	}
 }

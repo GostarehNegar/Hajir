@@ -176,6 +176,9 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                     quote.ExpirationDate = xrm_quote.ValidityPeriod;
                     quote.NonCash = !xrm_quote.Cash;
                     quote.Remarks = xrm_quote.GetAttributeValue<string>("hajir_remarks");
+                    quote.PrintHeader = xrm_quote.PrintHeader ?? true;
+                    quote.EffectiveFrom = xrm_quote.EffectiveFrom;
+                    quote.EffectiveTo = xrm_quote.EffectiveTo;
                     if (xrm_quote.AccountId.HasValue)
                     {
                         var acc = this.dataServices.GetRepository<XrmAccount>()

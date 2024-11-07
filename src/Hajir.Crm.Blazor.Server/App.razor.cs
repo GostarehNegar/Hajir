@@ -17,7 +17,7 @@ namespace Hajir.Crm.Blazor.Server
 
         public string ResolveNotFound()
         {
-            XrmFrameBase.HandleNotFound(this.NavigationManager);
+            XrmFrameBaseEx.HandleNotFound(this.NavigationManager);
             return "";
         }
     }

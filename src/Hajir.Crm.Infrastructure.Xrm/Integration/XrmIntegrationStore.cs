@@ -8,6 +8,7 @@ using Hajir.Crm.Features.Integration;
 using Hajir.Crm.Features.Integration.Infrastructure;
 using Hajir.Crm.Infrastructure.Xrm.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Crm.Sdk.Messages;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -20,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Security.Principal;
 using System.Text;
 
 namespace Hajir.Crm.Infrastructure.Xrm.Integration
@@ -344,86 +346,114 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         {
             var xrm_contact = this.dataServices.GetXrmOrganizationService<XrmHajirContact>()
                 .CreateQuery<XrmHajirContact>()
-                .FirstOrDefault(x => (string)x["rhs_externalid"] == contact.Id) ?? new XrmHajirContact();
+                .FirstOrDefault(x => x.Id == contact.GetId<Guid>()) ?? new XrmHajirContact();
+            var is_new = xrm_contact.Id == Guid.Empty;
+            if (is_new)
+            {
+                xrm_contact.Id = Guid.TryParse(contact.Id, out var _id) ? _id : Guid.Empty;
+            }
+
             xrm_contact.FirstName = contact.FirstName;
             xrm_contact.LastName = contact.LastName;
-            xrm_contact["rhs_externalid"] = contact.Id;
-            xrm_contact["rhs_prefix"] = GetSalutaion(contact.Salutation);
             xrm_contact.MobilePhone = contact.MobilePhone;
+            xrm_contact.Salutation = contact.Salutation;
             xrm_contact["jobtitle"] = contact.JobTitle;
-            xrm_contact[XrmHajirContact.Schema.RHSAddress] = contact.Address;
             xrm_contact["telephone1"] = contact.BusinessPhone;
-            xrm_contact["rhs_businessphone1"] = contact.BusinessPhone;
-            xrm_contact["rhs_address"] = contact.Address;
-            xrm_contact["rhs_address2"] = contact.GetAttributeValue("address1_line1");
-            xrm_contact["rhs_address3"] = contact.GetAttributeValue("address1_line2");
-
+            xrm_contact["accountrolecode"] = GetRole(contact);
             xrm_contact.Telephone1 = contact.BusinessPhone;
             xrm_contact.EmailAddress1 = contact.Email;
             xrm_contact["accountrolecode"] = GetRole(contact);
-            xrm_contact["rhs_dateofbirth"] = contact.BirthDate;
-            xrm_contact["rhs_gifts"] = contact.Hadaya;
             xrm_contact["description"] = contact.Description;
-            xrm_contact["rhs_sendemail"] = !contact.DoNotEmail;
-            xrm_contact["rhs_sendfax"] = !contact.DoNotFax;
             xrm_contact["donotemail"] = contact.DoNotEmail;
             xrm_contact["donotfax"] = contact.DoNotFax;
             xrm_contact["donotbulkemail"] = contact.DoNotBulkEmail;
             xrm_contact["donotphone"] = contact.DoNotPhone;
             xrm_contact["donotpostalmail"] = contact.DoNotPostalMail;
-            xrm_contact["rhs_call"] = !contact.DoNotPhone;
-            xrm_contact["rhs_sendpost"] = !contact.DoNotPost;
-            xrm_contact["rhs_sendmessage"] = !contact.DonotSendMarketingMaterial;
-            xrm_contact["rhs_postalcode"] = contact.PostalCode;
-            xrm_contact["rhs_internalphone"] = contact.GetAttributeValue<string>("thr_foriegnmobile");
             xrm_contact[XrmContact.Schema.Address1_Line1] = contact.GetAttributeValue<string>(XrmContact.Schema.Address1_Line1);
             xrm_contact[XrmContact.Schema.Address1_Line2] = contact.GetAttributeValue<string>(XrmContact.Schema.Address1_Line2);
             xrm_contact[XrmContact.Schema.Address1_Line3] = contact.GetAttributeValue<string>(XrmContact.Schema.Address1_Line3);
             xrm_contact[XrmContact.Schema.Fax] = contact.GetAttributeValue<string>(XrmContact.Schema.Fax);
             xrm_contact["address1_country"] = contact.GetAttributeValue<string>("address1_country");
 
-            var owner = string.IsNullOrEmpty(contact.OwnerLoginName) ? null : this.cache.Users.FirstOrDefault(x => x.GetAttributeValue("domainname")?.ToLowerInvariant() == contact.OwnerLoginName?.ToLowerInvariant());
-            if (owner != null && Guid.TryParse(owner.Id, out var _ownerid))
+
+
+            if (1 == 0)
             {
-                xrm_contact.Owner = new EntityReference(XrmSystemUser.Schema.LogicalName, _ownerid);
-            }
-            var country = this.GetCountry(contact.GetAttributeValue<string>("address1_country"))
-                ?? this.cache.Countries.Where(x => x.Name == "ایران").FirstOrDefault();
+                xrm_contact["rhs_prefix"] = GetSalutaion(contact.Salutation);
+                xrm_contact["rhs_externalid"] = contact.Id;
+                xrm_contact["rhs_prefix"] = GetSalutaion(contact.Salutation);
 
-            if (country != null && Guid.TryParse(country.Id, out var _countryid))
+                xrm_contact["jobtitle"] = contact.JobTitle;
+                xrm_contact[XrmHajirContact.Schema.RHSAddress] = contact.Address;
+                xrm_contact["rhs_businessphone1"] = contact.BusinessPhone;
+                xrm_contact["rhs_address"] = contact.Address;
+                xrm_contact["rhs_address2"] = contact.GetAttributeValue("address1_line1");
+                xrm_contact["rhs_address3"] = contact.GetAttributeValue("address1_line2");
+                xrm_contact["rhs_dateofbirth"] = contact.BirthDate;
+                xrm_contact["rhs_gifts"] = contact.Hadaya;
+                xrm_contact["rhs_call"] = !contact.DoNotPhone;
+                xrm_contact["rhs_sendpost"] = !contact.DoNotPost;
+                xrm_contact["rhs_sendmessage"] = !contact.DonotSendMarketingMaterial;
+                xrm_contact["rhs_postalcode"] = contact.PostalCode;
+                xrm_contact["rhs_internalphone"] = contact.GetAttributeValue<string>("thr_foriegnmobile");
+                xrm_contact["rhs_sendemail"] = !contact.DoNotEmail;
+                xrm_contact["rhs_sendfax"] = !contact.DoNotFax;
+            }
+            if (1 == 0)
             {
-                xrm_contact["rhs_country"] = new EntityReference(XrmHajirCountry.Schema.LogicalName, _countryid);
+                var country = this.GetCountry(contact.GetAttributeValue<string>("address1_country"))
+                    ?? this.cache.Countries.Where(x => x.Name == "ایران").FirstOrDefault();
+                if (country != null && Guid.TryParse(country.Id, out var _countryid))
+                {
+                    xrm_contact["rhs_country"] = new EntityReference(XrmHajirCountry.Schema.LogicalName, _countryid);
+                }
+
+
+                var city_phone_code = this.GetCityPhoneCode(contact.MobilePhone, out var _phone);
+                if (city_phone_code.HasValue)
+                {
+                    xrm_contact[XrmHajirContact.Schema.RHSCityPhoneCode] = new EntityReference(XrmHajirCityPhoneCode.Schema.LogicalName, city_phone_code.Value);
+                    xrm_contact["rhs_businessphone1"] = _phone;
+                }
+                var city = this.GetCity(contact.City);
+                if (city != null && Guid.TryParse(city.Id, out var cityId))
+                {
+                    xrm_contact[XrmHajirContact.Schema.RHSCity] = new EntityReference(XrmHajirCity.Schema.LogicalName, cityId);
+                }
+
+                var owner = string.IsNullOrEmpty(contact.OwnerLoginName) ? null : this.cache.Users.FirstOrDefault(x => x.GetAttributeValue("domainname")?.ToLowerInvariant() == contact.OwnerLoginName?.ToLowerInvariant());
+                if (owner != null && Guid.TryParse(owner.Id, out var _ownerid))
+                {
+                    xrm_contact.Owner = new EntityReference(XrmSystemUser.Schema.LogicalName, _ownerid);
+                }
             }
-
-
-            var city_phone_code = this.GetCityPhoneCode(contact.MobilePhone, out var _phone);
-            if (city_phone_code.HasValue)
-            {
-                xrm_contact[XrmHajirContact.Schema.RHSCityPhoneCode] = new EntityReference(XrmHajirCityPhoneCode.Schema.LogicalName, city_phone_code.Value);
-
-                xrm_contact["rhs_businessphone1"] = _phone;
-            }
-            var city = this.GetCity(contact.City);
-            if (city != null && Guid.TryParse(city.Id, out var cityId))
-            {
-                xrm_contact[XrmHajirContact.Schema.RHSCity] = new EntityReference(XrmHajirCity.Schema.LogicalName, cityId);
-            }
-
-
-
+            var account = this.GetAccountByExternalId(contact.AccontId);
             var account = this.GetAccountByExternalId(contact.AccontId);
             if (account != null && Guid.TryParse(account.Id, out var acc_id))
             {
                 xrm_contact[XrmContact.Schema.ParentCustomerId] = new EntityReference(XrmAccount.Schema.LogicalName, acc_id);
             }
-
-            var id = this.dataServices
+            var id = xrm_contact.Id;
+            if (is_new)
+            {
+                this.dataServices
                 .GetRepository<XrmContact>()
-                .Upsert(xrm_contact);
+                .Insert(xrm_contact);
+            }
+            else
+            {
+                this.dataServices
+                .GetRepository<XrmContact>()
+                .Update(xrm_contact);
+
+            }
+
 
             try
             {
+
                 this.dataServices.SetDates(XrmContact.Schema.LogicalName, id, contact.CreatedOn, contact.ModifiedOn);
+
 
             }
             catch (Exception err)
@@ -500,7 +530,12 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             var xrm_account = this.dataServices
                 .GetRepository<XrmHajirAccount>()
                 .Queryable
-                .FirstOrDefault(x => x.ExternalId == account.Id) ?? new XrmHajirAccount();
+                .FirstOrDefault(x => x.Id == account.GetId<Guid>()) ?? new XrmHajirAccount();
+            var is_new = xrm_account.Id == Guid.Empty;
+            if (is_new)
+            {
+                xrm_account.Id = Guid.TryParse(account.Id, out var _id) ? _id : Guid.Empty;
+            }
             xrm_account.Name = account.Name?.RemoveArabic();
             xrm_account[XrmHajirAccount.Schema.ExternalId] = account.Id;
             xrm_account.AccountType = GetAccountType(account.gn_hesab_no);
@@ -569,14 +604,14 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 xrm_account.Owner = new EntityReference(XrmSystemUser.Schema.LogicalName, _ownerid);
             }
             var parent = account.GetAttributeValue<DynamicEntityReference>("parentaccountid");
-            if (parent != null )
+            if (parent != null)
             {
                 var parent_account = this.GetAccountByExternalId(parent.Id);
                 if (parent_account != null && Guid.TryParse(parent_account.Id, out var _parentid))
                 {
                     xrm_account[XrmAccount.Schema.ParentAccount] = new EntityReference(XrmAccount.Schema.LogicalName, _parentid);
                 }
-                
+
             }
 
 
@@ -593,10 +628,20 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             {
                 xrm_account[XrmHajirAccount.Schema.PrimaryContactId] = new EntityReference(XrmContact.Schema.LogicalName, _primaryContact);
             }
-
-            var id = this.dataServices
+            var id = xrm_account.Id;
+            if (is_new)
+            {
+                this.dataServices
                 .GetRepository<XrmHajirAccount>()
-                .Upsert(xrm_account);
+                .Insert(xrm_account);
+            }
+            else
+            {
+                this.dataServices
+                .GetRepository<XrmHajirAccount>()
+                .Update(xrm_account);
+
+            }
             xrm_account = this.dataServices
                 .GetRepository<XrmHajirAccount>()
                 .Queryable
@@ -612,38 +657,20 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 this.logger.LogWarning(
                     $"An error occured while tryng to set CreatedOn,ModifiedOn on this account. Err:{exp.Message} ");
             }
-
-            //this.dataServices.WithImpersonatedSqlConnection(db => {
-            //    db.Open();
-            //    var transaction = db.BeginTransaction();
-            //    var cmd = db.CreateCommand();
-            //    cmd.Transaction = transaction;
-            //    var command_text = @"
-            //        update accountbase
-            //        set modifiedon='$date'
-            //        where accountid = '$id'
-            //    ";
-            //    cmd.CommandText = command_text;
-            //    try
-            //    {
-            //        cmd.ExecuteNonQuery();
-            //    }
-            //    catch (Exception err)
-            //    {
-
-            //    }
-
-
-            //});
-
             return LoadAccount(id.ToString());
-
-
-
         }
 
         public IntegrationAccount GetAccountByExternalId(string externalId)
         {
+            return string.IsNullOrWhiteSpace(externalId) && Guid.TryParse(externalId, out var _id)
+
+                ? string.IsNullOrWhiteSpace(externalId) ? null : this.dataServices.GetRepository<XrmHajirAccount>()
+                        .Queryable
+                        .FirstOrDefault(x => x.Id == _id)
+                        .ToIntegrationAccount()
+                        : null;
+
+
             return string.IsNullOrWhiteSpace(externalId) ? null : this.dataServices.GetRepository<XrmHajirAccount>()
                 .Queryable
                 .FirstOrDefault(x => x.ExternalId == externalId)
@@ -691,13 +718,28 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 .FirstOrDefault(x => x.QuoteDetailId == _id)
                 : null) ?? new XrmHajirQuoteDetail();
 
+            var is_new = line.Id == Guid.Empty;
+            if (is_new)
+            {
+                line.Id = _id;
+            }
             line.QuoteId = quoteid;
             line.SetAttribiuteValue("isproductoverridden", true);
-            line.SetAttribiuteValue("productdescription", product.GetAttributeValue("productdescription"));
-            line.SetAttribiuteValue("priceperunit", product.GetAttributeValue<double>("priceperuint"));
-            line.SetAttribiuteValue("priceperunit_base", product.GetAttributeValue<double>("priceperuint_base"));
+            var productId = product.GetAttributeValue<DynamicEntityReference>(XrmQuoteDetail.Schema.ProductId);
+            line.ProductDescription = productId == null
+                ? product.GetAttributeValue(XrmQuoteDetail.Schema.ProductDescription)
+                : productId.Name;
+            line.Quantity = product.GetAttributeValue<decimal?>(XrmQuoteDetail.Schema.Quantity);
+            //line.SetAttribiuteValue("priceperunit", product.GetAttributeValue<double>("priceperuint"));
+            //line.SetAttribiuteValue("priceperunit_base", product.GetAttributeValue<double>("priceperuint_base"));
+            line.PricePerUnit = product.GetAttributeValue<decimal?>(XrmQuoteDetail.Schema.PricePerUnit);
+            line.Tax = product.GetAttributeValue<decimal?>(XrmQuoteDetail.Schema.Tax);
+            line.ManualDiscountAmount = product.GetAttributeValue<decimal?>(XrmQuoteDetail.Schema.ManualDiscountAmount);
 
-            if (line.Id == Guid.Empty)
+
+
+
+            if (is_new)
             {
                 _id = this.dataServices
                     .GetRepository<XrmHajirQuoteDetail>()
@@ -721,26 +763,119 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         }
         public IntegrationQuote ImportLegacyQuote(IntegrationQuote quote)
         {
+
             var xrm_quote = this.dataServices
                 .GetRepository<XrmHajirQuote>()
                 .Queryable
-                .FirstOrDefault(x => x.ExternalId == quote.Id) ?? new XrmHajirQuote();
+                .FirstOrDefault(x => x.QuoteId == quote.GetId<Guid>()) ?? new XrmHajirQuote();
+            var is_new = xrm_quote.Id == Guid.Empty;
+            if (is_new)
+            {
+                xrm_quote.Id = Guid.TryParse(quote.Id, out var _id) ? _id : Guid.Empty;
+            }
+            DateTime modifiedOn = quote.ModifiedOn.Value;
+            DateTime createdOn = quote.CreatedOn.Value;
             if (quote.AccountId != null)
             {
                 var account = this.GetAccountByExternalId(quote.AccountId);
                 xrm_quote.AccountId = Guid.TryParse(account?.Id, out var _t) ? _t : (Guid?)null;
             }
-            xrm_quote.ExternalId = quote.Id;
+            //xrm_quote.ExternalId = quote.Id;
             xrm_quote.Name = quote.GetAttributeValue("name");
             xrm_quote.QuoteNumber = quote.GetAttributeValue("quotenumber");
+            if (is_new)
+            {
+                var existing = this.dataServices.GetRepository<XrmHajirQuote>()
+                    .Queryable
+                    .FirstOrDefault(x => x.QuoteNumber == xrm_quote.QuoteNumber) != null;
+                if (existing)
+                {
+                    xrm_quote.QuoteNumber = xrm_quote.QuoteNumber + (new Random().Next(1, 100)).ToString();
+                }
+            }
+            xrm_quote[XrmHajirQuote.Schema.HajirQuoteId] = xrm_quote.QuoteNumber;
+            xrm_quote[XrmHajirQuote.Schema.Remarks] = quote.GetAttributeValue<string>(XrmQuote.Schema.Description);
+            xrm_quote[XrmQuote.Schema.Description] = quote.GetAttributeValue<string>(XrmQuote.Schema.Description);
+            xrm_quote["statecode"] = new OptionSetValue(0); // Draft
+            xrm_quote["statuscode"] = new OptionSetValue(1);
+            //var _stateCode = quote.GetAttributeValue<int?>(XrmEntity.Schema.StateCode);
+            var owner = string.IsNullOrEmpty(quote.OwningLoginName) ? null : this.cache.Users.FirstOrDefault(x => x.GetAttributeValue("domainname")?.ToLowerInvariant() == quote.OwningLoginName?.ToLowerInvariant());
+            if (owner != null && Guid.TryParse(owner.Id, out var _ownerid))
+            {
+                xrm_quote.Owner = new EntityReference(XrmSystemUser.Schema.LogicalName, _ownerid);
+            }
 
-            var id = this.dataServices
-                .GetRepository<XrmQuote>()
-                .Upsert(xrm_quote);
 
+            Guid id = xrm_quote.Id;
+            if (is_new)
+            {
+                this.dataServices
+                 .GetRepository<XrmQuote>()
+                 .Insert(xrm_quote);
+            }
+            else
+            {
+
+                this.dataServices
+                 .GetRepository<XrmQuote>()
+                 .Update(xrm_quote);
+            }
+
+
+
+            //this.dataServices.GetXrmOrganizationService().SetState(xrm_quote,
+            //    quote.GetAttributeValue<int>(XrmEntity.Schema.StateCode),
+            //    quote.GetAttributeValue<int>(XrmEntity.Schema.StatusCode), true);
+
+
+            try
+            {
+                this.dataServices.SetDates(XrmQuote.Schema.LogicalName, id, createdOn, modifiedOn);
+            }
+            catch (Exception err)
+            {
+
+            }
             foreach (var line in quote.Products)
             {
                 ImportLegacryQuoteProduct(line, id);
+            }
+            var _stateCode = quote.GetAttributeValue<int?>(XrmEntity.Schema.StateCode);
+            var _statusCode = quote.GetAttributeValue<int>(XrmEntity.Schema.StatusCode);
+            if (_stateCode == (int)XrmQuote.Schema.QuoteStateCodes.Won)
+            {
+                this.dataServices.GetXrmOrganizationService().SetState(xrm_quote, 1, 2);
+                this.dataServices.GetXrmOrganizationService().GetOrganizationService().Execute(new WinQuoteRequest
+                {
+
+                    QuoteClose = new Entity("quoteclose")
+                    {
+                        Attributes = {
+                            {"subject", $"Quote Close {DateTime.Now}" },
+                            {"quoteid",xrm_quote.ToEntityReference() }                    }
+                    },
+                    Status = new OptionSetValue(_statusCode)
+                });
+            }
+            else if (_stateCode == (int)XrmQuote.Schema.QuoteStateCodes.Closed)
+            {
+                this.dataServices.GetXrmOrganizationService().SetState(xrm_quote, 1, 2);
+
+
+                this.dataServices.GetXrmOrganizationService().GetOrganizationService().Execute(new CloseQuoteRequest
+                {
+
+                    QuoteClose = new Entity("quoteclose")
+                    {
+                        Attributes = {
+                        {"quoteid", xrm_quote.ToEntityReference() },
+                        {"subject", "Quote Close " + DateTime.Now.ToString()}}
+                    },
+
+                    Status = new OptionSetValue(_statusCode)
+
+                });
+
             }
             return LoadQuote(id.ToString());
 

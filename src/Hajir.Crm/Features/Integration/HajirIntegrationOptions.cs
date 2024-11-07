@@ -1,4 +1,6 @@
 ﻿using Hajir.Crm;
+using System.IO;
+using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -13,6 +15,15 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             this.LegacyConnectionString = string.IsNullOrEmpty(this.LegacyConnectionString)? HajirCrmConstants.DefaultLegacyCrmConnectionString:this.LegacyConnectionString;
             return this;
+        }
+        public string GetQueueStorageConnectionString()
+        {
+            var result =
+                Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                "Hajir\\Integration_Queue.dat");
+
+            return $"Filename={result}";
         }
     }
 }

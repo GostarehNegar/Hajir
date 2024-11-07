@@ -1,0 +1,55 @@
+﻿@using Hajir.Crm.Features.Sales;
+@inherits BaseComponent<SaleQuote>
+
+<MudGrid>
+    <MudItem xs="8">
+        <MudGrid>
+            <MudItem xs="12">
+                <MudAutocomplete T="SaleAccount" Label="خریدار" @bind-Value="Value.Customer" @ondblclick="CustomerDblClick"
+                                 SearchFunc="@Search1" Variant="Variant.Outlined" ShowProgressIndicator="true" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudAutocomplete T="SaleContact" Label="شخص" @bind-Value="Value.Contact" SearchFunc="@SearchContact" Variant="Variant.Outlined" ShowProgressIndicator="true" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudAutocomplete T="PriceList" Label="لیست قیمت" @bind-Value="Value.PriceList" SearchFunc="@SearchPriceList" Variant="Variant.Outlined" ShowProgressIndicator="true" />
+            </MudItem>
+        </MudGrid>
+        <MudText></MudText>
+    </MudItem>
+    <MudItem xs="4">
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTextField T="string" Label="شماره " Text="@Value.QuoteNumber" style="direction:ltr;font-family:Arial"></MudTextField>
+            </MudItem>
+            <MudItem xs="6">
+                <MudDatePicker Label="Basic example" @bind-Date="Value.ExpirationDate" Culture="@GetPersianCulture()" />
+                @* <MudDatePicker @ref="_picker" Label="تاریخ اعتبار" @bind-Date="Value.ExpirationDate" Culture="@GetPersianCulture()" TitleDateFormat="dddd, dd MMMM">
+                <PickerActions>
+                <MudButton Class="mr-auto align-self-start" OnClick="TodayAsync">Today</MudButton>
+                </PickerActions>
+                </MudDatePicker>*@
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField T="double?" @bind-Value="Value.PyamentDeadline" Label="مهلت پرداخت (روز)" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="false" />
+            </MudItem>
+
+            <MudItem xs="4" style="text-align:right">
+                <MudCheckBox T="bool" @bind-Checked="Value.IsOfficial" Color="Color.Primary" Label="رسمی" style="text-align:right"></MudCheckBox>
+            </MudItem>
+            <MudItem xs="4" style="text-align:right">
+                <MudCheckBox T="bool" @bind-Checked="Value.NonCash" Color="Color.Primary" Label="غیر نقدی" style="text-align:right"></MudCheckBox>
+            </MudItem>
+            <MudItem xs="4" style="text-align:right">
+                <MudCheckBox T="bool" @bind-Checked="Value.PrintHeader" Color="Color.Primary" Label="چاپ سربرگ" style="text-align:right"></MudCheckBox>
+            </MudItem>
+
+        </MudGrid>
+    </MudItem>
+    <MudItem xs="12">
+    </MudItem>
+</MudGrid>
+
+@code {
+
+}

@@ -22,6 +22,9 @@ namespace Microsoft.Extensions.DependencyInjection
             //services.AddSingleton<IntegrationBackgroundService>();
             //services.AddHostedService(sp=> sp.GetService<IntegrationBackgroundService>());
             services.AddSingleton<IntegrationBackgroundServiceEx>();
+            services.AddSingleton<IntegrationQueue>();
+            services.AddSingleton<IntegrationQueueEx>();
+            services.AddSingleton<IIntegrationQueue, IntegrationQueueEx>();
             services.AddHostedService(sp => sp.GetService<IntegrationBackgroundServiceEx>());
 
 
@@ -29,7 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
         }
     }
 
-   
+
 }
 
 namespace Hajir.Crm.Features.Integration

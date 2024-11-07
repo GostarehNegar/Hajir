@@ -49,6 +49,7 @@ namespace Hajir.Crm.Xrm.Service
                     s.AddMvc();
                     s.AddTransient<IXrmMessageHandler, XrmContactHandler>();
                     s.AddTransient<IXrmMessageHandler, XrmQuoteProductHandler>();
+                    s.AddSalesSolution();
 
                 })
 

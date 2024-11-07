@@ -1,0 +1,44 @@
+﻿@using Hajir.Crm.Features.Sales;
+@inherits BaseComponent<SaleQuote>
+
+@if (this.ViewMode == QuoteProductsViewModes.Block)
+{
+    <MudGrid>
+        @foreach (var item in Value.Lines.Select(x => new State<SaleQuoteLine>(x)))
+        {
+            <div style="border:solid;padding:3px;">
+                <MudItem xs="12" style="">
+                    <QuoteProductLineComponent State="@item" ViewMode="@this.ViewMode" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="()=>InsertLine(item.Value)">Add</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="()=> RemoveLine(item.Value)">Delete</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="()=>SaveLine(item.Value)">ذخیره</MudButton>
+                </MudItem>
+            </div>
+            <div></div>
+            <MudDivider />
+        }
+    </MudGrid>
+}
+else if (this.ViewMode == QuoteProductsViewModes.Tabular)
+{
+    <MudTable Items="@this.Lines" Bordered="true" Striped="true">
+        <HeaderContent>
+            <MudTh style="width:40%">کالا/خدمات</MudTh>
+            <MudTh style="width:8%">تعداد</MudTh>
+            <MudTh style="padding:2px;">قیمت</MudTh>
+            <MudTh>تخفیف</MudTh>
+            <MudTh>مالیات</MudTh>
+            <MudTh style="width:15%;">مبلغ</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <QuoteProductLineComponent State="context" ViewMode="this.ViewMode" />
+        </RowTemplate>
+    </MudTable>
+
+}
+
+@code {
+
+}

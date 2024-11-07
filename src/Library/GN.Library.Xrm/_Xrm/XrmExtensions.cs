@@ -250,6 +250,8 @@ namespace GN.Library.Xrm
                     .ToArray();
                 case OptionSetValue optionSet:
                     return optionSet.Value;
+                case Money money:
+                    return money.Value;
                 case EntityReference reference:
                     return new DynamicEntityReference
                     {

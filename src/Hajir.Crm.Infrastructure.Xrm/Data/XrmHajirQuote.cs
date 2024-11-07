@@ -22,6 +22,8 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             public const string ValidityPeriod = SOlutionPerfix + "validityperiod";
             public const string PaymentMethod = SOlutionPerfix + "paymentmethod";
             public const string Contact = SOlutionPerfix + "contact";
+            public const string PrintHeader = HajirCrmConstants.HajirSolutionPerfix + "printheader";
+            public const string Remarks = HajirCrmConstants.HajirSolutionPerfix + "remarks";
             public enum PaymentMethods
             {
                 Cash = SolutionBaeIndex,
@@ -95,7 +97,14 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             get => this.PaymentMethodCode == null || this.PaymentMethodCode == Schema.PaymentMethods.Cash;
             set => this.PaymentMethodCode = value ? Schema.PaymentMethods.Cash : Schema.PaymentMethods.NonCash;
         }
-   
+
+        [AttributeLogicalName(Schema.PrintHeader)]
+        public bool? PrintHeader
+        {
+            get => this.GetAttributeValue<bool?>(Schema.PrintHeader);
+            set => this.SetAttribiuteValue(Schema.PrintHeader, value);
+        }
     
+       
     }
 }

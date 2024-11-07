@@ -12,6 +12,8 @@ using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk;
 using GN.Library.Xrm.StdSolution;
+using GN.Library.Shared.Entities;
+using GN.Library.Data;
 
 namespace Hajir.Crm.Infrastructure.Xrm.Integration
 {
@@ -154,7 +156,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 DoNotPostalMail = x.GetAttributeValue<bool?>("donotpostalmail") ?? false,
                 DonotSendMarketingMaterial = x.GetAttributeValue<bool?>("donotsendmm") ?? false,
                 PostalCode = x.GetAttributeValue<string>("address1_postalcode"),
-                
+
 
 
             };
@@ -163,7 +165,9 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         public IEnumerable<IntegrationContact> ReadContacts(int skip, int take)
         {
             var query = this.organizationService.CreateQuery("contact");
-            return query.Skip(skip).Take(take).ToArray()
+            return query
+                .OrderByDescending(x=>x[XrmEntity.Schema.ModifiedOn])
+                .Skip(skip).Take(take).ToArray()
                 .Select(x => ToContact(x))
                 .ToArray();
         }
@@ -261,6 +265,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         public IntegrationQuote ToQuote(Entity q)
         {
             var result = q.ToDynamic().To<IntegrationQuote>();
+            result.OwningLoginName = this.GetOwnerLoginName(q);
             return result;
         }
         public IntegrationQuoteProduct ToQuoteProduct(Entity e)
@@ -286,11 +291,14 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         public IEnumerable<IntegrationQuote> ReadQuotes(int skip, int take)
         {
             var query = this.organizationService.CreateQuery(XrmQuote.Schema.LogicalName);
-            var result = query.Skip(10).Take(10)
-               .ToArray()
-               .Select(x => ToQuote(x))
-               .Select(x => LoadLines(x))
-               .ToArray();
+            var result = query
+                //.Where(x => x["new_importstatus"] == null || (int)x["new_importstatus"] == 0)
+                .Skip(skip)
+                .Take(take)
+                .ToArray()
+                .Select(x => ToQuote(x))
+                .Select(x => LoadLines(x))
+                .ToArray();
             return result;
 
         }
@@ -302,5 +310,53 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                : null;
 
         }
+        public IntegrationQuote GetQuote(string id)
+        {
+            if (Guid.TryParse(id, out var _id))
+            {
+                var result = this.organizationService
+                    .CreateQuery(XrmQuote.Schema.LogicalName)
+                    .FirstOrDefault(x => (Guid)x[XrmQuote.Schema.QuoteId] == _id);
+                if (result != null)
+                {
+                    return LoadLines(ToQuote(result));
+                }
+            }
+            return null;
+        }
+
+        public void UpdateQuoteImportStatus(IntegrationQuote quote, int status = 1)
+        {
+            var query = this.organizationService.CreateQuery(XrmQuote.Schema.LogicalName);
+            if (Guid.TryParse(quote.Id, out var _id))
+            {
+                var result = query
+                    .FirstOrDefault(x => (Guid)x[XrmQuote.Schema.QuoteId] == _id);
+                result["new_importstatus"] = status;
+                this.organizationService.Update(result.ToXrmEntity());
+            }
+                
+            
+        }
+
+        public IEnumerable<DynamicEntity> ReadItems(string logicalName, int skip, int take)
+        {
+            
+            var query = this.organizationService.CreateQuery(logicalName);
+            return query
+                .OrderByDescending(x => x[XrmEntity.Schema.ModifiedOn])
+                .Skip(skip)
+                .Take(take)
+                .Select(x => new DynamicEntity
+                {
+                    Id = x.Id.ToString(),
+                    LogicalName = logicalName
+                })
+                .ToArray();
+
+            throw new NotImplementedException();
+        }
+
+       
     }
 }

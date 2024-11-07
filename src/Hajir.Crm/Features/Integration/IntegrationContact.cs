@@ -9,12 +9,14 @@ namespace Hajir.Crm.Features.Integration
 {
     public class IntegrationContact : DynamicEntity
     {
-        public IntegrationContact() { }
-        public IntegrationContact(IEnumerable<KeyValuePair<string, object>> attribs)
+        public IntegrationContact() {
+            this.LogicalName = "contact";
+        }
+        public IntegrationContact(IEnumerable<KeyValuePair<string, object>> attribs):this()
         {
             attribs.ToList().ForEach(x => this.SetAttributeValue(x.Key, x.Value));
         }
-        public string Id { get; set; }
+        //public string Id { get; set; }
         public int State { get; set; }
         public string Salutation { get; set; }
         public string Name { get; set; }

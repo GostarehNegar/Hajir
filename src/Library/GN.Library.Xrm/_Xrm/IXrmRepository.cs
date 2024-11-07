@@ -331,7 +331,7 @@ namespace GN.Library.Xrm
             catch (Exception err)
             {
                 this.logger.LogError(
-                    "An error occured while trying to update entity: '{0}', Err: '{1}'", entity, err.GetBaseException().Message);
+                    "An error occured while trying to insert entity: '{0}', Err: '{1}'", entity, err.GetBaseException().Message);
                 if (Throw)
                     throw;
             }

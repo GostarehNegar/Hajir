@@ -1,0 +1,22 @@
+﻿@using Hajir.Crm.Features.Sales; 
+@inherits BaseComponent<SaleQuote>
+
+    <div style="width:100%">
+    <ErrorComponent />
+    <MudGrid>
+        <MudItem xs="12">
+            <MudButton Link="@GetPrintLink()" Target="_blank" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Print" Color="Color.Info" Size="Size.Small">Print </MudButton>
+            <MudButton Variant="Variant.Filled" @onclick="DoSave" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small">ذخیره</MudButton>
+        </MudItem>
+    </MudGrid>
+    <QuoteHeaderComponent State="@this.State" />
+    <QuoteProductsComponent State="@this.State"/>
+    <MudDivider style="height:20px;" />
+    <MudGrid>
+        <MudItem xs="8">
+            <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="()=>RebuildComments()">Rebuild</MudButton>
+            <MudTextField T="string" Label="توضیحات" Variant="Variant.Outlined" @bind-Text="State.Value.Remarks" Lines="8" style="width:100%" />
+        </MudItem>
+    </MudGrid>
+
+</div>

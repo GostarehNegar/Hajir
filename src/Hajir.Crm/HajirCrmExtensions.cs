@@ -1,16 +1,18 @@
-﻿using Hajir.Crm.Features;
+﻿using GN;
+using Hajir.Crm.Features;
+using Hajir.Crm.Internals;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Hajir.Crm
 {
-	public static partial class HajirCrmExtensions
-	{
-		public static IHajirCrmServiceContext CreateHajirServiceContext(this IServiceProvider serviceProvider)
-		{
-			return new HajirCrmServiceContext(serviceProvider);
-		}
+    public static partial class HajirCrmExtensions
+    {
+        public static IHajirCrmServiceContext CreateHajirServiceContext(this IServiceProvider serviceProvider)
+        {
+            return new HajirCrmServiceContext(serviceProvider);
+        }
 
         internal static int CalcLevenshteinDistance(string a, string b)
         {
@@ -50,6 +52,11 @@ namespace Hajir.Crm
             }
 
             return distances[lengthA, lengthB];
+        }
+
+        public static string NumberToString(decimal number)
+        {
+            return PersianNumberToTextConverter.ConvertToText(number);
         }
     }
 }

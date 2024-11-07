@@ -146,7 +146,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
 
         }
 
-        private async Task<XrmFrameMessage> Evaluate(string expression)
+        private async Task<XrmFrameMessage> _Evaluate(string expression)
         {
             var task = new TaskCompletionSource<XrmFrameMessage>();
             var id = Guid.NewGuid().ToString();
@@ -163,9 +163,18 @@ namespace Hajir.Crm.Blazor.XrmFrames
                 throw new TimeoutException();
             return default(TResult);
         }
+        public async Task Evaluate(string expression, int timeOut = DEFAULT_TIMEOUT)
+        {
+            var result = await TimeoutAfter(_Evaluate(expression), timeOut, default);
+            if (result.Status != 0)
+            {
+                throw new Exception(result.GetBody<string>());
+            }
+            //return result.GetBody<T>();
+        }
         public async Task<T> Evaluate<T>(string expression, int timeOut = DEFAULT_TIMEOUT)
         {
-            var result = await TimeoutAfter(Evaluate(expression), timeOut, default);
+            var result = await TimeoutAfter(_Evaluate(expression), timeOut, default);
             if (result.Status != 0)
             {
                 throw new Exception(result.GetBody<string>());

@@ -14,7 +14,7 @@ namespace Hajir.Crm.Blazor.Components
         public NavigationManager NavigationManager { get; set; }
         protected override async Task OnInitializedAsync()
         {
-            XrmFrameBase.HandleNotFound(this.NavigationManager);
+            XrmFrameBaseEx.HandleNotFound(this.NavigationManager);
             await base.OnInitializedAsync();
         }
     }

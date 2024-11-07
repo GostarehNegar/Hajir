@@ -42,7 +42,6 @@
     <Folder Include="Features\XrmFrames\Quotes\" />
     <Folder Include="Infrastructure\Data\" />
     <Folder Include="Infrastructure\Integration\" />
-    <Folder Include="Internals\" />
     <Folder Include="Products\" />
   </ItemGroup>
 

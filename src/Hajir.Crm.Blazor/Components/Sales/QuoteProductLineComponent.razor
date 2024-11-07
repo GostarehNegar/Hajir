@@ -1,7 +1,9 @@
 ﻿@using Hajir.Crm.Features.Sales;
+
 @inherits BaseComponent<SaleQuoteLine>
 
-@if (1 == 1)
+
+@if (this.ViewMode == QuoteProductsViewModes.Block)
 {
 
     <MudGrid style="" Spacing="3">
@@ -9,15 +11,16 @@
             <MudTextField T="string" Label="کالا/خدمات" Variant="Variant.Outlined" @bind-Text="State.Value.Name" Lines="2" />
         </MudItem>
         <MudItem xs="2" style="text-align:right">
-            <MudTextField T="decimal?" @bind-Value="Value.Quantity" Label="تعداد" Variant="Variant.Outlined" Margin="Margin.Dense" @onfocusout="Recalculate" />
+            <MudTextField T="decimal?" @bind-Value="Value.Quantity" Label="تعداد" Variant="Variant.Outlined" Margin="Margin.Dense"
+                      @onfocusout="Recalculate" />
         </MudItem>
         <MudItem xs="2" style="text-align:right">
             <MudTextField T="decimal?" @bind-Value="Value.PricePerUnit" Label="قیمت" Variant="Variant.Outlined" Format="###,####"
-            Margin="Margin.Dense" @onfocusout="Recalculate" />
+                      Margin="Margin.Dense" @onfocusout="Recalculate" />
         </MudItem>
         <MudItem xs="2" style="text-align:right">
-            <MudTextField T="decimal?" @bind-Value="Value.BaseAmount" Label="مبلغ پایه" Variant="Variant.Outlined"       Format="###,####"
-            Margin="Margin.Dense" Disabled="true" />
+            <MudTextField T="decimal?" @bind-Value="Value.BaseAmount" Label="مبلغ پایه" Variant="Variant.Outlined" Format="###,####"
+                      Margin="Margin.Dense" Disabled="true" />
         </MudItem>
         <MudItem xs="2" style="text-align:right">
             <MudTextField T="long?" @bind-Value="Value.GuaranteeMonth" Label="گارنتی (ماه) " Variant="Variant.Outlined" Format="###,####"
@@ -33,7 +36,7 @@
 
         </MudItem>
         <MudItem xs="2" style="text-align:right">
-            <MudTextField T="decimal?" @bind-Value="Value.Discount" Label="تخفیف"  Format="###,####"
+            <MudTextField T="decimal?" @bind-Value="Value.Discount" Label="تخفیف" Format="###,####"
                       Variant="Variant.Outlined" Margin="Margin.Dense" @onfocusout="Recalculate" Disabled="IsDiscountDisabled" />
         </MudItem>
         <MudItem xs="2" style="text-align:right">
@@ -44,43 +47,49 @@
                       Margin="Margin.Dense" @onfocusout="Recalculate" Disabled="ITaxDisabled" />
         </MudItem>
         <MudItem xs="1" style="text-align:right">
-            
+
         </MudItem>
 
         <MudItem xs="3" style="text-align:right">
             <MudTextField T="decimal?" @bind-Value="Value.ExtendedAmount" Label="مبلغ" Variant="Variant.Outlined" Format="###,####"
-            Margin="Margin.Dense" Disabled="true" />
+                      Margin="Margin.Dense" Disabled="true" />
         </MudItem>
 
 
     </MudGrid>
 }
-else if (1 == 0)
+else if (this.ViewMode == QuoteProductsViewModes.Tabular)
 {
-    <MudGrid>
-        <MudItem xs="3">
-            <MudTextField T="string" Label="کالا/خدمات" Variant="Variant.Outlined" @bind-Text="State.Value.Name" Lines="2" />
-        </MudItem>
-        <MudItem xs="1">
-            <MudTextField T="decimal?" @bind-Value="Value.Quantity" Label="تعداد" Variant="Variant.Outlined" Margin="Margin.Dense" @onfocusout="Recalculate" />
-        </MudItem>
-        <MudItem xs="2">
-            <MudTextField T="decimal?" @bind-Value="Value.PricePerUnit" Label="قیمت" Variant="Variant.Outlined" Margin="Margin.Dense" @onfocusout="Recalculate" />
+    <MudTd DataLabel="Nr"><MudTextField T="string" Variant="Variant.Outlined" @bind-Text="State.Value.Name" Lines="2" /></MudTd>
+    <MudTd DataLabel="Nr">
+        <MudTextField T="decimal?" @bind-Value="Value.Quantity" Variant="Variant.Outlined" Margin="Margin.Dense"
+                  @onfocusout="Recalculate" />
+    </MudTd>
+    <MudTd DataLabel="Nr" style="padding:2px">
+        <MudTextField T="decimal?" @bind-Value="Value.PricePerUnit" Label="" Variant="Variant.Outlined" Format="###,####"
+                  Margin="Margin.Dense" @onfocusout="Recalculate" />
+    </MudTd>
+    <MudTd DataLabel="Nr">
+        <MudTextField T="long?" @bind-Value="Value.PercentDiscount" Label=""
+                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                  Adornment="Adornment.End" AdornmentText="%" @onfocusout="Recalculate" Disabled="false" />
+        <MudTextField T="decimal?" @bind-Value="Value.Discount" Label="" Format="###,####"
+                  Variant="Variant.Outlined" Margin="Margin.Dense" @onfocusout="Recalculate" Disabled="IsDiscountDisabled" />
 
-        </MudItem>
-        <MudItem xs="2">
-            <MudTextField T="decimal?" @bind-Value="Value.BaseAmount" Label="مبلغ پایه" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="true" />
+    </MudTd>
+    <MudTd DataLabel="Nr">
+        <MudTextField T="long?" @bind-Value="Value.PercentTax" Label="" Variant="Variant.Outlined"
+                  Adornment="Adornment.End" AdornmentText="%" Margin="Margin.Dense" @onfocusout="Recalculate" Disabled="false" />
+        <MudTextField T="decimal?" @bind-Value="Value.Tax" Label="" Variant="Variant.Outlined" Format="###,####"
+                  Margin="Margin.Dense" @onfocusout="Recalculate" Disabled="ITaxDisabled" />
 
-        </MudItem>
-        <MudItem xs="2">
-            <MudTextField T="decimal?" @bind-Value="Value.Tax" Label="مالیات" Variant="Variant.Outlined" Margin="Margin.Dense" @onfocusout="Recalculate" Disabled="false" />
+    </MudTd>
+    <MudTd DataLabel="Nr">
+        <MudTextField T="decimal?" @bind-Value="Value.ExtendedAmount" Label="مبلغ" Variant="Variant.Outlined" Format="###,####"
+                  Margin="Margin.Dense" Disabled="true" />
+    </MudTd>
+   
 
-        </MudItem>
-        <MudItem xs="2">
-            <MudTextField T="decimal?" @bind-Value="Value.ExtendedAmount" Label="مبلغ" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="true" />
-        </MudItem>
-
-    </MudGrid>
 }
 else if (1 == 3)
 {

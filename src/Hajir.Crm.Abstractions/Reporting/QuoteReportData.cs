@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.SymbolStore;
 using System.Text;
 
 namespace Hajir.Crm.Reporting
@@ -10,12 +11,20 @@ namespace Hajir.Crm.Reporting
         public string QuoteNumber { get; set; }
         public string CustomerName { get; set; }
         public string FormattedDate { get; set; }
+
+        public decimal TotalLineBaseAmount { get; set; }
+        public decimal TotalLineAmount { get; set; }
         public decimal TotalAmount { get; set; }
-        public decimal TotalNet { get; set; }
         public decimal TotalTax { get;set; }
-        public decimal Discount { get; set; }
+        public decimal TotalDiscount { get; set; }
         public string FormattedValidityDate { get; set; }
         public string Remarks { get; set; }
+        public bool PrintHeader { get; set; }
+        public bool PrintRowDiscounts { get; set; }
+        public DateTime? EffectiveFrom { get; set; }
+        public DateTime? EffectiveTo { get; set; }
+        public string FormattedEffectiveFrom { get; set; }
+        public string FormattedEffectiveTo { get; set; }
     }
     public class QuoteLineReportData
     {
@@ -23,6 +32,7 @@ namespace Hajir.Crm.Reporting
         public decimal Quantity { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal Discount { get; set; }
+        public decimal BaseAmount { get; set; }
         public decimal Amount { get; set; }
         public decimal Tax { get; set; }
     }

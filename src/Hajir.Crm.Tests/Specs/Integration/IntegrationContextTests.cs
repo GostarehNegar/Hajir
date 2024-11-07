@@ -10,9 +10,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Hajir.Crm.Features.Integration;
 using GN.Library.Xrm;
 using Hajir.Crm.Infrastructure.Xrm.Data;
+using GN.Library;
+using GN.Library.Data;
+using GN.Library.Xrm.StdSolution;
 
 namespace Hajir.Crm.Tests.Specs.Integration
 {
+    public class QuoteRepoItem
+    {
+        public int Id { get; set; }
+    }
     [TestClass]
     public class IntegrationContextTests:TestFixture
     {
@@ -22,6 +29,7 @@ namespace Hajir.Crm.Tests.Specs.Integration
             return this.GetDefaultHost((c,s) => {
 
                 s.AddHajirIntegrationServices(c, opt => { });
+                s.AddHajirInfrastructure(c, opt => { });
             
             });
         }
@@ -96,14 +104,32 @@ namespace Hajir.Crm.Tests.Specs.Integration
         public async Task quote_integration_works()
         {
             var host = GetHostEx();
+            //var store = host.Services.GetService<ILocalDocumentStore>();
+            //var repo = store.GetRepository<int, QuoteRepoItem>();
 
+
+            //host.Services.GetService<IXrmDataServices>()
+            //    .WithImpersonatedSqlConnection(db => {
+            //        db.Open();
+            //    });
+            var _t = host.Services.GetService<IXrmDataServices>()
+                .GetRepository<XrmQuote>()
+                .Queryable
+                //.FirstOrDefault(x => x.QuoteId == Guid.Parse("{033e35c0-669f-e611-bafc-000c29058b6f}"));
+                .FirstOrDefault(x => x.QuoteNumber == "QUO-03714-C4P7Q3");
+
+            //"QUO-03714-C4P7Q3"
+            var q = new XrmQuote
+            {
+                Id = Guid.Parse("{033e35c0-669f-e611-bafc-000c29058b6f}")
+            };
             host.Services.GetService<IXrmDataServices>()
-                .WithImpersonatedSqlConnection(db => {
-                    db.Open();
-                });
+                .GetRepository<XrmQuote>()
+                .Delete(q);
+
             var ctx = new IntegrationServiceContext(host.Services, "test", default);
             var quotes = ctx.LegacyCrmStore.ReadQuotes(0,10);
-            await ctx.ImportQuote(quotes.First());
+            await ctx.ImportQuote(quotes.Skip(1).First());
             
             
 

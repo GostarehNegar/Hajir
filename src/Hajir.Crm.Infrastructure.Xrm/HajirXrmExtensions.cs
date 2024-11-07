@@ -2,6 +2,7 @@
 using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace Hajir.Crm.Infrastructure.Xrm
@@ -23,7 +24,8 @@ namespace Hajir.Crm.Infrastructure.Xrm
             var result = false;
             var tableName = entityname + "base";
             var idcolumn = entityname + "id";
-            dataServices.WithImpersonatedSqlConnection(con => {
+            dataServices.WithImpersonatedSqlConnection(con =>
+            {
                 try
                 {
                     con.Open();
@@ -40,6 +42,11 @@ namespace Hajir.Crm.Infrastructure.Xrm
                 }
             });
             return result;
+        }
+
+        internal static string FormatPersianDate(this DateTime? dt, string fmt = null)
+        {
+            return dt.HasValue ? dt.Value.ToString(fmt ?? "yyyy/MM/dd", new CultureInfo("fa-IR")) : string.Empty;
         }
     }
 }

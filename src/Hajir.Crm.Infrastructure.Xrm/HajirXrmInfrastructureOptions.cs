@@ -6,5 +6,6 @@ namespace Hajir.Crm.Infrastructure.Xrm
 {
     public class HajirXrmInfrastructureOptions
     {
+        public bool SkipIntegration { get; set; }
     }
 }

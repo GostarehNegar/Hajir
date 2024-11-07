@@ -50,8 +50,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<ICacheService>(sp => sp.GetService<CacheService>());
             services.AddScoped<XrmReportingDataStore>()
                 .AddScoped<IReportingDataStore>(sp=>sp.GetService<XrmReportingDataStore>());
-            //services.AddScoped<ILegacyCrmStore, XrmLegacyContactRepository>();
-            //services.AddScoped<IIntegrationStore, XrmIntegrationStore>();
+            if (!options.SkipIntegration)
+            {
+                services.AddScoped<ILegacyCrmStore, XrmLegacyContactRepository>();
+                services.AddScoped<IIntegrationStore, XrmIntegrationStore>();
+            }
 
             return services;
         }

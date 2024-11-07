@@ -23,6 +23,9 @@ namespace Hajir.Crm.Features.Sales
         public PriceList PriceList { get; set; }
         public DateTime? ExpirationDate { get; set; }
         public string Remarks { get; set; }
+        public bool PrintHeader { get; set; }
+        public DateTime? EffectiveFrom { get; set; }
+        public DateTime? EffectiveTo { get; set; }
         public string RebuildRemarks()
         {
             var str = HajirCrmConstants.QuoteComments.STR_Gaurantee + "\r\n" +
@@ -31,10 +34,29 @@ namespace Hajir.Crm.Features.Sales
                 HajirCrmConstants.QuoteComments.STR_FREE_CABLES + "\r\n" +
                 HajirCrmConstants.QuoteComments.STR_SUPPORT_CONTRACT + "\r\n" +
                 HajirCrmConstants.QuoteComments.STR_DELIVERY + "\r\n" +
-                HajirCrmConstants.QuoteComments.STR_DELIVERY_POINT + "\r\n";
-                
-
+                HajirCrmConstants.QuoteComments.STR_DELIVERY_POINT + "\r\n" +
+                HajirCrmConstants.QuoteComments.STR1 + "\r\n" +
+                HajirCrmConstants.QuoteComments.STR2 + "\r\n" +
+                HajirCrmConstants.QuoteComments.STR3 + "\r\n" +
+                HajirCrmConstants.QuoteComments.STR4 + "\r\n" +
+                HajirCrmConstants.QuoteComments.STR5 + "\r\n" +
+                HajirCrmConstants.QuoteComments.STR6 + "\r\n" +
+                HajirCrmConstants.QuoteComments.STR7 + "\r\n" +
+                HajirCrmConstants.QuoteComments.STR8 + "\r\n" +
+                HajirCrmConstants.QuoteComments.STR9 + "\r\n" +
+                HajirCrmConstants.QuoteComments.STR10 + "\r\n";
             return str;
+        }
+        public QuoteRemarksModel GetekarksModel()
+        {
+            var result =   new QuoteRemarksModel { };
+            result.AddLine(new QuoteRemarkLine { Selected = true, Text = HajirCrmConstants.QuoteComments.STR_Gaurantee });
+            result.AddLine(new QuoteRemarkLine { Selected = true, Text = HajirCrmConstants.QuoteComments.STR_BATTERY_GAURANTEE });
+            result.AddLine(new QuoteRemarkLine { Selected = true, Text = HajirCrmConstants.QuoteComments.STR_BATTERY_GAURANTEE_SABA });
+            result.AddLine(new QuoteRemarkLine { Selected = true, Text = HajirCrmConstants.QuoteComments.STR_FREE_CABLES });
+            return result;
+
+
         }
         public SaleQuote()
         {

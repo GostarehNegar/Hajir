@@ -20,6 +20,8 @@ namespace Hajir.Crm.Features.Integration
                     var account = await context.ImportAccountById(quote.AccountId);
                 }
                 result = context.Store.ImportLegacyQuote(quote);
+                //context.LegacyCrmStore.UpdateQuoteImportStatus(quote);
+                context.Logger.LogInformation($"Quote {quote} successfully imported.");
 
             }
             catch (Exception err)

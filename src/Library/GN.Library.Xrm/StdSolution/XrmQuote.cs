@@ -6,6 +6,7 @@ using System.Text;
 using System.Linq;
 using System.Linq.Expressions;
 using GN.Library.Data;
+using System.Security.Cryptography;
 
 namespace GN.Library.Xrm.StdSolution
 {
@@ -22,10 +23,18 @@ namespace GN.Library.Xrm.StdSolution
 			public const string PriceLevelId = "pricelevelid";
 			public const string TotalAmount = "totalamount";
 			public const string TotalTax = "totaltax";
+			public const string DiscountPercentage = "discountpercentage";
+            public const string DiscountAmount = "discountamount";
+            public const string TotalDiscountAmount = "totaldiscountamount";
+			public const string TotalLineItemAmount = "totallineitemamount";
+			public const string TotalLineItemDiscountAmount = "totallineitemdiscountamount";
+			public const string EffectiveFrom = "effectivefrom";
+            public const string EffectiveTo= "effectiveto";
+			public const string Description = "description";
 
 
-			// https://docs.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/entities/quote#BKMK_StateCode
-			public enum QuoteStateCodes
+            // https://docs.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/entities/quote#BKMK_StateCode
+            public enum QuoteStateCodes
 			{
 				Draft = 0,
 				Active = 1,
@@ -188,10 +197,56 @@ namespace GN.Library.Xrm.StdSolution
 			set => this.TotalTaxMoney = value.HasValue ? new Money(value.Value) : null;
 		}
 
+        [AttributeLogicalName(Schema.DiscountPercentage)]
+		public decimal? DiscountPercentage
+		{
+			get => this.GetAttributeValue<decimal?>(Schema.DiscountPercentage);
+			set => this.SetAttribiuteValue(Schema.DiscountPercentage, value);
+		}
+        [AttributeLogicalName(Schema.DiscountAmount)]
+        public Money DiscountAmountMoney
+        {
+            get => this.GetAttributeValue<Money>(Schema.DiscountAmount);
+            set => this.SetAttribiuteValue(Schema.DiscountPercentage, value);
+        }
 
+        [AttributeLogicalName(Schema.TotalDiscountAmount)]
+        public Money TotalDiscountAmount
+        {
+            get => this.GetAttributeValue<Money>(Schema.TotalDiscountAmount);
+            set => this.SetAttribiuteValue(Schema.TotalDiscountAmount, value);
+        }
 
-	}
-	[EntityLogicalName(Schema.LogicalName)]
+        [AttributeLogicalName(Schema.TotalLineItemAmount)]
+        public Money TotalLineItemAmount
+        {
+            get => this.GetAttributeValue<Money>(Schema.TotalLineItemAmount);
+            set => this.SetAttribiuteValue(Schema.TotalLineItemAmount, value);
+        }
+        
+		[AttributeLogicalName(Schema.TotalLineItemDiscountAmount)]
+        public Money TotalLineItemDiscountAmount
+        {
+            get => this.GetAttributeValue<Money>(Schema.TotalLineItemDiscountAmount);
+            set => this.SetAttribiuteValue(Schema.TotalLineItemDiscountAmount, value);
+        }
+
+        [AttributeLogicalName(Schema.EffectiveFrom)]
+        public DateTime? EffectiveFrom
+        {
+            get => this.GetAttributeValue<DateTime?>(Schema.EffectiveFrom);
+            set => this.SetAttribiuteValue(Schema.EffectiveFrom, value);
+        }
+
+        [AttributeLogicalName(Schema.EffectiveTo)]
+        public DateTime? EffectiveTo
+        {
+            get => this.GetAttributeValue<DateTime?>(Schema.EffectiveTo);
+            set => this.SetAttribiuteValue(Schema.EffectiveTo, value);
+        }
+
+    }
+    [EntityLogicalName(Schema.LogicalName)]
 	public class XrmQuoteDetail : XrmEntity<XrmQuoteDetail, DefaultStateCodes, DefaultStatusCodes>
 	{
 
@@ -378,9 +433,9 @@ namespace GN.Library.Xrm.StdSolution
 		}
 
 		[AttributeLogicalName(Schema.Quantity)]
-		public double? Quantity
+		public decimal? Quantity
 		{
-			get { return this.GetAttributeValue<double?>(Schema.Quantity); }
+			get { return this.GetAttributeValue<decimal?>(Schema.Quantity); }
 			set { this.SetAttribiuteValue(Schema.Quantity, value); }
 		}
         [AttributeLogicalName(Schema.IsProductOverridden)]
@@ -390,6 +445,7 @@ namespace GN.Library.Xrm.StdSolution
             set { this.SetAttribiuteValue(Schema.IsProductOverridden, value); }
         }
 
+		
     }
 
     public static class XrmQouteExtensions

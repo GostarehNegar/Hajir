@@ -7,7 +7,7 @@
     <MudSnackbarProvider />
 
     <div class="page">
-        @if (!URL.Contains("/quote/") && !XrmFrameBase.IsXrmPage(URL) && !URL.Contains("/print/"))
+        @if (!URL.Contains("/quote/") && !XrmFrameBaseEx.IsXrmPage(URL) && !URL.Contains("/print/"))
         {
             <div class="sidebar">
                 <NavMenu />

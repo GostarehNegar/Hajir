@@ -11,6 +11,7 @@ namespace Hajir.Crm.Blazor.Components
     public partial class QuoteSetting
     {
 
+        public Dictionary<string, string> Model = new Dictionary<string, string>();
         private class Officiality
         {
             public bool IsOfficial { get; set; } = false;

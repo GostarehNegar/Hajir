@@ -1,7 +1,12 @@
 ﻿@using Hajir.Crm.Features.Sales;
-@inherits BaseComponent<QuoteRemarksEditModel>
-<h3>QuoteRemarksComponent</h3>
+@inherits BaseComponent<SaleQuote>
 
+<MudGrid>
+    <MudItem xs="10">
+        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="()=>RebuildComments()">Rebuild</MudButton>
+        <MudTextField T="string" Label="توضیحات" Variant="Variant.Outlined" @bind-Text="State.Value.Remarks" Lines="8" style="width:100%" />
+    </MudItem>
+</MudGrid>
 @code {
 
 }

@@ -26,15 +26,15 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                .GetRepository<XrmHajirQuote>()
                .Queryable
                .FirstOrDefault(x => x.HajirQuoteId == id);
-            
+
 
             if (q != null)
             {
                 var account = q.AccountId.HasValue
-                    ?this.dataServices
+                    ? this.dataServices
                         .GetRepository<XrmHajirAccount>()
                         .Queryable
-                        .FirstOrDefault(x=>x.AccountId== q.AccountId.Value)
+                        .FirstOrDefault(x => x.AccountId == q.AccountId.Value)
                     : null;
                 var lines = this.dataServices
                     .GetRepository<XrmHajirQuoteDetail>()
@@ -46,20 +46,35 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                 {
                     CustomerName = account?.Name,
                     QuoteNumber = q.HajirQuoteId,
-                    Remarks =q.GetAttributeValue<string>("hajir_remarks"),
+                    Remarks = q.GetAttributeValue<string>("hajir_remarks"),
+                    TotalDiscount = q.TotalDiscountAmount?.Value ?? 0,
+                    TotalTax = q.TotalTax ?? 0,
+                    TotalLineAmount = q.TotalLineItemAmount?.Value ?? 0,
+                    TotalAmount = q.TotalAmount ?? 0,
+                    TotalLineBaseAmount = lines.Sum(x => x.BaseAmount ?? 0),
+                    PrintHeader = q.PrintHeader ?? true,
+                    FormattedDate = q.CreatedOn.FormatPersianDate(),
+                    EffectiveFrom = q.EffectiveFrom,
+                    EffectiveTo = q.EffectiveTo,
+                    FormattedEffectiveFrom = q.EffectiveFrom.FormatPersianDate(),
+                    FormattedEffectiveTo = q.EffectiveTo.FormatPersianDate(),
+                    
+                    
                     Items = lines
-                        .Select(x => new QuoteLineReportData {
+                        .Select(x => new QuoteLineReportData
+                        {
                             Name = x.GetAttributeValue<string>("quotedetailname"),
-                            UnitPrice = x.PricePerUnit??0,
-                            Amount = x.ExtendedAmount?? 0,
-                            Discount = x.ManualDiscountAmount??0,
-                            Quantity = Convert.ToDecimal( x.Quantity??0),
-                            
+                            UnitPrice = x.PricePerUnit ?? 0,
+                            Amount = x.ExtendedAmount ?? 0,
+                            BaseAmount = x.BaseAmount ?? 0,
+                            Discount = x.ManualDiscountAmount ?? 0,
+                            Quantity = Convert.ToDecimal(x.Quantity ?? 0),
+
                         })
                         .ToArray()
-                    
+
                 };
-                
+
 
 
 

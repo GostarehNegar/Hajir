@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hajir.Crm.Blazor.XrmFrames.Quote
+namespace Hajir.Crm.Features.Sales
 {
     public class QuoteRemarkLine
     {
@@ -14,6 +14,7 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
         public string Input { get; set; }
 
         public string Right { get; set; }
+        public string Text { get; set; }
     }
     public class QuoteRemarksModel
     {
@@ -27,5 +28,13 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
                 new QuoteRemarkLine{Left="Text2"},
             }
         };
+        public QuoteRemarksModel AddLine(QuoteRemarkLine line)
+        {
+            this.Lines = this.Lines ?? new QuoteRemarkLine[] { };
+            var lines = new List<QuoteRemarkLine>(this.Lines?? new QuoteRemarkLine[] { });
+            lines.Add(line);
+            this.Lines = lines.ToArray();
+            return this;
+        }
     }
 }

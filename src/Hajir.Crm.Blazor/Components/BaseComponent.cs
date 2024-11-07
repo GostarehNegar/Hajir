@@ -28,6 +28,19 @@ namespace Hajir.Crm.Blazor.Components
         {
             this.ServiceProvider.GetState<ErrorModel>().SetState(new ErrorModel { Error=err });
         }
+        public async Task SafeExecute(Func<Task> func)
+        {
+            try
+            {
+                await func();
+            }
+            catch (Exception err)
+            {
+                //this.LastError = err.GetBaseException();
+                this.SetError(err);
+            }
+
+        }
     }
     public class BaseComponent<T> : BaseComponent where T : class, new()
     {

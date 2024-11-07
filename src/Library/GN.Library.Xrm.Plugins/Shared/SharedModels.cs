@@ -165,7 +165,16 @@ namespace GN.Library.Xrm.Plugins.Shared
                             optionSet = serializer.Deserialize<OptionSetValue>(strValue.Replace("\"ExtensionData\": {}", "\"AAA\":1"));
                             _value = optionSet;
                         }
-                        catch { }
+                        catch
+                        {
+                            try
+                            {
+                                _value = serializer.Deserialize<Money>(strValue.Replace("\"ExtensionData\": {}", "\"AAA\":1"));
+                                //_value = optionSet;
+                            }
+                            catch { }
+                        
+                        }
                     }
                     if (strValue.Contains("Entities"))
                     {
@@ -203,7 +212,8 @@ namespace GN.Library.Xrm.Plugins.Shared
                         if (refernces.Count > 0)
                         {
 
-                            EntityCollection collection = new EntityCollection(refernces.Select(x => {
+                            EntityCollection collection = new EntityCollection(refernces.Select(x =>
+                            {
                                 var en2 = new Entity();
                                 en2.Attributes.Add("partyid", x);
                                 return en2;
@@ -247,7 +257,17 @@ namespace GN.Library.Xrm.Plugins.Shared
                             optionSet = serializer.Deserialize<OptionSetValue>(strValue);
                             _value = optionSet;
                         }
-                        catch { }
+                        catch
+                        {
+                            try
+                            {
+
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+                        }
                     }
                     if (strValue.Contains("\"LogicalName"))
                     {

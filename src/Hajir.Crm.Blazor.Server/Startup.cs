@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GN;
 using GN.Library.Xrm;
+using Hajir.Crm.Reporting;
 
 namespace Hajir.Crm.Blazor.Server
 {
@@ -39,7 +40,7 @@ namespace Hajir.Crm.Blazor.Server
                 cfg.ConnectionOptions = ConnectionOptions.WebAPI;
             });
             services.AddHajirCrm(Configuration, cfg => { });
-            services.AddHajirInfrastructure(Configuration);
+            services.AddHajirInfrastructure(Configuration, opt => opt.SkipIntegration = true);
             services.AddHajirReportingServices(Configuration, cfg => { });
 
 
@@ -49,8 +50,8 @@ namespace Hajir.Crm.Blazor.Server
             services.AddScoped<CircuitHandler, CircuitHandlerService>();
 
             services.AddSingleton<WeatherForecastService>();
-            
-            services.AddControllers();
+
+            services.AddControllers().AddApplicationPart(typeof(HajirCrmReportingExtensions).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

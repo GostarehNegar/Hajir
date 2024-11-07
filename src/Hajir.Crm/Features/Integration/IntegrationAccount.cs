@@ -5,10 +5,9 @@ using System.Text;
 
 namespace Hajir.Crm.Features.Integration
 {
-    public class IntegrationAccount:DynamicEntity
+    public class IntegrationAccount : DynamicEntity
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
+
         public int Type { get; set; }
 
         public string MainPhone { get; set; }
