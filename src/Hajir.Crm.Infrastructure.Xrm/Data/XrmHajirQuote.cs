@@ -15,15 +15,18 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
         {
             public const string SOlutionPerfix = HajirCrmConstants.RahsamSolutionPerfix;
             public const int SolutionBaeIndex = HajirCrmConstants.RahsamSolutionIndex;
-            public const string QuoteType = SOlutionPerfix + "type";
+            public const string RhsQuoteType = SOlutionPerfix + "type";
             public const string HajirQuoteId = SOlutionPerfix + "quoteid";
             public const string ExternalId = SOlutionPerfix + "externalid";
             public const string PaymentDeadLine = SOlutionPerfix + "paymentdeadline";
             public const string ValidityPeriod = SOlutionPerfix + "validityperiod";
             public const string PaymentMethod = SOlutionPerfix + "paymentmethod";
-            public const string Contact = SOlutionPerfix + "contact";
+            public const string RhsContact = SOlutionPerfix + "contact";
             public const string PrintHeader = HajirCrmConstants.HajirSolutionPerfix + "printheader";
             public const string Remarks = HajirCrmConstants.HajirSolutionPerfix + "remarks";
+            public const string Contact = HajirCrmConstants.HajirSolutionPerfix + "contactid";
+            public const string QuoteType = HajirCrmConstants.HajirSolutionPerfix + "type";
+
             public enum PaymentMethods
             {
                 Cash = SolutionBaeIndex,
@@ -33,13 +36,19 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             }
 
         }
+        [AttributeLogicalName(Schema.RhsContact)]
+        public EntityReference RhsContact
+        {
+            get => this.GetAttributeValue<EntityReference>(Schema.RhsContact);
+            set => this.SetAttribiuteValue(Schema.RhsContact,value);
+        }
         [AttributeLogicalName(Schema.Contact)]
         public EntityReference Contact
         {
             get => this.GetAttributeValue<EntityReference>(Schema.Contact);
-            set => this.SetAttribiuteValue(Schema.Contact,value);
+            set => this.SetAttribiuteValue(Schema.Contact, value);
         }
-        
+
         public Guid? HajirContactId
         {
             get => this.Contact?.Id;
@@ -57,6 +66,13 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
         {
             get => this.GetAttributeValue<string>(Schema.ExternalId);
             set => this.SetAttributeValue(Schema.ExternalId, value);
+        }
+        [AttributeLogicalName(Schema.RhsQuoteType)]
+        public bool RhsQuoteType
+        {
+            get => this.GetAttributeValue<bool>(Schema.RhsQuoteType);
+            set => this.SetAttributeValue(Schema.RhsQuoteType, value);
+
         }
         [AttributeLogicalName(Schema.QuoteType)]
         public bool QuoteType
@@ -88,7 +104,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
         }
         public Schema.PaymentMethods? PaymentMethodCode
         {
-            get => (Schema.PaymentMethods) this.PaymentMethod?.Value;
+            get => (Schema.PaymentMethods?) this.PaymentMethod?.Value;
             set => this.PaymentMethod = value.HasValue ? new OptionSetValue((int) value) : null;
 
         }

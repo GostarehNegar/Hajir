@@ -46,6 +46,8 @@ namespace Hajir.Crm.Features.Integration
             return $"{Id} {Name}";
         }
 
+        public Guid? OwnerId => Guid.TryParse(this.GetAttributeValue<DynamicEntityReference>("ownerid")?.Id, out var __id) ? __id : (Guid?)null;
+
         public string GetImportantIntegrationValuesAsText()
         {
             var result = new StringBuilder();
@@ -65,8 +67,8 @@ namespace Hajir.Crm.Features.Integration
             add("صنعت", Industry);
             add("RelationShipType", RelationShipType);
             return result.ToString();
-            
-                
+
+
         }
     }
 }

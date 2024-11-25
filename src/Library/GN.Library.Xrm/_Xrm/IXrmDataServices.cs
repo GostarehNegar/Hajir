@@ -29,6 +29,7 @@ namespace GN.Library.Xrm
         IEnumerable<XrmEntity> QuickFind(string search, params string[] entities);
         Task Test();
         IXrmDataServices Clone(Guid userId);
+        IXrmDataServices Create(Action<XrmSettings> configure);
     }
     class XrmDataServices : IXrmDataServices
     {
@@ -235,6 +236,13 @@ namespace GN.Library.Xrm
                     Id = userId
                 }
             };
+        }
+        public IXrmDataServices Create(Action<XrmSettings> configure)
+        {
+            var settings = new XrmSettings();
+            configure?.Invoke(settings);
+            return new XrmDataServices(this.AppContext, settings);
+
         }
     }
 

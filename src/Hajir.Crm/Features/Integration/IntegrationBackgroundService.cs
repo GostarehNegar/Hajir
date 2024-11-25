@@ -228,6 +228,7 @@ namespace Hajir.Crm.Features.Integration
                 tasks.Add(this.EnqueueItems("contact", store, stoppingToken));
                 tasks.Add(this.EnqueueItems("account", store, stoppingToken));
                 tasks.Add(this.EnqueueItems("quote", store, stoppingToken));
+                //tasks.Add(this.EnqueueItems("systemuser", store, stoppingToken));
                 await Task.WhenAll(tasks);
                 await Task.Delay(5 * 1000 * 60);
             }
@@ -256,6 +257,9 @@ namespace Hajir.Crm.Features.Integration
                                     break;
                                 case "quote":
                                     target = store.GetQuote(item.Id);
+                                    break;
+                                case "systemuser":
+                                    target = store.GetUser(item.Id);
                                     break;
                                 default:
                                     throw new Exception($"Invalid Logical Name:{item.LogicalName}");

@@ -1,5 +1,6 @@
 ﻿using GN.Library.Shared.Entities;
 using GN.Library.Xrm.StdSolution;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
@@ -9,6 +10,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -580,6 +582,25 @@ namespace GN.Library.Xrm
                                     //result.SetAttribiuteValue(key, null);
                                 }
                                 break;
+                            case AttributeType.DateTime:
+                                if (value!=null && value.GetType() != typeof(DateTime) )
+                                {
+
+                                    if (DateTime.TryParse(value.ToString(), CultureInfo.InvariantCulture,DateTimeStyles.None, out var dateTimeVal))
+                                    {
+                                        result.SetAttribiuteValue(key, dateTimeVal);
+                                    }
+                                    else
+                                    {
+                                        throw new InvalidCastException(string.Format("Invalid Date. '{0}' ", value));
+                                    }
+                                }
+                                else {
+                                    result.SetAttribiuteValue(key, value);
+                                }
+                                
+                                break;
+
                             default:
                                 result.SetAttribiuteValue(key, value);
                                 break;

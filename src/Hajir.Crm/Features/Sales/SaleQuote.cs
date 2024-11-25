@@ -74,12 +74,12 @@ namespace Hajir.Crm.Features.Sales
             return this;
         }
         public SaleQuote(string quoteId, string quoteNumber, IEnumerable<SaleQuoteLine> lines,
-            IEnumerable<SaleAggergateProduct> aggregates, PriceList pl)
+             PriceList pl)
         {
             QuoteId = quoteId;
             QuoteNumber = quoteNumber;
             this._lines = new List<SaleQuoteLine>(lines ?? new List<SaleQuoteLine>());
-            this.aggergareProducts = new List<SaleAggergateProduct>(aggregates ?? new List<SaleAggergateProduct>());
+            this.aggergareProducts = new List<SaleAggergateProduct>();
             this.PriceList = pl;
         }
 

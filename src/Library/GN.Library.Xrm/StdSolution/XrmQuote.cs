@@ -10,7 +10,10 @@ using System.Security.Cryptography;
 
 namespace GN.Library.Xrm.StdSolution
 {
-	[EntityLogicalName(Schema.LogicalName)]
+    /// <summary>
+    /// https://learn.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/entities/quote?view=op-9-1#BKMK_ExpiresOn
+    /// </summary>
+    [EntityLogicalName(Schema.LogicalName)]
 	public class XrmQuote : XrmEntity<XrmQuote, XrmQuote.Schema.QuoteStateCodes, XrmQuote.Schema.QuoteStatusCodes>
 	{
 		public new class Schema
@@ -31,8 +34,9 @@ namespace GN.Library.Xrm.StdSolution
 			public const string EffectiveFrom = "effectivefrom";
             public const string EffectiveTo= "effectiveto";
 			public const string Description = "description";
+			public const string ExpiresOn = "expireson";
 
-
+            
             // https://docs.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/entities/quote#BKMK_StateCode
             public enum QuoteStateCodes
 			{
@@ -245,6 +249,14 @@ namespace GN.Library.Xrm.StdSolution
             set => this.SetAttribiuteValue(Schema.EffectiveTo, value);
         }
 
+        [AttributeLogicalName(Schema.ExpiresOn)]
+        public DateTime? ExpiresOn
+        {
+            get => this.GetAttributeValue<DateTime?>(Schema.ExpiresOn);
+            set => this.SetAttribiuteValue(Schema.ExpiresOn, value);
+        }
+
+
     }
     [EntityLogicalName(Schema.LogicalName)]
 	public class XrmQuoteDetail : XrmEntity<XrmQuoteDetail, DefaultStateCodes, DefaultStatusCodes>
@@ -433,9 +445,9 @@ namespace GN.Library.Xrm.StdSolution
 		}
 
 		[AttributeLogicalName(Schema.Quantity)]
-		public decimal? Quantity
+		public double? Quantity
 		{
-			get { return this.GetAttributeValue<decimal?>(Schema.Quantity); }
+			get { return this.GetAttributeValue<double?>(Schema.Quantity); }
 			set { this.SetAttribiuteValue(Schema.Quantity, value); }
 		}
         [AttributeLogicalName(Schema.IsProductOverridden)]

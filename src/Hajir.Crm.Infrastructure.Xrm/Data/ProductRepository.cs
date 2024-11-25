@@ -74,10 +74,10 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             var repo = this.dataServices
                     .GetRepository<XrmHajirProduct>();
 
-            var types = this.dataServices
-                .GetRepository<XrmHajirTypeProduct>()
-                .Queryable
-                .ToArray();
+            //var types = this.dataServices
+            //    .GetRepository<XrmHajirTypeProduct>()
+            //    .Queryable
+            //    .ToArray();
 
 
             var fin = false;

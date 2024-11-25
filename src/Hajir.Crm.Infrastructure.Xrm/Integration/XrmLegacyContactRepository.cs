@@ -356,7 +356,16 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
 
             throw new NotImplementedException();
         }
-
-       
+        public IntegrationUser ToUSer(Entity entity)
+        {
+            return entity.ToDynamic().To<IntegrationUser>();
+        }
+        public IntegrationUser GetUser(string id)
+        {
+            return id != null && Guid.TryParse(id, out var _id)
+              ? ToUSer(this.organizationService.CreateQuery("systemuser").FirstOrDefault(x => (Guid)x[XrmSystemUser.Schema.SystemUserId] == _id))
+              : null;
+            
+        }
     }
 }

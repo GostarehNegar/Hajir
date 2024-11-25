@@ -41,6 +41,8 @@ namespace GN.Library.Xrm.StdSolution
             public const string AccountNumber = "accountnumber";
 			public const string PrimaryContactId = "primarycontactid";
 			public const string ParentAccount = "parentaccountid";
+			public const string AccountRatingCode = "accountratingcode";
+            
 
             public class ColumnSelectors : XrmColumnSelector<XrmAccount>
 			{
@@ -236,9 +238,24 @@ namespace GN.Library.Xrm.StdSolution
 		[AttributeLogicalName(Schema.AccountNumber)]
 		public string AccountNumber { get => this.GetAttributeValue<string>(Schema.AccountNumber); set => this.SetAttribiuteValue(Schema.AccountNumber, value); }
 
-	}
+        [AttributeLogicalName(Schema.AccountRatingCode)]
+		public OptionSetValue AccountRatingOption
+		{
+			get => this.GetAttributeValue<OptionSetValue>(Schema.AccountRatingCode);
+			set => this.SetAttribiuteValue(Schema.AccountRatingCode, value);
+		}
+        //[AttributeLogicalName(Schema.AccountRatingCode)]
+        public int? AccountRating
+		{
+			get => this.AccountRatingOption?.Value;
+			set => this.AccountRatingOption = value.HasValue ? new OptionSetValue(value.Value) : null;
+		}
 
 
 
-	
+    }
+
+
+
+
 }

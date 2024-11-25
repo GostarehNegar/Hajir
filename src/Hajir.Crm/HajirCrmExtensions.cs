@@ -1,4 +1,5 @@
 ﻿using GN;
+using GN.Library.Shared.Entities;
 using Hajir.Crm.Features;
 using Hajir.Crm.Internals;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -57,6 +58,36 @@ namespace Hajir.Crm
         public static string NumberToString(decimal number)
         {
             return PersianNumberToTextConverter.ConvertToText(number);
+        }
+        public static Guid? GetOwnerId(this DynamicEntity entity)
+        {
+            if (entity == null)
+                return null;
+            return entity.GetAttributeValue<DynamicEntityReference>("ownerid")?.Id != null &&
+                Guid.TryParse(entity.GetAttributeValue<DynamicEntityReference>("ownerid")?.Id, out var _res)
+                ? _res
+                : (Guid?)null;
+
+        }
+        public static Guid? GetCreatedBy(this DynamicEntity entity)
+        {
+            if (entity == null)
+                return null;
+            return entity.GetAttributeValue<DynamicEntityReference>("createdby")?.Id != null &&
+                Guid.TryParse(entity.GetAttributeValue<DynamicEntityReference>("createdby")?.Id, out var _res)
+                ? _res
+                : (Guid?)null;
+
+        }
+        public static Guid? GetModifiedBy(this DynamicEntity entity)
+        {
+            if (entity == null)
+                return null;
+            return entity.GetAttributeValue<DynamicEntityReference>("modifiedby")?.Id != null &&
+                Guid.TryParse(entity.GetAttributeValue<DynamicEntityReference>("modifiedby")?.Id, out var _res)
+                ? _res
+                : (Guid?)null;
+
         }
     }
 }

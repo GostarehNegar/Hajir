@@ -146,23 +146,23 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                         .Queryable
                         .GetDetails(xrm_quote.Id)
                         .Select(x => ToSaleQuoteLine(x));
-                    var aggregates =
-                        this.dataServices
-                        .GetRepository<XrmHajirAggregateProduct>()
-                        .GetByquoteId(xrm_quote.Id)
-                        .Select(x => new SaleAggergateProduct()
-                        {
-                            Id = x.Id.ToString(),
-                            Name = x.Name,
-                            Quantity = Convert.ToInt32(x.Quantity),
-                            Amount = x.Amount,
-                            ManualDiscount = x.ManualDiscount
+                    //var aggregates =
+                    //    this.dataServices
+                    //    .GetRepository<XrmHajirAggregateProduct>()
+                    //    .GetByquoteId(xrm_quote.Id)
+                    //    .Select(x => new SaleAggergateProduct()
+                    //    {
+                    //        Id = x.Id.ToString(),
+                    //        Name = x.Name,
+                    //        Quantity = Convert.ToInt32(x.Quantity),
+                    //        Amount = x.Amount,
+                    //        ManualDiscount = x.ManualDiscount
 
-                        }).ToArray();
-                    foreach (var agg in aggregates)
-                    {
-                        lines.Where(l => l.AggregateId == agg.Id).ToList().ForEach(l => agg.AddLine(l));
-                    }
+                    //    }).ToArray();
+                    //foreach (var agg in aggregates)
+                    //{
+                    //    lines.Where(l => l.AggregateId == agg.Id).ToList().ForEach(l => agg.AddLine(l));
+                    //}
                     //aggregates.ToList().ForEach(x =>
                     //{
                     //	var ggg = lines.Where(l => l.AggregateId == x.Id).ToList();
@@ -170,10 +170,10 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                     //});
                     var pl = cache.PriceLists.FirstOrDefault(x => x.Id == xrm_quote.PriceLevelId?.ToString());
 
-                    quote = new SaleQuote(xrm_quote.QuoteId.ToString(), xrm_quote.HajirQuoteId, lines, aggregates, pl);
+                    quote = new SaleQuote(xrm_quote.QuoteId.ToString(), xrm_quote.QuoteNumber, lines,  pl);
                     quote.PyamentDeadline = xrm_quote.PaymentDeadLine;
                     quote.IsOfficial = xrm_quote.QuoteType;
-                    quote.ExpirationDate = xrm_quote.ValidityPeriod;
+                    quote.ExpirationDate = xrm_quote.ExpiresOn;
                     quote.NonCash = !xrm_quote.Cash;
                     quote.Remarks = xrm_quote.GetAttributeValue<string>("hajir_remarks");
                     quote.PrintHeader = xrm_quote.PrintHeader ?? true;

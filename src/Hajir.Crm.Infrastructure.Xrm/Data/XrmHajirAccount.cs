@@ -3,6 +3,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using System.Text;
 
 namespace Hajir.Crm.Infrastructure.Xrm.Data
@@ -18,15 +19,22 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             public const string rhs_industry = "rhs_industry";
             public const string rhs_connectiontype = "rhs_connectiontype";
             public const string MethodIntroduction = "rhs_methodintroduction";
-            public const string EconomicCode = "rhs_economiccode";
-            public const string NationalCode = "rhs_nationalcode";
-            public const string RegistrationNauber = "rhs_registrationnumber";
+            public const string RhsEconomicCode = "rhs_economiccode";
+            public const string RhsNationalCode = "rhs_nationalcode";
+            public const string RhsRegistrationNauber = "rhs_registrationnumber";
             public const string rhs_city = "rhs_city";
             public const string rhs_state = "rhs_state";
             public const string DegreeImportance = "rhs_degreeimportance";
             public const string rhs_MainPhone = "rhs_mainphone";
             public const string rhs_MainCityCode = "rhs_maincitycode";
-            public const string BrandName = "rhs_brandname";
+            public const string rhs_BrandName = "rhs_brandname";
+            public const string NationalId = HajirCrmConstants.HajirSolutionPerfix + "nationalid";
+            public const string RegistrationNumber = HajirCrmConstants.HajirSolutionPerfix + "registrationnumber";
+            public const string EconomicCode = HajirCrmConstants.HajirSolutionPerfix + "economiccode";
+            public const string IntroductionMethod = HajirCrmConstants.HajirSolutionPerfix + "introductionmethod";
+            public const string RelationTypeCode = "customertypecode";
+            public const string AccountType = HajirCrmConstants.HajirSolutionPerfix + "accounttype";
+            public const string BrandName = HajirCrmConstants.HajirSolutionPerfix + "brandname";
         }
 
         [AttributeLogicalName(Schema.ExternalId)]
@@ -58,7 +66,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
         }
 
         [AttributeLogicalName(Schema.rhs_companytype)]
-        public OptionSetValue AccountType
+        public OptionSetValue RhsAccountType
         {
             get
             {
@@ -71,7 +79,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             }
         }
         [AttributeLogicalName(Schema.rhs_companytype)]
-        public int? AccountTypeCode
+        public int? RhsAccountTypeCode
         {
             get
             {
@@ -80,7 +88,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             }
             set
             {
-                this.AccountType = value.HasValue ? new OptionSetValue(value.Value) : null;
+                this.RhsAccountType = value.HasValue ? new OptionSetValue(value.Value) : null;
             }
         }
 
@@ -118,8 +126,9 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             get => this.GetAttributeValue<OptionSetValue>(Schema.rhs_connectiontype);
             set => this.SetAttributeValue(Schema.rhs_connectiontype, value);
         }
+
         [AttributeLogicalName(Schema.rhs_companytype)]
-        public int? ConectionTypeCode
+        public int? RhsConectionTypeCode
         {
             get => this.ConectionType?.Value;
             set => this.ConectionType = value.HasValue ? new OptionSetValue(value.Value) : null;
@@ -152,24 +161,65 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                 this.MethodIntroduction = value.HasValue ? new EntityReference(XrmHajirMethodIntroduction.Schema.LogicalName, value.Value) : null;
             }
         }
-        [AttributeLogicalName(Schema.EconomicCode)]
-        public string EconomicCode
+        [AttributeLogicalName(Schema.RhsEconomicCode)]
+        public string RhsEconomicCode
         {
-            get => this.GetAttributeValue<string>(Schema.EconomicCode);
-            set => this.SetAttributeValue(Schema.EconomicCode, value);
+            get => this.GetAttributeValue<string>(Schema.RhsEconomicCode);
+            set => this.SetAttributeValue(Schema.RhsEconomicCode, value);
         }
-        [AttributeLogicalName(Schema.NationalCode)]
-        public string NationalCode
+        [AttributeLogicalName(Schema.RhsNationalCode)]
+        public string RhsNationalCode
         {
-            get => this.GetAttributeValue<string>(Schema.NationalCode);
-            set => this.SetAttributeValue(Schema.NationalCode, value);
+            get => this.GetAttributeValue<string>(Schema.RhsNationalCode);
+            set => this.SetAttributeValue(Schema.RhsNationalCode, value);
         }
-        [AttributeLogicalName(Schema.RegistrationNauber)]
-        public string RegistrationNauber
+        [AttributeLogicalName(Schema.RhsRegistrationNauber)]
+        public string RhsRegistrationNauber
         {
-            get => this.GetAttributeValue<string>(Schema.RegistrationNauber);
-            set => this.SetAttributeValue(Schema.RegistrationNauber, value);
+            get => this.GetAttributeValue<string>(Schema.RhsRegistrationNauber);
+            set => this.SetAttributeValue(Schema.RhsRegistrationNauber, value);
         }
+
+        [AttributeLogicalName(Schema.IntroductionMethod)]
+        public OptionSetValue IntroductionMethod
+        {
+            get => this.GetAttributeValue<OptionSetValue>(Schema.IntroductionMethod);
+            set => this.SetAttribiuteValue(Schema.IntroductionMethod, value);
+        }
+        [AttributeLogicalName(Schema.IntroductionMethod)]
+        public int? IntroductionMethodCode
+        {
+            get => this.GetAttributeValue<OptionSetValue>(Schema.IntroductionMethod)?.Value;
+            set => this.IntroductionMethod = value.HasValue ? new OptionSetValue(value.Value) : null;
+
+
+        }
+        [AttributeLogicalName(Schema.RelationTypeCode)]
+        public OptionSetValue RelationTypeCode
+        {
+            get => this.GetAttributeValue<OptionSetValue>(Schema.RelationTypeCode);
+            set => this.SetAttribiuteValue(Schema.RelationTypeCode, value);
+        }
+        [AttributeLogicalName(Schema.RelationTypeCode)]
+        public int? RelationType
+        {
+            get => this.RelationTypeCode?.Value;
+            set => this.RelationTypeCode = value.HasValue ? new OptionSetValue(value.Value) : null;
+        }
+
+        [AttributeLogicalName(Schema.AccountType)]
+        public OptionSetValue AccountType
+        {
+            get => this.GetAttributeValue<OptionSetValue>(Schema.AccountType);
+            set => this.SetAttribiuteValue(Schema.AccountType, value);
+        }
+        [AttributeLogicalName(Schema.AccountType)]
+        public int? AccountTypeCode
+        {
+            get => this.AccountType?.Value;
+            set => this.AccountType = value.HasValue ? new OptionSetValue(value.Value) : null;
+        }
+
 
     }
 }

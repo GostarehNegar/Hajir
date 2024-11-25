@@ -19,13 +19,14 @@ namespace Hajir.Crm.Features.Integration
             {
                 try
                 {
+                    await context.EnsureUsers(contact);
                     if (!string.IsNullOrWhiteSpace(contact.AccontId))
                     {
-                        var account = context.Store.GetAccountByExternalId(contact.AccontId);
-                        if (account == null && !shallow)
-                        {
-                            account = await context.ImportAccountById(contact.AccontId);
-                        }
+                        //var account = context.Store.GetAccountByExternalId(contact.AccontId);
+                        //if (account == null && !shallow)
+                        //{
+                        //    account = await context.ImportAccountById(contact.AccontId);
+                        //}
                     }
                     context.Store.ImportLegacyContact(contact);
                     context.Logger.LogInformation($"Contact {contact} Successfully Imported.");
@@ -34,6 +35,7 @@ namespace Hajir.Crm.Features.Integration
                 {
                     context.Logger.LogError(
                         $"An error occured while trying to import this contact:{contact}. Err:{err.Message}");
+                    throw;
                 }
             }
             return context;

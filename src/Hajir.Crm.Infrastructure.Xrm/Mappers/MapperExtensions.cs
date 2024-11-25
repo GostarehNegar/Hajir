@@ -88,7 +88,7 @@ namespace Hajir.Crm.Infrastructure.Xrm
                     QuoteId = Guid.TryParse(line.QuoteId, out var __iid) ? __iid : (Guid?)null,
                     //QuoteDetailId = Guid.TryParse(line.Id, out var _id) ? _id : (Guid?)null,
                     //ProductId = Guid.TryParse(line.ProductId, out var _pid) ? _pid : (Guid?)null,
-                    Quantity = Convert.ToDecimal(line.Quantity),
+                    Quantity = Convert.ToDouble(line.Quantity),
                     BaseAmount = line.BaseAmount,
                     ManualDiscountAmount = line.Discount,
                     ExtendedAmount = line.ExtendedAmount,

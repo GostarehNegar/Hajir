@@ -15,6 +15,8 @@ using GN.Library.Api;
 using GN.Library.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Hajir.Crm.Integration.SanadPardaz;
+using Microsoft.AspNetCore.Builder;
+using NLog.Web;
 
 namespace Hajir.Crm.Xrm.Service
 {
@@ -29,8 +31,18 @@ namespace Hajir.Crm.Xrm.Service
 
         public static IWebHostBuilder CreateHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureLogging(opt => { })
-                .ConfigureAppConfiguration(opt => { opt.AddJsonFile("appsettings.json"); })
+                .ConfigureLogging(opt => {
+                    opt.ClearProviders();
+                    //ConfigureNLog(args, opt.Configuration)
+                
+                })
+                .ConfigureAppConfiguration((ctx,opt) => { 
+                    opt.AddJsonFile("appsettings.json"); 
+                    if (ctx.HostingEnvironment.IsDevelopment())
+                    {
+                        opt.AddJsonFile("appsettings.Development.json");
+                    }
+                })
                 .ConfigureServices((c, s) =>
                 {
                     ConfigureNLog(args, c.Configuration);
@@ -39,14 +51,19 @@ namespace Hajir.Crm.Xrm.Service
                     s.AddXrmServices(c.Configuration, opt => { opt.ConnectionOptions = ConnectionOptions.OrganizationService; });
                     s.AddHajirIntegrationServices(c.Configuration, opt => { });
                     s.AddSignalRTransport(c.Configuration, opt => { });
+                    //s.AddLibraryApi();
                     s.AddHajirInfrastructure(c.Configuration);
+                    //s.AddMvc();
                     //s.AddSanadPardazIntegration(c.Configuration, opt => { });
 
 
 
                 })
 
-                .Configure(app => { })
+                .Configure(app => {
+                    //app.UseMvc();
+                })
+                .UseNLog()
                 .UseUrlsEx();
 
         public static IWindowsServiceHost CreateWindowsService(string[] args)

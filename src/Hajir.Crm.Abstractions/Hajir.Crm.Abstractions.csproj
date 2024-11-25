@@ -9,4 +9,8 @@
     <ProjectReference Include="..\Library\GN.Library.Shared\GN.Library.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Integration\" />
+  </ItemGroup>
+
 </Project>

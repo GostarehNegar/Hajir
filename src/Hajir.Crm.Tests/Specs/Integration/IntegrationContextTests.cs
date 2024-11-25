@@ -13,6 +13,10 @@ using Hajir.Crm.Infrastructure.Xrm.Data;
 using GN.Library;
 using GN.Library.Data;
 using GN.Library.Xrm.StdSolution;
+using GN.Library.Xrm.Query.StandardModels;
+using Microsoft.Xrm.Sdk;
+using Hajir.Crm.Entities;
+using System.IO;
 
 namespace Hajir.Crm.Tests.Specs.Integration
 {
@@ -21,16 +25,17 @@ namespace Hajir.Crm.Tests.Specs.Integration
         public int Id { get; set; }
     }
     [TestClass]
-    public class IntegrationContextTests:TestFixture
+    public class IntegrationContextTests : TestFixture
     {
 
         private IHost GetHostEx()
         {
-            return this.GetDefaultHost((c,s) => {
+            return this.GetDefaultHost((c, s) =>
+            {
 
                 s.AddHajirIntegrationServices(c, opt => { });
                 s.AddHajirInfrastructure(c, opt => { });
-            
+
             });
         }
         [TestMethod]
@@ -38,7 +43,7 @@ namespace Hajir.Crm.Tests.Specs.Integration
         {
             var host = GetHostEx();
             var ctx = new IntegrationServiceContext(host.Services, "test", default);
-            
+
             var contacts = ctx.LegacyCrmStore.ReadContacts(0, 1000).ToArray();
 
 
@@ -57,16 +62,27 @@ namespace Hajir.Crm.Tests.Specs.Integration
         public async Task contact_integration_works()
         {
             var host = GetHostEx();
-            var ctx = new IntegrationServiceContext(host.Services,"test", default);
+            var ctx = new IntegrationServiceContext(host.Services, "test", default);
+            //var fff = host.Services.GetService<IXrmDataServices>()
+            //    .GetRepository<XrmContact>()
+            //    .Queryable
+            //    .Take(10)
+            //    .ToArray();
+            //host.Services.GetService<IXrmDataServices>()
+            //    .WithImpersonatedDbContext(db => {
+            ////        var c = db.AddEntity<XrmContact>()
+            //            .Query<XrmContact>()
+            //            .ToArray();
+            //    });
             var contacts = ctx.LegacyCrmStore.ReadContacts(0, 100);
-            
+
 
             foreach (var contact in contacts.Skip(1))
             {
                 await ctx.ImportLegacyContact(contact);
             }
 
-            
+
 
         }
         [TestMethod]
@@ -75,9 +91,10 @@ namespace Hajir.Crm.Tests.Specs.Integration
             var host = GetHostEx();
             var ctx = new IntegrationServiceContext(host.Services, "test", default);
             var accounts = ctx.LegacyCrmStore.ReadAccounts(10, 1000).ToArray();
-            var acc = accounts.Where(x=>x.GetAttributeValue<object>("parentaccountid")!=null).ToArray();
+            //var acc = accounts.Where(x => x.GetAttributeValue<object>("parentaccountid") != null).ToArray();
+            var acc = accounts.Where(x => x.GetAttributeValue<int>("statecode") == 1).ToArray();
             await ctx.ImportAccountById(acc[0].Id);
-            var ff = accounts.Where(x=>x.AccountNumber!=null).ToArray();
+            var ff = accounts.Where(x => x.AccountNumber != null).ToArray();
             await ctx.ImportAccountById(accounts[0].Id);
         }
         [TestMethod]
@@ -89,6 +106,18 @@ namespace Hajir.Crm.Tests.Specs.Integration
 
         }
         [TestMethod]
+        public async Task user_integration_wroks()
+        {
+            var host = GetHostEx();
+            var ctx = new IntegrationServiceContext(host.Services, "test", default);
+            var users = ctx.LegacyCrmStore.ReadItems("systemuser", 0, 10);
+            var user = ctx.LegacyCrmStore.GetUser(users.Skip(1).First().Id);
+            await ctx.ImportUser(user);
+
+
+        }
+
+        [TestMethod]
         public async Task Mappping()
         {
             var host = GetHostEx();
@@ -97,8 +126,8 @@ namespace Hajir.Crm.Tests.Specs.Integration
             var lines = HajirCrmConstants.LegacyMaps.RelationShipMap;
             var industry = HajirCrmConstants.LegacyMaps.IndustryMap;
             var salutaion = HajirCrmConstants.LegacyMaps.SalutaionMap;
-            
-                
+
+
         }
         [TestMethod]
         public async Task quote_integration_works()
@@ -112,26 +141,26 @@ namespace Hajir.Crm.Tests.Specs.Integration
             //    .WithImpersonatedSqlConnection(db => {
             //        db.Open();
             //    });
-            var _t = host.Services.GetService<IXrmDataServices>()
-                .GetRepository<XrmQuote>()
-                .Queryable
-                //.FirstOrDefault(x => x.QuoteId == Guid.Parse("{033e35c0-669f-e611-bafc-000c29058b6f}"));
-                .FirstOrDefault(x => x.QuoteNumber == "QUO-03714-C4P7Q3");
+            //var _t = host.Services.GetService<IXrmDataServices>()
+            //    .GetRepository<XrmQuote>()
+            //    .Queryable
+            //    //.FirstOrDefault(x => x.QuoteId == Guid.Parse("{033e35c0-669f-e611-bafc-000c29058b6f}"));
+            //    .FirstOrDefault(x => x.QuoteNumber == "QUO-03714-C4P7Q3");
 
-            //"QUO-03714-C4P7Q3"
-            var q = new XrmQuote
-            {
-                Id = Guid.Parse("{033e35c0-669f-e611-bafc-000c29058b6f}")
-            };
-            host.Services.GetService<IXrmDataServices>()
-                .GetRepository<XrmQuote>()
-                .Delete(q);
+            ////"QUO-03714-C4P7Q3"
+            //var q = new XrmQuote
+            //{
+            //    Id = Guid.Parse("{033e35c0-669f-e611-bafc-000c29058b6f}")
+            //};
+            //host.Services.GetService<IXrmDataServices>()
+            //    .GetRepository<XrmQuote>()
+            //    .Delete(q);
 
             var ctx = new IntegrationServiceContext(host.Services, "test", default);
-            var quotes = ctx.LegacyCrmStore.ReadQuotes(0,10);
+            var quotes = ctx.LegacyCrmStore.ReadQuotes(0, 10);
             await ctx.ImportQuote(quotes.Skip(1).First());
-            
-            
+
+
 
         }
         public bool SetDates(IXrmDataServices dataServices, string entityname, Guid id, DateTime createdOn, DateTime modifiedon)
@@ -139,7 +168,8 @@ namespace Hajir.Crm.Tests.Specs.Integration
             var result = false;
             var tableName = entityname + "base";
             var idcolumn = entityname + "id";
-            dataServices.WithImpersonatedSqlConnection(con => {
+            dataServices.WithImpersonatedSqlConnection(con =>
+            {
                 try
                 {
                     con.Open();
@@ -190,8 +220,55 @@ namespace Hajir.Crm.Tests.Specs.Integration
             var account2 = host.Services.GetService<IXrmDataServices>()
                 .GetRepository<XrmHajirAccount>()
                 .Queryable
-                .Where(x=>x.AccountId==account.Id)
+                .Where(x => x.AccountId == account.Id)
                 .FirstOrDefault();
+
+
+
+
+        }
+        [TestMethod]
+        public async Task store_cities()
+        {
+            var host = GetHostEx();
+            var data = new GeoData();
+            data.Cities = host.Services
+                 .GetService<IXrmDataServices>()
+                 .GetRepository<XrmHajirCity>()
+                 .Queryable
+                 .ToArray()
+                 .Select(x => new GeoData.City
+                 {
+                     Id = x.Id,
+                     Name = x.Name,
+                     ProvinceId = x.GetAttributeValue<EntityReference>("rhs_state")?.Id,
+                     Code = x.GetAttributeValue<string>("rhs_codecity"),
+                 })
+                 .ToArray();
+            data.Provinces = host.Services
+                .GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirProvince>()
+                .Queryable
+                .ToArray()
+                .Select(x => new GeoData.Province
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    CenterCityId = x.GetAttributeValue<EntityReference>("rhs_centerprovince")?.Id,
+                    Code = x.GetAttributeValue<string>("rhs_codeprovince")
+                })
+                .ToArray();
+
+            data.Countries = host.Services
+                .GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirCountry>()
+                .Queryable
+                .ToArray()
+                .Select(x => new GeoData.Country { Id = x.Id, Name = x.Name })
+                .ToArray();
+            File.WriteAllText("geo.dat", Newtonsoft.Json.JsonConvert.SerializeObject(data));
+
+
 
 
 

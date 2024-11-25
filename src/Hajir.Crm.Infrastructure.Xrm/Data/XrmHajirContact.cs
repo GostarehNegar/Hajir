@@ -16,6 +16,8 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             public const string RHSCity = "rhs_city";
             public const string RHSCityPhoneCode = "rhs_codecityphone";
             public const string ExternalId = "rhs_externalid";
+            public const string Gifts = HajirCrmConstants.HajirSolutionPerfix + "gifts";
+            public const string SalutaionCode = HajirCrmConstants.HajirSolutionPerfix + "salutationcode";
 
         }
 

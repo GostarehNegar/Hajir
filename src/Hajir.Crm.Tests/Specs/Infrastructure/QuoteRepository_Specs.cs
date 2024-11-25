@@ -160,5 +160,20 @@ namespace Hajir.Crm.Tests.Specs.Infrastructure
 
 
 		}
-	}
+
+        [TestMethod]
+        public async Task expireson_test()
+		{
+            var host = this.GetDefaultHost();
+			var quote = host.Services
+				.GetService<IXrmDataServices>()
+				.GetRepository<XrmHajirQuote>()
+				.Queryable
+				.FirstOrDefault(x => x.QuoteNumber == "QUO-01000-H1S9D1");
+			var ff = await host.Services.GetService<IQuoteRepository>()
+				.SearchAccount("ت");
+
+        }
+
+    }
 }

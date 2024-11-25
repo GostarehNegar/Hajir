@@ -27,15 +27,16 @@ namespace Hajir.Crm.Features.Integration
 
                 if (account != null)
                 {
-                    var primary = account.GetAttributeValue<DynamicEntityReference>("parentaccountid");
-                    if (primary!=null && Guid.TryParse(primary.Id, out var _primaryId))
-                    {
-                        await context.ImportAccountById(primary.Id, true);
-                    }
-                    if (!string.IsNullOrWhiteSpace(account.PrimaryContactId) && !shallow && context.Store.GetContactByExternalId(account.PrimaryContactId) == null)
-                    {
-                        await context.ImportContactById(account.PrimaryContactId, true);
-                    }
+                    await context.EnsureUsers(account);
+                    //var primary = account.GetAttributeValue<DynamicEntityReference>("parentaccountid");
+                    //if (primary!=null && Guid.TryParse(primary.Id, out var _primaryId))
+                    //{
+                    //    //await context.ImportAccountById(primary.Id, true);
+                    //}
+                    //if (!string.IsNullOrWhiteSpace(account.PrimaryContactId) && !shallow && context.Store.GetContactByExternalId(account.PrimaryContactId) == null)
+                    //{
+                    //    //await context.ImportContactById(account.PrimaryContactId, true);
+                    //}
                     var result = context.Store.ImportLegacyAccount(account);
                     context.Logger.LogInformation(
                         $"Account:{account} Successfully Imported.");

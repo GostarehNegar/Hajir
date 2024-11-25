@@ -15,6 +15,7 @@ namespace Hajir.Crm.Features.Integration
 
             try
             {
+                await context.EnsureUsers(quote);
                 if (!string.IsNullOrWhiteSpace(quote.AccountId) && context.Store.GetAccountByExternalId(quote.AccountId)==null)
                 {
                     var account = await context.ImportAccountById(quote.AccountId);

@@ -190,7 +190,8 @@ namespace GN.Library.Xrm.Query.Internal
                    from => from.Value,
                    to => to.HasValue ? new OptionSetValue(to.Value) : null);
                 builder.Property(prop.Name)
-                    .HasColumnType("SMALLINT")
+                    //.HasColumnType("SMALLINT")
+                    .HasColumnType("INT")
                     .HasColumnName(columnName)
                     .HasConversion(converter);
                 return true;

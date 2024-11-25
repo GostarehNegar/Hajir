@@ -25,7 +25,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
             var q = this.dataServices
                .GetRepository<XrmHajirQuote>()
                .Queryable
-               .FirstOrDefault(x => x.HajirQuoteId == id);
+               .FirstOrDefault(x => x.QuoteNumber == id);
 
 
             if (q != null)
@@ -45,7 +45,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                 result = new QuoteReportData
                 {
                     CustomerName = account?.Name,
-                    QuoteNumber = q.HajirQuoteId,
+                    QuoteNumber = q.QuoteNumber,
                     Remarks = q.GetAttributeValue<string>("hajir_remarks"),
                     TotalDiscount = q.TotalDiscountAmount?.Value ?? 0,
                     TotalTax = q.TotalTax ?? 0,

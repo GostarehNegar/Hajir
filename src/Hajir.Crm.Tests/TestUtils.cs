@@ -70,7 +70,7 @@ namespace Hajir.Crm.Tests
                     if (!bypassDefaults)
                     {
                         s.AddGNLib(c.Configuration, cfg => { });
-                        s.AddXrmServices(c.Configuration, cfg => { cfg.ConnectionOptions = ConnectionOptions.OrganizationService; });
+                        s.AddXrmServices(c.Configuration, cfg => { cfg.ConnectionOptions = ConnectionOptions.WebAPI; });
                         s.AddHajirCrm(c.Configuration, cfg => { });
                         s.AddHajirInfrastructure(c.Configuration);
                         s.AddSanadPardazIntegration(c.Configuration, opt => { });

@@ -201,11 +201,11 @@ namespace Hajir.Crm.Blazor.Components.Sales
                     }
                     if (!string.IsNullOrWhiteSpace(this.Value.Contact?.Id) && Guid.TryParse(this.Value.Contact?.Id, out var _contactId))
                     {
-                        await this.SetLookupValue(XrmHajirQuote.Schema.Contact, _contactId.ToString(), XrmContact.Schema.LogicalName);
+                        await this.SetLookupValue(XrmHajirQuote.Schema.RhsContact, _contactId.ToString(), XrmContact.Schema.LogicalName);
                     }
                     await this.SetAttributeValue("hajir_remarks", this.Value.Remarks?.Replace("\r\n", ""));
                     await this.SetAttributeValue("rhs_paymentdeadline", this.Value.PyamentDeadline ?? 0);
-                    await this.SetAttributeValue(XrmHajirQuote.Schema.QuoteType, this.Value.IsOfficial);
+                    await this.SetAttributeValue(XrmHajirQuote.Schema.RhsQuoteType, this.Value.IsOfficial);
                     await this.SetAttributeValue(XrmHajirQuote.Schema.ValidityPeriod, this.Value.ExpirationDate);
                     await this.SetAttributeValue(XrmHajirQuote.Schema.PaymentMethod,
                         this.Value.NonCash ? XrmHajirQuote.Schema.PaymentMethods.NonCash : XrmHajirQuote.Schema.PaymentMethods.Cash);
