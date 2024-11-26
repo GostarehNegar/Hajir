@@ -101,16 +101,18 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
                     await this.SetAttributeValue("hajir_remarks", this.Value.Remarks);//?.Replace("\r\n", ""));
                     //await this.SetAttributeValue("rhs_paymentdeadline", this.Value.PyamentDeadline ?? 0);
                     await this.SetAttributeValue(XrmHajirQuote.Schema.QuoteType, this.Value.IsOfficial);
+                    await this.SetAttributeValue(XrmHajirQuote.Schema.PaymentTermsCode, this.Value.PaymentTermCode);
                     //await this.SetAttributeValue(XrmHajirQuote.Schema.ValidityPeriod, this.Value.ExpirationDate);
                     //await this.SetAttributeValue(XrmHajirQuote.Schema.PaymentMethod,
                     //    this.Value.NonCash ? XrmHajirQuote.Schema.PaymentMethods.NonCash : XrmHajirQuote.Schema.PaymentMethods.Cash);
                     await this.SetAttributeValue(XrmHajirQuote.Schema.PrintHeader, this.Value.PrintHeader);
+                    
                     //await this.SetAttributeValue("", this.Value.PyamentDeadline ?? 0);
                     await this.SaveData().TimeOutAfter(3000);
                     var id = await this.GetDataEntityId();
                     if (id.HasValue)
                     {
-                        foreach (var line in this.Value.Lines)
+                        foreach (var line in this.Value.Lines.Where(x=>!x.IsBlank))
                         {
                             line.QuoteId = id.Value.ToString();
                             await this.ServiceProvider.GetService<IQuoteRepository>()

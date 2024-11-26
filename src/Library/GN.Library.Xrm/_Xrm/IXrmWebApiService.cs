@@ -136,6 +136,15 @@ namespace GN.Library.Xrm
             var api = this.GetWebApi();
             var result = await api.GetAttributeDisplayNameList(entityName).ConfigureAwait(false);
             var lookups = await api.GetLookupFields(entityName).ConfigureAwait(false);
+            var options = await api.GetOptionSets(entityName).ConfigureAwait(false);
+            foreach(var opt in options)
+            {
+                var item = result.FirstOrDefault(x => x.LogicalName == opt.LogicalName);
+                if (item != null)
+                {
+                    item.Options = opt;
+                }
+            }
             foreach (var lookup in lookups)
             {
                 var item = result.FirstOrDefault(x => x.MetadataId == lookup.MetadataId);
@@ -177,6 +186,7 @@ namespace GN.Library.Xrm
                 LookupAnnotaions = true,
                 FormattedValues = options?.FormattedValues ?? false
             }); 
+
 
             return fetchResults;
         }

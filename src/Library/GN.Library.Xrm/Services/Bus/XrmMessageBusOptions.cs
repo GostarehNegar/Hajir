@@ -12,5 +12,11 @@ namespace GN.Library.Xrm.Services.Bus
 		public string WebApiUrl { get; set; }
 		public bool IsRemote { get; set; }
 		public bool AddSystemMessages { get; set; }
+		public bool PurgeOnShutDown { get; set; }
+		public bool WatchService { get; set; }
+		public XrmMessageBusOptions Validate()
+		{
+			return this;
+		}
 	}
 }

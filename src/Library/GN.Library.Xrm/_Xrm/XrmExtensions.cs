@@ -43,6 +43,7 @@ using System.Reflection;
 using GN.Library.Shared.EntityServices;
 using GN.Library.Xrm.Services.Handlers;
 using GN.Library.Xrm.StdSolution;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GN.Library.Xrm
 {
@@ -79,6 +80,8 @@ namespace GN.Library.Xrm
             XrmSettings.Current.ConnectionString = options.ConnectionString;
             XrmSettings.Current.DbConnectionString = options.DbConnectionString;
             XrmSettings.Current.WebHookPath = options.WebHookPath;
+            XrmSettings.Current.MessageBusOptions = options.MessageBusOptions ?? new XrmMessageBusOptions();
+            XrmSettings.Current.Validate();
             if (!services.HasService<IXrmOrganizationService>())
             {
                 services.AddTransient<XrmSettings>(s => XrmSettings.Current);
@@ -98,7 +101,7 @@ namespace GN.Library.Xrm
                 services.AddTransient<IWebCommand, EntityWebCommand>();
                 services.AddTransient<IEntityCommandHandler, EntityCommandHandler>();
                 services.AddTransient<CommandLine, XrmCommand>();
-                services.AddSingleton<XrmMessageBusOptions>(x => new XrmMessageBusOptions());
+                services.AddSingleton<XrmMessageBusOptions>(x => XrmSettings.Current.MessageBusOptions);
                 services.AddTransient<IPluginService, PluginService<GN.Library.Xrm.Plugins.XrmMessageBusPlugin>>();
                 services.AddTransient(typeof(IPluginService<>), typeof(PluginService<>));
                 services.AddTransient<IServiceStatusReporter, XrmHealthService>();
@@ -119,7 +122,10 @@ namespace GN.Library.Xrm
                 {
                     services.AddTransient<IHealthCheck>(s => s.GetServiceEx<XrmMessageBus>());
                     services.AddSingleton<IHostedService>(x => x.GetServiceEx<IXrmMessageBus>());
-                    services.AddXrmEntityWatcherService(configuration);
+                    if (options.MessageBusOptions.WatchService)
+                    {
+                        services.AddXrmEntityWatcherService(configuration);
+                    }
                     //services.AddActivityFeedServices(configuration, cfg => { });
                     //services.AddMyWorkServices(configuration, cfg => { });
                     if (options.MessageBusOptions.AddSystemMessages)

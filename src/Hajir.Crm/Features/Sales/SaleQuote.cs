@@ -26,6 +26,7 @@ namespace Hajir.Crm.Features.Sales
         public bool PrintHeader { get; set; }
         public DateTime? EffectiveFrom { get; set; }
         public DateTime? EffectiveTo { get; set; }
+        public int? PaymentTermCode { get; set; }
         public string RebuildRemarks()
         {
             var str = HajirCrmConstants.QuoteComments.STR_Gaurantee + "\r\n" +

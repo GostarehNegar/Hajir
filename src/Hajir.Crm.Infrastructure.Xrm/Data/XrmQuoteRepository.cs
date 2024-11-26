@@ -179,6 +179,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                     quote.PrintHeader = xrm_quote.PrintHeader ?? true;
                     quote.EffectiveFrom = xrm_quote.EffectiveFrom;
                     quote.EffectiveTo = xrm_quote.EffectiveTo;
+                    quote.PaymentTermCode = xrm_quote.PaymentTermsCode?.Value;
                     if (xrm_quote.AccountId.HasValue)
                     {
                         var acc = this.dataServices.GetRepository<XrmAccount>()

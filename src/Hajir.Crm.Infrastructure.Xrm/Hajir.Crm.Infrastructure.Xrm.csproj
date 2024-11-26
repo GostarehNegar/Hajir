@@ -7,6 +7,8 @@
   <ItemGroup>
     <None Remove="Solutions\HajirSales_1_0_0.zip" />
     <None Remove="Solutions\HajirSales_1_0_0_managed.zip" />
+    <None Remove="Solutions\HajirSales_1_0_1.zip" />
+    <None Remove="Solutions\HajirSales_1_0_1_managed.zip" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,6 +16,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Solutions\HajirSales_1_0_0_managed.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Solutions\HajirSales_1_0_1.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Solutions\HajirSales_1_0_1_managed.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

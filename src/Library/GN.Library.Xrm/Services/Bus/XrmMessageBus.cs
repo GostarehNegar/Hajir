@@ -12,6 +12,7 @@ using GN.Library.Xrm;
 using System.Collections.Concurrent;
 using GN.Library.Helpers;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GN.Library.Xrm.Services.Bus
 {
@@ -77,7 +78,7 @@ namespace GN.Library.Xrm.Services.Bus
             var _handlers = new List<IXrmMessageHandler>(handlers);
             _handlers.Add(new HelathCheckHandler());
             AddHanders(_handlers);
-            this.options = XrmMessageBusOptions.Instance;
+            this.options = serviceProvider.GetService<XrmMessageBusOptions>();//  XrmMessageBusOptions.Instance;
             if (string.IsNullOrWhiteSpace(this.options.WebApiUrl) || !Uri.IsWellFormedUriString(this.options.WebApiUrl, UriKind.Absolute))
             {
                 this.options.WebApiUrl = AppHost.Utils.GetAppUrl();
@@ -239,7 +240,10 @@ namespace GN.Library.Xrm.Services.Bus
                                 "An error occured while trying to Unregister Plugin. Error:{0} ", err.Message);
                         }
                     }
-                    this.PurgeAllGNPlugin();
+                    if (this.options.PurgeOnShutDown)
+                    {
+                        this.PurgeAllGNPlugin();
+                    }
                     this.isStarted = false;
                 });
             }

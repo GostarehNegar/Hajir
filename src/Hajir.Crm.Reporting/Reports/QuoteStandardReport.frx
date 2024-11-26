@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report ScriptLanguage="CSharp" ReportInfo.Created="09/20/2024 08:14:46" ReportInfo.Modified="10/15/2024 08:51:23" ReportInfo.CreatorVersion="2024.2.0.0">
+<Report ScriptLanguage="CSharp" ReportInfo.Created="09/20/2024 08:14:46" ReportInfo.Modified="11/25/2024 12:03:54" ReportInfo.CreatorVersion="2024.2.14.0">
   <Dictionary>
-    <BusinessObjectDataSource Name="Data" ReferenceName="Data" DataType="System.Int32" Enabled="true">
-      <BusinessObjectDataSource Name="Items" DataType="System.Int32" Enabled="true">
+    <BusinessObjectDataSource Name="Data" ReferenceName="Data" DataType="Hajir.Crm.Reporting.QuoteReportData[], Hajir.Crm.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" Enabled="true">
+      <BusinessObjectDataSource Name="Items" DataType="Hajir.Crm.Reporting.QuoteLineReportData[], Hajir.Crm.Abstractions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" Enabled="true">
         <Column Name="Name" DataType="System.String"/>
         <Column Name="Quantity" DataType="System.Decimal"/>
         <Column Name="UnitPrice" DataType="System.Decimal"/>
@@ -15,7 +15,6 @@
       <Column Name="FormattedDate" DataType="System.String"/>
       <Column Name="TotalAmount" DataType="System.Decimal"/>
       <Column Name="TotalTax" DataType="System.Decimal"/>
-      <Column Name="FormattedValidityDate" DataType="System.String"/>
       <Column Name="QuoteNumber" DataType="System.String"/>
       <Column Name="Remarks" DataType="System.String"/>
       <Column Name="PrintHeader" DataType="System.Boolean" BindableControl="CheckBox"/>
@@ -23,6 +22,14 @@
       <Column Name="TotalDiscount" DataType="System.Decimal"/>
       <Column Name="TotalLineAmount" DataType="System.Decimal"/>
       <Column Name="TotalLineBaseAmount" DataType="System.Decimal"/>
+      <Column Name="FormattedExpiresOn" DataType="System.String"/>
+      <Column Name="ExpiresOn" DataType="System.Nullable`1[[System.DateTime, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"/>
+      <Column Name="PaymentTerms" DataType="System.String"/>
+      <Column Name="PaymentTermsCode" DataType="System.Nullable`1[[System.Int32, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"/>
+      <Column Name="EffectiveFrom" DataType="System.Nullable`1[[System.DateTime, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"/>
+      <Column Name="EffectiveTo" DataType="System.Nullable`1[[System.DateTime, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"/>
+      <Column Name="FormattedEffectiveFrom" DataType="System.String"/>
+      <Column Name="FormattedEffectiveTo" DataType="System.String"/>
     </BusinessObjectDataSource>
   </Dictionary>
   <ReportPage Name="Page1" Watermark.Font="Arial, 60pt">

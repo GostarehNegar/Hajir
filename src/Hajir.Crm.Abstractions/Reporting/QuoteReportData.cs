@@ -17,7 +17,11 @@ namespace Hajir.Crm.Reporting
         public decimal TotalAmount { get; set; }
         public decimal TotalTax { get;set; }
         public decimal TotalDiscount { get; set; }
-        public string FormattedValidityDate { get; set; }
+        
+        public string FormattedExpiresOn { get; set; }
+        public DateTime? ExpiresOn { get; set; }
+        public string PaymentTerms { get; set; }
+        public int? PaymentTermsCode { get; set; }
         public string Remarks { get; set; }
         public bool PrintHeader { get; set; }
         public bool PrintRowDiscounts { get; set; }

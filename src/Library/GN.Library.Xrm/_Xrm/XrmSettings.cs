@@ -26,7 +26,7 @@ namespace GN.Library.Xrm
 		{
 			OrganizationServiceTimeoutInSeconds = 30
 		};
-		public XrmMessageBusOptions MessageBusOptions { get; }
+		public XrmMessageBusOptions MessageBusOptions { get; set; }
 		public XrmSettings()
 		{
 			this.OrganizationServiceTimeoutInSeconds = 30;
@@ -70,7 +70,11 @@ namespace GN.Library.Xrm
 			return result;
 		}
 
-
+		public XrmSettings Validate()
+		{
+			this.MessageBusOptions = (this.MessageBusOptions ?? new XrmMessageBusOptions()).Validate();
+			return this;
+		}
 
 
 

@@ -22,6 +22,7 @@ namespace Hajir.Crm.Features.Sales
         public decimal? Tax { get; set; }
         public long? PercentTax { get; set; }
         public bool IsProductOverriden => string.IsNullOrWhiteSpace(this.ProductId);
+        public bool IsBlank => string.IsNullOrWhiteSpace(this.Name) && string.IsNullOrEmpty(this.ProductId);
 
         public void Recalculate()
         {

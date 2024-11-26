@@ -27,6 +27,12 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                .Queryable
                .FirstOrDefault(x => x.QuoteNumber == id);
 
+            var schema = this.dataServices.GetSchemaService().GetSchema(XrmHajirQuote.Schema.LogicalName);
+            string GetPaymentCode(int? val)
+            {
+                var att = schema.Attributes.FirstOrDefault(x => x.LogicalName == XrmHajirQuote.Schema.PaymentTermsCode);
+                return att.GetOptionSetValues(1065).TryGetValue(val ?? 0, out var r) ? r : "";
+            }
 
             if (q != null)
             {
@@ -58,8 +64,13 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                     EffectiveTo = q.EffectiveTo,
                     FormattedEffectiveFrom = q.EffectiveFrom.FormatPersianDate(),
                     FormattedEffectiveTo = q.EffectiveTo.FormatPersianDate(),
-                    
-                    
+                    ExpiresOn = q.ExpiresOn,
+                    FormattedExpiresOn = q.ExpiresOn.FormatPersianDate(),
+                    PaymentTermsCode = q.PaymentTermsCode?.Value,
+                    PaymentTerms = GetPaymentCode(q.PaymentTermsCode?.Value),
+
+
+
                     Items = lines
                         .Select(x => new QuoteLineReportData
                         {

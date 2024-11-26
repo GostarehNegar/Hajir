@@ -20,10 +20,10 @@
     <MudItem xs="4">
         <MudGrid>
             <MudItem xs="12">
-                <MudTextField T="string" Label="شماره " Text="@Value.QuoteNumber" style="direction:ltr;font-family:Arial"></MudTextField>
+                <MudTextField T="string" Label="شماره " Text="@Value.QuoteNumber" style="direction:ltr;font-family:Arial" Disabled="true"></MudTextField>
             </MudItem>
             <MudItem xs="6">
-                <MudDatePicker Label="Basic example" @bind-Date="Value.ExpirationDate" Culture="@GetPersianCulture()" />
+                <MudDatePicker Label="تاریخ اعتبار" @bind-Date="Value.ExpirationDate" Culture="@GetPersianCulture()" />
                 @* <MudDatePicker @ref="_picker" Label="تاریخ اعتبار" @bind-Date="Value.ExpirationDate" Culture="@GetPersianCulture()" TitleDateFormat="dddd, dd MMMM">
                 <PickerActions>
                 <MudButton Class="mr-auto align-self-start" OnClick="TodayAsync">Today</MudButton>
@@ -31,7 +31,12 @@
                 </MudDatePicker>*@
             </MudItem>
             <MudItem xs="6">
-                <MudTextField T="double?" @bind-Value="Value.PyamentDeadline" Label="مهلت پرداخت (روز)" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="false" />
+                @*<MudTextField T="double?" @bind-Value="Value.PyamentDeadline" Label="مهلت پرداخت (روز)" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="false" />*@
+                <MudSelect @bind-Value="this.PaymentTerm" Label="پرداخت">
+                    @foreach(var item in this.PaymentTerms){
+                        <MudSelectItem Value="item.Key">@item.Value</MudSelectItem>
+                    }
+                </MudSelect>
             </MudItem>
 
             <MudItem xs="4" style="text-align:right">

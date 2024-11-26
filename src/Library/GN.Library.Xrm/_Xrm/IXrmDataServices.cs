@@ -109,11 +109,16 @@ namespace GN.Library.Xrm
         }
         public IXrmRepository<TEntity> GetRepository<TEntity>() where TEntity : XrmEntity
         {
-            return new XrmRepository<TEntity>(this);
-            var result = AppHost.GetService<IXrmRepository<TEntity>>();
-            result?.AttachTo(this);
-
+            /// Babak:
+            /// To support callerid
+            var result = new XrmRepository<TEntity>(this);
+            result.CurrentUserCallerId = this.CallerId;
             return result;
+            return new XrmRepository<TEntity>(this);
+            //var result = AppHost.GetService<IXrmRepository<TEntity>>();
+            //result?.AttachTo(this);
+
+            //return result;
         }
         public IXrmRepository<XrmEntity> GetRepository(string logicalName)
         {
@@ -237,6 +242,7 @@ namespace GN.Library.Xrm
                 }
             };
         }
+
         public IXrmDataServices Create(Action<XrmSettings> configure)
         {
             var settings = new XrmSettings();

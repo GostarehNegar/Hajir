@@ -172,6 +172,12 @@ namespace Hajir.Crm.Tests.Specs.Infrastructure
 				.FirstOrDefault(x => x.QuoteNumber == "QUO-01000-H1S9D1");
 			var ff = await host.Services.GetService<IQuoteRepository>()
 				.SearchAccount("ت");
+			var schema = host
+				.Services
+				.GetService<IXrmSchemaService>()
+				.GetSchema(XrmQuote.Schema.LogicalName);
+			var field = schema.Attributes.FirstOrDefault(x => x.LogicalName == XrmQuote.Schema.PaymentTermsCode);
+			var vals = field.GetOptionSetValues(1033);
 
         }
 

@@ -35,6 +35,7 @@ namespace GN.Library.Xrm.StdSolution
             public const string EffectiveTo= "effectiveto";
 			public const string Description = "description";
 			public const string ExpiresOn = "expireson";
+			public const string PaymentTermsCode = "paymenttermscode";
 
             
             // https://docs.microsoft.com/en-us/dynamics365/customerengagement/on-premises/developer/entities/quote#BKMK_StateCode
@@ -255,7 +256,12 @@ namespace GN.Library.Xrm.StdSolution
             get => this.GetAttributeValue<DateTime?>(Schema.ExpiresOn);
             set => this.SetAttribiuteValue(Schema.ExpiresOn, value);
         }
-
+        [AttributeLogicalName(Schema.PaymentTermsCode)]
+        public OptionSetValue PaymentTermsCode
+        {
+            get => this.GetAttributeValue<OptionSetValue>(Schema.PaymentTermsCode);
+            set => this.SetAttribiuteValue(Schema.PaymentTermsCode, value);
+        }
 
     }
     [EntityLogicalName(Schema.LogicalName)]

@@ -1,12 +1,10 @@
 ﻿using GN.Library.Shared.Entities;
 using GN.Library.Xrm.StdSolution;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -47,12 +45,13 @@ namespace GN.Library.Xrm
         State,
         Status,
         Customer,
-        Unkown,
+        Unknown,
     }
     public class AbstractMetaData
     {
         private List<AbstractAttributeMetaData> attributes;
         private object metadata;
+        private IXrmSchemaService _service;
 
         public string LogicalName { get; private set; }
         public int? ObjectTypeCode => MetaData2 != null ? MetaData2.ObjectTypeCode : null;
@@ -60,14 +59,15 @@ namespace GN.Library.Xrm
 
         public IEnumerable<AbstractAttributeMetaData> Attributes => this.attributes;
 
-        internal AbstractMetaData(EntityMetadata metadata)
+        internal AbstractMetaData(EntityMetadata metadata, IXrmSchemaService service)
         {
+            this._service = service;
             this.LogicalName = metadata?.LogicalName;
             this.metadata = metadata;
             this.attributes = new List<AbstractAttributeMetaData>();
             if (metadata != null && metadata.Attributes != null)
             {
-                this.attributes = metadata.Attributes.Select(x => new AbstractAttributeMetaData(x)).ToList();
+                this.attributes = metadata.Attributes.Select(x => new AbstractAttributeMetaData(x, service)).ToList();
             }
         }
         internal AbstractMetaData(CRMEntityDisplayName metadata, List<AbstractAttributeMetaData> attributes = null)
@@ -87,6 +87,7 @@ namespace GN.Library.Xrm
     }
     public class AbstractAttributeMetaData
     {
+        private IXrmSchemaService _service;
         private object metadata;
         private AttributeType? attributeType;
         public string LogicalName => this.MetdaData1 == null ? this.Metadata2?.LogicalName : this.MetdaData1.LogicalName;
@@ -95,6 +96,7 @@ namespace GN.Library.Xrm
         public bool? NullableIsPrimaryId => this.MetdaData1 == null ? this.Metadata2?.IsPrimaryId : this.MetdaData1.IsPrimaryId;
         public bool IsPrimaryId => NullableIsPrimaryId.HasValue ? this.NullableIsPrimaryId.Value : false;
         public string SchemaName => this.MetdaData1 == null ? this.Metadata2?.SchemaName : this.MetdaData1.SchemaName;
+        private MyOptionSetMetadata _optionSetMetadat;
 
         public string GetNavigationPropertyName()
         {
@@ -125,7 +127,7 @@ namespace GN.Library.Xrm
             {
                 if (!attributeType.HasValue)
                 {
-                    attributeType = AttributeType.Unkown;
+                    attributeType = AttributeType.Unknown;
                     var typeName = TypeName?.Replace("Type", "");
 
                     if (typeName != null && Enum.TryParse<AttributeType>(typeName, out var t))
@@ -134,7 +136,7 @@ namespace GN.Library.Xrm
                     }
                     else
                     {
-                        attributeType = AttributeType.Unkown;
+                        attributeType = AttributeType.Unknown;
                     }
                 }
                 return attributeType.Value;
@@ -146,17 +148,101 @@ namespace GN.Library.Xrm
             this.metadata = metadata;
             //this.LogicalName = metadata.LogicalName;
         }
-        internal AbstractAttributeMetaData(AttributeMetadata metadata)
+        internal AbstractAttributeMetaData(AttributeMetadata metadata, IXrmSchemaService service)
         {
             this.metadata = metadata;
+            this._service = service;
         }
 
         internal CRMAttributeDisplayName MetdaData1 { get { return this.metadata as CRMAttributeDisplayName; } }
         internal AttributeMetadata Metadata2 { get { return this.metadata as AttributeMetadata; } }
+        public MyOptionSetMetadata GetOptions()
+        {
+            if (this._optionSetMetadat != null)
+            {
+                return this._optionSetMetadat;
+            }
 
+            if (this.metadata is CRMAttributeDisplayName meta)
+            {
+                this._optionSetMetadat = meta.Options;
+            }
+            if (this.metadata is AttributeMetadata meta2 && this._service is XrmSchemaService __service)
+            {
+                
+                this._optionSetMetadat = __service.GetOptionSetDataEx(meta2.EntityLogicalName, meta2.LogicalName);
+            }
+            this._optionSetMetadat = this._optionSetMetadat ?? new MyOptionSetMetadata();
+            return this._optionSetMetadat;
+        }
         public override string ToString()
         {
             return string.Format("{0}, {1}, {2} ", LogicalName, TypeName, Type.ToString());
+        }
+
+        public string GetDisplayName(int langcode)
+        {
+            return GetDisplayName()?.GetLabel(langcode);
+        }
+        public MyLabel GetDisplayName()
+        {
+            MyLabel ReadLabel(Label lbl)
+            {
+
+                return new MyLabel
+                {
+                    LocalizedLabels = (lbl.LocalizedLabels ?? new LocalizedLabelCollection()).Select(x => new MyLocalizedLabel { Label = x.Label, LangCode = x.LanguageCode }).ToArray(),
+                    UserLocalizedLabel = new MyLocalizedLabel { Label = lbl?.UserLocalizedLabel.Label, LangCode = lbl?.UserLocalizedLabel.LanguageCode ?? 0 }
+                };
+
+            }
+
+            if (this.metadata is CRMAttributeDisplayName meta)
+            {
+                return meta.DisplayNameEx;
+            }
+            else if (this.metadata is AttributeMetadata meta1)
+            {
+                return ReadLabel(meta1.DisplayName);
+            }
+            return new MyLabel { };
+        }
+        public bool IsRequired => RequiredLevel == AttributeRequiredLevel.SystemRequired || RequiredLevel == AttributeRequiredLevel.ApplicationRequired;
+        public AttributeRequiredLevel RequiredLevel
+        {
+            get
+            {
+                if (this.metadata is CRMAttributeDisplayName meta)
+                {
+                    return meta.RequiredLevel;
+                }
+                else if (this.metadata is AttributeMetadata meta2)
+                {
+                    return meta2.RequiredLevel.Value;
+                }
+                return AttributeRequiredLevel.None;
+
+            }
+        }
+       
+        public Dictionary<int, string> GetOptionSetValues(int langcode)
+        {
+            var result = new Dictionary<int, string>();
+            var options = this.GetOptions();
+            if (options != null && options.OptionSet != null && options.OptionSet.Options != null)
+            {
+                options.OptionSet.Options.ToList()
+                    .ForEach(x =>
+                    {
+                        if (x.Label != null)
+                        {
+                            var lbl = x.Label?.LocalizedLabels.FirstOrDefault(y => y.LanguageCode == langcode)?.Label ?? x.Label.UserLocalizedLabel?.Label;
+                            result[x.Value] = lbl;
+                        }
+
+                    });
+            }
+            return result;
         }
     }
     public interface IXrmSchemaService
@@ -583,10 +669,10 @@ namespace GN.Library.Xrm
                                 }
                                 break;
                             case AttributeType.DateTime:
-                                if (value!=null && value.GetType() != typeof(DateTime) )
+                                if (value != null && value.GetType() != typeof(DateTime))
                                 {
 
-                                    if (DateTime.TryParse(value.ToString(), CultureInfo.InvariantCulture,DateTimeStyles.None, out var dateTimeVal))
+                                    if (DateTime.TryParse(value.ToString(), CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTimeVal))
                                     {
                                         result.SetAttribiuteValue(key, dateTimeVal);
                                     }
@@ -595,12 +681,12 @@ namespace GN.Library.Xrm
                                         throw new InvalidCastException(string.Format("Invalid Date. '{0}' ", value));
                                     }
                                 }
-                                else {
+                                else
+                                {
                                     result.SetAttribiuteValue(key, value);
                                 }
-                                
-                                break;
 
+                                break;
                             default:
                                 result.SetAttribiuteValue(key, value);
                                 break;
@@ -719,7 +805,14 @@ namespace GN.Library.Xrm
                         }
                         else if (!attribute.IsCustomAttribute)
                         {
-                            result.Add(f.Key + "@odata.bind", "/" + collectionName + "(" + refrence.Id.ToString() + ")");
+                            if (entity.LogicalName == "annotation" && attribute.LogicalName == "objectid")
+                            {
+                                result.Add(f.Key + "_" + refrence.LogicalName + "@odata.bind", "/" + collectionName + "(" + refrence.Id.ToString() + ")");
+                            }
+                            else
+                            {
+                                result.Add(f.Key + "@odata.bind", "/" + collectionName + "(" + refrence.Id.ToString() + ")");
+                            }
                         }
                         else
                         {
@@ -733,7 +826,12 @@ namespace GN.Library.Xrm
                             //{
                             //    navigatiob_property_name = "bmsd_SubServiceItemId_PhoneCall";
                             //}
+                            //if (f.Key == "bmsd_branchcode")
+                            //{
+                            //    navigatiob_property_name = "bmsd_BranchCode_PhoneCall";
+                            //}
                             result.Add(navigatiob_property_name + "@odata.bind", "/" + collectionName + "(" + refrence.Id.ToString() + ")");
+                            //result.Add(f.Key + "@odata.bind", "/" + collectionName + "(" + refrence.Id.ToString() + ")");
                         }
                     }
                     else if (value as EntityCollection != null)
@@ -782,6 +880,11 @@ namespace GN.Library.Xrm
         {
             var result = new XrmEntity(entity.LogicalName);
             result.Id = Guid.TryParse(entity.Id, out var _id) ? _id : Guid.Empty;
+            if (result.Id != Guid.Empty)
+            {
+                result.SetAttribiuteValue(this.PrimaryAttibuteName, result.Id);
+            }
+            //result.SetAttribiuteValue()
             var ignorable_attributes = new HashSet<string>(new string[] {
                 "isworkflow","modifiedby","modifiedon",XrmEntity.Schema.CreatedBy, XrmEntity.Schema.CreatedOn,"owninguser","transactioncurrencyid","owningbusinessunit" });
 
@@ -797,26 +900,52 @@ namespace GN.Library.Xrm
                 if (attrib != null && (ignore == null || !ignore(attrib.LogicalName, attrib.Type)))
                 {
 
-                    switch (attrib.TypeName)
+                    switch (attrib.Type)
                     {
-                        case "String":
+                        case AttributeType.String:
                             result.SetAttribiuteValue(attrib.LogicalName, p.Value);
                             break;
-                        case "Boolean":
+                        //case AttributeType.Status:// "String":
+                        //    result.SetAttribiuteValue(attrib.LogicalName, p.Value);
+                        //    break;
+                        case AttributeType.Boolean:// "Boolean":
                             result.SetAttribiuteValue(attrib.LogicalName, p.Value);
                             break;
-                        case "Status":
+                        case AttributeType.Status:// "Status":
                             result.SetAttribiuteValue(attrib.LogicalName, p.Value);
                             break;
-                        case "State":
+                        case AttributeType.State:// "State":
                             result.SetAttribiuteValue(attrib.LogicalName, p.Value);
                             break;
-                        case "Memo":
+                        case AttributeType.Money:// "Memo":
                             result.SetAttribiuteValue(attrib.LogicalName, p.Value);
                             break;
-                        case "Lookup":
+                        case AttributeType.DateTime:// "DateTime":
+                            var dt = entity.GetAttributeValue<DateTime?>(p.Key);
+                            result.SetAttribiuteValue(attrib.LogicalName, entity.GetAttributeValue<DateTime?>(p.Key));
+                            break;
+                        case AttributeType.Picklist://  "Picklist":
+                            result.SetAttribiuteValue(attrib.LogicalName, new OptionSetValue(entity.GetAttributeValue<int>(p.Key)));
+                            break;
+                        case AttributeType.Lookup:// "Lookup":
                             var reference = entity.GetAttributeValue<DynamicEntityReference>(p.Key).ToXrmEntityReference();
                             result.SetAttribiuteValue(p.Key, reference);
+                            break;
+                        case AttributeType.Customer:// "Customer":
+                            var k = entity.GetAttributeValue<DynamicEntityReference>(p.Key).ToXrmEntityReference();
+                            result.SetAttribiuteValue(p.Key, k);
+                            break;
+                        case AttributeType.Uniqueidentifier:// "Uniqueidentifier":
+                            if (Guid.TryParse(entity.Id, out var __id))
+                            {
+                                //result.SetAttribiuteValue(attrib.LogicalName, __id);
+                            }
+                            break;
+                        case AttributeType.Unknown:
+                            if (attrib.TypeName == "Memo")
+                            {
+                                result.SetAttribiuteValue(attrib.LogicalName, p.Value);
+                            }
                             break;
                         default:
                             if (!ignoreUnSupportedTypes)
@@ -1079,7 +1208,7 @@ namespace GN.Library.Xrm
                 var retrieveEntityResponseObj = (RetrieveAllEntitiesResponse)service.Execute(retrieveDetails);
                 var _metadata = retrieveEntityResponseObj.EntityMetadata;
                 if (_metadata != null)
-                    result = _metadata.Select(x => new AbstractMetaData(x)).ToList();
+                    result = _metadata.Select(x => new AbstractMetaData(x, this)).ToList();
             }
             catch (Exception err)
             {
@@ -1098,7 +1227,8 @@ namespace GN.Library.Xrm
             var result = new List<AbstractMetaData>();
             try
             {
-                var objects = await this.dataContext.GetWebApiService().GetLogicalNamesAsync().ConfigureAwait(false);
+                //var objects = await this.dataContext.GetWebApiService().GetLogicalNamesAsync().ConfigureAwait(false);
+                var objects = this.dataContext.GetWebApiService().GetLogicalNamesAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 
                 if (objects != null)
                 {
@@ -1153,7 +1283,12 @@ namespace GN.Library.Xrm
                     //    $"Failed to retreive metadta for entity. LogicalName: {logicalName}");
                 }
                 if (metadata != null)
-                    result = new XrmEntitySchema(new AbstractMetaData(metadata), entityType, this);
+                {
+                    metadata.Attributes.ToList().ForEach(x =>
+                    {
+                    });
+                    result = new XrmEntitySchema(new AbstractMetaData(metadata, this), entityType, this);
+                }
             }
             catch (Exception err)
             {
@@ -1163,7 +1298,66 @@ namespace GN.Library.Xrm
             }
             return await Task.FromResult(result).ConfigureAwait(false);
         }
+        public MyOptionSetMetadata GetOptionSetDataEx(string entityName, string propertyName)
+        {
+            MyOptionSetMetadata.OptionSetClass.LocalizedLabelClass ToLocalizeLabel(LocalizedLabel lbl)
+            {
+                return lbl == null ? null : new MyOptionSetMetadata.OptionSetClass.LocalizedLabelClass
+                {
+                    Label = lbl.Label,
+                    LanguageCode = lbl.LanguageCode
+                };
+            }
+            MyOptionSetMetadata.OptionSetClass.LabelClass ToLabel(Label lbl)
+            {
+                return lbl == null ? null : new MyOptionSetMetadata.OptionSetClass.LabelClass
+                {
+                    LocalizedLabels = lbl.LocalizedLabels.Select(x => ToLocalizeLabel(x)).ToArray(),
+                    UserLocalizedLabel = ToLocalizeLabel(lbl.UserLocalizedLabel)
+                };
 
+            }
+            try
+            {
+                var attributeRequest = new RetrieveAttributeRequest
+                {
+                    EntityLogicalName = entityName,
+                    LogicalName = propertyName,
+                    RetrieveAsIfPublished = false
+                };
+                var s = this.dataContext.GetXrmOrganizationService().GetOrganizationService();
+                RetrieveAttributeResponse response = s.Execute(attributeRequest) as RetrieveAttributeResponse;
+
+                EnumAttributeMetadata attributeData = (EnumAttributeMetadata)response.AttributeMetadata;
+
+                var result = new MyOptionSetMetadata();
+                result.LogicalName = propertyName;
+                result.OptionSet = new MyOptionSetMetadata.OptionSetClass
+                {
+                    Options = attributeData.OptionSet.Options.Select(x => new MyOptionSetMetadata.OptionSetClass.OptionsClass
+                    {
+                        Value = x.Value ?? 0,
+                        Label = ToLabel(x.Label),
+                        Description = ToLabel(x.Description),
+
+
+                    }).ToArray(),
+                    DisplayName = ToLabel(attributeData.OptionSet.DisplayName),
+                    Description = ToLabel(attributeData.OptionSet.Description)
+
+
+                };
+
+
+                return result;
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine(
+                    $"An error occured while trying to retreive OptionSet. Entity:'{entityName}', Attribute:'{propertyName}', Err:{err.Message}");
+            }
+            return new MyOptionSetMetadata();
+        }
         public List<Tuple<int?, string>> GetOptionSetData(string entityName, string propertyName)
         {
             var attributeRequest = new RetrieveAttributeRequest

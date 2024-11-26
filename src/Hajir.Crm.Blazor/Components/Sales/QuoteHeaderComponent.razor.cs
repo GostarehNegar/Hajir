@@ -1,4 +1,6 @@
-﻿using Hajir.Crm.Features.Sales;
+﻿using GN.Library.Xrm;
+using GN.Library.Xrm.StdSolution;
+using Hajir.Crm.Features.Sales;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,8 @@ namespace Hajir.Crm.Blazor.Components.Sales
 {
     public partial class QuoteHeaderComponent
     {
-
+        public int? PaymentTerm { get=> this.Value.PaymentTermCode; set=> this.Value.PaymentTermCode=value; }
+        public  List<KeyValuePair<int?, string>> PaymentTerms { get; set; }
         private async Task<IEnumerable<SaleAccount>> Search1(string value)
         {
             // In real life use an asynchronous function for fetching data from an api.
@@ -25,6 +28,19 @@ namespace Hajir.Crm.Blazor.Components.Sales
         private async Task CustomerDblClick()
         {
 
+        }
+        protected override async Task OnInitializedAsync()
+        {
+            this.PaymentTerms = this.ServiceProvider.GetService<IXrmSchemaService>()
+                .GetSchema(XrmQuote.Schema.LogicalName)
+                .Attributes.FirstOrDefault(x => x.LogicalName == XrmQuote.Schema.PaymentTermsCode)
+                .GetOptionSetValues(1065)
+                .Select(x => new KeyValuePair<int?, string>(x.Key, x.Value))
+                .ToList();
+            //.ToDictionary(c=>(int?) c.Key, c=>c.Value);
+
+            this.PaymentTerms.Insert(0, new KeyValuePair<int?, string>(null, ""));
+            await base.OnInitializedAsync();
         }
         public async Task<IEnumerable<SaleContact>> SearchContact(string text)
         {
