@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hajir.Crm.Infrastructure.Xrm\Hajir.Crm.Infrastructure.Xrm.csproj" />
+    <ProjectReference Include="..\Hajir.Crm.Sale.Xrm.Plugins\Hajir.Crm.Sale.Xrm.Plugins.csproj" />
+    <ProjectReference Include="..\Library\GN.Library.Api\GN.Library.Api.csproj" />
+    <ProjectReference Include="..\Library\GN.Library.Messaging.Transports.SignalR\GN.Library.Messaging.Transports.SignalR.csproj" />
+    <ProjectReference Include="..\Library\GN.Library.Win32\GN.Library.Win32.csproj" />
+    <ProjectReference Include="..\Library\GN.Library.Xrm.Query\GN.Library.Xrm.Query.csproj" />
+    <ProjectReference Include="..\Library\GN.Library.Xrm\GN.Library.Xrm.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+</Project>

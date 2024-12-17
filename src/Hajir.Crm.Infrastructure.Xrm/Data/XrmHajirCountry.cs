@@ -9,7 +9,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
     {
         public new class Schema : XrmEntity.Schema
         {
-            public const string SolutionPerfix = HajirCrmConstants.RahsamSolutionPerfix;
+            public const string SolutionPerfix = HajirCrmConstants.HajirSolutionPerfix;
             public const string LogicalName = SolutionPerfix + "country";
             public const string CountryId = LogicalName + "id";
             public const string Name = SolutionPerfix + "name";

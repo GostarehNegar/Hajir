@@ -236,7 +236,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
                     {
                         Id = x.Id.ToString(),
                         Name = x.Name,
-                        ProvinceId = x.GetAttributeValue<EntityReference>(XrmHajirCity.Schema.rhs_state)?.Id.ToString(),
+                        ProvinceId = x.GetAttributeValue<EntityReference>(XrmHajirCity.Schema.ProvinceId)?.Id.ToString(),
                     });
                     result.AddRange(entries);
                     if (entries.Count() < take)

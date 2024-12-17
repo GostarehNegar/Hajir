@@ -35,6 +35,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             public const string RelationTypeCode = "customertypecode";
             public const string AccountType = HajirCrmConstants.HajirSolutionPerfix + "accounttype";
             public const string BrandName = HajirCrmConstants.HajirSolutionPerfix + "brandname";
+            public const string CityId = HajirCrmConstants.HajirSolutionPerfix + "cityid";
         }
 
         [AttributeLogicalName(Schema.ExternalId)]

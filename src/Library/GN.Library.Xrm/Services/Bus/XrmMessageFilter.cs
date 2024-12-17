@@ -1,12 +1,6 @@
-﻿using GN.Library.Helpers;
-using GN.Library.Xrm.Helpers;
-using GN.Library.Xrm.Plugins.Shared;
+﻿using GN.Library.Xrm.Plugins;
 using GN.Library.Xrm.Services.Plugins;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GN.Library.Xrm.Services.Bus
 {
@@ -45,7 +39,7 @@ namespace GN.Library.Xrm.Services.Bus
             this.FilteringAttributes = new XrmMessageFilteringAttributes();
             this.TargetEntityName = target;
             //this.PluginBusType = PluginBusTypes.PubSub;
-            this.PluginType = typeof(GN.Library.Xrm.Plugins.XrmMessageBusPlugin);
+            this.PluginType = XrmSettings.Current.MessageBusOptions.BusPluginType;// typeof(GN.Library.Xrm.Plugins.XrmMessageBusPlugin);
             this.Stage = PluginMessageStages.PostOperation;
             this.Id = Guid.NewGuid();
             this.PluginConfiguration = new PluginConfiguration();
@@ -63,7 +57,7 @@ namespace GN.Library.Xrm.Services.Bus
             this.Message = message;
             this.TargetEntityName = targetEntity ?? this.TargetEntityName;
             this.PluginConfiguration.Trace = traceEnabled;
-            this.PluginType = typeof(GN.Library.Xrm.Plugins.XrmMessageBusPlugin);
+            this.PluginType = XrmSettings.Current.MessageBusOptions.BusPluginType;
             return this;
         }
 
@@ -79,7 +73,7 @@ namespace GN.Library.Xrm.Services.Bus
             this.Message = message;
             this.TargetEntityName = targetEntity ?? this.TargetEntityName;
             this.PluginConfiguration.Trace = traceEnabled;
-            this.PluginType = typeof(GN.Library.Xrm.Plugins.XrmMessageBusPlugin);
+            this.PluginType = XrmSettings.Current.MessageBusOptions.BusPluginType;
             return this;
         }
         public XrmMessageFilter ConfigureValidation(
@@ -95,7 +89,7 @@ namespace GN.Library.Xrm.Services.Bus
             this.TargetEntityName = targetEntity ?? this.TargetEntityName;
             this.PluginConfiguration.Trace = traceEnabled;
             //this.PluginType = typeof(GN.Library.Xrm.Plugins.ValidationPlugin);
-            this.PluginType = typeof(GN.Library.Xrm.Plugins.XrmMessageBusPlugin);
+            this.PluginType = XrmSettings.Current.MessageBusOptions.BusPluginType;
             this.PluginConfiguration.SendSynch = true;
             return this;
         }

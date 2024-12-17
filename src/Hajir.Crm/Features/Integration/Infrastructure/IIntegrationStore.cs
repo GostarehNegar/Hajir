@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hajir.Crm.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
@@ -15,6 +16,8 @@ namespace Hajir.Crm.Features.Integration.Infrastructure
         IntegrationQuote ImportLegacyQuote(IntegrationQuote quote);
         IntegrationUser ImportLegacyUser(IntegrationUser user);
         IntegrationUser GetUserById(string id);
+        IntegrationUser GetUserByFullName(string fullName);
+        void ImportGeoData(GeoData geoData);
 
 
     }

@@ -7,10 +7,11 @@ namespace Hajir.Crm.Features.Integration
 {
     public class IntegrationUser : DynamicEntity
     {
-
+        
         public override string ToString()
         {
             return $"{this.GetAttributeValue<string>("lastname")}";
         }
+        public string FullName => this.GetAttributeValue<string>("fullname");
     }
 }

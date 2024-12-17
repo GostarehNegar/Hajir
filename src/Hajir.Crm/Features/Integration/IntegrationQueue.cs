@@ -33,7 +33,7 @@ namespace Hajir.Crm.Features.Integration
         {
             repo = serviceProvider.CreateScope()
                 .ServiceProvider
-                .GetService<IPublicDocumentStore>()
+                .GetService<ILocalDocumentStore>()
                 .GetRepository<string, IntegrationEntry>();
         }
         public void Upsert(string id, string logicalName)

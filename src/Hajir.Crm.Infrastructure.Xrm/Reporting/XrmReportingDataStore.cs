@@ -68,6 +68,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                     FormattedExpiresOn = q.ExpiresOn.FormatPersianDate(),
                     PaymentTermsCode = q.PaymentTermsCode?.Value,
                     PaymentTerms = GetPaymentCode(q.PaymentTermsCode?.Value),
+                    Payable = "payable",
 
 
 
@@ -80,6 +81,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                             BaseAmount = x.BaseAmount ?? 0,
                             Discount = x.ManualDiscountAmount ?? 0,
                             Quantity = Convert.ToDecimal(x.Quantity ?? 0),
+                            RowNumber = x.GetAttributeValue<int?>("rownumber")??1
 
                         })
                         .ToArray()

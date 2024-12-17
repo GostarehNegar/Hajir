@@ -1,16 +1,12 @@
 ﻿using GN.Library.Helpers;
-using GN.Library.Xrm.Helpers;
-using GN.Library.Xrm.Plugins.Shared;
+using GN.Library.Xrm.Plugins;
 using GN.Library.Xrm.StdSolution;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GN.Library.Xrm.Services.Plugins
 {
-	public class PluginStepFilteringAttributes : DelimitedText
+    public class PluginStepFilteringAttributes : DelimitedText
 	{
 		public PluginStepFilteringAttributes() : this("")
 		{

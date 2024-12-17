@@ -14,6 +14,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Helpers\SharedLib.cs" />
+	  <Compile Remove="Plugins\MessageBusPlugin.cs" />
+	  <Compile Remove="Plugins\TestPlugin.cs" />
+	  <Compile Remove="Plugins\ValidationPlugin.cs" />
+	  <Compile Remove="Shared\SharedModels.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.0.7" />
 	<!--
 	  <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="8.0.0" />
@@ -29,6 +37,14 @@
 
 	<ItemGroup>
 		<Folder Include="lib\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="Helpers\SharedLib.cs" />
+	  <None Include="Plugins\MessageBusPlugin.cs" />
+	  <None Include="Plugins\TestPlugin.cs" />
+	  <None Include="Plugins\ValidationPlugin.cs" />
+	  <None Include="Shared\SharedModels.cs" />
 	</ItemGroup>
 
 </Project>

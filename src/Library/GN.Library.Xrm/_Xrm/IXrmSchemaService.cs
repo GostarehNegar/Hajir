@@ -668,6 +668,23 @@ namespace GN.Library.Xrm
                                     //result.SetAttribiuteValue(key, null);
                                 }
                                 break;
+                            case AttributeType.Integer:
+                                if (value != null && value.GetType() != typeof(int) && int.TryParse(value.ToString(), out var __val))
+                                {
+                                    value = __val;
+                                }
+                                result.SetAttribiuteValue(key, value);
+
+                                break;
+
+                            case AttributeType.Decimal:
+                                if (value!=null && value.GetType() != typeof(decimal) && decimal.TryParse(value.ToString(),out var _val))
+                                {
+                                    value = _val;
+                                }
+                                result.SetAttribiuteValue(key, value);
+                                
+                                break;
                             case AttributeType.DateTime:
                                 if (value != null && value.GetType() != typeof(DateTime))
                                 {

@@ -10,6 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public string LegacyConnectionString { get; set; } = HajirCrmConstants.DefaultLegacyCrmConnectionString;
         public bool LegacyAccountImportEnabled { get; set; } = false;
         public bool LegacyContactImportEnabled { get; set; } = false;
+        public bool LegacyImportEnabled { get; set; } = false;
 
         public HajirIntegrationOptions Validate()
         {
@@ -20,8 +21,9 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             var result =
                 Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-                "Hajir\\Integration_Queue.dat");
+                Path.GetDirectoryName( this.GetType().Assembly.Location),
+                //Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                "Data\\Integration_Queue.dat");
 
             return $"Filename={result}";
         }

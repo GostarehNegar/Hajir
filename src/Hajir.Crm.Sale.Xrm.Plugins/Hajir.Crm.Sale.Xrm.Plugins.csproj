@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>GN.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.0.7" />
+    <!--
+	  <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="8.0.0" />
+ 	  -->
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web.Extensions" />
+  </ItemGroup>
+
+</Project>

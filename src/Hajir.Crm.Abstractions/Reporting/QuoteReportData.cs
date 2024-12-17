@@ -29,6 +29,7 @@ namespace Hajir.Crm.Reporting
         public DateTime? EffectiveTo { get; set; }
         public string FormattedEffectiveFrom { get; set; }
         public string FormattedEffectiveTo { get; set; }
+        public string Payable { get; set; }
     }
     public class QuoteLineReportData
     {
@@ -39,5 +40,6 @@ namespace Hajir.Crm.Reporting
         public decimal BaseAmount { get; set; }
         public decimal Amount { get; set; }
         public decimal Tax { get; set; }
+        public int RowNumber { get; set; }
     }
 }

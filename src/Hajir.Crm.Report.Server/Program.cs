@@ -76,7 +76,7 @@ namespace Hajir.Crm.Infrastructure.Service
 
                     });
                     s.AddXrmServices(c.Configuration, opt => { opt.ConnectionOptions = ConnectionOptions.WebAPI; });
-                    s.AddHajirInfrastructure(c.Configuration);
+                    s.AddHajirSalesInfrastructure(c.Configuration);
                     s.AddHajirReportingServices(c.Configuration, opt => { });
                     s.AddHostedService<TestService>();
                     var ff = s.AddControllers().AddApplicationPart(typeof(Hajir.Crm.Reporting.HajirCrmReportingExtensions).Assembly);

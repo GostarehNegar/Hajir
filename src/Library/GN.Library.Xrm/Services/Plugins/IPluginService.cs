@@ -1,6 +1,6 @@
 ﻿using GN.Library.Xrm.Helpers;
 using GN.Library.Xrm.Plugins;
-using GN.Library.Xrm.Plugins.Shared;
+
 using GN.Library.Xrm.StdSolution;
 using Microsoft.Extensions.Logging;
 using Microsoft.Xrm.Sdk;

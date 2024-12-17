@@ -1,11 +1,8 @@
-﻿using GN.Library.Xrm.Plugins.Shared;
+﻿using GN.Library.Xrm.Plugins;
 using GN.Library.Xrm.Services.Plugins;
 using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GN.Library.Xrm.Services.Bus
 {

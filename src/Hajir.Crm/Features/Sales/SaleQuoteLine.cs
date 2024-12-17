@@ -15,12 +15,12 @@ namespace Hajir.Crm.Features.Sales
         public decimal? PricePerUnit { get; set; }
         public string Name { get; set; }
         public decimal? Discount { get; set; }
-        public long? PercentDiscount { get; set; }
+        public int? PercentDiscount { get; set; }
         public long? GuaranteeMonth { get; set; }
         public decimal? ExtendedAmount { get; set; }
         public decimal? BaseAmount { get; set; }
         public decimal? Tax { get; set; }
-        public long? PercentTax { get; set; }
+        public int? PercentTax { get; set; }
         public bool IsProductOverriden => string.IsNullOrWhiteSpace(this.ProductId);
         public bool IsBlank => string.IsNullOrWhiteSpace(this.Name) && string.IsNullOrEmpty(this.ProductId);
 

@@ -36,19 +36,19 @@ namespace Hajir.Crm.Features.Integration
                 try
                 {
                     var owner_id = entity.GetOwnerId();
-                    if (owner_id.HasValue && ctx.Store.GetUserById(owner_id.ToString())==null)
+                    if (owner_id.HasValue && ctx.Store.GetUserById(owner_id.ToString())==null && ctx.Store.GetUserByFullName(entity.GetOwnerReference()?.Name)==null)
                     {
                         var user = ctx.LegacyCrmStore.GetUser(owner_id.Value.ToString());
                         await ctx.ImportUser(user);
                     }
                     var created_by = entity.GetCreatedBy();
-                    if (created_by.HasValue && ctx.Store.GetUserById(created_by.ToString()) == null)
+                    if (created_by.HasValue && ctx.Store.GetUserById(created_by.ToString()) == null&& ctx.Store.GetUserByFullName(entity.GetCreatedByReference()?.Name) == null)
                     {
                         var user = ctx.LegacyCrmStore.GetUser(created_by.Value.ToString());
                         await ctx.ImportUser(user);
                     }
-                    var modified_by = entity.GetCreatedBy();
-                    if (modified_by.HasValue && ctx.Store.GetUserById(modified_by.ToString()) == null)
+                    var modified_by = entity.GetModifiedBy();
+                    if (modified_by.HasValue && ctx.Store.GetUserById(modified_by.ToString()) == null && ctx.Store.GetUserByFullName(entity.GetModifiedByReference()?.Name) == null)
                     {
                         var user = ctx.LegacyCrmStore.GetUser(modified_by.Value.ToString());
                         await ctx.ImportUser(user);

@@ -40,7 +40,7 @@ namespace Hajir.Crm.Blazor.Server
                 cfg.ConnectionOptions = ConnectionOptions.WebAPI;
             });
             services.AddHajirCrm(Configuration, cfg => { });
-            services.AddHajirInfrastructure(Configuration, opt => opt.SkipIntegration = true);
+            services.AddHajirSalesInfrastructure(Configuration, opt => opt.SkipIntegration = true);
             services.AddHajirReportingServices(Configuration, cfg => { });
 
 

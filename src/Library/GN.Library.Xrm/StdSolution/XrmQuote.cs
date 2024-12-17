@@ -451,9 +451,9 @@ namespace GN.Library.Xrm.StdSolution
 		}
 
 		[AttributeLogicalName(Schema.Quantity)]
-		public double? Quantity
+		public decimal? Quantity
 		{
-			get { return this.GetAttributeValue<double?>(Schema.Quantity); }
+			get { return this.GetAttributeValue<decimal?>(Schema.Quantity); }
 			set { this.SetAttribiuteValue(Schema.Quantity, value); }
 		}
         [AttributeLogicalName(Schema.IsProductOverridden)]

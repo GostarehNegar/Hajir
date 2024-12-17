@@ -13,10 +13,13 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
     {
         public new class Schema : XrmEntity.Schema
         {
-            public const string SolutionPerfix = HajirCrmConstants.RahsamSolutionPerfix;
-            public const string LogicalName = SolutionPerfix + "state";
+            public const string SolutionPerfix = HajirCrmConstants.HajirSolutionPerfix;
+            public const string LogicalName = SolutionPerfix + "province";
             public const string ProvinceId = LogicalName + "id";
             public const string Name = SolutionPerfix + "name";
+            public const string Code = SolutionPerfix + "code";
+            public const string country = SolutionPerfix + "countryid";
+            public const string CenterCityId = SolutionPerfix + "centercityid";
             //public const string rhs_state = "rhs_state";
         }
 
@@ -60,6 +63,15 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 
         [AttributeLogicalNameAttribute(Schema.Name)]
         public string Name { get { return this.GetAttributeValue<string>(Schema.Name); } set { this.SetAttribiuteValue(Schema.Name, value); } }
+
+        [AttributeLogicalNameAttribute(Schema.Code)]
+        public string Code { get { return this.GetAttributeValue<string>(Schema.Code); } set { this.SetAttribiuteValue(Schema.Code, value); } }
+
+        [AttributeLogicalNameAttribute(Schema.country)]
+        public EntityReference Country { get { return this.GetAttributeValue<EntityReference>(Schema.country); } set { this.SetAttribiuteValue(Schema.country, value); } }
+
+        [AttributeLogicalNameAttribute(Schema.CenterCityId)]
+        public EntityReference CenterCityId { get { return this.GetAttributeValue<EntityReference>(Schema.CenterCityId); } set { this.SetAttribiuteValue(Schema.CenterCityId, value); } }
 
     }
 }

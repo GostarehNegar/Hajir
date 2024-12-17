@@ -1,6 +1,7 @@
 ﻿using GN.Library.Shared.Entities;
 using GN.Library.TaskScheduling;
 using GN.Library.Xrm.StdSolution;
+using Hajir.Crm.Entities;
 using Hajir.Crm.Features.Integration.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,7 @@ using NLog.Targets;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -331,13 +333,24 @@ namespace Hajir.Crm.Features.Integration
         }
 
 
+        private async Task EnsureLookUpTables(IIntegrationStore store, CancellationToken stoppingToken)
+        {
+            
+            var data = Newtonsoft.Json.JsonConvert.DeserializeObject<GeoData>(File.ReadAllText("geo.dat"));
+            store.ImportGeoData(data);
+        }
 
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var tasks = new List<Task>();
             await Task.Delay(1000);
+
+            
+
+
             using (var scope = this.serviceProvider.CreateScope())
             {
+                await EnsureLookUpTables(scope.ServiceProvider.GetService<IIntegrationStore>(), stoppingToken);
                 var store = scope.ServiceProvider.GetService<ILegacyCrmStore>();
                 //var total = store.GetContatCount() + store.GetAccountsCount();
                 //tasks.Add(ImportAccounts(store, stoppingToken));

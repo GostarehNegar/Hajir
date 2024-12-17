@@ -21,7 +21,7 @@ namespace Hajir.Crm.Blazor.Server
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseWindowsService()
+                //.UseWindowsService()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

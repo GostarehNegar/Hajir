@@ -17,6 +17,8 @@ using GN.Library.Xrm.Query.StandardModels;
 using Microsoft.Xrm.Sdk;
 using Hajir.Crm.Entities;
 using System.IO;
+using Microsoft.AspNetCore.Mvc;
+using System.Drawing;
 
 namespace Hajir.Crm.Tests.Specs.Integration
 {
@@ -34,7 +36,7 @@ namespace Hajir.Crm.Tests.Specs.Integration
             {
 
                 s.AddHajirIntegrationServices(c, opt => { });
-                s.AddHajirInfrastructure(c, opt => { });
+                s.AddHajirSalesInfrastructure(c, opt => { });
 
             });
         }
@@ -90,7 +92,7 @@ namespace Hajir.Crm.Tests.Specs.Integration
         {
             var host = GetHostEx();
             var ctx = new IntegrationServiceContext(host.Services, "test", default);
-            var accounts = ctx.LegacyCrmStore.ReadAccounts(10, 1000).ToArray();
+            var accounts = ctx.LegacyCrmStore.ReadAccounts(10, 100).ToArray();
             //var acc = accounts.Where(x => x.GetAttributeValue<object>("parentaccountid") != null).ToArray();
             var acc = accounts.Where(x => x.GetAttributeValue<int>("statecode") == 1).ToArray();
             await ctx.ImportAccountById(acc[0].Id);
@@ -157,7 +159,8 @@ namespace Hajir.Crm.Tests.Specs.Integration
             //    .Delete(q);
 
             var ctx = new IntegrationServiceContext(host.Services, "test", default);
-            var quotes = ctx.LegacyCrmStore.ReadQuotes(0, 10);
+            var quotes = ctx.LegacyCrmStore.ReadQuotes(0, 100);
+            quotes = quotes.Where(x => x.GetOwnerReference()?.Name == "Reza Rahimi").ToArray();
             await ctx.ImportQuote(quotes.Skip(1).First());
 
 
@@ -226,6 +229,22 @@ namespace Hajir.Crm.Tests.Specs.Integration
 
 
 
+        }
+        [TestMethod]
+        public async Task fix_rahimi()
+        {
+            var host = this.GetHostEx();
+            host.Services.GetService<IXrmDataServices>()
+                .WithImpersonatedSqlConnection(con => {
+
+                    con.Open();
+                    var cmd = con.CreateCommand();
+                    cmd.CommandText = $"select * from systemuser " +
+                              $" " +
+                              $" ";
+                    var result = cmd.ExecuteNonQuery() == 1;
+
+                });
         }
         [TestMethod]
         public async Task store_cities()

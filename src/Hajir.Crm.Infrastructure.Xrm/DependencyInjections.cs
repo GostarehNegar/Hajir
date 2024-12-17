@@ -17,11 +17,11 @@ namespace Microsoft.Extensions.DependencyInjection
 {
 	public static partial class ServiceCollectionExtensions
 	{
-		public static IServiceCollection AddHajirInfrastructure(this IServiceCollection services, IConfiguration configuration, Action<HajirXrmInfrastructureOptions> configure=null)
+		public static IServiceCollection AddHajirSalesInfrastructure(this IServiceCollection services, IConfiguration configuration, Action<HajirSalesXrmInfrastructureOptions> configure=null)
 		{
-            var options = new HajirXrmInfrastructureOptions();
+            var options = new HajirSalesXrmInfrastructureOptions();
             configure?.Invoke(options);
-            return services.AddHajirInfrastructure(options);
+            return services.AddHajirSalesInfrastructure(options);
 			services.AddScoped<XrmProductRepository>();
 			services.AddTransient<IProductRepository>(s => s.GetService<XrmProductRepository>());
 			//services.AddScoped<InMemoryProductRepository>();
@@ -36,7 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return services;
 		}
-        public static IServiceCollection AddHajirInfrastructure(this IServiceCollection services, HajirXrmInfrastructureOptions options)
+        public static IServiceCollection AddHajirSalesInfrastructure(this IServiceCollection services, HajirSalesXrmInfrastructureOptions options)
 		{
             services.AddSingleton(options);
             services.AddScoped<XrmProductRepository>();
@@ -58,7 +58,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return services;
         }
-
 
     }
 }

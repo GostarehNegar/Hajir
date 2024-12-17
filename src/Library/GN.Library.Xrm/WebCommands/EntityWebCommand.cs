@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GN.Library.WebCommands;
+﻿using GN.Library.WebCommands;
 using GN.Library.Xrm.Plugins;
-using GN.Library.Xrm.Plugins.Shared;
-using GN.Library.Xrm.Services;
 using GN.Library.Xrm.Services.Bus;
 using GN.Library.Xrm.Services.Plugins;
 using Microsoft.Extensions.Logging;
-using Microsoft.Xrm.Sdk;
+using System;
+using System.Linq;
 
 namespace GN.Library.Xrm.WebCommands
 {
 #pragma warning disable CS0436 // Type conflicts with imported type
-	class EntityWebCommand : WebCommandBase<EntityWebCommandRequestModel, EntityWebCommandResponseModel>
+    class EntityWebCommand : WebCommandBase<EntityWebCommandRequestModel, EntityWebCommandResponseModel>
 
 	{
 		protected static ILogger logger = typeof(EntityWebCommand).GetLoggerEx();

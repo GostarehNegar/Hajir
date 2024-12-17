@@ -15,11 +15,15 @@
     <ProjectReference Include="..\Hajir.Crm\Hajir.Crm.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="FastReport\" />
     <Folder Include="Reports\" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Reports\QuoteStandardReport.frx">
+    <None Update="FastReport\FastReport.Community.2024.2.0.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Reports\QuoteStandardReport.frx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Reports\QuoteStandardReport01.frx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

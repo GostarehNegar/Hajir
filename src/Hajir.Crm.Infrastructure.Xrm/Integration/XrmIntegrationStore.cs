@@ -497,7 +497,11 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             xrm_contact[XrmHajirContact.Schema.SalutaionCode] = GetSalutaionCode(contact.Salutation);
             xrm_contact["address1_postalcode"] = contact.PostalCode;
             //address1_postalcode
-
+            var city = this.GetCity(contact.City);
+            if (city != null && Guid.TryParse(city.Id, out var cityId))
+            {
+                xrm_contact[XrmHajirContact.Schema.CityId] = new EntityReference(XrmHajirCity.Schema.LogicalName, cityId);
+            }
 
 
 
@@ -540,11 +544,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                     xrm_contact[XrmHajirContact.Schema.RHSCityPhoneCode] = new EntityReference(XrmHajirCityPhoneCode.Schema.LogicalName, city_phone_code.Value);
                     xrm_contact["rhs_businessphone1"] = _phone;
                 }
-                var city = this.GetCity(contact.City);
-                if (city != null && Guid.TryParse(city.Id, out var cityId))
-                {
-                    xrm_contact[XrmHajirContact.Schema.RHSCity] = new EntityReference(XrmHajirCity.Schema.LogicalName, cityId);
-                }
+                
 
                 var owner = string.IsNullOrEmpty(contact.OwnerLoginName) ? null : this.cache.Users.FirstOrDefault(x => x.GetAttributeValue("domainname")?.ToLowerInvariant() == contact.OwnerLoginName?.ToLowerInvariant());
                 if (owner != null && Guid.TryParse(owner.Id, out var _ownerid))
@@ -578,8 +578,11 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             {
 
                 this.dataServices.SetDates(XrmContact.Schema.LogicalName, id, contact.CreatedOn, contact.ModifiedOn);
-                this.dataServices.SetOwner("contact", id, contact.GetOwnerId());
-                this.dataServices.SetModifiedeBy("contact", id, contact.GetCreatedBy(), contact.GetModifiedBy());
+                //this.dataServices.SetOwner("account", id, this.ResolveUserId(account, "ownerid"));// account.GetOwnerId());
+                //this.dataServices.SetModifiedeBy("account", id, this.ResolveUserId(account, "createdby"), this.ResolveUserId(account, "modifiedby"));// account.GetCreatedBy(), account.GetModifiedBy());
+
+                this.dataServices.SetOwner("contact", id, this.ResolveUserId(contact, "ownerid"));// contact.GetOwnerId());
+                this.dataServices.SetModifiedeBy("contact", id, this.ResolveUserId(contact, "createdby"), this.ResolveUserId(contact, "modifiedby"));// contact.GetCreatedBy(), contact.GetModifiedBy());
 
 
             }
@@ -659,7 +662,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         public int? GetIntroductionMethod(string connectionType)
         {
             int? result = null;
-            if (connectionType!=null &&  HajirCrmConstants.LegacyMaps.NahveAshnaeiMap.TryGetValue(connectionType, out var _res))
+            if (connectionType != null && HajirCrmConstants.LegacyMaps.NahveAshnaeiMap.TryGetValue(connectionType, out var _res))
             {
                 var item = this.GetIntroductionMethods()
                     .Select(x => new PicklistValue
@@ -695,7 +698,41 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
 
         }
 
+        public Guid? ResolveUserId(DynamicEntity entity, string field)
+        {
+            if (entity == null)
+                return null;
 
+            var user = entity.GetAttributeValue<DynamicEntityReference>(field);
+            if (user?.Name != null)
+            {
+                if (user.Name == "mehdi shafiee")
+                {
+                    return Guid.TryParse(this.cache.Users.First().Id, out var ___id) ? ___id : (Guid?)null;
+                }
+                var u = this.cache.Users;
+                var __user = this.cache.Users.FirstOrDefault(x => x.FulleName == user.Name);
+                if (__user != null && Guid.TryParse(__user.Id, out var __id))
+                {
+                    return __id;
+                }
+
+                var _user = this.dataServices.GetRepository<XrmSystemUser>()
+                    .Queryable.FirstOrDefault(x => x.FullName == user.Name);
+                if (_user != null)
+                {
+                    return _user.Id;
+                }
+            }
+            return Guid.TryParse(user?.Id, out var id) ? id : (Guid?)null;
+
+            return null;
+
+            return entity.GetAttributeValue<DynamicEntityReference>("ownerid")?.Id != null &&
+                Guid.TryParse(entity.GetAttributeValue<DynamicEntityReference>("ownerid")?.Id, out var _res)
+                ? _res
+                : (Guid?)null;
+        }
         public IntegrationAccount ImportLegacyAccount(IntegrationAccount account)
         {
             var xrm_account = this.dataServices
@@ -707,6 +744,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             {
                 xrm_account.Id = Guid.TryParse(account.Id, out var _id) ? _id : Guid.Empty;
             }
+
             xrm_account.Name = account.Name?.RemoveArabic();
             xrm_account.Description = account.Description;
 
@@ -739,6 +777,12 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             xrm_account["donotfax"] = account.DoNotFax;
             xrm_account["donotphone"] = account.DoNotPhone;
             xrm_account["donotpostalmail"] = account.DoNotPostalMail;
+
+            var city = this.GetCity(account.City);
+            if (city != null && Guid.TryParse(city.Id, out var cityId))
+            {
+                xrm_account[XrmHajirAccount.Schema.CityId] = new EntityReference(XrmHajirCity.Schema.LogicalName, cityId);
+            }
 
             if (1 == 0)
             {
@@ -778,11 +822,11 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                     xrm_account["rhs_country"] = new EntityReference(XrmHajirCountry.Schema.LogicalName, _countryid);
                 }
 
-                var city = this.GetCity(account.City);
-                if (city != null && Guid.TryParse(city.Id, out var cityId))
-                {
-                    xrm_account[XrmHajirAccount.Schema.rhs_city] = new EntityReference(XrmHajirCity.Schema.LogicalName, cityId);
-                }
+                //var city = this.GetCity(account.City);
+                //if (city != null && Guid.TryParse(city.Id, out var cityId))
+                //{
+                //    xrm_account[XrmHajirAccount.Schema.rhs_city] = new EntityReference(XrmHajirCity.Schema.LogicalName, cityId);
+                //}
                 if (city != null && Guid.TryParse(city.ProvinceId, out var provinceId))
                 {
                     xrm_account[XrmHajirAccount.Schema.rhs_state] = new EntityReference(XrmHajirProvince.Schema.LogicalName, provinceId);
@@ -850,8 +894,8 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             try
             {
                 this.dataServices.SetDates("account", id, account.CreatedOn, account.ModifiedOn);
-                this.dataServices.SetOwner("account", id, account.GetOwnerId());
-                this.dataServices.SetModifiedeBy("account", id, account.GetCreatedBy(), account.GetModifiedBy());
+                this.dataServices.SetOwner("account", id, this.ResolveUserId(account, "ownerid"));// account.GetOwnerId());
+                this.dataServices.SetModifiedeBy("account", id, this.ResolveUserId(account, "createdby"), this.ResolveUserId(account, "modifiedby"));// account.GetCreatedBy(), account.GetModifiedBy());
 
             }
             catch (Exception exp)
@@ -937,7 +981,9 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             line.ProductDescription = productId == null
                 ? product.GetAttributeValue(XrmQuoteDetail.Schema.ProductDescription)
                 : productId.Name;
-            line.Quantity = product.GetAttributeValue<double?>(XrmQuoteDetail.Schema.Quantity);
+            line.Quantity = product.GetAttributeValue<decimal?>(XrmQuoteDetail.Schema.Quantity);
+            line.PercentTax = product.GetAttributeValue<int?>("gn_taxpercent");
+            //line.SetAttribiuteValue(XrmHajirQuoteDetail.Schema.PercentTax, product.GetAttributeValue<int?>("gn_taxpercent"));
             //line.SetAttribiuteValue("priceperunit", product.GetAttributeValue<double>("priceperuint"));
             //line.SetAttribiuteValue("priceperunit_base", product.GetAttributeValue<double>("priceperuint_base"));
             line.PricePerUnit = product.GetAttributeValue<decimal?>(XrmQuoteDetail.Schema.PricePerUnit);
@@ -1036,16 +1082,6 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             //    quote.GetAttributeValue<int>(XrmEntity.Schema.StatusCode), true);
 
 
-            try
-            {
-                this.dataServices.SetDates(XrmQuote.Schema.LogicalName, id, createdOn, modifiedOn);
-                this.dataServices.SetOwner(XrmQuote.Schema.LogicalName, id, quote.GetOwnerId());
-                this.dataServices.SetModifiedeBy(XrmQuote.Schema.LogicalName, id, quote.GetCreatedBy(),quote.GetModifiedBy());
-            }
-            catch (Exception err)
-            {
-
-            }
             foreach (var line in quote.Products)
             {
                 ImportLegacryQuoteProduct(line, id);
@@ -1087,6 +1123,19 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 });
 
             }
+
+            try
+            {
+                this.dataServices.SetDates(XrmQuote.Schema.LogicalName, id, createdOn, modifiedOn);
+                this.dataServices.SetOwner(XrmQuote.Schema.LogicalName, id, this.ResolveUserId(quote, "ownerid"));// quote.GetOwnerId());
+                this.dataServices.SetModifiedeBy(XrmQuote.Schema.LogicalName, id, this.ResolveUserId(quote, "createdby"), this.ResolveUserId(quote, "modifiedby"));// quote.GetCreatedBy(), quote.GetModifiedBy());
+            }
+            catch (Exception err)
+            {
+
+            }
+
+
             return LoadQuote(id.ToString());
 
         }
@@ -1126,10 +1175,18 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         }
         public IntegrationUser ImportLegacyUser(IntegrationUser user)
         {
+            if (user.FullName == "mehdi shafiee")
+            {
+                return this.cache.Users.First()?.To<IntegrationUser>();
+            }
             var xrmUser = this.dataServices
                 .GetRepository<XrmSystemUser>()
                 .Queryable
-                .FirstOrDefault(x => x.Id == user.GetId<Guid>()) ?? new XrmSystemUser();
+                .FirstOrDefault(x => x.Id == user.GetId<Guid>())
+                ?? this.dataServices.GetRepository<XrmSystemUser>()
+                .Queryable
+                .FirstOrDefault(x => x.FullName == user.FullName)
+                ?? new XrmSystemUser();
             var is_new = xrmUser.Id == Guid.Empty;
             if (is_new)
             {
@@ -1184,6 +1241,160 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 .ToDynamic().To<IntegrationUser>();
             }
             return null;
+        }
+
+        public IntegrationUser GetUserByFullName(string fullName)
+        {
+            if (fullName == "mehdi shafiee")
+            {
+                return this.cache.Users.First()?.To<IntegrationUser>();
+            }
+            return string.IsNullOrWhiteSpace(fullName)
+                ? null
+                : this.dataServices
+                .GetRepository<XrmSystemUser>()
+                .Queryable
+                .FirstOrDefault(x => x.FullName == fullName)?
+                .ToDynamic().To<IntegrationUser>();
+
+        }
+
+        public void ImportGeoData(GeoData geoData)
+        {
+
+            this.logger.LogInformation($"Importing GeoData");
+            var industries = this.dataServices.GetRepository<XrmHajirIndustry>()
+                .Queryable
+                .Select(x => x.Name)
+                .ToArray();
+            foreach (var ind in HajirCrmConstants.LegacyMaps.Industries
+                .Split('\n')
+                .Select(x => x.Trim())
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Where(x => !industries.Contains(x)))
+            {
+                try
+                {
+                    this.dataServices.GetRepository<XrmHajirIndustry>()
+                        .Upsert(new XrmHajirIndustry { Name = ind });
+                }
+                catch (Exception err)
+                {
+                    this.logger.LogError(
+                        $"An error occcured while trying to update industry. Err:{err.Message}");
+                }
+                if (!industries.Contains(ind))
+                {
+
+                }
+            }
+            var countries = this.dataServices
+                .GetRepository<XrmHajirCountry>()
+                .Queryable
+                .Select(x => x.Id)
+                .ToArray();
+            geoData
+                .Countries
+                .Where(x => !countries.Contains(x.Id))
+                .ToList()
+                .ForEach(country =>
+                {
+                    try
+                    {
+                        this.dataServices
+                            .GetRepository<XrmHajirCountry>()
+                            .Insert(new XrmHajirCountry
+                            {
+                                Id = country.Id,
+                                Name = country.Name
+                            });
+                    }
+                    catch (Exception err)
+                    {
+                        this.logger.LogError($"An erro occured while trying to insert country. err:{err.Message}");
+                    }
+                });
+            var provinces = this.dataServices
+                .GetRepository<XrmHajirProvince>()
+                .Queryable
+                .Select(x => x.Id)
+                .ToArray();
+            geoData
+                .Provinces
+                .Where(x => !provinces.Contains(x.Id))
+                .ToList()
+                .ForEach(prov =>
+                {
+                    try
+                    {
+                        this.dataServices
+                        .GetRepository<XrmHajirProvince>()
+                        .Insert(new XrmHajirProvince
+                        {
+                            Id = prov.Id,
+                            Name = prov.Name,
+                            Code = prov.Code,
+                            Country = new EntityReference(XrmHajirCountry.Schema.LogicalName, geoData.Countries.FirstOrDefault(x => x.Name == "ایران").Id),
+                            //CenterCityId = prov.CenterCityId.HasValue
+                            //    ? new EntityReference(XrmHajirCity.Schema.LogicalName, prov.CenterCityId.Value)
+                            //    : null
+                        }); ;
+                    }
+                    catch (Exception err)
+                    {
+                        this.logger.LogError(
+                            $"An error occured while trying to update province. Err:{err.Message}");
+                    }
+                });
+            var cities = this.dataServices
+                .GetRepository<XrmHajirCity>()
+                .Queryable
+                .Select(x => x.Id)
+                .ToArray();
+            geoData
+                .Cities
+                .Where(x => !cities.Contains(x.Id))
+                .ToList()
+                .ForEach(city =>
+                {
+                    try
+                    {
+                        this.dataServices
+                        .GetRepository<XrmHajirCity>()
+                        .Insert(new XrmHajirCity
+                        {
+                            Id = city.Id,
+                            Name = city.Name,
+                            Code = city.Code,
+                            ProvinceReference = city.ProvinceId.HasValue
+                                ? new EntityReference(XrmHajirProvince.Schema.LogicalName, city.ProvinceId.Value)
+                                : null
+                        });
+                    }
+                    catch (Exception err)
+                    {
+                        this.logger.LogError(
+                            $"An error occured while trying to insert city. err:{err.Message}");
+                    }
+
+
+
+                });
+
+            this.dataServices
+                .GetRepository<XrmHajirProvince>()
+                .Queryable
+                .Where(x => x.CenterCityId == null)
+                .ToList()
+                .ForEach(p =>
+                {
+                    var prov = geoData.Provinces.FirstOrDefault(x => x.Id == p.Id);
+                    p.CenterCityId = prov != null && prov.CenterCityId.HasValue
+                        ? new EntityReference(XrmHajirCity.Schema.LogicalName, prov.CenterCityId.Value)
+                        : null;
+                    this.dataServices.GetRepository<XrmHajirProvince>().Update(p);
+                });
+            this.logger.LogInformation($"Finished Importing GeoData");
         }
     }
 }

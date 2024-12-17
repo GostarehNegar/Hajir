@@ -33,7 +33,13 @@ namespace Hajir.Crm.Xrm.Service
         public static IWebHostBuilder CreateHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureLogging(opt => { opt.ClearProviders(); })
-                .ConfigureAppConfiguration(opt => { opt.AddJsonFile("appsettings.json"); })
+                .ConfigureAppConfiguration((b,opt) => {
+                    opt.AddJsonFile("appsettings.json");
+                    if (b.HostingEnvironment.IsDevelopment())
+                    {
+                        opt.AddJsonFile("appsettings.development.json");
+                    }
+                })
                 .ConfigureServices((c, s) =>
                 {
                     ConfigureNLog(args, c.Configuration);

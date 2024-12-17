@@ -34,15 +34,15 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             set => this.AggregateProduct = value.HasValue ? new EntityReference(XrmHajirAggregateProduct.Schema.LogicalName, value.Value) : null;
         }
         [AttributeLogicalName(Schema.PercentDiscount)]
-        public long? PercentDiscount
+        public int? PercentDiscount
         {
-            get => this.GetAttributeValue<long?>(Schema.PercentDiscount);
+            get => this.GetAttributeValue<int?>(Schema.PercentDiscount);
             set => this.SetAttribiuteValue(Schema.PercentDiscount, value);
         }
         [AttributeLogicalName(Schema.PercentTax)]
-        public long? PercentTax
+        public int? PercentTax
         {
-            get => this.GetAttributeValue<long?>(Schema.PercentTax);
+            get => this.GetAttributeValue<int?>(Schema.PercentTax);
             set => this.SetAttribiuteValue(Schema.PercentTax, value);
         }
         [AttributeLogicalName(Schema.GuaranteeMonths)]

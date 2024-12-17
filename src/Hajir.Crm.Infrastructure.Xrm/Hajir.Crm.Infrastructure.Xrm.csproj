@@ -9,6 +9,8 @@
     <None Remove="Solutions\HajirSales_1_0_0_managed.zip" />
     <None Remove="Solutions\HajirSales_1_0_1.zip" />
     <None Remove="Solutions\HajirSales_1_0_1_managed.zip" />
+    <None Remove="Solutions\HajirSales_1_0_2.zip" />
+    <None Remove="Solutions\HajirSales_1_0_2_managed.zip" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +26,13 @@
     <EmbeddedResource Include="Solutions\HajirSales_1_0_1_managed.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Solutions\HajirSales_1_0_2.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Solutions\HajirSales_1_0_2_managed.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +43,11 @@
 
   <ItemGroup>
     <Folder Include="XrmFrames\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="Solutions\HajirSales_1_0_2.zip" />
+    <Page Include="Solutions\HajirSales_1_0_2_managed.zip" />
   </ItemGroup>
 
 </Project>

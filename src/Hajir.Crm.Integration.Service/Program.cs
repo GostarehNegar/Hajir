@@ -52,7 +52,7 @@ namespace Hajir.Crm.Xrm.Service
                     s.AddHajirIntegrationServices(c.Configuration, opt => { });
                     s.AddSignalRTransport(c.Configuration, opt => { });
                     //s.AddLibraryApi();
-                    s.AddHajirInfrastructure(c.Configuration);
+                    s.AddHajirSalesInfrastructure(c.Configuration);
                     //s.AddMvc();
                     //s.AddSanadPardazIntegration(c.Configuration, opt => { });
 

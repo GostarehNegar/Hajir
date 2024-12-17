@@ -14,7 +14,8 @@ namespace GN.Library.Xrm.Services.Bus
 		public bool AddSystemMessages { get; set; }
 		public bool PurgeOnShutDown { get; set; }
 		public bool WatchService { get; set; }
-		public XrmMessageBusOptions Validate()
+		public Type BusPluginType { get; set; } = typeof(GN.Library.Xrm.Plugins.XrmMessageBusPlugin);
+        public XrmMessageBusOptions Validate()
 		{
 			return this;
 		}

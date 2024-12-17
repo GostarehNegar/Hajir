@@ -69,6 +69,20 @@ namespace Hajir.Crm
                 : (Guid?)null;
 
         }
+        public static DynamicEntityReference GetOwnerReference(this DynamicEntity entity)
+        {
+            if (entity == null)
+                return null;
+            return entity.GetAttributeValue<DynamicEntityReference>("ownerid");
+
+        }
+        public static DynamicEntityReference GetCreatedByReference(this DynamicEntity entity)
+        {
+            if (entity == null)
+                return null;
+            return entity.GetAttributeValue<DynamicEntityReference>("createdby");
+
+        }
         public static Guid? GetCreatedBy(this DynamicEntity entity)
         {
             if (entity == null)
@@ -77,6 +91,13 @@ namespace Hajir.Crm
                 Guid.TryParse(entity.GetAttributeValue<DynamicEntityReference>("createdby")?.Id, out var _res)
                 ? _res
                 : (Guid?)null;
+
+        }
+        public static DynamicEntityReference GetModifiedByReference(this DynamicEntity entity)
+        {
+            if (entity == null)
+                return null;
+            return entity.GetAttributeValue<DynamicEntityReference>("modifiedby");
 
         }
         public static Guid? GetModifiedBy(this DynamicEntity entity)
