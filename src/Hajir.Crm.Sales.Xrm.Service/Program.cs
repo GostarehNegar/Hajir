@@ -17,9 +17,9 @@ using Microsoft.AspNetCore.Builder;
 using NLog.Web;
 using Microsoft.Extensions.DependencyInjection;
 using GN.Library.Xrm.Services.Bus;
-using Hajir.Crm.Infrastructure.Xrm.Handlers;
+using Hajir.Crm.Infrastructure.Xrm.Sales.Handlers;
 
-namespace Hajir.Crm.Sale.Xrm.Service
+namespace Hajir.Crm.Sales.Xrm.Service
 {
     public class Program
     {

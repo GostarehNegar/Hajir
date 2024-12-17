@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 
-namespace Hajir.Crm.Sale.Xrm.Plugins
+namespace Hajir.Crm.Sales.Xrm.Plugins
 {
 
     public interface IJsonSerializer
