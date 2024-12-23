@@ -194,18 +194,7 @@ namespace GN.Library
                 public const string AccountRatingCode = "accountratingcode";
 
 
-                public class ColumnSelectors : XrmColumnSelector<XrmAccount>
-                {
-                    public static Expression<Func<XrmAccount, XrmAccount>> Default => x => new XrmAccount
-                    {
-                        Name = x.Name,
-                        Id = x.Id,
-                        StatusCode = x.StatusCode,
-                        StateCode = x.StateCode
-                    };
-                    public static Expression<Func<XrmAccount, XrmAccount>> All => x => x;
-
-                }
+               
 
             }
 

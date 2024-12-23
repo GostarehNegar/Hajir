@@ -20,7 +20,19 @@ namespace GN.Library.Xrm.StdSolution
 	{
 		public new class Schema : LibraryConstants.Schema.Account
 		{
-		}
+            public class ColumnSelectors : XrmColumnSelector<XrmAccount>
+            {
+                public static Expression<Func<XrmAccount, XrmAccount>> Default => x => new XrmAccount
+                {
+                    Name = x.Name,
+                    Id = x.Id,
+                    StatusCode = x.StatusCode,
+                    StateCode = x.StateCode
+                };
+                public static Expression<Func<XrmAccount, XrmAccount>> All => x => x;
+
+            }
+        }
 		public XrmAccount() : base(Schema.LogicalName)
 		{
 		}

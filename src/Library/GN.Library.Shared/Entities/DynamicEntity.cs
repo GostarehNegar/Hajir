@@ -34,7 +34,7 @@ namespace GN.Library.Shared.Entities
 
     public class DynamicEntity
     {
-        public class Schema:LibraryConstants.Schema.CrmStdSolution.EntitySchema
+        public class Schema:LibraryConstants.Schema.EntitySchema
         {
             public const string Description = "description";
             public const string ModiefiedOn = "modifiedon";
