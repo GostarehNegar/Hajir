@@ -2,11 +2,12 @@
 using GN.Library.Shared.Entities;
 using GN.Library.Xrm;
 using GN.Library.Xrm.StdSolution;
+using Hajir.Crm.Common;
 using Hajir.Crm.Entities;
-using Hajir.Crm.Features.Common;
-using Hajir.Crm.Features.Integration;
-using Hajir.Crm.Features.Integration.Infrastructure;
+using Hajir.Crm.Integration;
+using Hajir.Crm.Integration.Infrastructure;
 using Hajir.Crm.Infrastructure.Xrm.Data;
+using Hajir.Crm.Integration.Infrastructure;
 using MassTransit.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Crm.Sdk.Messages;

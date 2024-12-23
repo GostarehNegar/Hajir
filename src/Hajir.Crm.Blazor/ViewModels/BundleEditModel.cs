@@ -1,4 +1,4 @@
-﻿using Hajir.Crm.Features.Products;
+﻿using Hajir.Crm.Products;
 using System;
 using System.Linq;
 using System.Text;

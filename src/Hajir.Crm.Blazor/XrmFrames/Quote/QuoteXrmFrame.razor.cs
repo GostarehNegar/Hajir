@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using GN.Library.Xrm;
 using GN.Library.Xrm.StdSolution;
 using Hajir.Crm;
-using Hajir.Crm.Features.Sales;
 using Hajir.Crm.Infrastructure.Xrm.Data;
 using Hajir.Crm.Sales;
 using Microsoft.AspNetCore.Components;

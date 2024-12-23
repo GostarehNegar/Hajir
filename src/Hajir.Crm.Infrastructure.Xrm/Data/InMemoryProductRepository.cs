@@ -1,9 +1,9 @@
 ﻿using Hajir.Crm.Entities;
-using Hajir.Crm.Features.Products;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using Hajir.Crm.Products;
 
 namespace Hajir.Crm.Infrastructure.Xrm.Data
 {

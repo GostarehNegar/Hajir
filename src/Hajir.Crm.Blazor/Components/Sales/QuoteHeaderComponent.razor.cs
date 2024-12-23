@@ -1,6 +1,6 @@
 ﻿using GN.Library.Xrm;
 using GN.Library.Xrm.StdSolution;
-using Hajir.Crm.Features.Sales;
+using Hajir.Crm.Sales;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

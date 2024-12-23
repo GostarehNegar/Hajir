@@ -1,5 +1,5 @@
 ﻿using Hajir.Crm.Blazor.Models;
-using Hajir.Crm.Features.Products;
+using Hajir.Crm.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;

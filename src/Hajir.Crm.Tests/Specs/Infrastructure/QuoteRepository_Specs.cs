@@ -1,9 +1,9 @@
 ﻿using GN.Library.Xrm;
 using GN.Library.Xrm.StdSolution;
-using Hajir.Crm.Features.Common;
+using Hajir.Crm.Common;
 using Hajir.Crm.Features.Products;
-using Hajir.Crm.Features.Sales;
 using Hajir.Crm.Infrastructure.Xrm.Data;
+using Hajir.Crm.Sales;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog.Targets;
@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Hajir.Crm.Tests.Specs.Infrastructure
 {
-	[TestClass]
+    [TestClass]
 	public class QuoteRepository_Specs : TestFixture
 	{
 		[TestMethod]

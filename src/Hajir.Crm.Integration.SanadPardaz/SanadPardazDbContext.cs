@@ -1,5 +1,5 @@
-﻿using Hajir.Crm.Features.Integration;
-using Hajir.Crm.Features.Integration.Infrastructure;
+﻿using Hajir.Crm.Integration;
+using Hajir.Crm.Integration.Infrastructure;
 using Hajir.Crm.Integration.SanadPardaz.Entities;
 using Hajir.Crm.Integration.SanadPardaz.Internals;
 using Microsoft.EntityFrameworkCore;

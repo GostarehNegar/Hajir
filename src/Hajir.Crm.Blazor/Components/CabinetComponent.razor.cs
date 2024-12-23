@@ -1,4 +1,4 @@
-﻿using Hajir.Crm.Features.Products;
+﻿using Hajir.Crm.Products;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;

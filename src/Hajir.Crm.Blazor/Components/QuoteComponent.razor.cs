@@ -5,14 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Hajir.Crm;
-using Hajir.Crm.Features.Sales;
 using MudBlazor;
-using Hajir.Crm.Features.Products;
+using Hajir.Crm.Products;
 using Microsoft.Extensions.DependencyInjection;
 
 using Hajir.Crm.Blazor.ViewModels;
 using Microsoft.JSInterop;
 using System.Security.Policy;
+using Hajir.Crm.Sales;
 
 namespace Hajir.Crm.Blazor.Components
 {

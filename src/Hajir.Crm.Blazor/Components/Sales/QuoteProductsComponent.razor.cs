@@ -1,5 +1,5 @@
 ﻿using Hajir.Crm.Blazor.XrmFrames;
-using Hajir.Crm.Features.Sales;
+using Hajir.Crm.Sales;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using System;

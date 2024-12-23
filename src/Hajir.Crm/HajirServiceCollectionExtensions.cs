@@ -1,8 +1,8 @@
 ﻿using Hajir.Crm;
 using Hajir.Crm.Features;
-using Hajir.Crm.Features.Products;
-using Hajir.Crm.Features.Products.Internals;
 using Hajir.Crm.Features.Sales;
+using Hajir.Crm.Products;
+using Hajir.Crm.Products.Internals;
 using Microsoft.Extensions.Configuration;
 using System;
 

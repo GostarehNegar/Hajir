@@ -1,5 +1,5 @@
 ﻿
-using Hajir.Crm.Features.Common;
+using Hajir.Crm.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Xrm.Sdk;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Hajir.Crm.Tests.Specs
 {
-   
+
 
     [TestClass]
 	public class CacheServices_Tests:TestFixture

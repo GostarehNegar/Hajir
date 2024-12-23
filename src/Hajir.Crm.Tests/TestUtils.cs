@@ -8,11 +8,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using GN.Library.Xrm;
 using Microsoft.Extensions.DependencyInjection;
-using Hajir.Crm.Features.Products;
 using Hajir.Crm.Entities;
 using Hajir.Crm.Integration.SanadPardaz;
 using GN.Library.Odoo;
 using GostarehNegarBot;
+using Hajir.Crm.Products;
 
 namespace Hajir.Crm.Tests
 {

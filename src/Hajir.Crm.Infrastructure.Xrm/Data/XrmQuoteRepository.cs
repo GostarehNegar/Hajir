@@ -2,8 +2,7 @@
 using GN.Library.Pipelines.WithBlockingCollection;
 using GN.Library.Xrm;
 using GN.Library.Xrm.StdSolution;
-using Hajir.Crm.Features.Common;
-using Hajir.Crm.Features.Sales;
+using Hajir.Crm.Common;
 using Hajir.Crm.Sales;
 using Microsoft.AspNetCore.Http.Internal;
 using System;

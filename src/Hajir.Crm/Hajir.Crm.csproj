@@ -6,23 +6,17 @@
 
   <ItemGroup>
     <Compile Remove="Entities\**" />
-    <Compile Remove="Features\Products\Application\**" />
-    <Compile Remove="Features\Products\Domain\**" />
-    <Compile Remove="Features\Products\Infrastructure\**" />
-    <Compile Remove="Infrastructure\Internals\**" />
-    <Compile Remove="Infrastructure\States\**" />
+    <Compile Remove="Products\Application\**" />
+    <Compile Remove="Products\Domain\**" />
+    <Compile Remove="Products\Infrastructure\**" />
     <EmbeddedResource Remove="Entities\**" />
-    <EmbeddedResource Remove="Features\Products\Application\**" />
-    <EmbeddedResource Remove="Features\Products\Domain\**" />
-    <EmbeddedResource Remove="Features\Products\Infrastructure\**" />
-    <EmbeddedResource Remove="Infrastructure\Internals\**" />
-    <EmbeddedResource Remove="Infrastructure\States\**" />
+    <EmbeddedResource Remove="Products\Application\**" />
+    <EmbeddedResource Remove="Products\Domain\**" />
+    <EmbeddedResource Remove="Products\Infrastructure\**" />
     <None Remove="Entities\**" />
-    <None Remove="Features\Products\Application\**" />
-    <None Remove="Features\Products\Domain\**" />
-    <None Remove="Features\Products\Infrastructure\**" />
-    <None Remove="Infrastructure\Internals\**" />
-    <None Remove="Infrastructure\States\**" />
+    <None Remove="Products\Application\**" />
+    <None Remove="Products\Domain\**" />
+    <None Remove="Products\Infrastructure\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,11 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Validation\" />
-    <Folder Include="Features\XrmFrames\Quotes\" />
-    <Folder Include="Infrastructure\Data\" />
-    <Folder Include="Infrastructure\Integration\" />
-    <Folder Include="Products\" />
+    <Folder Include="Features\" />
   </ItemGroup>
 
 </Project>

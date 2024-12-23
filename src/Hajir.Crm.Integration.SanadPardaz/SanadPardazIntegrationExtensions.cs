@@ -1,4 +1,4 @@
-﻿using Hajir.Crm.Features.Integration.Infrastructure;
+﻿using Hajir.Crm.Integration.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

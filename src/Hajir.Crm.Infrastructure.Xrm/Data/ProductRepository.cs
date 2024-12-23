@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using Hajir.Crm.Features.Products;
+using Hajir.Crm.Products;
 using Microsoft.AspNetCore.Mvc;
 
 

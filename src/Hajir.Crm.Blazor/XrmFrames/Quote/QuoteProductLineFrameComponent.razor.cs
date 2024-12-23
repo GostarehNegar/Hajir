@@ -1,5 +1,4 @@
-﻿using Hajir.Crm.Features.Sales;
-using Hajir.Crm.Sales;
+﻿using Hajir.Crm.Sales;
 using Microsoft.AspNetCore.Components;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;

@@ -1,6 +1,5 @@
 ﻿using GN;
 using GN.Library.Shared.Entities;
-using Hajir.Crm.Features;
 using Hajir.Crm.Internals;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;

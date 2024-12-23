@@ -1,6 +1,6 @@
 ﻿using GN.Library.Xrm.StdSolution;
 using Hajir.Crm.Entities;
-using Hajir.Crm.Features.Products;
+using Hajir.Crm.Products;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
 using System;

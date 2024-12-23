@@ -1,5 +1,5 @@
 ﻿using GN;
-using Hajir.Crm.Features.Sales;
+using Hajir.Crm.Sales;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;

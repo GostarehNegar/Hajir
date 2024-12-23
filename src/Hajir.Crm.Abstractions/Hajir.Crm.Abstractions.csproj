@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Integration\" />
+    <Folder Include="Features\" />
   </ItemGroup>
 
 </Project>

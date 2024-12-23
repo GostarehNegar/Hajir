@@ -1,6 +1,6 @@
 ﻿using GN.Library.Xrm;
-using Hajir.Crm.Features.Integration;
-using Hajir.Crm.Features.Integration.Infrastructure;
+using Hajir.Crm.Integration;
+using Hajir.Crm.Infrastructure;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -14,6 +14,7 @@ using Microsoft.Xrm.Sdk;
 using GN.Library.Xrm.StdSolution;
 using GN.Library.Shared.Entities;
 using GN.Library.Data;
+using Hajir.Crm.Integration.Infrastructure;
 
 namespace Hajir.Crm.Infrastructure.Xrm.Integration
 {

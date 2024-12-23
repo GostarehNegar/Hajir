@@ -14,6 +14,7 @@ using GN.Library.Xrm;
 using GN.Library.Api;
 using GN.Library.Messaging;
 using Microsoft.Extensions.DependencyInjection;
+using Hajir.Crm.Integration;
 using Hajir.Crm.Integration.SanadPardaz;
 using Microsoft.AspNetCore.Builder;
 using NLog.Web;

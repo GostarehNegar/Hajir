@@ -1,20 +1,21 @@
 ﻿using GN;
 using GN.Library;
 using Hajir.Crm.Entities;
-using Hajir.Crm.Features.Products;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
 using AutoMapper.Configuration;
 using GN.Library.Xrm;
-using Hajir.Crm.Features.Sales;
 using Hajir.Crm.Infrastructure.Xrm.Data;
 using Microsoft.Xrm.Sdk;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Hajir.Crm.Features.Integration;
 using GN.Library.Xrm.StdSolution;
 using Hajir.Crm.Reporting;
+using Hajir.Crm.Products;
+using Hajir.Crm.Sales;
+using Hajir.Crm.Integration;
 
 namespace Hajir.Crm.Infrastructure.Xrm
 {

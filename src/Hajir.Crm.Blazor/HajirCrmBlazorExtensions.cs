@@ -8,10 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Hajir.Crm.Features;
 using Hajir.Crm;
 using Hajir.Crm.Blazor.ViewModels;
 using Hajir.Crm.Blazor.XrmFrames;
+using Hajir.Crm.Internals;
 
 namespace Hajir.Crm.Blazor
 {

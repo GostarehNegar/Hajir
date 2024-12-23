@@ -1,7 +1,7 @@
 ﻿using GN.Library.Xrm;
 using GN.Library.Xrm.Services.Bus;
 using GN.Library.Xrm.StdSolution;
-using Hajir.Crm.Features.Common;
+using Hajir.Crm.Common;
 using Hajir.Crm.Infrastructure.Xrm.Data;
 using Microsoft.Extensions.Logging;
 using System;

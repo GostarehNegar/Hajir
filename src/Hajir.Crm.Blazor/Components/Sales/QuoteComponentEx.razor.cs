@@ -1,8 +1,8 @@
 ﻿using GN.Library.Xrm.StdSolution;
 using Hajir.Crm.Blazor.XrmFrames;
 using Hajir.Crm.Blazor.XrmFrames.Quote;
-using Hajir.Crm.Features.Sales;
 using Hajir.Crm.Infrastructure.Xrm.Data;
+using Hajir.Crm.Sales;
 using Microsoft.AspNetCore.Components;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
