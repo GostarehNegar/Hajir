@@ -194,11 +194,17 @@ namespace GN.Library
                 public const string AccountRatingCode = "accountratingcode";
 
 
-               
+
 
             }
 
-
+            public class Product : EntitySchema
+            {
+                public const string LogicalName = "product";
+                public const string ProductId = LogicalName + "id";
+                public const string Name = "name";
+                public const string ProductNumber = "productnumber";
+            }
         }
     }
 }
