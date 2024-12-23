@@ -1,0 +1,23 @@
+﻿@page "/xrmframes/account"
+@using Hajir.Crm.Features.Sales;
+@inherits XrmFrameBaseEx<SaleAccount>
+
+<div style="width:100%">
+    <ErrorComponent />
+    <MudGrid>
+        <MudItem xs="12">
+@*            <MudButton Link="@GetPrintLink()" Target="_blank" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Print" Color="Color.Info" Size="Size.Small">Print </MudButton>
+            <MudButton Variant="Variant.Filled" @onclick="DoSave" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small">ذخیره</MudButton>
+*@
+        </MudItem>
+        <MudItem xs="12">
+
+        </MudItem>
+    </MudGrid>
+   @* <QuoteHeaderComponent State="@this.State" />
+    <QuoteProductsComponent State="@this.State" ViewMode="QuoteProductsViewModes.Block" />
+    <QuoteRemarksComponent State="@this.State" />*@
+    <MudDivider style="height:20px;" />
+
+
+</div>

@@ -70,7 +70,7 @@ else if (this.ViewMode == QuoteProductsViewModes.Tabular)
                   Margin="Margin.Dense" @onfocusout="Recalculate" />
     </MudTd>
     <MudTd DataLabel="Nr">
-        <MudTextField T="long?" @bind-Value="Value.PercentDiscount" Label=""
+        <MudTextField T="int?" @bind-Value="Value.PercentDiscount" Label=""
                   Variant="Variant.Outlined" Margin="Margin.Dense"
                   Adornment="Adornment.End" AdornmentText="%" @onfocusout="Recalculate" Disabled="false" />
         <MudTextField T="decimal?" @bind-Value="Value.Discount" Label="" Format="###,####"
@@ -78,7 +78,7 @@ else if (this.ViewMode == QuoteProductsViewModes.Tabular)
 
     </MudTd>
     <MudTd DataLabel="Nr">
-        <MudTextField T="long?" @bind-Value="Value.PercentTax" Label="" Variant="Variant.Outlined"
+        <MudTextField T="int?" @bind-Value="Value.PercentTax" Label="" Variant="Variant.Outlined"
                   Adornment="Adornment.End" AdornmentText="%" Margin="Margin.Dense" @onfocusout="Recalculate" Disabled="false" />
         <MudTextField T="decimal?" @bind-Value="Value.Tax" Label="" Variant="Variant.Outlined" Format="###,####"
                   Margin="Margin.Dense" @onfocusout="Recalculate" Disabled="ITaxDisabled" />

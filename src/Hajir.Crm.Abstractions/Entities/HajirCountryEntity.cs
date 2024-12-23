@@ -37,6 +37,8 @@ namespace Hajir.Crm.Entities
     }
     public class HajirProvinceEntity : DynamicEntity
     {
+        public string CountryId => this.GetAttributeValue<DynamicEntityReference>("hajir_countryid")?.Id;
+        public override string Name { get => this.GetAttributeValue<string>("hajir_name"); set => base.Name = value; }
     }
 }
 

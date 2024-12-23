@@ -1,7 +1,9 @@
 ﻿using GN.Library.Shared.ServiceDiscovery;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
+using System.Xml;
 
 namespace GN.Library
 {
@@ -141,6 +143,73 @@ namespace GN.Library
                 public static string MyUpdate => Perfix + ".my.update";
                 public const string GetUpdate = Perfix + ".my.get";
             }
+        }
+
+        public class Schema
+        {
+
+            public class EntitySchema
+            {
+                public const string StateCode = "statecode";
+                public const string StatusCode = "statuscode";
+                public const string CreatedOn = "createdon";
+                public const string ModifiedOn = "modifiedon";
+                public const string CreatedBy = "createdby";
+                public const string ModifiedBy = "modifiedby";
+                public const string Owner = "ownerid";
+                public const string OwningUser = "owninguser";
+                public const string OwningTeam = "owningteam";
+                public const string OwningBuisnessUnit = "owningbusinessunit";
+                public class WhereClauses
+                {
+                }
+            }
+
+            public class Account : EntitySchema
+            {
+
+                public const string LogicalName = "account";
+                public const string AccountId = "accountid";
+                public const string Name = "name";
+                public const string Telephone1 = "telephone1";
+                public const string Telephone2 = "telephone1";
+                public const string Telephone3 = "telephone1";
+                public const string Fax = "fax";
+                public const string Address1_Line1 = "address1_line1";
+                public const string Address1_Line2 = "address1_line2";
+                public const string Address1_Line3 = "address1_line2";
+                public const string Address1_Fax = "address1_fax";
+                public const string Address1_City = "address1_city";
+                public const string address1_stateorprovince = "address1_stateorprovince";
+                public const string address1_country = "address1_country";
+
+                public const string Address1_Telehone1 = "address1_telephone1";
+                public const string Address1_Telehone2 = "address1_telephone2";
+                public const string Address1_Telehone3 = "address1_telephone3";
+                public const string WebSiteUrl = "websiteurl";
+                public const string Email1 = "emailaddress1";
+                public const string AccountNumber = "accountnumber";
+                public const string PrimaryContactId = "primarycontactid";
+                public const string ParentAccount = "parentaccountid";
+                public const string AccountRatingCode = "accountratingcode";
+
+
+                public class ColumnSelectors : XrmColumnSelector<XrmAccount>
+                {
+                    public static Expression<Func<XrmAccount, XrmAccount>> Default => x => new XrmAccount
+                    {
+                        Name = x.Name,
+                        Id = x.Id,
+                        StatusCode = x.StatusCode,
+                        StateCode = x.StateCode
+                    };
+                    public static Expression<Func<XrmAccount, XrmAccount>> All => x => x;
+
+                }
+
+            }
+
+
         }
     }
 }

@@ -879,11 +879,30 @@ namespace Hajir.Crm.Sales.Xrm.Plugins
     {
         public string Key { get; set; }
         public object Value { get; set; }
+        public string Type { get; set; }
         public KeyValue() { }
         public KeyValue(string key, object value)
         {
+            if (value is EntityReference _val)
+            {
+                value = new JsonSerializableEntity._EntityReference
+                {
+                    Id = _val.Id,
+                    LogicalName = _val.LogicalName,
+                    Name = _val.Name
+                };
+            }
+            if (value is EntityCollection _col)
+            {
+                value = new JsonSerializableEntity._EntityCollection()
+                {
+                    Entities = _col.Entities==null?Array.Empty<JsonSerializableEntity>(): _col.Entities.Select(x => new JsonSerializableEntity(x)).ToArray(),
+                };
+            }
+            
             this.Key = key;
             this.Value = value;
+            this.Type = value?.GetType().AssemblyQualifiedName;
         }
     }
     public class ChangeValue
@@ -909,14 +928,15 @@ namespace Hajir.Crm.Sales.Xrm.Plugins
             public string Key { get; set; }
             public object Value { get; set; }
         }
-        class _EntityCollection
+        public class _EntityCollection
         {
-            public _Entity[] Entities { get; set; }
+            public JsonSerializableEntity[] Entities { get; set; }
         }
-        class _EntityReference
+        public class _EntityReference
         {
             public Guid Id { get; set; }
             public string LogicalName { get; set; }
+            public string Name { get; set; }
         }
         public string LogicalName { get; set; }
         public Guid Id { get; set; }

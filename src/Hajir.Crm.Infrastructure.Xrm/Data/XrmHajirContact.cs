@@ -35,6 +35,18 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                 this.SetAttributeValue(Schema.ExternalId, value);
             }
         }
+        [AttributeLogicalName(Schema.CityId)]
+        public EntityReference City
+        {
+            get => this.GetAttributeValue<EntityReference>(Schema.CityId);
+            set => this.SetAttribiuteValue(Schema.CityId, value);
+        }
+
+        public Guid? CityId
+        {
+            get => this.City?.Id;
+            set => this.City = value.HasValue ? new EntityReference(XrmHajirCity.Schema.LogicalName, value.Value) : null;
+        }
 
     }
 }

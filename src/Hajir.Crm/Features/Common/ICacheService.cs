@@ -20,5 +20,6 @@ namespace Hajir.Crm.Features.Common
 		IEnumerable<HajirCityPhoneCode> CityPhoneCodes { get; }
 		IEnumerable<HajirCountryEntity> Countries { get; }
 		IEnumerable<HajirUserEntity> Users { get; }
+		IEnumerable<HajirProvinceEntity> Provinces { get; }
 	}
 }

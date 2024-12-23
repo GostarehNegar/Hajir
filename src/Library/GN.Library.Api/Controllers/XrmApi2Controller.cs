@@ -36,7 +36,7 @@ namespace GN.Library.Controllers
 			//WebCommandRequest request = null;
 			var user = HttpContext.User;
 			//log.MethodStart();
-			log.LogInformation("XrmJS Service API starts. Request: {0}", request);
+			log.LogDebug("XrmJS Service API starts. Request: {0}", request);
 			bool success = false;
             
             WebCommandResponse ret = new WebCommandResponse();

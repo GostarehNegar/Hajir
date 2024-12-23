@@ -27,7 +27,8 @@ namespace GN.Library.Xrm.StdSolution
 			public const string Address1_Line3 = "address1_line3";
 			public const string Address1_City = "address1_city";
 			public const string Address1_Country = "address1_country";
-			public const string Telephone1 = "telephone1";
+			public const string address1_stateorprovince = "address1_stateorprovince";
+            public const string Telephone1 = "telephone1";
 			public const string Telephone2 = "telephone2";
 			public const string Telephone3 = "telephone3";
 			public const string EmailAddress1 = "emailaddress1";

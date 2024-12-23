@@ -22,7 +22,7 @@ namespace Hajir.Crm.Tests.Specs.Integration
                 var target = scope
                     .ServiceProvider
                     .GetService<ISanadPardazApiClient>();
-                var goods = await target.GetGoods();
+                //var goods = await target.GetGoods();
                 var details = await target.GetDetails();
                 var detail = await target.GetDetailByCode(1);
             }

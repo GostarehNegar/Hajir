@@ -43,13 +43,13 @@ namespace Hajir.Crm.Sales.Xrm.Service
 
                         opt.AddXrmMessageBus = true;
                         opt.ConnectionOptions = ConnectionOptions.OrganizationService;
-                        opt.MessageBusOptions.BusPluginType = typeof(Hajir.Crm.Sale.Xrm.Plugins.XrmMessageBusPlugin);
+                        opt.MessageBusOptions.BusPluginType = typeof(Hajir.Crm.Sales.Xrm.Plugins.XrmMessageBusPlugin);
                     });
                     s.AddLibraryApi();
                     s.AddSignalRTransport(c.Configuration, opt => { });
                     s.AddMvc();
-                    s.AddTransient<IXrmMessageHandler, XrmContactHandler>();
-
+                    s.AddHajirSalesInfrastructure(c.Configuration);
+                    s.AddHajirSalesHandlers();
                     s.AddSalesSolution();
 
                 })
@@ -65,7 +65,7 @@ namespace Hajir.Crm.Sales.Xrm.Service
         {
             return WindowsServiceHost.CreateDefaultBuilder(args)
                 .UseWebHostBuilder(CreateHostBuilder(args))
-                .ConfigureWindowsService("Hajir.Xrm.Service", "Hajir Xrm Service", null)
+                .ConfigureWindowsService("Hajir.Xrm.Sales.Service", "Hajir Xrm Sales Service", null)
                 .Build(w => w.UseGNLib());
         }
         public static NLog.LogFactory ConfigureNLog(string[] args, IConfiguration configuration)

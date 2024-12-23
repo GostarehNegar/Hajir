@@ -183,6 +183,23 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
 
             });
 
+        public IEnumerable<HajirProvinceEntity> Provinces => this.cache.GetOrCreate<IEnumerable<HajirProvinceEntity>>("_PROVINCES_", entry =>
+        {
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
+            using (var scope = this.serviceProvider.CreateScope())
+            {
+                return scope.ServiceProvider.GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirProvince>()
+                .Queryable
+                .ToArray()
+                .Where(x => x.StateCode == 0)
+                .Select(x => x.ToDynamic().To<HajirProvinceEntity>())
+                .ToArray();
+
+            }
+
+        });
+
         public CacheService(IServiceProvider serviceProvider, IMemoryCache cache)
         {
             this.serviceProvider = serviceProvider;

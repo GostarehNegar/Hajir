@@ -68,8 +68,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                     FormattedExpiresOn = q.ExpiresOn.FormatPersianDate(),
                     PaymentTermsCode = q.PaymentTermsCode?.Value,
                     PaymentTerms = GetPaymentCode(q.PaymentTermsCode?.Value),
-                    Payable = "payable",
-
+                    Payable = q.TotalAmount.HasValue? HajirCrmExtensions.NumberToString(q.TotalAmount ?? 0):"",
 
 
                     Items = lines

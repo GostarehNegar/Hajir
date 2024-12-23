@@ -879,11 +879,31 @@ namespace GN.Library.Xrm.Plugins
     {
         public string Key { get; set; }
         public object Value { get; set; }
+        public string Type { get; set; }
         public KeyValue() { }
         public KeyValue(string key, object value)
         {
+            if (value is EntityReference _val)
+            {
+                value = new JsonSerializableEntity._EntityReference
+                {
+                    Id = _val.Id,
+                    LogicalName = _val.LogicalName,
+                    Name = _val.Name
+                };
+            }
+            if (value is EntityCollection _col)
+            {
+                value = new JsonSerializableEntity._EntityCollection()
+                {
+                    Entities = _col.Entities == null ? Array.Empty<JsonSerializableEntity>() : _col.Entities.Select(x => new JsonSerializableEntity(x)).ToArray(),
+                };
+            }
+
             this.Key = key;
             this.Value = value;
+            this.Type = value?.GetType().AssemblyQualifiedName;
+
         }
     }
     public class ChangeValue
@@ -897,26 +917,27 @@ namespace GN.Library.Xrm.Plugins
     public class JsonSerializableEntity
     {
 
-        class _Entity
+        public class _Entity
         {
             public string LogicalName { get; set; }
             public Guid Id { get; set; }
             public _Attribute[] Attributes { get; set; }
         }
 
-        class _Attribute
+        public class _Attribute
         {
             public string Key { get; set; }
             public object Value { get; set; }
         }
-        class _EntityCollection
+        public class _EntityCollection
         {
-            public _Entity[] Entities { get; set; }
+            public JsonSerializableEntity[] Entities { get; set; }
         }
-        class _EntityReference
+        internal class _EntityReference
         {
             public Guid Id { get; set; }
             public string LogicalName { get; set; }
+            public string Name { get; set; }
         }
         public string LogicalName { get; set; }
         public Guid Id { get; set; }
@@ -940,146 +961,160 @@ namespace GN.Library.Xrm.Plugins
             }
             return this;
         }
+        KeyValuePair<string, object> fix(KeyValuePair<string, object> source)
+        {
+            var serializer = new JavaScriptSerializer();
+            object _value = source.Value;
+            var isJObject = _value != null && _value.GetType() != typeof(string)
+                && _value.ToString().Trim().StartsWith("{");
+            if (isJObject)
+            {
+                var strValue = _value.ToString();//.Replace("{}","1");
+                OptionSetValue optionSet = null;
+                if (strValue.Contains("\"Value"))
+                {
+                    try
+                    {
+                        optionSet = serializer.Deserialize<OptionSetValue>(strValue.Replace("\"ExtensionData\": {}", "\"AAA\":1"));
+                        _value = optionSet;
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            _value = serializer.Deserialize<Money>(strValue.Replace("\"ExtensionData\": {}", "\"AAA\":1"));
+                            //_value = optionSet;
+                        }
+                        catch { }
+
+                    }
+                }
+                if (strValue.Contains("Entities"))
+                {
+                    var refernces = new List<EntityReference>();
+                    foreach (var e in serializer.Deserialize<_EntityCollection>(strValue).Entities)
+                    {
+                        foreach (var attr in e.Attributes)
+                        {
+                            if (attr.Key == "partyid")
+                            {
+                                var values = attr.Value as Dictionary<string, object>;
+                                if (values.TryGetValue("Id", out var s_id) && values.TryGetValue("LogicalName", out var logicalName) &&
+                                    s_id != null && logicalName != null &&
+                                    Guid.TryParse(s_id.ToString(), out var id))
+
+                                {
+                                    values.TryGetValue("Name", out var name);
+                                    var reference = new EntityReference(logicalName.ToString(), id);
+                                    reference.Name = name?.ToString();
+                                    refernces.Add(reference);
+                                }
+                            }
+                            //    if (values!=null )
+                            //    {
+                            //        if (values.TryGetValue("Id", out var s_id) && values.TryGetValue("LogicalName",out var logicalName) && 
+                            //            s_id!=null && logicalName!=null &&
+                            //            Guid.TryParse(s_id.ToString(), out var id))
+
+                            //        {
+                            //            refernces.Add(new EntityReference(logicalName.ToString(), id));
+                            //        }
+                            //    }
+                        }
+                    }
+                    if (refernces.Count > 0)
+                    {
+
+                        EntityCollection collection = new EntityCollection(refernces.Select(x =>
+                        {
+                            var en2 = new Entity();
+                            en2.Attributes.Add("partyid", x);
+                            return en2;
+                        }
+                        ).ToList());
+                        _value = collection;
+                    }
+                }
+                else if (strValue.Contains("\"LogicalName"))
+                {
+                    try
+                    {
+                        var _reference = serializer.Deserialize<_EntityReference>(strValue);
+
+                        _value = new EntityReference(_reference.LogicalName, _reference.Id);
+                    }
+                    catch { }
+                }
+            }
+            if (_value != null && _value.GetType() == typeof(string) && Guid.TryParse(_value.ToString(), out var guid))
+            {
+                _value = guid;
+            }
+
+            return new KeyValuePair<string, object>(source.Key, _value);
+        }
+
+        bool TryGetType(string typeName, out Type ret)
+        {
+            ret = null;
+            try
+            {
+                ret = Type.GetType(typeName);
+                return ret != null;
+            }
+            catch { }
+            return false;
+        }
+        KeyValuePair<string, object> GetKeyValue(KeyValue val)
+        {
+            if (val.Value == null)
+            {
+                return new KeyValuePair<string, object>(val.Key, null);
+            }
+            
+            if (!TryGetType(val.Type, out var _type))
+            {
+                return fix(new KeyValuePair<string, object>(val.Key, val.Value));
+            }
+            var serializer = new JavaScriptSerializer();
+            var isJObject = val.Value != null && val.Value.GetType() != typeof(string)
+                && val.Value.ToString().Trim().StartsWith("{");
+            var str = isJObject ? val.Value.ToString() : serializer.Serialize(val.Value);
+            if (_type.Name.EndsWith("_EntityReference"))
+            {
+                _type = typeof(EntityReference);
+            }
+            if (_type.Name.EndsWith("_EntityCollection"))
+            {
+                _type = typeof(JsonSerializableEntity._EntityCollection);
+            }
+            val.Value = serializer.Deserialize(str, _type);
+            if (val.Value is JsonSerializableEntity._EntityCollection _col)
+            {
+                var __col = new EntityCollection();
+                if (_col.Entities != null)
+                {
+                    var eee = _col.Entities.Select(x => x.GetEntity());
+                    __col.Entities.AddRange(eee);
+                }
+                val.Value = __col;
+            }
+            
+
+            return new KeyValuePair<string, object>(val.Key, val.Value);
+
+
+        }
         public Entity GetEntity()
         {
             var serializer = new JavaScriptSerializer();
-            KeyValuePair<string, object> fix(KeyValuePair<string, object> source)
-            {
-                object _value = source.Value;
-                var isJObject = _value != null && _value.GetType() != typeof(string)
-                    && _value.ToString().Trim().StartsWith("{");
-                if (isJObject)
-                {
-                    var strValue = _value.ToString();//.Replace("{}","1");
-                    OptionSetValue optionSet = null;
-                    if (strValue.Contains("\"Value"))
-                    {
-                        try
-                        {
-                            optionSet = serializer.Deserialize<OptionSetValue>(strValue.Replace("\"ExtensionData\": {}", "\"AAA\":1"));
-                            _value = optionSet;
-                        }
-                        catch
-                        {
-                            try
-                            {
-                                _value = serializer.Deserialize<Money>(strValue.Replace("\"ExtensionData\": {}", "\"AAA\":1"));
-                                //_value = optionSet;
-                            }
-                            catch { }
 
-                        }
-                    }
-                    if (strValue.Contains("Entities"))
-                    {
-                        var refernces = new List<EntityReference>();
-                        foreach (var e in serializer.Deserialize<_EntityCollection>(strValue).Entities)
-                        {
-                            foreach (var attr in e.Attributes)
-                            {
-                                if (attr.Key == "partyid")
-                                {
-                                    var values = attr.Value as Dictionary<string, object>;
-                                    if (values.TryGetValue("Id", out var s_id) && values.TryGetValue("LogicalName", out var logicalName) &&
-                                        s_id != null && logicalName != null &&
-                                        Guid.TryParse(s_id.ToString(), out var id))
 
-                                    {
-                                        values.TryGetValue("Name", out var name);
-                                        var reference = new EntityReference(logicalName.ToString(), id);
-                                        reference.Name = name?.ToString();
-                                        refernces.Add(reference);
-                                    }
-                                }
-                                //    if (values!=null )
-                                //    {
-                                //        if (values.TryGetValue("Id", out var s_id) && values.TryGetValue("LogicalName",out var logicalName) && 
-                                //            s_id!=null && logicalName!=null &&
-                                //            Guid.TryParse(s_id.ToString(), out var id))
-
-                                //        {
-                                //            refernces.Add(new EntityReference(logicalName.ToString(), id));
-                                //        }
-                                //    }
-                            }
-                        }
-                        if (refernces.Count > 0)
-                        {
-
-                            EntityCollection collection = new EntityCollection(refernces.Select(x =>
-                            {
-                                var en2 = new Entity();
-                                en2.Attributes.Add("partyid", x);
-                                return en2;
-                            }
-                            ).ToList());
-                            _value = collection;
-                        }
-                    }
-                    else if (strValue.Contains("\"LogicalName"))
-                    {
-                        try
-                        {
-                            var _reference = serializer.Deserialize<_EntityReference>(strValue);
-
-                            _value = new EntityReference(_reference.LogicalName, _reference.Id);
-                        }
-                        catch { }
-                    }
-                }
-                if (_value != null && _value.GetType() == typeof(string) && Guid.TryParse(_value.ToString(), out var guid))
-                {
-                    _value = guid;
-                }
-
-                return new KeyValuePair<string, object>(source.Key, _value);
-            }
-
-            KeyValuePair<string, object> fix2(KeyValuePair<string, object> source)
-            {
-                object _value = source.Value;
-                var isJObject = _value != null && _value.GetType() != typeof(string)
-                    && _value.ToString().Trim().StartsWith("{");
-                if (isJObject)
-                {
-                    var strValue = _value.ToString();
-                    OptionSetValue optionSet = null;
-                    if (strValue.Contains("\"Value"))
-                    {
-                        try
-                        {
-                            optionSet = serializer.Deserialize<OptionSetValue>(strValue);
-                            _value = optionSet;
-                        }
-                        catch
-                        {
-                            try
-                            {
-
-                            }
-                            catch (Exception ex)
-                            {
-
-                            }
-                        }
-                    }
-                    if (strValue.Contains("\"LogicalName"))
-                    {
-                        try
-                        {
-                            var _reference = serializer.Deserialize<_EntityReference>(strValue);
-
-                            _value = new EntityReference(_reference.LogicalName, _reference.Id);
-                        }
-                        catch { }
-                    }
-                }
-
-                return new KeyValuePair<string, object>(source.Key, _value);
-            }
             var result = new Entity(this.LogicalName, this.Id);
+            //result.Attributes
+            //    .AddRange(this.Attributes.Select(x => fix(new KeyValuePair<string, object>(x.Key, x.Value))));
             result.Attributes
-                .AddRange(this.Attributes.Select(x => fix(new KeyValuePair<string, object>(x.Key, x.Value))));
+                .AddRange(this.Attributes.Select(x => GetKeyValue(x)));
             return result;
         }
 

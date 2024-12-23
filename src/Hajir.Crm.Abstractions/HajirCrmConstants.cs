@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GN.Library;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -51,7 +52,14 @@ namespace Hajir.Crm
 
 
         }
+        public class Schema : LibraryConstants.Schema
+        {
+            public new class Account : LibraryConstants.Schema.Account
+            {
+                public const string LL = "";
 
+            }
+        }
 
         public static string MAP1 = @"
 شرکت	شرکت

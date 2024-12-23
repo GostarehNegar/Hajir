@@ -34,21 +34,13 @@ namespace GN.Library.Shared.Entities
 
     public class DynamicEntity
     {
-        public class Schema
+        public class Schema:LibraryConstants.Schema.CrmStdSolution.EntitySchema
         {
             public const string Description = "description";
             public const string ModiefiedOn = "modifiedon";
-            public const string CreatedOn = "createdon";
+            
             public const string TimeStamp = "$timestamp";
-            public const string StateCode = "statecode";
-            public const string StatusCode = "statuscode";
-            public const string ModifiedOn = "modifiedon";
-            public const string CreatedBy = "createdby";
-            public const string ModifiedBy = "modifiedby";
-            public const string Owner = "ownerid";
-            public const string OwningUser = "owninguser";
-            public const string OwningTeam = "owningteam";
-            public const string OwningBuisnessUnit = "owningbusinessunit";
+            
         }
         public DynamicEntity()
         {

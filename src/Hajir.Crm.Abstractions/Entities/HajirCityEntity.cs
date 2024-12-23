@@ -12,7 +12,7 @@ namespace Hajir.Crm.Entities
         public string ProvinceId { get; set; }
         public HajirCityEntity()
         {
-            this.LogicalName = "rhs_city";
+            this.LogicalName = "city";
         }
         public override string ToString()
         {

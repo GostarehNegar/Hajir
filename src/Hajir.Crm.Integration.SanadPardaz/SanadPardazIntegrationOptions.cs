@@ -8,6 +8,8 @@ namespace Hajir.Crm.Integration.SanadPardaz
         /// Url to SanadPardaz api server.
         /// </summary>
         public string ApiUrl { get; set; }
+        public string UserName { get; set; } = "admin";
+        public string Password { get; set; } = "123456";
 
         internal string GetBaseApiAddress()
         {
@@ -18,14 +20,14 @@ namespace Hajir.Crm.Integration.SanadPardaz
             }
 
             
-            return $"{result}api/v2/";
+            return $"{result}api/v3/";
         }
 
         public SanadPardazIntegrationOptions Validate()
         {
             this.ApiUrl = Uri.IsWellFormedUriString(this.ApiUrl, uriKind: UriKind.Absolute)
                 ? this.ApiUrl
-                : "http://192.168.20.7:81/";
+                : "http://192.168.20.7:82/";
             if (!this.ApiUrl.Trim().EndsWith("/"))
             {
                 this.ApiUrl = this.ApiUrl + "/";
