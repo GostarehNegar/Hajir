@@ -457,22 +457,38 @@ namespace Hajir.Crm.Sales.Xrm.Plugins
 
             }
         }
+        public class _EntityRef
+        {
+            public string LogicalName { get; set; }
+            public Guid Id { get; set; }
 
+        }
         public void ApplyChanges(Entity entity, List<ChangeValue> changes, IJsonSerializer serializer)
         {
             var ser = serializer ?? PluginHelper.GetSerializer();
+            //return;
             foreach (var change in changes)
             {
                 try
                 {
                     Type type = null;
-                    try { type = Type.GetType(change.Type); } catch { }
+                    try { type = Type.GetType(change.Type); } catch {  }
                     object val = null;
                     if (change.Value != null && type != null)
                     {
                         try
                         {
                             val = ser.Deserialize(change.Value, type);
+                        }
+                        catch {  }
+                    }
+                    if (type == typeof(EntityReference))
+                    {
+                        try
+                        {
+                            var e = ser.Deserialize<_EntityRef>(change.Value);
+                            val = new EntityReference(e.LogicalName, e.Id);
+
                         }
                         catch { }
                     }
@@ -492,7 +508,7 @@ namespace Hajir.Crm.Sales.Xrm.Plugins
                 catch (Exception err)
                 {
                     throw new PluginValidationException(string.Format(
-                        "An error occured while trying to apply changes. Key:{0}, Value:{1}, Error:{2}", change.Key, change.Value, err.Message));
+                        "An error occured while trying to apply changes. Key:{0}, Value:{1}, Error:{2}, Type:{3}", change.Key, change.Value, err.Message, change.Type));
                 }
             }
 

@@ -1,4 +1,5 @@
-﻿using Hajir.Crm.Features.Products;
+﻿
+using Hajir.Crm.Products;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;

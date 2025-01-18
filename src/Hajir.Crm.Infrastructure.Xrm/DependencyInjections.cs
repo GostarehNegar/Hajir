@@ -44,7 +44,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddTransient<IXrmMessageHandler, XrmEmailHanler>()
                 .AddTransient<IXrmMessageHandler, XrmQuoteProductHandler>()
                 .AddTransient<IXrmMessageHandler, XrmContactHandler>()
-                .AddTransient<IXrmMessageHandler, XrmAccountValidationHandler>();
+                .AddTransient<IXrmMessageHandler, XrmAccountValidationHandler>()
+                .AddTransient<IXrmMessageHandler, XrmQuoteHandler>();
         }
 
         public static IServiceCollection AddHajirSalesInfrastructure(this IServiceCollection services, HajirSalesXrmInfrastructureOptions options)

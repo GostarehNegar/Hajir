@@ -27,20 +27,44 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales.Handlers
         public override async Task Handle(XrmMessage message)
         {
             await Task.CompletedTask;
+                       
             try
             {
-
                 var pre = message.PreImage?.ToEntity<XrmHajirQuoteDetail>();
+
+                if (pre==null && message.PrimraryEntityId!= Guid.Empty)
+                {
+                    pre = this.service.GetService<IXrmDataServices>()
+                        .GetRepository<XrmHajirQuoteDetail>()
+                        .Queryable
+                        .FirstOrDefault(x => x.Id == message.PrimraryEntityId);
+                }
                 var line = message.Entity.ToEntity<XrmHajirQuoteDetail>();
                 var quoteId = line.QuoteId ?? pre?.QuoteId;
                 var isFormal = false;
-                if (quoteId.HasValue)
+                //if (quoteId.HasValue)
+                //{
+                //    var quote = this.service.GetService<IXrmDataServices>()
+                //        .GetRepository<XrmHajirQuote>()
+                //        .Queryable
+                //        .FirstOrDefault(x => x.Id == quoteId.Value);
+                //    isFormal = quote.QuoteType;
+                //}
+                var percentTax = line.PercentTax ?? pre?.PercentTax;
+                if (1 == 0)
                 {
-                    var quote = this.service.GetService<IXrmDataServices>()
-                        .GetRepository<XrmHajirQuote>()
-                        .Queryable
-                        .FirstOrDefault(x => x.Id == quoteId.Value);
-                    isFormal = quote.QuoteType;
+                   
+                    if (isFormal && (!percentTax.HasValue || percentTax != 10))
+                    {
+                        percentTax = 10;
+                        message.Change(XrmHajirQuoteDetail.Schema.PercentTax, percentTax);
+                    }
+                    if (!isFormal && percentTax.HasValue && percentTax == 10)
+                    {
+                        percentTax = 0;
+                        message.Change(XrmHajirQuoteDetail.Schema.PercentTax, percentTax);
+
+                    }
                 }
                 if (line.Attributes.ContainsKey(XrmHajirQuoteDetail.Schema.Quantity) && line[XrmHajirQuoteDetail.Schema.Quantity] != null)
                 {
@@ -53,13 +77,9 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales.Handlers
                 var quantity = line.Quantity ?? pre?.Quantity ?? 0;
                 var pricePerUnit = line.PricePerUnit ?? pre?.PricePerUnit ?? 0;
                 var percentDiscount = line.PercentDiscount ?? pre?.PercentDiscount;
-                var percentTax = line.PercentTax ?? pre?.PercentTax;
+               
                 var amount = pricePerUnit * (decimal)quantity;
-                if (isFormal && (!percentDiscount.HasValue || percentTax != 10))
-                {
-                    percentTax = 10;
-                    message.Change(XrmHajirQuoteDetail.Schema.PercentTax, percentTax);
-                }
+               
                 if (pricePerUnit > 0 && quantity > 0)
                 {
 
@@ -72,8 +92,10 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales.Handlers
                 if (percentTax.HasValue)
                 {
                     var tax = amount * ((decimal)percentTax / 100);
-                    message.Change(XrmQuoteDetail.Schema.Tax, new Money(tax));
+                    if (line.Tax!= tax)
+                        message.Change(XrmQuoteDetail.Schema.Tax, new Money(tax));
                 }
+                
                 this.logger.LogInformation(
                     $"QuoteProduct update message successfully handled.");
             }

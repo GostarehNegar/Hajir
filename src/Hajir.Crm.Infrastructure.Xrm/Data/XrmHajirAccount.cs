@@ -32,10 +32,14 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             public const string RegistrationNumber = HajirCrmConstants.HajirSolutionPerfix + "registrationnumber";
             public const string EconomicCode = HajirCrmConstants.HajirSolutionPerfix + "economiccode";
             public const string IntroductionMethod = HajirCrmConstants.HajirSolutionPerfix + "introductionmethod";
-            public const string RelationTypeCode = "customertypecode";
+            public const string RelationTypeCode = HajirCrmConstants.HajirSolutionPerfix+ "relationshiptype";
             public const string AccountType = HajirCrmConstants.HajirSolutionPerfix + "accounttype";
             public const string BrandName = HajirCrmConstants.HajirSolutionPerfix + "brandname";
             public const string CityId = HajirCrmConstants.HajirSolutionPerfix + "cityid";
+            public const string ProvinceId = HajirCrmConstants.HajirSolutionPerfix + "provinceid";
+            public const string CountryId = HajirCrmConstants.HajirSolutionPerfix + "countryid";
+            public const string ImportanceCode = HajirCrmConstants.HajirSolutionPerfix + "importancecode";
+            
         }
 
         [AttributeLogicalName(Schema.ExternalId)]
@@ -221,6 +225,11 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             set => this.AccountType = value.HasValue ? new OptionSetValue(value.Value) : null;
         }
 
-
+        [AttributeLogicalName(Schema.ImportanceCode)]
+        public OptionSetValue ImportanceCode
+        {
+            get => this.GetAttributeValue<OptionSetValue>(Schema.ImportanceCode);
+            set => this.SetAttribiuteValue(Schema.ImportanceCode, value);
+        }
     }
 }

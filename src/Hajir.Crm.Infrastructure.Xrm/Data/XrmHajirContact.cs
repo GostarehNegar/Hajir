@@ -19,6 +19,8 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             public const string Gifts = HajirCrmConstants.HajirSolutionPerfix + "gifts";
             public const string SalutaionCode = HajirCrmConstants.HajirSolutionPerfix + "salutationcode";
             public const string CityId = HajirCrmConstants.HajirSolutionPerfix + "cityid";
+            public const string ProvinceId = HajirCrmConstants.HajirSolutionPerfix + "provinceid";
+            public const string CountryId = HajirCrmConstants.HajirSolutionPerfix + "countryid";
 
         }
 

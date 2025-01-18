@@ -19,6 +19,7 @@ using Hajir.Crm.Entities;
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
+using Hajir.Crm.Integration;
 
 namespace Hajir.Crm.Tests.Specs.Integration
 {
@@ -36,7 +37,7 @@ namespace Hajir.Crm.Tests.Specs.Integration
             {
 
                 s.AddHajirIntegrationServices(c, opt => { });
-                s.AddHajirSalesInfrastructure(c, opt => { });
+                s.AddHajirIntegrationInfrastructure(c, opt => { });
 
             });
         }

@@ -78,9 +78,26 @@ namespace GN.Library.Xrm.Services.Bus
         }
         public XrmMessageFilter ConfigureValidation(
             string targetEntity = null,
-            PluginMessageStages stage = PluginMessageStages.PreOpertaion,
+            PluginMessageStages stage = PluginMessageStages.PreValidation,
             PluginMessageTypes message = PluginMessageTypes.UpdateCreate,
             bool isCritical = true, bool traceEnabled = false)
+        {
+            this.Stage = stage;
+            //this.PluginBusType = PluginBusTypes.Validation;
+            this.PluginConfiguration.IsCritical = isCritical;
+            this.Message = message;
+            this.TargetEntityName = targetEntity ?? this.TargetEntityName;
+            this.PluginConfiguration.Trace = traceEnabled;
+            //this.PluginType = typeof(GN.Library.Xrm.Plugins.ValidationPlugin);
+            this.PluginType = XrmSettings.Current.MessageBusOptions.BusPluginType;
+            this.PluginConfiguration.SendSynch = true;
+            return this;
+        }
+        public XrmMessageFilter ConfigurePostValidation(
+           string targetEntity = null,
+           PluginMessageStages stage = PluginMessageStages.PostOperation,
+           PluginMessageTypes message = PluginMessageTypes.UpdateCreate,
+           bool isCritical = true, bool traceEnabled = false)
         {
             this.Stage = stage;
             //this.PluginBusType = PluginBusTypes.Validation;

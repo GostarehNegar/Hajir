@@ -1,5 +1,4 @@
 ﻿using GN.Library.Xrm;
-using Hajir.Crm.Entities;
 using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk;
 using System;
@@ -9,28 +8,28 @@ using System.Text;
 namespace Hajir.Crm.Infrastructure.Xrm.Data
 {
     [EntityLogicalName(Schema.LogicalName)]
-    public class XrmHajirIndustry : XrmEntity<XrmHajirIndustry, DefaultStateCodes, DefaultStatusCodes>
+    public class XrmHajirJobTitle : XrmEntity<XrmHajirJobTitle, DefaultStateCodes, DefaultStatusCodes>
     {
         public new class Schema : XrmEntity.Schema
         {
             public const string SolutionPerfix = HajirCrmConstants.HajirSolutionPerfix;
-            public const string LogicalName = SolutionPerfix + "industry";
-            public const string IndustryId = LogicalName + "id";
+            public const string LogicalName = SolutionPerfix + "jobtitle";
+            public const string JobTitleId = LogicalName + "id";
             public const string Name = SolutionPerfix + "name";
         }
 
-        public XrmHajirIndustry() : base(Schema.LogicalName) { }
+        public XrmHajirJobTitle() : base(Schema.LogicalName) { }
 
-        [AttributeLogicalName(Schema.IndustryId)]
-        public System.Nullable<System.Guid> IndustryId
+        [AttributeLogicalName(Schema.JobTitleId)]
+        public System.Nullable<System.Guid> JobTitleId
         {
             get
             {
-                return this.GetAttributeValue<System.Nullable<System.Guid>>(Schema.IndustryId);
+                return this.GetAttributeValue<System.Nullable<System.Guid>>(Schema.JobTitleId);
             }
             set
             {
-                this.SetAttributeValue(Schema.IndustryId, value);
+                this.SetAttributeValue(Schema.JobTitleId, value);
                 if (value.HasValue)
                 {
                     base.Id = value.Value;
@@ -44,7 +43,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 
 
 
-        [AttributeLogicalNameAttribute(Schema.IndustryId)]
+        [AttributeLogicalNameAttribute(Schema.JobTitleId)]
         public override System.Guid Id
         {
             get
@@ -53,7 +52,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             }
             set
             {
-                this.IndustryId = value;
+                this.JobTitleId = value;
             }
         }
 
@@ -61,5 +60,4 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
         public string Name { get { return this.GetAttributeValue<string>(Schema.Name); } set { this.SetAttribiuteValue(Schema.Name, value); } }
 
     }
-
 }

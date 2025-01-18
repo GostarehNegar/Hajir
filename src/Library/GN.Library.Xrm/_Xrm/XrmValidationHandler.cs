@@ -28,4 +28,27 @@ namespace GN.Library.Xrm
 		public abstract Task Handle(XrmMessage message);
 
 	}
+
+    public abstract class XrmPostValidationHandler<TEntity> : IXrmMessageHandler where TEntity : XrmEntity
+    {
+        public string Name { get; set; }
+        public XrmPostValidationHandler()
+        {
+            var entityName = AppHost.Utils.GetEntityLogicalName(typeof(TEntity));
+            XrmMessageFilter filter = new XrmMessageFilter(entityName).ConfigurePostValidation();
+        }
+        public virtual void ConfigureFilter(XrmMessageFilter filter)
+        {
+
+        }
+        public virtual void Configure(XrmMessageSubscriber subscription)
+        {
+            var entityName = AppHost.Utils.GetEntityLogicalName(typeof(TEntity));
+            XrmMessageFilter filter = new XrmMessageFilter(entityName).ConfigurePostValidation();
+            ConfigureFilter(filter);
+            subscription.AddFilter(filter);
+        }
+        public abstract Task Handle(XrmMessage message);
+
+    }
 }

@@ -9,10 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Hajir.Crm.Infrastructure;
 using GN.Library.Xrm;
 using Hajir.Crm.Entities;
-using Hajir.Crm.Features.Products;
+
 using Hajir.Crm.Infrastructure.Xrm.Data;
 using GN.Library.Odoo;
 using Hajir.AI.Bot.Internals;
+using Hajir.Crm.Products;
 
 namespace Hajir.Crm.Tests.Specs
 {

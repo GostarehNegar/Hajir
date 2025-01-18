@@ -1,4 +1,5 @@
-﻿using Hajir.Crm.Features.Integration.Infrastructure;
+﻿
+using Hajir.Crm.Integration.Infrastructure;
 using Hajir.Crm.Integration.SanadPardaz;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

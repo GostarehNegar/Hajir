@@ -33,7 +33,14 @@ namespace Hajir.Crm.Sales.Xrm.Service
         public static IWebHostBuilder CreateHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureLogging(opt => { opt.ClearProviders(); })
-                .ConfigureAppConfiguration(opt => { opt.AddJsonFile("appsettings.json"); })
+                //.ConfigureAppConfiguration(opt => { opt.AddJsonFile("appsettings.json"); })
+                .ConfigureAppConfiguration((ctx, opt) => {
+                    opt.AddJsonFile("appsettings.json");
+                    if (ctx.HostingEnvironment.IsDevelopment())
+                    {
+                        opt.AddJsonFile("appsettings.Development.json");
+                    }
+                })
                 .ConfigureServices((c, s) =>
                 {
                     ConfigureNLog(args, c.Configuration);
@@ -45,6 +52,7 @@ namespace Hajir.Crm.Sales.Xrm.Service
                         opt.ConnectionOptions = ConnectionOptions.OrganizationService;
                         opt.MessageBusOptions.BusPluginType = typeof(Hajir.Crm.Sales.Xrm.Plugins.XrmMessageBusPlugin);
                     });
+                    //s.AddHostedService<HajirSalesPluginService>();
                     s.AddLibraryApi();
                     s.AddSignalRTransport(c.Configuration, opt => { });
                     s.AddMvc();

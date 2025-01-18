@@ -4,6 +4,7 @@ using GN.Library.Xrm.StdSolution;
 using Hajir.Crm.Common;
 using Hajir.Crm.Infrastructure.Xrm.Data;
 using Microsoft.Extensions.Logging;
+using Microsoft.Xrm.Sdk;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,12 +36,21 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales.Handlers
                         if (province != null)
                         {
                             message.Change(XrmHajirContact.Schema.address1_stateorprovince, province.Name);
-                            var country = this.cache.Countries.FirstOrDefault(x=>x.Id==province.CountryId);
+                            if (province.GetId<Guid?>().HasValue)
+                            {
+                                message.Change(XrmHajirContact.Schema.ProvinceId, new EntityReference(XrmHajirProvince.Schema.LogicalName, province.GetId<Guid?>().Value));
+                            }
+                            var country = this.cache.Countries.FirstOrDefault(x => x.Id == province.CountryId);
                             if (country != null)
                             {
                                 message.Change(XrmHajirContact.Schema.Address1_Country, country?.Name);
+                                if (Guid.TryParse(country.Id, out var countryId))
+                                {
+                                    message.Change(XrmHajirContact.Schema.CountryId, new EntityReference(XrmHajirCountry.Schema.LogicalName, countryId));
+                                }
                             }
                         }
+
                     }
                 }
                 this.logger.LogInformation(

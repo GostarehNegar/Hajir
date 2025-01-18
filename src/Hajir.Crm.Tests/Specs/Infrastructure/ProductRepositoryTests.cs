@@ -1,4 +1,5 @@
-﻿using Hajir.Crm.Features.Products;
+﻿
+using Hajir.Crm.Products;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;

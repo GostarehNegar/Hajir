@@ -458,6 +458,12 @@ namespace GN.Library.Xrm.Plugins
             }
         }
 
+        public class _EntityRef
+        {
+            public string LogicalName { get; set; }
+            public Guid Id { get; set; }
+
+        }
         public void ApplyChanges(Entity entity, List<ChangeValue> changes, IJsonSerializer serializer)
         {
             var ser = serializer ?? PluginHelper.GetSerializer();
@@ -473,6 +479,16 @@ namespace GN.Library.Xrm.Plugins
                         try
                         {
                             val = ser.Deserialize(change.Value, type);
+                        }
+                        catch { }
+                    }
+                    if (type == typeof(EntityReference))
+                    {
+                        try
+                        {
+                            var e = ser.Deserialize<_EntityRef>(change.Value);
+                            val = new EntityReference(e.LogicalName, e.Id);
+
                         }
                         catch { }
                     }

@@ -13,6 +13,8 @@
     <None Remove="Solutions\HajirSales_1_0_2_managed.zip" />
     <None Remove="Solutions\HajirSales_1_0_5.zip" />
     <None Remove="Solutions\HajirSales_1_0_5_managed.zip" />
+    <None Remove="Solutions\HajirSales_1_0_8.zip" />
+    <None Remove="Solutions\HajirSales_1_0_8_managed.zip" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +40,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Solutions\HajirSales_1_0_5_managed.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Solutions\HajirSales_1_0_8.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Solutions\HajirSales_1_0_8_managed.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
 

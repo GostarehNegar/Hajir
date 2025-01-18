@@ -1,8 +1,9 @@
 ﻿using GN.Library.Xrm;
 using GN.Library.Xrm.StdSolution;
 using Hajir.Crm.Common;
-using Hajir.Crm.Features.Products;
+
 using Hajir.Crm.Infrastructure.Xrm.Data;
+using Hajir.Crm.Products;
 using Hajir.Crm.Sales;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

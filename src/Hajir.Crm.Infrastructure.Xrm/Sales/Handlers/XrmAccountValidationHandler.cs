@@ -40,10 +40,18 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales.Handlers
                         if (province!=null)
                         {
                             message.Change(XrmHajirAccount.Schema.address1_stateorprovince, province.Name);
+                            if (province.GetId<Guid?>().HasValue)
+                            {
+                                message.Change(XrmHajirAccount.Schema.ProvinceId, new EntityReference(XrmHajirProvince.Schema.LogicalName, province.GetId<Guid?>().Value));
+                            }
                             var country = this.cache.Countries.FirstOrDefault(x => x.Id == province.CountryId);
                             if (country != null)
                             {
                                 message.Change(XrmHajirAccount.Schema.address1_country, country.Name);
+                                if (Guid.TryParse(country.Id, out var countryId))
+                                {
+                                    message.Change(XrmHajirAccount.Schema.CountryId, new EntityReference(XrmHajirCountry.Schema.LogicalName, countryId));
+                                }
                             }
                         }
                     }

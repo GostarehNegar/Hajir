@@ -29,6 +29,7 @@ using System.Linq.Dynamic;
 using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
+using static Hajir.Crm.Entities.GeoData;
 
 
 namespace Hajir.Crm.Infrastructure.Xrm.Integration
@@ -126,7 +127,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         {
             if (this._importanceDegrees == null)
             {
-                this._importanceDegrees = this.GetOptionSetData("account", XrmHajirAccount.Schema.DegreeImportance);
+                this._importanceDegrees = this.GetOptionSetData("account", XrmHajirAccount.Schema.ImportanceCode);
             }
             return this._importanceDegrees;
 
@@ -503,7 +504,24 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             {
                 xrm_contact[XrmHajirContact.Schema.CityId] = new EntityReference(XrmHajirCity.Schema.LogicalName, cityId);
             }
+            if (city.ProvinceId != null && Guid.TryParse(city.ProvinceId, out var provinceId))
+            {
+                xrm_contact[XrmHajirContact.Schema.ProvinceId] = new EntityReference(XrmHajirProvince.Schema.LogicalName, provinceId);
+            }
+            var country = this.GetCountry(contact.GetAttributeValue<string>("address1_country"))
+                ?? this.cache.Countries.Where(x => x.Name == "ایران").FirstOrDefault();
+            if (country != null && Guid.TryParse(country.Id, out var _countryid))
+            {
+                xrm_contact[XrmHajirContact.Schema.CountryId] = new EntityReference(XrmHajirCountry.Schema.LogicalName, _countryid);
+            }
+            var province = this.cache.Provinces.FirstOrDefault(x => x.Id == city.ProvinceId);
+            if (province.CountryId != null && Guid.TryParse(province.CountryId, out var countryId))
+            {
+                xrm_contact[XrmHajirContact.Schema.CountryId] = new EntityReference(XrmHajirCountry.Schema.LogicalName, countryId);
+            }
 
+
+            
 
 
 
@@ -531,12 +549,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             }
             if (1 == 0)
             {
-                var country = this.GetCountry(contact.GetAttributeValue<string>("address1_country"))
-                    ?? this.cache.Countries.Where(x => x.Name == "ایران").FirstOrDefault();
-                if (country != null && Guid.TryParse(country.Id, out var _countryid))
-                {
-                    xrm_contact["rhs_country"] = new EntityReference(XrmHajirCountry.Schema.LogicalName, _countryid);
-                }
+               
 
 
                 var city_phone_code = this.GetCityPhoneCode(contact.MobilePhone, out var _phone);
@@ -751,6 +764,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
 
             xrm_account.IntroductionMethodCode = this.GetIntroductionMethod(account.Nahve_Ahnaei);
             xrm_account.AccountRatingOption = this.GetAccountRatingValue(account.Daraje_Ahamiat);
+            xrm_account.ImportanceCode = this.GetDegreeImportance(account.Daraje_Ahamiat);
 
             xrm_account.AccountType = GetAccountType(account.gn_hesab_no);
             xrm_account.RelationType = GetRelationType(account.RelationShipType);
@@ -784,6 +798,22 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             {
                 xrm_account[XrmHajirAccount.Schema.CityId] = new EntityReference(XrmHajirCity.Schema.LogicalName, cityId);
             }
+            if (city.ProvinceId!=null &&  Guid.TryParse(city.ProvinceId,out var provinceId))
+            {
+                xrm_account[XrmHajirAccount.Schema.ProvinceId] = new EntityReference(XrmHajirProvince.Schema.LogicalName, provinceId);
+            }
+            var country = this.GetCountry(account.GetAttributeValue<string>("address1_country"))
+                ?? this.cache.Countries.Where(x => x.Name == "ایران").FirstOrDefault();
+            if (country != null && Guid.TryParse(country.Id, out var _countryid))
+            {
+                xrm_account[XrmHajirAccount.Schema.CountryId] = new EntityReference(XrmHajirCountry.Schema.LogicalName, _countryid);
+            }
+            var province = this.cache.Provinces.FirstOrDefault(x => x.Id == city.ProvinceId);
+            if (province.CountryId != null && Guid.TryParse(province.CountryId, out var countryId))
+            {
+                xrm_account[XrmHajirAccount.Schema.CountryId] = new EntityReference(XrmHajirCountry.Schema.LogicalName, countryId);
+            }
+
 
             if (1 == 0)
             {
@@ -815,23 +845,23 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             {
                 //account.Daraje_Ahamiat
 
-                var country = this.GetCountry(account.GetAttributeValue<string>("address1_country"))
-                    ?? this.cache.Countries.Where(x => x.Name == "ایران").FirstOrDefault();
+                //var country = this.GetCountry(account.GetAttributeValue<string>("address1_country"))
+                //    ?? this.cache.Countries.Where(x => x.Name == "ایران").FirstOrDefault();
 
-                if (country != null && Guid.TryParse(country.Id, out var _countryid))
-                {
-                    xrm_account["rhs_country"] = new EntityReference(XrmHajirCountry.Schema.LogicalName, _countryid);
-                }
+                //if (country != null && Guid.TryParse(country.Id, out var _countryid))
+                //{
+                //    xrm_account["rhs_country"] = new EntityReference(XrmHajirCountry.Schema.LogicalName, _countryid);
+                //}
 
                 //var city = this.GetCity(account.City);
                 //if (city != null && Guid.TryParse(city.Id, out var cityId))
                 //{
                 //    xrm_account[XrmHajirAccount.Schema.rhs_city] = new EntityReference(XrmHajirCity.Schema.LogicalName, cityId);
                 //}
-                if (city != null && Guid.TryParse(city.ProvinceId, out var provinceId))
-                {
-                    xrm_account[XrmHajirAccount.Schema.rhs_state] = new EntityReference(XrmHajirProvince.Schema.LogicalName, provinceId);
-                }
+                //if (city != null && Guid.TryParse(city.ProvinceId, out var provinceId))
+                //{
+                //    xrm_account[XrmHajirAccount.Schema.rhs_state] = new EntityReference(XrmHajirProvince.Schema.LogicalName, provinceId);
+                //}
                 var phoneCityCode = this.GetCityPhoneCode(account.MainPhone, out var _phone);
                 if (phoneCityCode.HasValue)
                 {
@@ -1264,10 +1294,28 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
         {
 
             this.logger.LogInformation($"Importing GeoData");
+           
+            var jobTitles = this.dataServices.GetRepository<XrmHajirJobTitle>()
+               .Queryable
+               .Select(x => x.Name)
+               .ToArray();
+
+            foreach (var jobTitle in HajirCrmConstants.LegacyMaps.JobTitles
+                .Split('\n')
+                .Where(x=>x!=null)
+                .Select(x=>x.Trim())
+                .Where(x=>!string.IsNullOrWhiteSpace(x))
+                .Where(x=> !jobTitles.Contains(x)))
+            {
+                this.dataServices.GetRepository<XrmHajirJobTitle>()
+                       .Upsert(new XrmHajirJobTitle { Name = jobTitle });
+            };
             var industries = this.dataServices.GetRepository<XrmHajirIndustry>()
-                .Queryable
-                .Select(x => x.Name)
-                .ToArray();
+               .Queryable
+               .Select(x => x.Name)
+               .ToArray();
+
+
             foreach (var ind in HajirCrmConstants.LegacyMaps.Industries
                 .Split('\n')
                 .Select(x => x.Trim())
