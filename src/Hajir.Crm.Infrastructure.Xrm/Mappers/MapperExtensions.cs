@@ -45,6 +45,15 @@ namespace Hajir.Crm.Infrastructure.Xrm
             result.BatteryPower = int.TryParse(product.BatteryCurrent, out var p) ? p : 0;
             return result;
         }
+        public static IntegrationProduct ToIntegrationProduct(this XrmHajirProduct product)
+        {
+            if (product == null) return null;
+            var result = product?.ToDynamic().To<IntegrationProduct>();
+            //result.CatCode = product?.ProductCategoryCode?.Value;
+            result.UnitOfMeasurement = product?.DefaultUoMIdRef?.Name;
+
+            return result;
+        }
 
         public static ProductSeries ToProductSeries(this XrmHajirProductSeries series)
         {

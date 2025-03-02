@@ -14,6 +14,9 @@ using Hajir.Crm.Infrastructure.Xrm.Data;
 using GN.Library.Odoo;
 using Hajir.AI.Bot.Internals;
 using Hajir.Crm.Products;
+using Hajir.Crm.Features.Reporting;
+using Microsoft.Xrm.Sdk;
+using GN.Library.Xrm.StdSolution;
 
 namespace Hajir.Crm.Tests.Specs
 {
@@ -103,7 +106,7 @@ namespace Hajir.Crm.Tests.Specs
                 .Execute(q =>
                 {
                     q.AddField(OdooMail.Schema.Receipients, OdooMessage.Schema.Body).AddAllFields();
-                    
+
                 })
                 .ToArray();
             var email = odoo.New<OdooMail>();
@@ -130,6 +133,13 @@ namespace Hajir.Crm.Tests.Specs
             host.Services.GetService<IContactStore>().GetContactById("31");
         }
         [TestMethod]
+        public async Task LoadQuote()
+        {
+            var host = this.GetDefualtHost();
+            var store = host.Services.GetService<IReportingDataStore>();
+            var q = await store.GetQuote("QUO-01000-K5H3W5");
+        }
+        [TestMethod]
         public async Task DbContext_Test()
         {
             var host = this.GetDefualtHost();
@@ -153,5 +163,54 @@ namespace Hajir.Crm.Tests.Specs
 
         }
 
+        [TestMethod]
+        public async Task Bundle_Tests()
+        {
+            var host = this.GetDefualtHost();
+            var entities = host.Services.GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirQuote>()
+                .Queryable
+                .Where(x=>x.QuoteNumber== "QUO-01001-N2V7N6")
+                .Take(10)
+                .ToArray();
+
+            var lines = host.Services.GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirQuoteDetail>()
+                .Queryable
+                .GetDetails(entities[0].Id)
+                .ToArray();
+
+            var line = new XrmHajirQuoteDetail()
+            {
+                QuoteId = entities[0].Id,
+                IsProductOverridden = true,
+                ProductDescription ="aaa"
+            };
+            line.Id = host.Services.GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirQuoteDetail>()
+                .Upsert(line);
+            
+            var line2 = new XrmHajirQuoteDetail()
+            {
+                QuoteId = entities[0].Id,
+                IsProductOverridden = true,
+                ProductDescription = "bbb"
+            };
+            //line2[XrmHajirQuoteDetail.Schema.ParentBundleId] = line.Id;
+            line2["parentbundleidref"] = new EntityReference(XrmQuoteDetail.Schema.LogicalName, line.Id);
+            var id = host.Services.GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirQuoteDetail>()
+                .Upsert(line2);
+            line2 = host.Services.GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirQuoteDetail>()
+                .Queryable
+                .FirstOrDefault(x => x.Id == id);
+            //line2[XrmHajirQuoteDetail.Schema.ParentBundleId] = line.Id;
+            line2["parentbundleidref"] = new EntityReference(XrmQuoteDetail.Schema.LogicalName, line.Id);
+            host.Services.GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirQuoteDetail>()
+                .Upsert(line2);
+
+        }
     }
 }

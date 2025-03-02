@@ -9,8 +9,4 @@
     <ProjectReference Include="..\Library\GN.Library.Shared\GN.Library.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Common\" />
-  </ItemGroup>
-
 </Project>

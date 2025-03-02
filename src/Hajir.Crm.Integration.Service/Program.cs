@@ -55,7 +55,7 @@ namespace Hajir.Crm.Xrm.Service
                     //s.AddLibraryApi();
                     s.AddHajirIntegrationInfrastructure(c.Configuration);
                     //s.AddMvc();
-                    //s.AddSanadPardazIntegration(c.Configuration, opt => { });
+                    s.AddSanadPardazIntegration(c.Configuration, opt => { });
 
 
 

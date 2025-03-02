@@ -7,11 +7,11 @@ using System.Text;
 namespace GN.Library.Xrm.StdSolution
 {
     [EntityLogicalName(Schema.LogicalName)]
-    public class XrmProduct : XrmEntity<XrmProduct, DefaultStateCodes, DefaultStatusCodes>
+    public class XrmProduct : XrmEntity<XrmProduct, LibraryConstants.Schema.Product.StateCodes, LibraryConstants.Schema.Product.StatusCodes>
     {
-        public new class Schema:LibraryConstants.Schema.Product
+        public new class Schema : LibraryConstants.Schema.Product
         {
-            
+
         }
         public XrmProduct() : base(Schema.LogicalName)
         {
@@ -59,5 +59,38 @@ namespace GN.Library.Xrm.StdSolution
         [AttributeLogicalNameAttribute(Schema.ProductNumber)]
         public string ProductNumber { get { return this.GetAttributeValue<string>(Schema.ProductNumber); } set { this.SetAttribiuteValue(Schema.ProductNumber, value); } }
 
+        [AttributeLogicalNameAttribute(Schema.DefaultUoMId)]
+        public EntityReference DefaultUoMIdRef
+        {
+            get => this.GetAttributeValue<EntityReference>(Schema.DefaultUoMId);
+            set => this.SetAttributeValue(Schema.DefaultUoMId, value);
+        }
+
+        [AttributeLogicalNameAttribute(Schema.DefaultUoMId)]
+        public Guid? DefaultUoMId
+        {
+            get => this.DefaultUoMIdRef?.Id;
+            set => this.DefaultUoMIdRef = value.HasValue ? new EntityReference(XrmUnitOfMeasure.Schema.LogicalName, value.Value) : null;
+        }
+
+        [AttributeLogicalNameAttribute(Schema.DefaultUomScheduleId)]
+        public EntityReference DefaultUomScheduleIdRef
+        {
+            get => this.GetAttributeValue<EntityReference>(Schema.DefaultUomScheduleId);
+            set => this.SetAttributeValue(Schema.DefaultUomScheduleId, value);
+        }
+        [AttributeLogicalNameAttribute(Schema.DefaultUomScheduleId)]
+        public Guid? DefaultUomScheduleId
+        {
+            get => this.DefaultUomScheduleIdRef?.Id;
+            set => this.DefaultUomScheduleIdRef = value.HasValue ? new EntityReference(XrmUnitOfMeasurementGroup.Schema.LogicalName, value.Value) : null;
+        }
+
+        [AttributeLogicalNameAttribute(Schema.QuantityDecimal)]
+        public int? QuantityDecimal
+        {
+            get => this.GetAttributeValue<int?>(Schema.QuantityDecimal);
+            set => this.SetAttributeValue(Schema.QuantityDecimal, value);
+        }
     }
 }

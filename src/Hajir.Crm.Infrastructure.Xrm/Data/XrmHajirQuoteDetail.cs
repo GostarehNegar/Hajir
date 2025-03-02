@@ -46,9 +46,9 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             set => this.SetAttribiuteValue(Schema.PercentTax, value);
         }
         [AttributeLogicalName(Schema.GuaranteeMonths)]
-        public long? GuaranteeMonths
+        public int? GuaranteeMonths
         {
-            get => this.GetAttributeValue<long?>(Schema.GuaranteeMonths);
+            get => this.GetAttributeValue<int?>(Schema.GuaranteeMonths);
             set => this.SetAttribiuteValue(Schema.GuaranteeMonths, value);
         }
 

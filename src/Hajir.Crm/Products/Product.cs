@@ -20,10 +20,13 @@ namespace Hajir.Crm.Products
 
         }
         public string UOMId { get; set; }
-        public HajirProductEntity.Schema.ProductTypes ProductType { get; set; }
+        public Schema.ProductTypes ProductType
+        {
+            get => this.GetAttributeValue<HajirProductEntity.Schema.ProductTypes?>(Schema.ProductTypeCode) ?? HajirCrmConstants.Schema.Product.ProductTypes.Other;
+            set => this.SetAttributeValue(Schema.ProductTypeCode, value);
+        }
         public HajirProductEntity.Schema.ProductSeries ProductSeries { get; set; }
         public string SupportedBattries { get; set; }
-        //public string CabinetSpec { get; set; }
         public IEnumerable<BatterySpec> GetSupportedBatteryConfig() => BatterySpec.ParseCollection(SupportedBattries);
         public int BatteryPower { get; set; }
         public CabinetVendors Vendor { get; set; }
@@ -43,11 +46,11 @@ namespace Hajir.Crm.Products
         {
             return $"{ProductNumber} ({ProductType})";
         }
-		public override void Init()
-		{
+        public override void Init()
+        {
             //this.ProductType = ProductTypes.Ups;
-			base.Init();
-		}
+            base.Init();
+        }
 
-	}
+    }
 }

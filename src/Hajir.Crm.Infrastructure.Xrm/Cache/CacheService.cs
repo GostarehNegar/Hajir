@@ -20,6 +20,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
     {
         private readonly IServiceProvider serviceProvider;
         private readonly IMemoryCache cache;
+        private static TimeSpan DEFAULT = TimeSpan.FromMinutes(10);
 
         public IEnumerable<Product> Products => GetProducts();
 
@@ -36,7 +37,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
                         .GetRepository<XrmUnitOfMeasure>()
                         .Queryable
                         .ToArray()
-                        .Select(x => new UnitOfMeasurements { Id = x.Id.ToString(), Name = x.Name })
+                        .Select(x => new UnitOfMeasurements { Id = x.Id.ToString(), Name = x.Name, UnitId = x.ScheduleId?.ToString() })
                         .ToArray();
                     }
                 });
@@ -200,6 +201,57 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
             }
 
         });
+
+        public IEnumerable<UnitOfMeasurmentGroup> UnitOfMeasuementGroups =>
+
+            this.cache.GetOrCreate<IEnumerable<UnitOfMeasurmentGroup>>("UOMS_GROUPS", entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = DEFAULT;
+                    using (var scope = this.serviceProvider.CreateScope())
+                    {
+                        var groups = scope.ServiceProvider.GetService<IXrmDataServices>()
+                        .GetRepository<XrmUnitOfMeasurementGroup>()
+                        .Queryable
+                        .ToArray()
+                        .Select(x => new UnitOfMeasurmentGroup
+                        {
+                            Name = x.GetAttributeValue<string>("name"),
+                            Id = x.Id.ToString(),
+                            Unites = scope.ServiceProvider.GetService<IXrmDataServices>()
+                                .GetRepository<XrmUnitOfMeasure>()
+                                .Queryable
+                                .Where(u => u.ScheduleId == x.Id)
+                                .Select(u => new UnitOfMeasurements { Name = u.Name, Id = u.Id.ToString(), UnitId = x.Id.ToString() })
+                                .ToArray()
+
+                        })
+                        .ToArray();
+
+
+
+                        return groups;
+
+
+                    }
+                });
+
+        public IEnumerable<HajirProductCategoryEntity> ProductCategories => this.cache.GetOrCreate<IEnumerable<HajirProductCategoryEntity>>("PRUDUCT_CATEGORIES", entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = DEFAULT;
+                    using (var scope = this.serviceProvider.CreateScope())
+                    {
+                        var groups = scope.ServiceProvider.GetService<IXrmDataServices>()
+                        .GetRepository<XrmHajirProductCategory>()
+                        .Queryable
+                        .ToArray()
+                        .Where(x => x.State == DefaultStateCodes.Active)
+                        .Select(x => x.ToDynamic().To<HajirProductCategoryEntity>())
+                        .ToArray();
+                        return groups;
+
+
+                    }
+                });
 
         public CacheService(IServiceProvider serviceProvider, IMemoryCache cache)
         {

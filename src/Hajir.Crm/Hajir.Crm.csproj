@@ -20,6 +20,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Products\Datasheet.csv" />
+    <None Remove="Products\DatasheetProps.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Products\Datasheet.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Products\DatasheetProps.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.8.0" />
   </ItemGroup>
 

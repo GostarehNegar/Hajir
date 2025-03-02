@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using Hajir.Crm.Entities;
 
 namespace Hajir.Crm
 {
@@ -164,7 +165,7 @@ namespace Hajir.Crm
 کارشناس کارپردازی
 
 ";
-            
+
             private const string _Salutaion = @"Ms	سرکار خانم
 Mr	جناب آقای
 جناب آقای کاپیتان	جناب آقای
@@ -215,6 +216,28 @@ Decision Maker;تصمیم گیرنده";
                 {"Employee","کارمند" },
                 {"Decision Maker","تصمیم گیرنده" },
                 {"Influencer","تاثیر گذار" }
+            };
+
+            public static HajirProductCategoryEntity[] DefaultProductCategories => new HajirProductCategoryEntity[]
+            {
+                new HajirProductCategoryEntity{Code = 401, Name="یوپی‌اس تولیدی"},
+                new HajirProductCategoryEntity{Code = 501, Name="یوپی‌اس بازرگانی"},
+
+                new HajirProductCategoryEntity{Code = 402, Name="استبیلایزر تولیدی"},
+                new HajirProductCategoryEntity{Code = 502, Name="‌استبیلایزر بازرگانی"},
+
+                new HajirProductCategoryEntity{Code = 405, Name="‌اینورتر تولیدی"},
+                new HajirProductCategoryEntity{Code = 505, Name="اینورتر بازرگانی"},
+
+                new HajirProductCategoryEntity{Code = 506, Name="کارت SNMP"},
+                new HajirProductCategoryEntity{Code = 513, Name="سویچ ATS"},
+
+                new HajirProductCategoryEntity{Code = 504, Name="باتری"},
+                new HajirProductCategoryEntity{Code = 403, Name="پک باتری"},
+
+                new HajirProductCategoryEntity{Code = 412, Name="کابینت تولیدی"},
+                new HajirProductCategoryEntity{Code = 904, Name="کابینت مجازی"},
+
             };
 
         }

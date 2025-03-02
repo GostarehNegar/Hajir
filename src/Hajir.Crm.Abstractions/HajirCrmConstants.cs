@@ -1,6 +1,9 @@
 ﻿using GN.Library;
+using Hajir.Crm.Products;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Hajir.Crm
@@ -21,8 +24,17 @@ namespace Hajir.Crm
         public const string RahsamSolutionPerfix = "rhs_";
         public const int RahsamSolutionIndex = 130770000;
         public const string DefaultLegacyCrmConnectionString = "Url=http://192.168.20.15:5555/hajircrm;UserName=CRMIMPU01;Password=%H@ZH!r_1402&$;Domain=hsco";
+        public const string DatasheetFileName = "Datasheet.csv";
+        public const string DatasheetPropSpecFileName = "DatasheetProps.json";
+        public static string GetDatasheetFullPathFileName()
+        {
+            return Path.GetFullPath(Path.Combine("Products", DatasheetFileName));
+        }
+        public static string GetDatasheetPropSpecFullPath()
+        {
+            return Path.GetFullPath(Path.Combine("Products", DatasheetPropSpecFileName));
+        }
 
-        
         public class Reporting
         {
             public class ReportNames
@@ -52,6 +64,7 @@ namespace Hajir.Crm
 
 
         }
+        
         public class Schema : LibraryConstants.Schema
         {
             public const string HajrSolutionPerfix = HajirCrmConstants.HajirSolutionPerfix;
@@ -64,32 +77,92 @@ namespace Hajir.Crm
             {
                 public const int BaseOptionSetIndex = 130770000;
                 public const string RHS_SolutionPerfix = "rhs";
-                //public const string LogicalName = "product";
-                //public const string ProductId = LogicalName + "id";
-                //public const string Name = "name";
-                //public const string ProductNumber = "productnumber";
-                public const string ProductType = RHS_SolutionPerfix + "producttype";
+                public const string SolutionPerfix = HajirCrmConstants.HajirSolutionPerfix;
+                //public const string ProductType = RHS_SolutionPerfix + "producttype";
                 public const string TypeProducts_deprecated = "rhs_typeproducts";
                 public const string ProductSerie = "rhs_productseries";
-                public const string SupportedBatteries = "rhs_supportedbattries";
+                public const string SupportedBatteries = SolutionPerfix + "spec_ups_supported_batteries";
                 public const string NumberOfFloors = "rhs_numberoffloors";
-                public const string BatteryCurrent = "rhs_currenta";
+                public const string BatteryCurrent = SolutionPerfix + "spec_ups_battery_current";
+                //public const string ProductCategoryCode = SolutionPerfix + "categorycode";
+                public const string SynchedOn = SolutionPerfix + "synchedon";
+                public const string ProductTypeCode = SolutionPerfix + "producttypecode";
+                public const string CategoryId = SolutionPerfix + "categoryid";
 
+                public static ProductCategories? IntToProductCategory(int? cat)
+                {
 
+                    if (cat.HasValue && Enum.IsDefined(typeof(ProductCategories), cat.Value))
+                    {
+                        return (ProductCategories)cat;
+                    }
+                    return null;
+                }
+                public static ProductTypes? GetProductTypeFromProductCategory(int? category)
+                {
+                    return GetProductTypeFromProductCategory(IntToProductCategory(category));
+                }
+                public static ProductTypes? GetProductTypeFromProductCategory(ProductCategories? category)
+                {
+                    if (!category.HasValue)
+                        return null;
+                    switch (category)
+                    {
+                        case ProductCategories.UPS_Tolidi:
+                        case ProductCategories.UPS_Bazargani:
+                            return ProductTypes.UPS;
+                        case ProductCategories.Cabinet_Majazi:
+                        case ProductCategories.Cabinet_Tolidi:
+                            return ProductTypes.Cabinet;
+                        case ProductCategories.Inverter_Bazargani:
+                        case ProductCategories.Inverter_Tolidi:
+                            return ProductTypes.Inverter;
+                        case ProductCategories.Battery:
+                            return ProductTypes.Battery;
+                        case ProductCategories.Battery_Pack:
+                            return ProductTypes.Battery_Pack;
+                        case ProductCategories.Stabilizer_Bazargani:
+                        case ProductCategories.Stabilizer_Tolidi:
+                            return ProductTypes.Stabilizer;
+                        case ProductCategories.Switch_ATS:
+                            return ProductTypes.Switch_ATS;
+                        case ProductCategories.Kart_SNMP:
+                            return ProductTypes.SMP_Card;
+                        default:
+                            return ProductTypes.Other;
+
+                    }
+
+                }
                 public enum ProductTypes
                 {
-                    UPS = BaseOptionSetIndex,
-                    Stabilizer = BaseOptionSetIndex + 1,
-                    Battery = BaseOptionSetIndex + 2,
-                    Cabinet = BaseOptionSetIndex + 3,
-                    Inverter = BaseOptionSetIndex + 4,
-                    Battery_Pack = BaseOptionSetIndex + 5,
-                    Switch_ATS = BaseOptionSetIndex + 6,
-                    SMP_Card = BaseOptionSetIndex + 7,
-                    Genrator = BaseOptionSetIndex + 8,
-                    Parallel_Card = BaseOptionSetIndex + 9,
-                    Battery_Connector = BaseOptionSetIndex + 10,
-                    Other = BaseOptionSetIndex + 11,
+                    UPS = 1,
+                    Stabilizer = 2,
+                    Battery = 4,
+                    Cabinet = 12,
+                    Inverter = 5,
+                    Battery_Pack = 3,
+                    Switch_ATS = 13,
+                    SMP_Card = 6,
+                    Genrator = 14,
+                    Parallel_Card = 15,
+                    Battery_Connector = 16,
+                    Other = 10,
+                }
+                public enum ProductCategories
+                {
+                    UPS_Tolidi = 401,
+                    UPS_Bazargani = 501,
+                    Stabilizer_Tolidi = 402,
+                    Stabilizer_Bazargani = 502,
+                    Inverter_Tolidi = 405,
+                    Inverter_Bazargani = 505,
+                    Kart_SNMP = 506,
+                    Switch_ATS = 513,
+                    Battery = 504,
+                    Battery_Pack = 403,
+                    Cabinet_Tolidi = 412,
+                    Cabinet_Majazi = 905
                 }
                 public enum ProductSeries
                 {
@@ -121,6 +194,15 @@ namespace Hajir.Crm
                     UNKOWN = BaseOptionSetIndex + 25,
                 }
             }
+
+            public class ProductCategory : LibraryConstants.Schema.EntitySchema
+            {
+                public const string LogicalName = HajrSolutionPerfix + "productcategory";
+                public const string ProductCategoryId = LogicalName + "id";
+                public const string Name = HajrSolutionPerfix + "name";
+                public const string Code = HajrSolutionPerfix + "code";
+                public const string ProductTypeCode = HajrSolutionPerfix + "producttypecode";
+            }
         }
 
         public static string MAP1 = @"
@@ -135,6 +217,6 @@ namespace Hajir.Crm
 کارخانه	کارخانه
 وزارتخانه	وزارتخانه
 ";
-        
+
     }
 }

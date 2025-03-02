@@ -15,7 +15,11 @@ namespace Microsoft.Extensions.DependencyInjection
             //services.AddHajirInfrastructure(configuration);
 
             services.AddScoped<IProductBundlingService, ProductBundlingService>();
-			return services;
+            services.AddSingleton<ProductDatasheetProviderFromCSV>()
+            services.AddSingleton<IProductDatasheetProviderFromCSV>(sp=>sp.GetService<ProductDatasheetProviderFromCSV>());
+            services.AddSingleton<IDatasheetProvider>(sp => sp.GetService<ProductDatasheetProviderFromCSV>());
+
+            return services;
         }
        
     }

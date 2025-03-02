@@ -19,9 +19,7 @@ namespace Hajir.Crm
         {
             return 0;
         }
-    }
-    public static class HajirBusinessRulesExtensions
-    {
         
     }
+   
 }

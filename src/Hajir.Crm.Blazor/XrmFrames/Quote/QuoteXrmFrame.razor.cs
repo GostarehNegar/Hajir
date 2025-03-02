@@ -114,6 +114,7 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
                         foreach (var line in this.Value.Lines.Where(x=>!x.IsBlank))
                         {
                             line.QuoteId = id.Value.ToString();
+                            line.PercentTax = Value.IsOfficial ? 10 : 0;
                             await this.ServiceProvider.GetService<IQuoteRepository>()
                                 .SaveLine(line);
                         }

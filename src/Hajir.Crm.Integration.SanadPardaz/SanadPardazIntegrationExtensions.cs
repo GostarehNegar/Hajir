@@ -13,15 +13,13 @@ namespace Hajir.Crm.Integration.SanadPardaz
             var options = configuration.GetSection("sanadpardaz")?.Get<SanadPardazIntegrationOptions>() ?? new SanadPardazIntegrationOptions();
             configure?.Invoke(options);
             services.AddSingleton(options.Validate());
-
-
-            services.AddDbContext<SanadPardazDbContext>((sp, opt) =>
-            {
-                opt.UseSqlServer(configuration.GetConnectionString("sanadpardaz"));
-            });
-            services.AddScoped<ISanadPardazDbContext>(sp => sp.GetService<SanadPardazDbContext>());
+            //services.AddDbContext<SanadPardazDbContext>((sp, opt) =>
+            //{
+            //    opt.UseSqlServer(configuration.GetConnectionString("sanadpardaz"));
+            //});
+            //services.AddScoped<ISanadPardazDbContext>(sp => sp.GetService<SanadPardazDbContext>());
             services.AddScoped<SanadPardazApiClient>();
-            services.AddScoped<ISanadPardazApiClient>(sp => sp.GetService<SanadPardazApiClient>());
+            services.AddScoped<ISanadApiClientService>(sp => sp.GetService<SanadPardazApiClient>());
             return services;
         }
     }

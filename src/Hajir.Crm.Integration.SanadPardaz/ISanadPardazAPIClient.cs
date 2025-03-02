@@ -1,7 +1,10 @@
-﻿using Hajir.Crm.Integration.SanadPardaz.Models;
+﻿using Hajir.Crm.Integration.Infrastructure;
+using Hajir.Crm.Integration.SanadPardaz.Models;
+using Hajir.Crm.SanadPardaz;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -11,14 +14,8 @@ using System.Threading.Tasks;
 
 namespace Hajir.Crm.Integration.SanadPardaz
 {
-    public interface ISanadPardazApiClient : IDisposable
-    {
-        Task Test();
-        Task<GoodGetModel> GetGoods(int pageNumber = 1, int pageSize = 10);
-        Task<DetailGetModel> GetDetails(int pageNumber = 1, int pageSize = 10);
-        Task<DetailGetByCodeModel> GetDetailByCode(int code);
-    }
-    class SanadPardazApiClient : ISanadPardazApiClient
+
+    class SanadPardazApiClient : ISanadApiClientService// ISanadPardazApiClient
     {
         class TokenModel
         {
@@ -31,29 +28,18 @@ namespace Hajir.Crm.Integration.SanadPardaz
         private readonly ILogger<SanadPardazApiClient> logger;
         private readonly IServiceProvider serviceProvider;
         private readonly IMemoryCache cache;
-        private HttpClient httpClient;
-
         private T Deserialize<T>(string content) => Newtonsoft.Json.JsonConvert.DeserializeObject<T>(content);
-        private string Serialize(object obj)=> Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+        private string Serialize(object obj) => Newtonsoft.Json.JsonConvert.SerializeObject(obj);
         public SanadPardazApiClient(SanadPardazIntegrationOptions options, ILogger<SanadPardazApiClient> logger,
             IServiceProvider serviceProvider, IMemoryCache cache)
         {
-            
+
             this.options = options;
             this.logger = logger;
             this.serviceProvider = serviceProvider;
             this.cache = cache;
         }
-        private HttpClient DoGetHttpClient()
-        {
-            if (this.httpClient == null)
-            {
-                this.httpClient = new HttpClient();
-                var str = this.options.ApiUrl + "api/v3/";
-                this.httpClient.BaseAddress = new Uri(this.options.GetBaseApiAddress());
-            }
-            return this.httpClient;
-        }
+
         private async Task<TokenModel> _GetToken()
         {
             TokenModel result = null;
@@ -88,7 +74,7 @@ namespace Hajir.Crm.Integration.SanadPardaz
             }
             return result;
         }
-        private Task<HttpClient> GetHttpClient(bool refresh=false)
+        private Task<HttpClient> GetHttpClient(bool refresh = false)
         {
             if (refresh)
             {
@@ -128,44 +114,57 @@ namespace Hajir.Crm.Integration.SanadPardaz
         }
         public void Dispose()
         {
-            this.httpClient?.Dispose();
+            //this.httpClient?.Dispose();
 
         }
 
-        public async Task<GoodGetModel> GetGoods(int pageNumber = 1, int pageSize = 10)
+
+
+
+        private async Task<TRep[]> Request<TReq, TRep>(int requestId, Action<TReq> configure) where TReq : class, new()
         {
-            await this.GetHttpClient(false);
-            var response = await this.DoGetHttpClient().GetAsync($"good?OrderBy=actiondate&Direction=desc&PageNumber={pageNumber}&PageSize={pageSize}");
-            response.EnsureSuccessStatusCode();
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<GoodGetModel>(await response.Content.ReadAsStringAsync());
+            var req = new TReq();
+            configure?.Invoke(req);
+            try
+            {
+                var client = await this.GetHttpClient();
+                var response = await PostJsonAsync<SanadApiResponseModel<TRep>>(client, 
+                    "Request", 
+                    new SanadApiRequestModel<TReq>
+                    {
+                        configId = requestId,
+                        input = req
+                    });
+                if (!response.isSuccess)
+                {
+                    throw new Exception(
+                        $"Unsuccessfull request. Message:{response.message}");
+                }
+                return response.data.result;
+            }
+            catch (Exception err)
+            {
+                this.logger.LogError(
+                    $"An error occured while trying to execute a SanadPardaz request. configId:{requestId} " +
+                    $"Err:{err.GetBaseException().Message}");
+                throw;
+
+
+            }
+
         }
-
-        public async Task Test()
-        {
-            var client = this.DoGetHttpClient();
-            var response = await client.GetAsync("good");
-            response.EnsureSuccessStatusCode();
-            var res = await response.Content.ReadAsStringAsync();
-            var items = Newtonsoft.Json.JsonConvert.DeserializeObject<GoodGetModel>(res);
-
-
-            //throw new NotImplementedException();
-        }
-
-        private async Task<Res> PostJsonAsync<Res>(HttpClient client,  string api, object req)
+        private async Task<Res> PostJsonAsync<Res>(HttpClient client, string api, object req)
         {
             var response = await client.PostAsync(api, new StringContent(Serialize(req), Encoding.UTF8, "application/json"));
-            var fff = await response.Content.ReadAsStringAsync();
             response.EnsureSuccessStatusCode();
             return this.Deserialize<Res>(await response.Content.ReadAsStringAsync());
-
         }
         public async Task<DetailGetModel> GetDetails(int pageNumber = 1, int pageSize = 10)
         {
 
             var client = await this.GetHttpClient();
 
-            var request = new SanadRequestModel<GetDetailRequestModel>
+            var request = new SanadApiRequestModel<GetDetailRequestModel>
             {
                 configId = 1,
                 input = new GetDetailRequestModel { pageNumber = 1, pageSize = 20 }
@@ -174,7 +173,7 @@ namespace Hajir.Crm.Integration.SanadPardaz
 
 
 
-            var response = await this.DoGetHttpClient()
+            var response = await (await this.GetHttpClient())
                 .GetAsync($"Detail?OrderBy=actiondate&Direction=desc&PageNumber={pageNumber}&PageSize={pageSize}");
             response.EnsureSuccessStatusCode();
             return Newtonsoft.Json.JsonConvert.DeserializeObject<DetailGetModel>(await response.Content.ReadAsStringAsync());
@@ -182,10 +181,36 @@ namespace Hajir.Crm.Integration.SanadPardaz
 
         public async Task<DetailGetByCodeModel> GetDetailByCode(int code)
         {
-            var response = await this.DoGetHttpClient()
+            var response = await (await this.GetHttpClient())
                 .GetAsync($"Detail/{code}");
             response.EnsureSuccessStatusCode();
             return Newtonsoft.Json.JsonConvert.DeserializeObject<DetailGetByCodeModel>(await response.Content.ReadAsStringAsync());
+        }
+
+        public async Task<IEnumerable<SanadPardazGoodModel>> GetGoods(int page = 1, int pageLength = 100)
+        {
+            var res = await Request<GetGoodRequestModel, SanadPardazGoodModel>(6, cfg =>
+            {
+
+                cfg.pageNumber = page < 1 ? 1 : page;
+                cfg.pageSize = pageLength;
+                cfg.orderBy = "ActionDate";
+                cfg.orderDirection = "desc";
+            });
+            return res; ;
+        }
+
+        public async Task<IEnumerable<SanadPardazDetialModel>> GetDetials(int page = 1, int pageLength = 500)
+        {
+            var res = await Request<GetDetailRequestModel, SanadPardazDetialModel>(1, cfg =>
+            {
+
+                cfg.pageNumber = page < 1 ? 1 : page;
+                cfg.pageSize = pageLength;
+                cfg.orderBy = "ActionDate";
+                cfg.orderDirection = "desc";
+            });
+            return res; ;
         }
     }
 }

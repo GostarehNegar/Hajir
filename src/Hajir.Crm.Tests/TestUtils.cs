@@ -61,20 +61,20 @@ namespace Hajir.Crm.Tests
             };
 
         }
-        public static IHost GetDefaultHost(Action<IConfiguration,IServiceCollection> configurator = null, bool bypassDefaults = false)
+        public static IHost GetDefaultHost(Action<IConfiguration, IServiceCollection> configurator = null, bool bypassDefaults = false, bool webapi = false)
         {
             return GN.AppHost.GetHostBuilder()
                 .ConfigureAppConfiguration(c => c.AddJsonFile("appsettings.json"))
                 .ConfigureServices((c, s) =>
                 {
+                    s.AddGNLib(c.Configuration, cfg => { });
+                    s.AddXrmServices(c.Configuration, cfg => { cfg.ConnectionOptions = webapi ? ConnectionOptions.WebAPI : ConnectionOptions.OrganizationService; });
                     if (!bypassDefaults)
                     {
-                        s.AddGNLib(c.Configuration, cfg => { });
-                        s.AddXrmServices(c.Configuration, cfg => { cfg.ConnectionOptions = ConnectionOptions.OrganizationService; });
                         s.AddHajirCrm(c.Configuration, cfg => { });
                         s.AddHajirSalesInfrastructure(c.Configuration);
                         s.AddSanadPardazIntegration(c.Configuration, opt => { });
-                        s.AddOdoo(c.Configuration, opt => { opt.ConnectionString= "Url=http://localhost:8069,DbName=HajirAI,UserName=babak@gnco.ir,Password=zry2352KAB"; });
+                        s.AddOdoo(c.Configuration, opt => { opt.ConnectionString = "Url=http://localhost:8069,DbName=HajirAI,UserName=babak@gnco.ir,Password=zry2352KAB"; });
                         s.AddHajirAIBot(c.Configuration, opt => { });
 
                     }

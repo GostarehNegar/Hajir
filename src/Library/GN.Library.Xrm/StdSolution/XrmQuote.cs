@@ -284,6 +284,8 @@ namespace GN.Library.Xrm.StdSolution
 			public const string VolumeDiscountAmount = "volumediscountamount";
 			public const string UnitOfMeasureId = "uomid";
 			public const string IsProductOverridden = "isproductoverridden";
+			public const string SequenceNumber = "sequencenumber";
+			public const string ParentBundleId="parentbundleid";
         }
 
 		public XrmQuoteDetail() : base(Schema.LogicalName) { }
@@ -462,8 +464,13 @@ namespace GN.Library.Xrm.StdSolution
             get { return this.GetAttributeValue<bool?>(Schema.IsProductOverridden); }
             set { this.SetAttribiuteValue(Schema.IsProductOverridden, value); }
         }
+        [AttributeLogicalName(Schema.SequenceNumber)]
+        public int? SequenceNumber
+        {
+            get { return this.GetAttributeValue<int?>(Schema.SequenceNumber); }
+            set { this.SetAttribiuteValue(Schema.SequenceNumber, value); }
+        }
 
-		
     }
 
     public static class XrmQouteExtensions

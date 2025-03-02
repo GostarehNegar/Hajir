@@ -13,7 +13,10 @@ namespace Hajir.Crm.Entities
         }
         public string ProductNumber { get => this.GetAttributeValue<string>(Schema.ProductNumber); set => this.SetAttributeValue(Schema.ProductNumber, value); }
 
-
-
+       
+        public Schema.StateCodes? StateCode
+        {
+            get => this.GetAttributeValue<Schema.StateCodes?>(Schema.StateCode);
+        }
     }
 }

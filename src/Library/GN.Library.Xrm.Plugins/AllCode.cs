@@ -3,6 +3,7 @@ using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -1087,7 +1088,7 @@ namespace GN.Library.Xrm.Plugins
             {
                 return new KeyValuePair<string, object>(val.Key, null);
             }
-            
+
             if (!TryGetType(val.Type, out var _type))
             {
                 return fix(new KeyValuePair<string, object>(val.Key, val.Value));
@@ -1104,7 +1105,15 @@ namespace GN.Library.Xrm.Plugins
             {
                 _type = typeof(JsonSerializableEntity._EntityCollection);
             }
-            val.Value = serializer.Deserialize(str, _type);
+            str = str.Replace("\"ExtensionData\": {}", "\"AAA\":1");// Replace("\"ExtensionData\": {}", "");
+            try
+            {
+                val.Value = serializer.Deserialize(str, _type);
+            }
+            catch (Exception err)
+            {
+                throw;
+            }
             if (val.Value is JsonSerializableEntity._EntityCollection _col)
             {
                 var __col = new EntityCollection();
@@ -1115,7 +1124,7 @@ namespace GN.Library.Xrm.Plugins
                 }
                 val.Value = __col;
             }
-            
+
 
             return new KeyValuePair<string, object>(val.Key, val.Value);
 

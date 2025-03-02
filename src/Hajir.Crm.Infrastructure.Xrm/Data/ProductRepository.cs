@@ -53,20 +53,20 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
         {
             XrmHajirProduct Fix(XrmHajirProduct item)
             {
-                if (!item.ProductType.HasValue && item.Name.StartsWith("UPS"))
-                {
-                    item.ProductType = HajirProductEntity.Schema.ProductTypes.UPS;
-                }
-                if (!item.ProductType.HasValue && item.Name.StartsWith("کابينت"))
-                {
-                    item.ProductType = HajirProductEntity.Schema.ProductTypes.Cabinet;
-                }
-                ///
-                ///
-                if (!item.ProductType.HasValue && item.Name.StartsWith("باتري"))
-                {
-                    item.ProductType = HajirProductEntity.Schema.ProductTypes.Battery;
-                }
+                //if (!item.ProductType.HasValue && item.Name.StartsWith("UPS"))
+                //{
+                //    item.ProductType = HajirProductEntity.Schema.ProductTypes.UPS;
+                //}
+                //if (!item.ProductType.HasValue && item.Name.StartsWith("کابينت"))
+                //{
+                //    item.ProductType = HajirProductEntity.Schema.ProductTypes.Cabinet;
+                //}
+                /////
+                /////
+                //if (!item.ProductType.HasValue && item.Name.StartsWith("باتري"))
+                //{
+                //    item.ProductType = HajirProductEntity.Schema.ProductTypes.Battery;
+                //}
 
                 return item;
             }
@@ -85,7 +85,11 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             var skip = 0;
             while (!fin)
             {
-                var items = repo.Queryable.SKIP(skip).Take(take).ToArray();
+                var items = repo.
+                    Queryable
+                    .Where(x => x.StatusCode ==(int) GN.Library.LibraryConstants.Schema.Product.StatusCodes.Active)
+                    .SKIP(skip)
+                    .Take(take).ToArray();
                 result.AddRange(items.Select(x => Fix(x).ToProduct()));
                 fin = items.Length < take;
                 skip += take;

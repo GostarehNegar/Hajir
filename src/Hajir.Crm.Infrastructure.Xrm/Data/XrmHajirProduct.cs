@@ -1,5 +1,6 @@
 ﻿using GN.Library.Xrm.StdSolution;
 using Hajir.Crm.Entities;
+using Hajir.Crm.Infrastructure.Xrm.Data;
 using Hajir.Crm.Products;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Client;
@@ -17,8 +18,21 @@ namespace Hajir.Crm.Entities
 
         }
 
-        [AttributeLogicalName(Schema.ProductType)]
-        public OptionSetValue ProductTypeCode { get => this.GetAttributeValue<OptionSetValue>(Schema.ProductType); set => this.SetAttributeValue(Schema.ProductType, value); }
+        [AttributeLogicalName(Schema.CategoryId)]
+        public EntityReference Category
+        { 
+            get => this.GetAttributeValue<EntityReference>(Schema.CategoryId); 
+            set => this.SetAttributeValue(Schema.CategoryId, value); }
+        
+        [AttributeLogicalName(Schema.CategoryId)]
+        public Guid? CategoryId
+        {
+            get => this.Category?.Id;
+            set => this.Category = value.HasValue ? new EntityReference(XrmHajirProductCategory.Schema.LogicalName, value.Value) : null;
+        }
+
+        [AttributeLogicalName(Schema.ProductTypeCode)]
+        public OptionSetValue ProductTypeCode { get => this.GetAttributeValue<OptionSetValue>(Schema.ProductTypeCode); set => this.SetAttributeValue(Schema.ProductTypeCode, value); }
 
         public Schema.ProductTypes? ProductType
         {
@@ -55,7 +69,12 @@ namespace Hajir.Crm.Entities
             get => this.GetAttributeValue<string>(Schema.BatteryCurrent);
             set => this.SetAttribiuteValue(Schema.BatteryCurrent, value);
         }
-
+        [AttributeLogicalName(Schema.SynchedOn)]
+        public DateTime? SynchedOn
+        {
+            get => this.GetAttributeValue<DateTime?>(Schema.SynchedOn);
+            set => this.SetAttribiuteValue(Schema.SynchedOn, value);
+        }
 
         public int GetNumberIfFloors() => int.TryParse(NumberOfFloors, out var _r) ? _r : 0;
 

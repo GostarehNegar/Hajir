@@ -27,12 +27,12 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales.Handlers
         public override async Task Handle(XrmMessage message)
         {
             await Task.CompletedTask;
-                       
+
             try
             {
                 var pre = message.PreImage?.ToEntity<XrmHajirQuoteDetail>();
 
-                if (pre==null && message.PrimraryEntityId!= Guid.Empty)
+                if (pre == null && message.PrimraryEntityId != Guid.Empty)
                 {
                     pre = this.service.GetService<IXrmDataServices>()
                         .GetRepository<XrmHajirQuoteDetail>()
@@ -42,18 +42,26 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales.Handlers
                 var line = message.Entity.ToEntity<XrmHajirQuoteDetail>();
                 var quoteId = line.QuoteId ?? pre?.QuoteId;
                 var isFormal = false;
-                //if (quoteId.HasValue)
-                //{
-                //    var quote = this.service.GetService<IXrmDataServices>()
-                //        .GetRepository<XrmHajirQuote>()
-                //        .Queryable
-                //        .FirstOrDefault(x => x.Id == quoteId.Value);
-                //    isFormal = quote.QuoteType;
-                //}
-                var percentTax = line.PercentTax ?? pre?.PercentTax;
-                if (1 == 0)
+                if (line.PercentTax.HasValue)
                 {
-                   
+                    isFormal = line.PercentTax.Value > 0;
+                }
+                else
+                {
+                    if (quoteId.HasValue)
+                    {
+                        var quote = this.service.GetService<IXrmDataServices>()
+                            .GetRepository<XrmHajirQuote>()
+                            .Queryable
+                            .FirstOrDefault(x => x.Id == quoteId.Value);
+                        isFormal = quote.QuoteType;
+                    }
+                }
+                var percentTax = line.PercentTax ?? pre?.PercentTax;
+                
+                if (1 == 1)
+                {
+
                     if (isFormal && (!percentTax.HasValue || percentTax != 10))
                     {
                         percentTax = 10;
@@ -66,36 +74,41 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales.Handlers
 
                     }
                 }
-                if (line.Attributes.ContainsKey(XrmHajirQuoteDetail.Schema.Quantity) && line[XrmHajirQuoteDetail.Schema.Quantity] != null)
-                {
-                    line.Quantity = decimal.Parse(line[XrmHajirQuoteDetail.Schema.Quantity].ToString());
-                }
-                if (pre != null && pre.Attributes.ContainsKey(XrmHajirQuoteDetail.Schema.Quantity) && pre[XrmHajirQuoteDetail.Schema.Quantity] != null)
-                {
-                    pre.Quantity = decimal.Parse(pre[XrmHajirQuoteDetail.Schema.Quantity].ToString());
-                }
+                //if (line.Attributes.ContainsKey(XrmHajirQuoteDetail.Schema.Quantity) && line[XrmHajirQuoteDetail.Schema.Quantity] != null)
+                //{
+                //    line.Quantity = decimal.Parse(line[XrmHajirQuoteDetail.Schema.Quantity].ToString());
+                //}
+                //if (pre != null && pre.Attributes.ContainsKey(XrmHajirQuoteDetail.Schema.Quantity) && pre[XrmHajirQuoteDetail.Schema.Quantity] != null)
+                //{
+                //    pre.Quantity = decimal.Parse(pre[XrmHajirQuoteDetail.Schema.Quantity].ToString());
+                //}
                 var quantity = line.Quantity ?? pre?.Quantity ?? 0;
                 var pricePerUnit = line.PricePerUnit ?? pre?.PricePerUnit ?? 0;
                 var percentDiscount = line.PercentDiscount ?? pre?.PercentDiscount;
-               
+
                 var amount = pricePerUnit * (decimal)quantity;
-               
+                decimal discount = line.ManualDiscountAmount ?? pre?.ManualDiscountAmount ?? 0;
+
                 if (pricePerUnit > 0 && quantity > 0)
                 {
 
                     if (percentDiscount.HasValue)
                     {
-                        var discount = amount * ((decimal)percentDiscount / 100);
+                        discount = amount * ((decimal)percentDiscount / 100);
                         message.Change(XrmQuoteDetail.Schema.ManualDiscountAmount, new Money(discount));
                     }
                 }
                 if (percentTax.HasValue)
                 {
-                    var tax = amount * ((decimal)percentTax / 100);
-                    if (line.Tax!= tax)
+                    var tax = (amount - discount) * ((decimal)percentTax / 100);
+                    if (line.Tax != tax)
+                    {
+                        this.logger.LogInformation(
+                            $"QuoteProduct tax field changed, OldValue:{line.Tax}, NewValue:{tax}");
                         message.Change(XrmQuoteDetail.Schema.Tax, new Money(tax));
+                    }
                 }
-                
+
                 this.logger.LogInformation(
                     $"QuoteProduct update message successfully handled.");
             }

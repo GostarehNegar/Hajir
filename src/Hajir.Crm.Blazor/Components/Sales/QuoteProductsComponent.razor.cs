@@ -2,6 +2,7 @@
 using Hajir.Crm.Sales;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace Hajir.Crm.Blazor.Components.Sales
     }
     public partial class QuoteProductsComponent : IXrmFrame
     {
+        [Inject]
+        public IDialogService dialogueService { get; set; }
         [Parameter]
         public QuoteProductsViewModes ViewMode { get; set; } = QuoteProductsViewModes.Tabular;
         public XrmFrameAdapter Adapter => this.ServiceProvider.GetService<XrmFrameAdapter>();
@@ -51,6 +54,7 @@ namespace Hajir.Crm.Blazor.Components.Sales
         }
         public async Task InsertLine(SaleQuoteLine q)
         {
+            
             await this.SafeExecute(async () =>
             {
                 this.Value.AddLine(null);

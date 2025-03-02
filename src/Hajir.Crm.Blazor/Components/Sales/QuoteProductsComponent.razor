@@ -23,13 +23,13 @@
 }
 else if (this.ViewMode == QuoteProductsViewModes.Tabular)
 {
-    <MudTable Items="@this.Lines" Bordered="true" Striped="true">
+    <MudTable Items="@this.Lines" Bordered="true" Striped="true" style="font-size:small">
         <HeaderContent>
             <MudTh style="width:40%">کالا/خدمات</MudTh>
             <MudTh style="width:8%">تعداد</MudTh>
             <MudTh style="padding:2px;">قیمت</MudTh>
-            <MudTh>تخفیف</MudTh>
-            <MudTh>مالیات</MudTh>
+            <MudTh style="width:10%">تخفیف</MudTh>
+            <MudTh style="width:10%" >مالیات</MudTh>
             <MudTh style="width:15%;">مبلغ</MudTh>
         </HeaderContent>
         <RowTemplate>

@@ -28,13 +28,13 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales.Handlers
         public override async Task Handle(XrmMessage message)
         {
             await Task.CompletedTask;
-          
             var quote = message.Entity.ToEntity<XrmHajirQuote>();
+
             try
             {
                 if (quote.Attributes.ContainsKey(XrmHajirQuote.Schema.QuoteType))
                 {
-                   
+
                     this.dataServices
                             .GetRepository<XrmHajirQuoteDetail>()
                             .Queryable
@@ -50,10 +50,10 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales.Handlers
                                     this.dataServices
                                     .GetRepository<XrmHajirQuoteDetail>()
                                     .Update(l);
-                                    this.logger.LogInformation($"Updating PercentTax based on quote type.");
+                                    this.logger.LogInformation($"Updating PercentTax based on quote type. Value:{l.PercentTax}");
                                 }
-                                
-                                
+
+
                             });
                     this.logger.LogInformation(
                         $"Quote Update Handler successfully executed.");

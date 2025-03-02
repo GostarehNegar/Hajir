@@ -192,7 +192,7 @@ namespace GN.Library
                 public const string PrimaryContactId = "primarycontactid";
                 public const string ParentAccount = "parentaccountid";
                 public const string AccountRatingCode = "accountratingcode";
-                
+
 
 
 
@@ -205,7 +205,27 @@ namespace GN.Library
                 public const string ProductId = LogicalName + "id";
                 public const string Name = "name";
                 public const string ProductNumber = "productnumber";
+                public const string DefaultUomScheduleId = "defaultuomscheduleid";
+                public const string DefaultUoMId = "defaultuomid";
+                public const string QuantityDecimal = "quantitydecimal";
+
+                public enum StateCodes
+                {
+                    Active = 0,
+                    Retired = 1,
+                    Draft = 2,
+                    UnderRevision = 3,
+                }
+                public enum StatusCodes
+                {
+                    Draft = 0,
+                    Active = 1,
+                    Retired = 2,
+                    UnderRevision = 3,
+                }
             }
+           
+
         }
     }
 }

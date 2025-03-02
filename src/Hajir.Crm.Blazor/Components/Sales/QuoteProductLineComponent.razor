@@ -23,7 +23,7 @@
                       Margin="Margin.Dense" Disabled="true" />
         </MudItem>
         <MudItem xs="2" style="text-align:right">
-            <MudTextField T="long?" @bind-Value="Value.GuaranteeMonth" Label="گارنتی (ماه) " Variant="Variant.Outlined" Format="###,####"
+            <MudTextField T="int?" @bind-Value="Value.GuaranteeMonth" Label="گارنتی (ماه) " Variant="Variant.Outlined" Format="###,####"
                       Margin="Margin.Dense" Disabled="false" />
         </MudItem>
 
@@ -53,6 +53,7 @@
         <MudItem xs="3" style="text-align:right">
             <MudTextField T="decimal?" @bind-Value="Value.ExtendedAmount" Label="مبلغ" Variant="Variant.Outlined" Format="###,####"
                       Margin="Margin.Dense" Disabled="true" />
+            
         </MudItem>
 
 
@@ -78,7 +79,7 @@ else if (this.ViewMode == QuoteProductsViewModes.Tabular)
 
     </MudTd>
     <MudTd DataLabel="Nr">
-        <MudTextField T="int?" @bind-Value="Value.PercentTax" Label="" Variant="Variant.Outlined"
+        <MudTextField T="int?" @bind-Value="Value.PercentTax" Label="" Variant="Variant.Outlined" 
                   Adornment="Adornment.End" AdornmentText="%" Margin="Margin.Dense" @onfocusout="Recalculate" Disabled="false" />
         <MudTextField T="decimal?" @bind-Value="Value.Tax" Label="" Variant="Variant.Outlined" Format="###,####"
                   Margin="Margin.Dense" @onfocusout="Recalculate" Disabled="ITaxDisabled" />
@@ -87,6 +88,12 @@ else if (this.ViewMode == QuoteProductsViewModes.Tabular)
     <MudTd DataLabel="Nr">
         <MudTextField T="decimal?" @bind-Value="Value.ExtendedAmount" Label="مبلغ" Variant="Variant.Outlined" Format="###,####"
                   Margin="Margin.Dense" Disabled="true" />
+
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" />
+            <MudIconButton Icon="@Icons.Material.Filled.PostAdd" aria-label="delete" Size="Size.Small" OnClick="()=>Insert(State)" />
+
+
     </MudTd>
    
 

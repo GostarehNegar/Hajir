@@ -12,6 +12,7 @@ namespace Hajir.Crm.Common
     {
         IEnumerable<Product> Products { get; }
         IEnumerable<UnitOfMeasurements> UnitOfMeasurements { get; }
+        IEnumerable<UnitOfMeasurmentGroup> UnitOfMeasuementGroups { get; }
         IEnumerable<PriceList> PriceLists { get; }
         IEnumerable<ProductSeries> ProductSeries { get; }
         IEnumerable<HajirCityEntity> Cities { get; }
@@ -21,5 +22,6 @@ namespace Hajir.Crm.Common
         IEnumerable<HajirCountryEntity> Countries { get; }
         IEnumerable<HajirUserEntity> Users { get; }
         IEnumerable<HajirProvinceEntity> Provinces { get; }
+        IEnumerable<HajirProductCategoryEntity> ProductCategories { get; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Hajir.Crm.Sales;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,10 @@ namespace Hajir.Crm.Blazor.Components.Sales
     {
         [Parameter]
         public QuoteProductsViewModes ViewMode { get; set; } = QuoteProductsViewModes.Block;
+        [Inject]
+        public IDialogService DialogService { get; set; }
+
+        
         void Recalculate()
         {
             this.Value.Recalculate();
@@ -20,5 +25,11 @@ namespace Hajir.Crm.Blazor.Components.Sales
         public bool IsDiscountDisabled => this.Value.PercentDiscount.HasValue;
         public bool ITaxDisabled => this.Value.PercentTax.HasValue;
         public IMask mask = new PatternMask("###,###");
+
+        public async Task Insert(State<SaleQuoteLine> state)
+        {
+            var dialog = this.DialogService.Show<BundleDialog>("", new DialogOptions { });
+            var result = await dialog.Result;
+        }
     }
 }

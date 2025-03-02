@@ -13,6 +13,7 @@ using Hajir.Crm.Sales;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using System;
+using Hajir.Crm.Integration;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -94,6 +95,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<ILegacyCrmStore, XrmLegacyContactRepository>();
             services.AddScoped<IIntegrationStore, XrmIntegrationStore>();
+            services.AddScoped<XrmProductIntegrationStore>();
+            services.AddScoped<IProductIntegrationStore>(sp=>sp.GetService<XrmProductIntegrationStore>());
 
 
             return services;

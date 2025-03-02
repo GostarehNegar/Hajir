@@ -1,6 +1,7 @@
 ﻿
 using Hajir.Crm.Products;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,17 @@ namespace Hajir.Crm.Tests.Specs.Infrastructure
     [TestClass]
     public class ProductRepositoryTests : TestFixture
     {
+        IHost GetHost(bool webapi = false)
+        {
+            return this.GetDefaultHost(webapi: webapi);
+        }
+
         [TestMethod]
         public async Task how_it_works()
         {
             var host = this.GetDefaultHost();
             var target = host.Services.GetService<IProductRepository>();
+            var products = target.GetAll();
 
         }
         [TestMethod]

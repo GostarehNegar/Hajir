@@ -68,7 +68,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                     FormattedExpiresOn = q.ExpiresOn.FormatPersianDate(),
                     PaymentTermsCode = q.PaymentTermsCode?.Value,
                     PaymentTerms = GetPaymentCode(q.PaymentTermsCode?.Value),
-                    Payable = q.TotalAmount.HasValue? HajirCrmExtensions.NumberToString(q.TotalAmount ?? 0):"",
+                    Payable = q.TotalAmount.HasValue ? HajirCrmExtensions.NumberToString(q.TotalAmount ?? 0) +" ریال" : "",
 
 
                     Items = lines
@@ -80,7 +80,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                             BaseAmount = x.BaseAmount ?? 0,
                             Discount = x.ManualDiscountAmount ?? 0,
                             Quantity = Convert.ToDecimal(x.Quantity ?? 0),
-                            RowNumber = x.GetAttributeValue<int?>("rownumber")??1
+                            RowNumber = x.SequenceNumber ?? 1
 
                         })
                         .ToArray()

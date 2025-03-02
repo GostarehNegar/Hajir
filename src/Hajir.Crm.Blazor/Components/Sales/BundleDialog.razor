@@ -1,0 +1,28 @@
+﻿<h3>BundleDialog</h3>
+@using Hajir.Crm.Products
+<MudDialog >
+    <TitleContent>
+
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudItem xs="12">
+                    <MudAutocomplete T="Product" Label="خریدار" @bind-Value="State.Value.UPS"
+                                     SearchFunc="@SearchProcucts" Variant="Variant.Outlined" ShowProgressIndicator="true" />
+                </MudItem>
+            </MudItem>
+        </MudGrid>
+        <MudPaper>
+            Hi There
+        </MudPaper>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+}
