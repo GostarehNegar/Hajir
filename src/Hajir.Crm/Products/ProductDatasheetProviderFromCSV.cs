@@ -29,7 +29,7 @@ namespace Hajir.Crm.Products
             }
             object get_value(string v)
             {
-                return string.IsNullOrWhiteSpace(v)
+                return string.IsNullOrWhiteSpace(v) || v.Length>6
                     ? v
                     : decimal.TryParse(v, out var _res) ? (object)_res : v;
 
@@ -40,8 +40,8 @@ namespace Hajir.Crm.Products
                 {
                     Name = getspec(i)?.Name,
                     Description = getspec(i)?.Description,
-                    Type = getspec(i)?.Type,
-                    Value = get_value(a)
+                    //Type = getspec(i)?.Type,
+                    Value = a
                 }).ToArray()
             };
         }

@@ -25,6 +25,8 @@ namespace Hajir.Crm.Blazor.Components.Sales
         [Parameter]
         public State<BundleEditModel> State { get; set; }
 
+        public BundleEditModel BundleModel => State.Value;
+        private bool IsUpsEmpty => this.BundleModel.UPS == null;
 
         protected override Task OnParametersSetAsync()
         {

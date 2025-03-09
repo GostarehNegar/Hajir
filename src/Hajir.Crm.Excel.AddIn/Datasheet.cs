@@ -1,16 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Hajir.Crm.Products
+namespace Hajir.Crm.Excel.AddIn
 {
-    public class DatasheetPropDefinition
-    {
-
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Label { get; set; }
-        public string Type { get; set; }
-
-    }
     public class DatasheetProperty
     {
         public string Name { get; set; }
@@ -29,4 +24,5 @@ namespace Hajir.Crm.Products
            (Properties.FirstOrDefault(x => x.Description == "نام كالا") ?? Properties.Skip(1).FirstOrDefault())?
            .Value;
     }
+
 }

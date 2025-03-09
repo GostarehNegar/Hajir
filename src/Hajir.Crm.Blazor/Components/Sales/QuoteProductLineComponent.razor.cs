@@ -28,7 +28,7 @@ namespace Hajir.Crm.Blazor.Components.Sales
 
         public async Task Insert(State<SaleQuoteLine> state)
         {
-            var dialog = this.DialogService.Show<BundleDialog>("", new DialogOptions { });
+            var dialog = this.DialogService.Show<BundleDialog>("", new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth=true});
             var result = await dialog.Result;
         }
     }

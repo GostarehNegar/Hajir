@@ -1,22 +1,169 @@
 ﻿<h3>BundleDialog</h3>
 @using Hajir.Crm.Products
-<MudDialog >
+<MudDialog  >
     <TitleContent>
 
     </TitleContent>
     <DialogContent>
-        <MudGrid>
-            <MudItem xs="12">
-                <MudItem xs="12">
-                    <MudAutocomplete T="Product" Label="خریدار" @bind-Value="State.Value.UPS"
-                                     SearchFunc="@SearchProcucts" Variant="Variant.Outlined" ShowProgressIndicator="true" />
-                </MudItem>
-            </MudItem>
-        </MudGrid>
-        <MudPaper>
-            Hi There
-        </MudPaper>
-    </DialogContent>
+
+        <div class="main-container">
+            @if (!IsUpsEmpty)
+            {
+                <div class="alert-container">
+                    <div class="bundle-name">@this.BundleModel.Bundle.Name</div>
+                    <div class="bundle-name">@this.ValidationMessage</div>
+                    <div class="bundle-buttons">
+                        <MudButton Variant="Variant.Filled" Color="Color.Info" DisableElevation OnClick="AddDesign">تأیید</MudButton>
+                        <MudButton Color="Color.Error" OnClick="Cancel">لغو</MudButton>
+                    </div>
+                </div>
+            }
+
+            <div class="form-container">
+                <MudAutocomplete T="Product"
+                                 @bind-Value="this.BundleModel.UPS"
+                                 SearchFunc="e=>SearchUps(new Input(e))"
+                                 ToStringFunc="e=>ProductToString(e)"
+                                 OnClearButtonClick="ClearUps"
+                                 Label="مدل UPS"
+                                 Placeholder="search a UPS model"
+                                 OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                                 CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
+                                                  AutoFocus
+                                                  Immediate
+                                                  Clearable
+                                                  ResetValueOnEmptyText
+                                                  SelectValueOnTab>
+                </MudAutocomplete>
+                <MudCheckBox @bind-Checked="@HasBattery">باتری دارد؟</MudCheckBox>
+                @if (HasBattery)
+                {
+                    <div class="battery-container">
+                        <div class="battery-fields">
+                            <MudSelect T="Product"
+                                   @bind-Value="this.Battery"
+                                   ToStringFunc="e=>ProductToString(e)"
+                                   Disabled=@IsUpsEmpty
+                                   OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                                   CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
+                                   Label="نوع باتری">
+                                @foreach (var b in AllBatteries)
+                                {
+                                    <MudSelectItem Value="b">@b</MudSelectItem>
+                                }
+
+                            </MudSelect>
+                            <MudSelect T="int"
+                                   @bind-Value="this.NumberOfBatteries"
+                                   Disabled="@IsUpsEmpty"
+                                   OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                                   CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
+                                   Label="تعداد باتری">
+                                @foreach (var i in GetSupportedNumberOfBatteries())
+                                {
+                                    <MudSelectItem Value="i">@i</MudSelectItem>
+                                }
+                            </MudSelect>
+
+                            @*<MudSelect T="int"
+                        @bind-Value="this.BundleModel.Power"
+                        Disabled="@IsUpsEmpty"
+                        OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                        CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
+                        Label="آمپر">
+                        @foreach (var i in GetPowers())
+                        {
+                        <MudSelectItem Value="i">@i</MudSelectItem>
+                        }
+                        </MudSelect>*@
+                        </div>
+                        <div class="battery-add"><MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="()=>AddNewRow(this.Battery,this.NumberOfBatteries)">اضافه کردن باتری</MudButton></div>
+
+                    </div>
+                }
+
+                <MudCheckBox @bind-Checked="HasCabinet">کابینت دارد؟</MudCheckBox>
+                @if (HasCabinet)
+                {
+                    <div class="cabinet-container">
+                        <div class="cabinet-fields">
+                            <MudSelect T="Product"
+                                   @bind-Value="this.Cabinet"
+                                   Disabled="@IsUpsEmpty"
+                                   OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                                   CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
+                                   Label="مدل کابینت">
+                                @foreach (var i in AllCabinets)
+                                {
+                                    <MudSelectItem Value="i">@i.Name</MudSelectItem>
+                                }
+                            </MudSelect>
+                            <MudTextField T="int" InputType="InputType.Number" @bind-Value="this.NumberOfCabinets" Disabled="@IsUpsEmpty"></MudTextField>
+                        </div>
+
+                        @if (this.BundleModel.Bundle.Design != null && this.BundleModel.Bundle.Design.Capacity > 0)
+                        {
+                            <div class="bundle-container">
+                                @*<div style="font-weight:bold">Design #@(i+1)</div>*@
+                                <CabinetsComponent Cabinets=@this.BundleModel.Bundle.Design></CabinetsComponent>
+                            </div>
+                        }
+                        <div class="cabinet-save">
+                            <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="()=>AddNewRow(this.Cabinet,this.NumberOfCabinets)">اضافه کردن کابینت</MudButton>
+                            <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="ClearCabinets">حذف کابینت </MudButton>
+                            <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="SuggestCabinet">Suggest  </MudButton>
+                        </div>
+                    </div>
+                }
+
+                <MudCheckBox @bind-Checked="HasSNMP">کارت SNMP دارد؟</MudCheckBox>
+                @if (HasSNMP)
+                {
+                    <MudSelect T="int"
+                           @bind-Value="this.BundleModel.NumberOfBatteries"
+                           Disabled="@IsUpsEmpty"
+                           OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                           CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
+                           Label="مدل کارت SNMP">
+                        @foreach (var i in GetSupportedNumberOfBatteries())
+                        {
+                            <MudSelectItem Value="i">@i</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+
+                <MudCheckBox @bind-Checked="HasParallel">کارت Parallel دارد؟</MudCheckBox>
+                @if (HasParallel)
+                {
+                    <MudSelect T="int"
+                           @bind-Value="this.BundleModel.NumberOfBatteries"
+                           Disabled="@IsUpsEmpty"
+                           OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                           CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
+                           Label="مدل کارت پارالل">
+                        @foreach (var i in GetSupportedNumberOfBatteries())
+                        {
+                            <MudSelectItem Value="i">@i</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+
+                @*<MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="Design">Design</MudButton>*@
+            </div>
+            @*@if (CabinetDesign.Length != 0)
+            {
+                <div class="bundle-container">
+                    @foreach (var cab in CabinetDesign)
+                    {
+                        <div style="cursor:pointer" class=@((cab==SelectedDesign)?"selected":"") @onclick=@(()=>SelectDesign(cab))>
+                            <div style="font-weight:bold">Design #@(i + 1)</div>
+                            <CabinetsComponent Cabinets=@cab></CabinetsComponent>
+                        </div>
+                    }
+                </div>
+            }*@
+        </div>
+    </DialogContent>  
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
         <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
