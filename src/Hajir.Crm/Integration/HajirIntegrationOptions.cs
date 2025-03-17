@@ -4,6 +4,11 @@ using System;
 
 namespace Hajir.Crm.Integration
 {
+    public class ProductIntegrationOptions
+    {
+        public bool Disabled { get; set; } = false;
+        public bool CSVDatasheetIntegration { get; set; } = false;
+    }
     public class HajirIntegrationOptions
     {
 
@@ -11,10 +16,12 @@ namespace Hajir.Crm.Integration
         public bool LegacyAccountImportEnabled { get; set; } = false;
         public bool LegacyContactImportEnabled { get; set; } = false;
         public bool LegacyImportEnabled { get; set; } = false;
+        public ProductIntegrationOptions ProductIntegration { get; set; } = new ProductIntegrationOptions();
 
         public HajirIntegrationOptions Validate()
         {
             LegacyConnectionString = string.IsNullOrEmpty(LegacyConnectionString) ? HajirCrmConstants.DefaultLegacyCrmConnectionString : LegacyConnectionString;
+            ProductIntegration = this.ProductIntegration ?? new ProductIntegrationOptions();
             return this;
         }
         public string GetQueueStorageConnectionString()

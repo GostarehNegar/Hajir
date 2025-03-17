@@ -13,6 +13,7 @@ using Hajir.Crm.Blazor.ViewModels;
 using Microsoft.JSInterop;
 using System.Security.Policy;
 using Hajir.Crm.Sales;
+using Hajir.Crm.Blazor.Components.Sales;
 
 namespace Hajir.Crm.Blazor.Components
 {

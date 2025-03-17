@@ -29,12 +29,12 @@ namespace Hajir.Crm.Blazor.Models
             }
         }
         public int NumberOfBatteries { get; set; }
-        //private int ggg;
-        //public void TTT()
-        //{
-            
+        private int ggg;
+        public void TTT()
+        {
 
-        //    this.SetValue(ref ggg, 1);
-        //}
+
+            //this.SetValue(ref NumberOfBatteries, 1);
+        }
     }
 }

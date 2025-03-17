@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Hajir.Crm.Products
 {
@@ -28,5 +29,23 @@ namespace Hajir.Crm.Products
         public string ProductName =>
            (Properties.FirstOrDefault(x => x.Description == "نام كالا") ?? Properties.Skip(1).FirstOrDefault())?
            .Value;
+
+        public string GetBatterySpec()
+        {
+            var specs = new List<string>();
+            var result = "";
+
+            for (var i = 1; i < 12; i++)
+            {
+                var n = Properties.FirstOrDefault(x => x.Description == $"تعداد باتری {i}")?.Value;
+                var p = Properties.FirstOrDefault(x => x.Description == $"Power Factor {i}")?.Value;
+                if (!string.IsNullOrWhiteSpace(n))
+                {
+                    specs.Add($"{n}:{p}");
+                }
+            }
+            return string.Join(",", specs);
+
+        }
     }
 }

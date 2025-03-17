@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "GN.Library.CommandLines": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:50919"
+    }
+  }
+}

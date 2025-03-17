@@ -80,12 +80,14 @@ namespace Hajir.Crm.Integration
                         try
                         {
                             var prod = await store.GetByProductNumber(item.GoodCode);
+                            //
+                            //
+
                             var isChanged = true ||  prod == null
                                 || prod.Name != item.GoodName || prod.CatCode != item.CatCode;
                             //if (prod == null || !prod.SynchedOn.HasValue || prod.SynchedOn < item.ActionDate)
                             if (isChanged)
                             {
-
                                 await store.SaveProduct(new IntegrationProduct
                                 {
                                     CatCode = item.CatCode,

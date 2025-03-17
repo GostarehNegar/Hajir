@@ -1,0 +1,28 @@
+﻿
+<MudGrid>
+    <MudItem xs="6">
+        <SelectProduct 
+            Label="انتخاب باتری"
+            Placeholder="جستجوی باتری"
+            ProductTypes="HajirCrmConstants.Schema.Product.ProductTypes.Battery"/>
+    </MudItem>
+    <MudItem xs="3">
+        <MudSelect T="int"
+                   @bind-Value="this.NumberOfBatteries"
+                   OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                   CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
+                   Label="تعداد باتری">
+            @foreach (var i in GetSupportedNumberOfBatteries())
+            {
+                <MudSelectItem Value="i">@i</MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>
+    <MudItem xs="3">
+
+    </MudItem>
+</MudGrid>
+
+@code {
+
+}

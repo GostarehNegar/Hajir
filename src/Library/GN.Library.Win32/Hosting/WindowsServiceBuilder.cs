@@ -42,15 +42,15 @@ namespace GN.Library.Win32.Hosting
             return this;
 
         }
-        public IWindowsServiceHost Build(Func<IWebHost, IWebHost> func)
+        public IWindowsServiceHost Build(Func<IWebHost, IWebHost> func = null)
         {
 
-            return new WindowsServiceHost(this, func == null ? webHostBuilder?.Build() : func(webHostBuilder?.Build()), hostBuilder?.Build());
+            return new WindowsServiceHost(this, func == null ? webHostBuilder?.Build().UseGNLib() : func(webHostBuilder?.Build().UseGNLib()), hostBuilder?.Build().UseGNLib());
         }
-        public IWindowsServiceHost Build1(Func<IHost, IHost> func)
+        public IWindowsServiceHost Build1(Func<IHost, IHost> func = null)
         {
 
-            return new WindowsServiceHost(this,null, func == null ? hostBuilder?.Build() : func(hostBuilder?.Build()));
+            return new WindowsServiceHost(this, null, func == null ? hostBuilder?.Build() : func(hostBuilder?.Build()));
         }
     }
 }

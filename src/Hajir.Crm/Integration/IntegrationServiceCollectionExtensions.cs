@@ -31,8 +31,18 @@ namespace Hajir.Crm.Integration
                 services.AddSingleton<IIntegrationQueue, IntegrationQueueEx>();
                 services.AddHostedService(sp => sp.GetService<IntegrationBackgroundServiceEx>());
             }
-            services.AddSingleton<ProductIntegrationService>();
-            //services.AddHostedService(sp=>sp.GetService<ProductIntegrationService>());
+            if (!opt.ProductIntegration.Disabled)
+            {
+                services.AddSingleton<ProductIntegrationService>();
+                services.AddHostedService(sp => sp.GetService<ProductIntegrationService>());
+                if (opt.ProductIntegration.CSVDatasheetIntegration)
+                {
+                    services.AddSingleton<DatasheetIntegrationService>();
+                    services.AddHostedService(sp => sp.GetService<DatasheetIntegrationService>());
+                }
+
+            }
+            //
 
 
             return services;

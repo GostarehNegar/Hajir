@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Hajir.Crm.Sales.Xrm.Plugins": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:50939;http://localhost:50940"
+    }
+  }
+}

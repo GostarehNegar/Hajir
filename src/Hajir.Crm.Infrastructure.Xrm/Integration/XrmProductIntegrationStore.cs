@@ -3,6 +3,7 @@ using GN.Library.Xrm.StdSolution;
 using Hajir.Crm.Common;
 using Hajir.Crm.Entities;
 using Hajir.Crm.Integration;
+using Hajir.Crm.Products;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
 using System;
@@ -121,6 +122,36 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 .FirstOrDefault()?
                 .SynchedOn;
 
+
+        }
+
+        public Task<IntegrationProduct> UpdateJsonProps(string productNamber, Datasheet ds)
+        {
+            var product = this.dataServices
+                .GetRepository<XrmHajirProduct>()
+                .Queryable
+                .FirstOrDefault(x => x.ProductNumber == productNamber);
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(ds.Properties);
+            if (product != null)
+            {
+                bool update = false;
+                if (product.JsonProps != json)
+                {
+                    product.JsonProps = json;
+                    update = true;
+                }
+                var spec = ds.GetBatterySpec();
+                if (product.SupportedBatteries != spec)
+                {
+                    product.SupportedBatteries = spec;
+                    update = true;
+                }
+                if (update)
+                {
+                    this.dataServices.GetRepository<XrmHajirProduct>().Update(product);
+                }
+            }
+            return Task.FromResult(product?.ToDynamic().To<IntegrationProduct>());
 
         }
     }

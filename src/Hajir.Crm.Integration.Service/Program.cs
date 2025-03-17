@@ -50,6 +50,7 @@ namespace Hajir.Crm.Xrm.Service
                     s.AddGNLib(c.Configuration, opt => { });
                     s.AddMessagingServices(c.Configuration, opt => { });
                     s.AddXrmServices(c.Configuration, opt => { opt.ConnectionOptions = ConnectionOptions.OrganizationService; });
+                    s.AddHajirCrm(c.Configuration, opt => { });
                     s.AddHajirIntegrationServices(c.Configuration, opt => { });
                     s.AddSignalRTransport(c.Configuration, opt => { });
                     //s.AddLibraryApi();

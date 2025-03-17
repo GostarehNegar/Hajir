@@ -1,0 +1,19 @@
+﻿@using Hajir.Crm.Products
+@inherits BaseComponent<AddBundleWizardState>
+
+
+    <MudGrid>
+        <MudItem xs="6">
+            <SelectProduct 
+                Product="State.Value.Bundle.UPS"
+                ProductTypes="HajirCrmConstants.Schema.Product.ProductTypes.UPS"
+                Label="انتخاب یو پی اس"
+                Placeholder="جستجوی یوپی‌اس"
+                OnSelected="SelectUPS"
+                />
+        </MudItem>
+        <MudItem xs="6">
+            
+        </MudItem>
+
+    </MudGrid>

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -189,6 +190,14 @@ namespace Hajir.Crm.Integration.SanadPardaz
 
         public async Task<IEnumerable<SanadPardazGoodModel>> GetGoods(int page = 1, int pageLength = 100)
         {
+            SanadPardazGoodModel fix(SanadPardazGoodModel goodModel)
+            {
+                if (goodModel != null)
+                {
+                    goodModel.GoodName = goodModel.GoodName?.Replace("ك", "ک").Replace("ي", "ی");
+                }
+                return goodModel;
+            }
             var res = await Request<GetGoodRequestModel, SanadPardazGoodModel>(6, cfg =>
             {
 
@@ -197,7 +206,7 @@ namespace Hajir.Crm.Integration.SanadPardaz
                 cfg.orderBy = "ActionDate";
                 cfg.orderDirection = "desc";
             });
-            return res; ;
+            return res.Select(x=>fix(x)); ;
         }
 
         public async Task<IEnumerable<SanadPardazDetialModel>> GetDetials(int page = 1, int pageLength = 500)

@@ -11,8 +11,9 @@ using MudBlazor;
 
 using Hajir.Crm.Blazor.ViewModels;
 using System.Reflection.Metadata;
+using Hajir.Crm.Blazor;
 
-namespace Hajir.Crm.Blazor.Components
+namespace Hajir.Crm.Blazor.Components.Sales
 {
     public partial class AddBundleDialog
     {
@@ -24,15 +25,15 @@ namespace Hajir.Crm.Blazor.Components
 
         public IProductBundlingService BundlingService => this.ServiceProvider.GetService<IProductBundlingService>();
 
-        public IEnumerable<Product> AllUpses => this.BundlingService.GetAllUpses();
-        public IEnumerable<Product> AllBatteries => this.BundlingService.GetAllBatteries();
-        public IEnumerable<Product> AllCabinets => this.BundlingService.GetAllCabinets();
+        public IEnumerable<Product> AllUpses => BundlingService.GetAllUpses();
+        public IEnumerable<Product> AllBatteries => BundlingService.GetAllBatteries();
+        public IEnumerable<Product> AllCabinets => BundlingService.GetAllCabinets();
 
 
 
         public IEnumerable<int> GetAllPowers => HajirBusinessRules.Instance.CabinetCapacityRules.GetKnownPowers().ToArray();
 
-        private bool IsUpsEmpty => this.BundleModel.UPS == null;
+        private bool IsUpsEmpty => BundleModel.UPS == null;
 
         public record Input(string Value);
 
@@ -57,7 +58,7 @@ namespace Hajir.Crm.Blazor.Components
             MudDialog.Options.MaxWidth = MaxWidth.Medium;
             MudDialog.Options.CloseButton = true;
             MudDialog.SetOptions(MudDialog.Options);
-            this.BundleModel = new BundleEditModel();
+            BundleModel = new BundleEditModel();
             base.OnInitialized();
         }
         protected override async Task OnInitializedAsync()
@@ -86,18 +87,18 @@ namespace Hajir.Crm.Blazor.Components
 
         private void ClearUps()
         {
-            this.BundleModel = new BundleEditModel();
-            this.DesignedBundle = new CabinetSet(null);
-            this.CabinetDesign = Array.Empty<CabinetSet>();
-            this.Battery = new Product();
-            this.HasBattery = this.HasCabinet = this.HasParallel = this.HasSNMP = false;
+            BundleModel = new BundleEditModel();
+            DesignedBundle = new CabinetSet(null);
+            CabinetDesign = Array.Empty<CabinetSet>();
+            Battery = new Product();
+            HasBattery = HasCabinet = HasParallel = HasSNMP = false;
         }
 
         public int[] GetSupportedNumberOfBatteries()
         {
-            return this.BundleModel?.Bundle.UPS == null
+            return BundleModel?.Bundle.UPS == null
                 ? new int[] { }
-                : this.BundleModel?.Bundle.UPS.GetSupportedBatteryConfig().Select(x => x.Number).ToArray();
+                : BundleModel?.Bundle.UPS.GetSupportedBatteryConfig().Select(x => x.Number).ToArray();
         }
         public int[] GetPowers()
         {
@@ -106,9 +107,9 @@ namespace Hajir.Crm.Blazor.Components
 
         public async Task Design()
         {
-            if (this.BundleModel.UPS != null && this.BundleModel.NumberOfBatteries != 0)
+            if (BundleModel.UPS != null && BundleModel.NumberOfBatteries != 0)
             {
-                CabinetDesign = this.BundlingService.Design(this.BundleModel.UPS, this.BundleModel.Power, this.BundleModel.NumberOfBatteries).ToArray();
+                CabinetDesign = BundlingService.Design(BundleModel.UPS, BundleModel.Power, BundleModel.NumberOfBatteries).ToArray();
             }
         }
 
@@ -118,14 +119,14 @@ namespace Hajir.Crm.Blazor.Components
             {
                 if (number > 0)
                 {
-                    this.BundleModel.Bundle.AddRow(product, number);
-                    if (product.ProductType == Entities.HajirProductEntity.Schema.ProductTypes.Cabinet)
+                    BundleModel.Bundle.AddRow(product, number);
+                    if (product.ProductType == HajirCrmConstants.Schema.Product.ProductTypes.Cabinet)
                     {
                         /// Resign
                         /// 
-                        var design = this.BundleModel.Bundle.GetDesign();
-                        this.CabinetDesign = new CabinetSet[] { design };
-                        this.ValidationMessage = this.BundleModel.Bundle.Validate();
+                        var design = BundleModel.Bundle.GetDesign();
+                        CabinetDesign = new CabinetSet[] { design };
+                        ValidationMessage = BundleModel.Bundle.Validate();
 
 
 
@@ -145,23 +146,23 @@ namespace Hajir.Crm.Blazor.Components
         {
             try
             {
-                this.BundleModel.Bundle.Remove(Entities.HajirProductEntity.Schema.ProductTypes.Cabinet);
-                var battery_row = this.BundleModel.Bundle.Rows.FirstOrDefault(x => x.Product?.ProductType == Entities.HajirProductEntity.Schema.ProductTypes.Battery);
+                BundleModel.Bundle.Remove(HajirCrmConstants.Schema.Product.ProductTypes.Cabinet);
+                var battery_row = BundleModel.Bundle.Rows.FirstOrDefault(x => x.Product?.ProductType == HajirCrmConstants.Schema.Product.ProductTypes.Battery);
                 if (battery_row == null)
                     throw new Exception(message: "باتری انتخاب نشده است");
                 else
                 {
-                    var designs = this.BundlingService.Design(this.BundleModel.UPS, battery_row.Product.BatteryPower, battery_row.Quantity).ToArray();
-                    if (this.LastDesignSuggestion < designs.Length)
+                    var designs = BundlingService.Design(BundleModel.UPS, battery_row.Product.BatteryPower, battery_row.Quantity).ToArray();
+                    if (LastDesignSuggestion < designs.Length)
                     {
-                        CabinetDesign = new CabinetSet[] { designs[this.LastDesignSuggestion] };
-                        var design = designs[this.LastDesignSuggestion];
-                        this.LastDesignSuggestion++;
-                        if (this.LastDesignSuggestion >= designs.Length)
+                        CabinetDesign = new CabinetSet[] { designs[LastDesignSuggestion] };
+                        var design = designs[LastDesignSuggestion];
+                        LastDesignSuggestion++;
+                        if (LastDesignSuggestion >= designs.Length)
                         {
-                            this.LastDesignSuggestion = 0;
+                            LastDesignSuggestion = 0;
                         }
-                        this.BundleModel.Bundle.Design = design;
+                        BundleModel.Bundle.Design = design;
                     }
                 }
             }
@@ -177,21 +178,21 @@ namespace Hajir.Crm.Blazor.Components
         }
         public void ClearCabinets()
         {
-            this.BundleModel.Bundle.Remove(Entities.HajirProductEntity.Schema.ProductTypes.Cabinet);
-            this.CabinetDesign = Array.Empty<CabinetSet>();
+            BundleModel.Bundle.Remove(HajirCrmConstants.Schema.Product.ProductTypes.Cabinet);
+            CabinetDesign = Array.Empty<CabinetSet>();
             StateHasChanged();
         }
 
         public void AddDesign()
         {
-            if (this.SelectedDesign != null)
+            if (SelectedDesign != null)
             {
-                var bundle = this.BundleModel.Bundle;
+                var bundle = BundleModel.Bundle;
                 var design = SelectedDesign;
                 var ids = design.Cabinets.GroupBy(x => x.CabinetProduct.Id)
                     .Select(x => x.Key).ToArray();
-                this.Battery = this.Battery ?? AllBatteries.FirstOrDefault();
-                var battery = this.Battery;
+                Battery = Battery ?? AllBatteries.FirstOrDefault();
+                var battery = Battery;
                 bundle.AddRow(battery, design.Quantity);
                 foreach (var id in ids)
                 {

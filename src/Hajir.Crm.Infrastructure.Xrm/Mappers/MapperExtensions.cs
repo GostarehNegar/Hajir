@@ -32,7 +32,7 @@ namespace Hajir.Crm.Infrastructure.Xrm
         }
         public static T2 Mapper<T1, T2>(T1 input) => mapper.Map<T1, T2>(input);
 
-        public static Product ToProduct(this XrmHajirProduct product)
+        public static Product ToProduct(this XrmHajirProduct product, IServiceProvider serviceProvider)
         {
 
             var result = product.ToDynamic().To<Product>();
@@ -42,7 +42,7 @@ namespace Hajir.Crm.Infrastructure.Xrm
             result.SupportedBattries = product.SupportedBatteries;
             result.NumberOfRows = product.GetNumberIfFloors();
             result.Vendor = CabinetVendors.Hajir;
-            result.BatteryPower = int.TryParse(product.BatteryCurrent, out var p) ? p : 0;
+            result.BatteryPower = int.TryParse(product.BatteryCurrent?.ToString(), out var p) ? p : 0;
             return result;
         }
         public static IntegrationProduct ToIntegrationProduct(this XrmHajirProduct product)

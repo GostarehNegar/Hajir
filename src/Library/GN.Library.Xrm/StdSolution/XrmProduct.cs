@@ -92,5 +92,7 @@ namespace GN.Library.Xrm.StdSolution
             get => this.GetAttributeValue<int?>(Schema.QuantityDecimal);
             set => this.SetAttributeValue(Schema.QuantityDecimal, value);
         }
+
+        
     }
 }

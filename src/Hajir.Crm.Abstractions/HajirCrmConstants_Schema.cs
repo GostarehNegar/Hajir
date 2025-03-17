@@ -23,13 +23,14 @@ namespace Hajir.Crm
                 //public const string ProductType = RHS_SolutionPerfix + "producttype";
                 public const string TypeProducts_deprecated = "rhs_typeproducts";
                 public const string ProductSerie = "rhs_productseries";
-                public const string SupportedBatteries = SolutionPerfix + "spec_ups_supported_batteries";
+                public const string SpecSupportedBatteries = SolutionPerfix + "spec_ups_supported_batteries";
                 public const string NumberOfFloors = "rhs_numberoffloors";
-                public const string BatteryCurrent = SolutionPerfix + "spec_ups_battery_current";
+                public const string SpecBatteryAmperage = SolutionPerfix + "spec_batterty_amperage";
                 //public const string ProductCategoryCode = SolutionPerfix + "categorycode";
                 public const string SynchedOn = SolutionPerfix + "synchedon";
                 public const string ProductTypeCode = SolutionPerfix + "producttypecode";
                 public const string CategoryId = SolutionPerfix + "categoryid";
+                public const string JsonProps = SolutionPerfix + "jsonprops";
 
                 public static ProductCategories? IntToProductCategory(int? cat)
                 {

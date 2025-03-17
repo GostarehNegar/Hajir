@@ -49,11 +49,11 @@ namespace Hajir.Crm.Entities
             set => this.ProductSerieCode = value.HasValue ? new OptionSetValue((int)value.Value) : null;
         }
 
-        [AttributeLogicalName(Schema.SupportedBatteries)]
+        [AttributeLogicalName(Schema.SpecSupportedBatteries)]
         public string SupportedBatteries
         {
-            get => this.GetAttributeValue<string>(Schema.SupportedBatteries);
-            set => this.SetAttribiuteValue(Schema.SupportedBatteries, value);
+            get => this.GetAttributeValue<string>(Schema.SpecSupportedBatteries);
+            set => this.SetAttribiuteValue(Schema.SpecSupportedBatteries, value);
         }
 
         [AttributeLogicalName(Schema.NumberOfFloors)]
@@ -63,11 +63,11 @@ namespace Hajir.Crm.Entities
             set => this.SetAttribiuteValue(Schema.NumberOfFloors, value);
         }
 
-        [AttributeLogicalName(Schema.BatteryCurrent)]
-        public string BatteryCurrent
+        [AttributeLogicalName(Schema.SpecBatteryAmperage)]
+        public decimal? BatteryCurrent
         {
-            get => this.GetAttributeValue<string>(Schema.BatteryCurrent);
-            set => this.SetAttribiuteValue(Schema.BatteryCurrent, value);
+            get => this.GetAttributeValue<decimal?>(Schema.SpecBatteryAmperage);
+            set => this.SetAttribiuteValue(Schema.SpecBatteryAmperage, value);
         }
         [AttributeLogicalName(Schema.SynchedOn)]
         public DateTime? SynchedOn
@@ -75,7 +75,12 @@ namespace Hajir.Crm.Entities
             get => this.GetAttributeValue<DateTime?>(Schema.SynchedOn);
             set => this.SetAttribiuteValue(Schema.SynchedOn, value);
         }
-
+        [AttributeLogicalName(Schema.JsonProps)]
+        public string JsonProps
+        {
+            get => this.GetAttributeValue<string>(Schema.JsonProps);
+            set => this.SetAttributeValue(Schema.JsonProps, value);
+        }
         public int GetNumberIfFloors() => int.TryParse(NumberOfFloors, out var _r) ? _r : 0;
 
 

@@ -1,4 +1,5 @@
-﻿using Hajir.Crm.Sales;
+﻿using Hajir.Crm.Blazor.Components.Products;
+using Hajir.Crm.Sales;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using System;
@@ -28,7 +29,7 @@ namespace Hajir.Crm.Blazor.Components.Sales
 
         public async Task Insert(State<SaleQuoteLine> state)
         {
-            var dialog = this.DialogService.Show<BundleDialog>("", new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth=true});
+            var dialog = this.DialogService.Show<AddBundleWizard>("", new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth=true, Position = DialogPosition.TopCenter});
             var result = await dialog.Result;
         }
     }

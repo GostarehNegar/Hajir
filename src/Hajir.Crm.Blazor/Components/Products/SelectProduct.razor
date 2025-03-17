@@ -1,0 +1,23 @@
+﻿@using Hajir.Crm.Products;
+
+<MudAutocomplete T="Product"
+                 Value="this.Product"
+                 ValueChanged="ValueChanged"
+                 SearchFunc="e=>SearchUps(e)"
+                 ToStringFunc="e=>ProductToString(e)"
+                 OnClearButtonClick="ClearUps"
+                 Label="@Label"
+                 Placeholder="@Placeholder"
+                 MaxHeight="160"
+                 OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                 CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
+                      AutoFocus
+                      Immediate
+                      Clearable
+                      ResetValueOnEmptyText
+                      SelectValueOnTab>
+</MudAutocomplete>
+
+@code {
+
+}

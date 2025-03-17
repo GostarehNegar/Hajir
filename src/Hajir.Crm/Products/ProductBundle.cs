@@ -95,13 +95,20 @@ namespace Hajir.Crm.Products
             }
             set
             {
-                var row = this.GetRows(HajirProductEntity.Schema.ProductTypes.UPS).FirstOrDefault();
-                if (row == null)
+                if (value != null)
                 {
-                    this.AddRow(value, 1);
+                    var row = this.GetRows(HajirProductEntity.Schema.ProductTypes.UPS).FirstOrDefault();
+                    if (row == null)
+                    {
+                        this.AddRow(value, 1);
+                    }
+                    else
+                        row.Product = value;
                 }
                 else
-                    row.Product = value;
+                {
+                    this.Remove(HajirCrmConstants.Schema.Product.ProductTypes.UPS);
+                }
             }
         }
 

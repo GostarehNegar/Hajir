@@ -1,0 +1,43 @@
+﻿@inherits BaseComponent<AddBundleWizardState>
+
+<MudDialog>
+
+    <TitleContent>
+        <MudGrid>
+            <MudItem xs="8" Class="pa-1" >
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowRight" OnClick="PrevStep" Class="pa-1"></MudIconButton>
+                <span>@Step </span> <span></span> @State.Value.StepName
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowLeft" OnClick="NextStep" Class="pa-1"></MudIconButton>
+            </MudItem>
+            <MudItem xs="12" Class="pa-1">
+                <MudPaper>
+                    <MudAlert Severity="Severity.Normal" Variant="Variant.Filled" NoIcon="true" Class="my-0">@State.Value.Bundle.Name</MudAlert>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </TitleContent>
+    <DialogContent>
+        @switch (this.Step)
+        {
+            case 4:
+                <AddBundleWizardSNMPStep />
+                break;
+            case 3:
+                <AddBundleWizardCabinetStep />
+                break;
+            case 2:
+                <AddBundleWizardBatteryStep />
+                break;
+
+            default:
+                <AddBundleWizardUPSStep State="@State" />
+                @*<SelectProduct OnSelected="@SelectP" ProductTypes="HajirCrmConstants.Schema.Product.ProductTypes.Battery" />*@
+                break;
+        }
+
+    </DialogContent>
+    <DialogActions>
+
+    </DialogActions>
+
+</MudDialog>

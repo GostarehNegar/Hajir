@@ -12,6 +12,7 @@ using Hajir.Crm;
 using Hajir.Crm.Blazor.ViewModels;
 using Hajir.Crm.Blazor.XrmFrames;
 using Hajir.Crm.Internals;
+using Hajir.Crm.Blazor.Internals;
 
 namespace Hajir.Crm.Blazor
 {
@@ -30,9 +31,11 @@ namespace Hajir.Crm.Blazor
             services.AddScoped<XrmPageHelper>();
             services.AddScoped<XrmFrameAdapter>();
             services.AddScoped<StateManager>()
-                .AddScoped<IStateManager>(sp => sp.GetService<StateManager>());
-            services.AddScoped(typeof(State<>), typeof(State<>));
-            services.AddScoped(typeof(StateCollection<>), typeof(StateCollection<>));
+                .AddScoped<IStateManager>(sp => sp.GetService<StateManager>())
+                .AddScoped<IScopedHostedService>(sp => sp.GetService<StateManager>());
+            services.AddScoped<UserContextContainer>();
+            //services.AddScoped(typeof(State<>), typeof(State<>));
+            //services.AddScoped(typeof(StateCollection<>), typeof(StateCollection<>));
 
             services.AddMudServices();
             return services;
@@ -64,6 +67,12 @@ namespace Hajir.Crm.Blazor
         public static State<T> GetState<T>(this IServiceProvider services, string name = null, Func<State<T>> constructor = null) where T : class, new() =>
             services.GetService<IStateManager>().GetState<T>(name, constructor);
 
+        public static IServiceScope CreateScopeEx(this IServiceProvider service)
+        {
+            var result = service.CreateScope();
+            result.ServiceProvider.GetService<UserContextContainer>().Context = service.GetService<UserContextContainer>().Context;
+            return result;
+        }
     }
 
 

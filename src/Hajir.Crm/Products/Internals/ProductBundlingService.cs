@@ -17,7 +17,14 @@ namespace Hajir.Crm.Products.Internals
             this.productRepository = productRepository;
             this.cache = cache;
         }
-        public IEnumerable<Product> Products => cache.Products;
+
+        public Product FillProperties(Product product)
+        {
+
+            return product;
+        }
+
+        public IEnumerable<Product> Products => cache.Products.Select(x => FillProperties(x));
         public IEnumerable<Product> GetAllUpses()
         {
             return Products

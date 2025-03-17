@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "GN.Library.Parnian": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:50921;http://localhost:50922"
+    }
+  }
+}

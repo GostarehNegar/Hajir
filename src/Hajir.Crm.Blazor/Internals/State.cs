@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,7 +19,7 @@ namespace Hajir.Crm
                 dispose.Invoke();
             }
         }
-
+        private IDisposable linkDisposable;
         public T Value { get; private set; }
         public delegate void StateChanged();
         public event StateChanged OnChanged;
@@ -31,6 +30,7 @@ namespace Hajir.Crm
             OnChanged += _handler;
             return new MyDisposable(() =>
             {
+                this.linkDisposable?.Dispose();
                 OnChanged -= _handler;
             });
         }
@@ -63,6 +63,11 @@ namespace Hajir.Crm
         {
             action?.Invoke(Value);
             SetState(Value);
+        }
+
+        public void Link<TO>(State<TO> state) where TO : class, new()
+        {
+            this.linkDisposable = state.On(x => this.OnChanged?.Invoke());
         }
     }
 
@@ -117,32 +122,5 @@ namespace Hajir.Crm
     public interface IStateManager
     {
         State<T> GetState<T>(string name = null, Func<State<T>> constructor = null) where T : class, new();
-    }
-    internal class StateManager : IStateManager
-    {
-        private ConcurrentDictionary<string, object> items = new ConcurrentDictionary<string, object>();
-        private string GetKey<T>(string name) => typeof(T).FullName + "-" + name ?? "noname";
-        public State<T> GetState<T>(string name = null, Func<State<T>> constructor = null) where T : class, new()
-        {
-            var key = this.GetKey<T>(name);
-            if (items.TryGetValue(key, out var state) && state is State<T> result)
-            {
-                return result;
-            }
-            result = constructor == null
-                ? new State<T>()
-                : constructor();
-            items.TryAdd(key, result);
-            return result;
-        }
-        public State<T> SetState<T>(string name = null, Func<State<T>> constructor = null) where T : class, new()
-        {
-            var key = this.GetKey<T>(name);
-            var result = constructor == null
-                ? new State<T>()
-                : constructor();
-            items.AddOrUpdate(key, result, (a, b) => result);
-            return result;
-        }
     }
 }

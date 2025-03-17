@@ -6,26 +6,16 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using GN.Library;
-using GN.Library.Xrm;
-using GN.Library.Messaging;
 using Microsoft.AspNetCore.Builder;
 using GN.Library.Api;
 using GN.Library.Win32;
 using GN.Library.Win32.Hosting;
 using NLog.Web;
 using System.Reflection;
-using GN.Library.Xrm.Query;
-using GN.Library.Messaging.Chat;
-using GN.Library.Api;
-using GN.Library.CommandLines;
 
 namespace GN.Library.ServerBase
 {
-
-    public class ProgramBase
+    public partial class ProgramBaseEx
     {
         public class RunOptions
         {
@@ -34,16 +24,27 @@ namespace GN.Library.ServerBase
             private List<Assembly> _applicationParts = new List<Assembly>();
 
             public bool NoDefaultUse;
+            public bool NoHttpSupport { get; set; }
+            public string ServiceName { get; set; } = "GN.Dynamic.Service";
+            public string ServiceDescription = "Gostareh Negar Dynamic Service";
+
 
             public Assembly[] ApplicationParts => this._applicationParts.ToArray();
 
             public RunOptions()
             {
+                GN.Library.Api.Extensions.AddLibraryApi(null);
                 this._applicationParts.Add(typeof(GN.Library.Api.Extensions).Assembly);
             }
-            public RunOptions WithNoDefaultUse()
+            public RunOptions WithNoHttpSupport()
             {
-                this.NoDefaultUse = true;
+                this.NoHttpSupport = true;
+                return this;
+            }
+            public RunOptions WithServiceName(string serviceName, string description)
+            {
+                this.ServiceName = serviceName;
+                this.ServiceDescription = description;
                 return this;
             }
             public RunOptions WithServices(Action<IConfiguration, IServiceCollection> cfg)
@@ -74,20 +75,21 @@ namespace GN.Library.ServerBase
                 System.IO.Directory.SetCurrentDirectory(System.AppDomain.CurrentDomain.BaseDirectory);
                 Console.WriteLine($"Current Directory:{System.AppDomain.CurrentDomain.BaseDirectory}");
             }
-            
+
             configure?.Invoke(Options);
             try
             {
 #if (NET461_OR_GREATER)
                 NetCore = false;
                 Console.WriteLine($"NetCore: {NetCore}");
-                //CreateWindowsService(args).Run();
-                CreateHostBuilder(args).Build().UseGNLib().Run();
+                CreateWindowsService(args).Run();
+                //CreateHostBuilder(args).Build().UseGNLib().Run();
                 LibraryConstants.IsNetCore = NetCore;
 #else
                 Console.WriteLine($"NetCore: {NetCore}");
                 LibraryConstants.IsNetCore = NetCore;
-                CreateHostBuilder(args).Build().UseGNLib().Run();
+                //CreateHostBuilder(args).Build().UseGNLib().Run();
+                CreateWindowsService(args).Run();
 #endif
 
             }
@@ -115,41 +117,43 @@ namespace GN.Library.ServerBase
                     NetCore = false;
                     DefaultConfigureServices(c.Configuration, s, args);
                     //_configureServices(c.Configuration, s, args);
+                    if (!Options.NoHttpSupport){
                     var mvc = s.AddMvc();
                     foreach (var asm in Options.ApplicationParts)
                     {
                         mvc.AddApplicationPart(asm);
                     }
+                    }
                 })
                 .Configure(app =>
                 {
-                    //=ConfigureApp(app);
-                    //app.UseUrlsEx();
                     app.UseGNLib();
-                    app.UseStaticFiles();
-                    app.UseMvcWithDefaultRoute();
-                    app.UseSignalREventHub();
+                    if (!Options.NoHttpSupport)
+                    {
+                        app.UseStaticFiles();
+                        app.UseMvcWithDefaultRoute();
+                        //app.UseSignalREventHub();
+                    }
                     Options.ConfigureApp?.Invoke(app);
                     //_appBuilder?.Invoke(app);
                 })
                 .UseNLog()
                 .UseUrlsEx();
         }
-        public static IWindowsServiceHost CreateWindowsService(string[] args)
-        {
-            return WindowsServiceHost.CreateDefaultBuilder(args)
-                .UseWebHostBuilder(CreateHostBuilder(args))
-                .ConfigureWindowsService("GN.Dynamic.Server", "Gostareh Negar Dynamic Server", null)
-                .Build();
-        }
+       
 
 
 #endif
 #if (NETCOREAPP3_0_OR_GREATER)
+
+        public static void TT()
+        {
+            
+        }
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
             .UseDefaultServiceProvider(s => s.ValidateScopes = false)
-            .UseWindowsService()
+            //.UseWindowsService()
                 .ConfigureAppConfiguration(c => ConfigureAppConfiguration(c, args))
                 .ConfigureLogging(logging => ConfigureLogging(logging))
                 .ConfigureWebHostDefaults(cfg =>
@@ -158,19 +162,16 @@ namespace GN.Library.ServerBase
                     cfg.UseNLog();
                     cfg.Configure(app =>
                     {
-                        if (!Options.NoDefaultUse)
+                        if (!Options.NoHttpSupport)
                         {
                             app.UseRouting();
                             app.UseStaticFiles();
-                            //_appBuilder?.Invoke(app);
                             app.UseEndpoints(endpoints =>
                             {
                                 endpoints.MapControllers();
                             });
-                            //Options?.ConfigureApp?.Invoke(app);
-
-                            app.UseSignalREventHub();
-                            app.UseChatService();
+                            //app.UseSignalREventHub();
+                            //app.UseChatService();
                         }
                         Options?.ConfigureApp?.Invoke(app);
                         //ConfigureApp(app);
@@ -182,10 +183,13 @@ namespace GN.Library.ServerBase
                     NetCore = true;
                     DefaultConfigureServices(c.Configuration, s, args);
                     //_configureServices(c.Configuration, s, args);
-                    var ff = s.AddControllers();
-                    foreach (var asm in Options.ApplicationParts ?? new Assembly[] { })
+                    if (!Options.NoHttpSupport)
                     {
-                        ff.AddApplicationPart(asm);
+                        var ff = s.AddControllers();
+                        foreach (var asm in Options.ApplicationParts ?? new Assembly[] { })
+                        {
+                            ff.AddApplicationPart(asm);
+                        }
                     }
                 });
 #endif
@@ -198,22 +202,20 @@ namespace GN.Library.ServerBase
             {
                 cfg.SkipRedis();
             });
-            s.AddLibraryApi();
-
-            s.AddMessagingServices(configuration, cfg => { cfg.Name = AppInfo.Current.Name; });
-            s.AddSignalRTransport(configuration);
+            //s.AddLibraryApi();
+            //s.AddMessagingServices(configuration, cfg => { cfg.Name = AppInfo.Current.Name; });
+            //s.AddSignalRTransport(configuration);
             //s.AddSignalRHub(configuration, cfg => { });
-            s.AddSignalRHub(configuration, cfg => { });
-            s.AddXrmServices(configuration, cfg =>
-            {
-                //cfg.AddXrmMessageBus = false;
-                cfg.ConnectionOptions = NetCore ? ConnectionOptions.WebAPI : ConnectionOptions.OrganizationService;
-            });
-            s.AddXrmDbQueryService(configuration, opt => { });
-            s.AddChat(configuration, cfg => { });
+            //s.AddXrmServices(configuration, cfg =>
+            //{
+            //    cfg.ConnectionOptions = NetCore ? ConnectionOptions.WebAPI : ConnectionOptions.OrganizationService;
+            //});
+            //s.AddXrmDbQueryService(configuration, opt => { });
+            //s.AddChat(configuration, cfg => { });
             Options.ConfigureServices?.Invoke(configuration, s);
             //_configureServices(configuration, s);
         }
+        
         public static void ConfigureAppConfiguration(IConfigurationBuilder c, string[] args)
         {
             var configFile = "appsettings.json";
@@ -249,16 +251,25 @@ namespace GN.Library.ServerBase
 
         {
             logging.ClearProviders();
+            logging.AddConsole();
+        }
+        public static IWindowsServiceHost CreateWindowsService(string[] args)
+        {
+
+            return WindowsServiceHost.CreateDefaultBuilder(args)
+                .UseWebHostBuilder(CreateHostBuilder(args))
+                .ConfigureWindowsService(Options.ServiceName, Options.ServiceDescription, null)
+                .Build();
         }
         public static NLog.LogFactory ConfigureNLog(string[] args, IConfiguration configuration)
         {
             NLog.LogFactory result = null;
             var ffname = Path.GetFileNameWithoutExtension(Environment.GetCommandLineArgs()[0]);
-            var name = configuration["name"] ?? configuration["applicationName"];
+            var name = configuration["name"];// ?? configuration["applicationName"];
             name = string.IsNullOrWhiteSpace(name)
                 ? Path.GetFileNameWithoutExtension(Environment.GetCommandLineArgs()[0])
                 : name;
-            var folder = Path.Combine(Path.GetDirectoryName(typeof(ProgramBase).Assembly.Location), "logs");
+            var folder = Path.Combine(Path.GetDirectoryName(typeof(ProgramBaseEx).Assembly.Location), "logs");
             var default_layout = "${longdate}|${uppercase:${level}}|${logger}::: ${message} ${exception:format=tostring}";
             string getFileName(string n)
             {
@@ -286,7 +297,7 @@ namespace GN.Library.ServerBase
                 });
                 config.AddRule(NLog.LogLevel.Trace, NLog.LogLevel.Fatal, "trace");
                 config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, "info");
-                config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, "console");
+                //config.AddRule(NLog.LogLevel.Info, NLog.LogLevel.Fatal, "console");
                 result = NLog.Web.NLogBuilder.ConfigureNLog(config);
                 Console.WriteLine($"NLog Configured. FileName:'{getFileName("")}'");
                 return result;
@@ -301,5 +312,7 @@ namespace GN.Library.ServerBase
 
         }
 
+
     }
+
 }

@@ -16,11 +16,13 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
     {
         private readonly IXrmDataServices dataServices;
         private readonly ILogger<XrmProductRepository> logger;
+        private readonly IServiceProvider serviceProvider;
 
-        public XrmProductRepository(IXrmDataServices dataServices, ILogger<XrmProductRepository> logger)
+        public XrmProductRepository(IXrmDataServices dataServices, ILogger<XrmProductRepository> logger, IServiceProvider serviceProvider)
         {
             this.dataServices = dataServices;
             this.logger = logger;
+            this.serviceProvider = serviceProvider;
         }
         public XrmHajirProduct GetXrmProcuct(string id)
         {
@@ -45,7 +47,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 
         public Product GetProductById(string id)
         {
-            return GetXrmProcuct(id)?.ToProduct();
+            return GetXrmProcuct(id)?.ToProduct(this.serviceProvider);
 
         }
 
@@ -90,7 +92,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                     .Where(x => x.StatusCode ==(int) GN.Library.LibraryConstants.Schema.Product.StatusCodes.Active)
                     .SKIP(skip)
                     .Take(take).ToArray();
-                result.AddRange(items.Select(x => Fix(x).ToProduct()));
+                result.AddRange(items.Select(x => Fix(x).ToProduct(this.serviceProvider)));
                 fin = items.Length < take;
                 skip += take;
             }
