@@ -9,7 +9,7 @@
                 <span>@Step </span> <span></span> @State.Value.StepName
                 <MudIconButton Icon="@Icons.Material.Filled.ArrowLeft" OnClick="NextStep" Class="pa-1"></MudIconButton>
             </MudItem>
-            <MudItem xs="12" Class="pa-1">
+            <MudItem xs="12" Class="pa-1" style="direction:rtl">
                 <MudPaper>
                     <MudAlert Severity="Severity.Normal" Variant="Variant.Filled" NoIcon="true" Class="my-0">@State.Value.Bundle.Name</MudAlert>
                 </MudPaper>
@@ -23,10 +23,10 @@
                 <AddBundleWizardSNMPStep />
                 break;
             case 3:
-                <AddBundleWizardCabinetStep />
+                <AddBundleWizardCabinetStep State="State" />
                 break;
             case 2:
-                <AddBundleWizardBatteryStep />
+                <AddBundleWizardBatteryStep State="State" />
                 break;
 
             default:
@@ -37,7 +37,10 @@
 
     </DialogContent>
     <DialogActions>
-
+        <div class="actions-container">
+            <MudButton Variant="Variant.Filled" OnClick="AddAsBundle">افزودن به صورت باندل</MudButton>
+            <MudButton Color="Color.Error" >Cancel</MudButton>
+        </div>
     </DialogActions>
 
 </MudDialog>

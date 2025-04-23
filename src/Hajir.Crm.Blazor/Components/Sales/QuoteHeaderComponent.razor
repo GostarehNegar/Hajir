@@ -6,10 +6,11 @@
         <MudGrid>
             <MudItem xs="12">
                 <MudAutocomplete T="SaleAccount" Label="خریدار" @bind-Value="Value.Customer" @ondblclick="CustomerDblClick"
-                                 SearchFunc="@Search1" Variant="Variant.Outlined" ShowProgressIndicator="true" />
+                                 SearchFunc="@Search1" Variant="Variant.Outlined" ShowProgressIndicator="true" Dense="true" />
             </MudItem>
             <MudItem xs="12">
-                <MudAutocomplete T="SaleContact" Label="شخص" @bind-Value="Value.Contact" SearchFunc="@SearchContact" Variant="Variant.Outlined" ShowProgressIndicator="true" />
+                <MudAutocomplete T="SaleContact" Label="شخص" Dense="true"
+                @bind-Value="Value.Contact" SearchFunc="@SearchContact" Variant="Variant.Outlined" ShowProgressIndicator="true" />
             </MudItem>
             <MudItem xs="12">
                 <MudAutocomplete T="PriceList" Label="لیست قیمت" @bind-Value="Value.PriceList" SearchFunc="@SearchPriceList" Variant="Variant.Outlined" ShowProgressIndicator="true" />
@@ -20,7 +21,7 @@
     <MudItem xs="4">
         <MudGrid>
             <MudItem xs="12">
-                <MudTextField T="string" Label="شماره " Text="@Value.QuoteNumber" style="direction:ltr;font-family:Arial" Disabled="true"></MudTextField>
+                <MudTextField  T="string" Label="شماره " Text="@Value.QuoteNumber" style="direction:ltr;font-family:Arial" Disabled="true"></MudTextField>
             </MudItem>
             <MudItem xs="6">
                 <MudDatePicker Label="تاریخ اعتبار" @bind-Date="Value.ExpirationDate" Culture="@GetPersianCulture()" />

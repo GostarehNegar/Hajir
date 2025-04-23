@@ -131,7 +131,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 .GetRepository<XrmHajirProduct>()
                 .Queryable
                 .FirstOrDefault(x => x.ProductNumber == productNamber);
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(ds.Properties);
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(ds);
             if (product != null)
             {
                 bool update = false;

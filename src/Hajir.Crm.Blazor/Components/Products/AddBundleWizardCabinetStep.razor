@@ -1,8 +1,62 @@
-﻿
+﻿@inherits BaseComponent<AddBundleWizardState>
 <MudGrid>
     <MudItem xs="12">
-        <SelectProduct ProductTypes="HajirCrmConstants.Schema.Product.ProductTypes.Cabinet"/>
+        <MudGrid>
+
+            <MudItem xs="6">
+                <MudStack Row="true">
+                    <MudText Typo="Typo.caption">
+                        <SelectProduct Product="Cabinet"
+                                       ProductTypes="HajirCrmConstants.Schema.Product.ProductTypes.Cabinet"
+                                       Small="true"
+                                       Placeholder="کابینت"
+                                       OnSelected="SelectCabinet" />
+                    </MudText>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="AddCabinet">Add  </MudButton>
+
+                </MudStack>
+
+            </MudItem>
+
+            <MudItem xs="6">
+                <MudStack Row="true">
+                    <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="ApplyDesign">انتخاب این طرح  </MudButton>
+                   
+
+                    <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="Design">Suggest  </MudButton>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="ClearDesign">پاک شود  </MudButton>
+
+                    <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="NextDesign">قبلی  </MudButton>
+                    @*<MudText> طرح @(_currentDesign + 1) از @Designs.Count</MudText>*@
+                    <MudButton Variant="Variant.Outlined" Color="Color.Info" Size="Size.Small" OnClick="NextDesign">بعدی  </MudButton>
+                    
+                </MudStack>
+            </MudItem>
+        </MudGrid>
+
     </MudItem>
+    <MudItem xs="12">
+
+        @if (this.CurrentDesing != null && this.CurrentDesing.Capacity > 0)
+        {
+            <div class="bundle-container">
+                @*<div style="font-weight:bold">Design #@(i+1)</div>*@
+                <CabinetsComponent Cabinets=@this.CurrentDesing></CabinetsComponent>
+            </div>
+        }
+        else
+        {
+            <div>
+                <MudPaper>
+                    <MudText Align="Align.Center" Typo="Typo.h4">
+                        لطفا کابینت را اضافه کنید.
+                    </MudText>
+                </MudPaper>
+
+            </div>
+        }
+    </MudItem>
+
 </MudGrid>
 @code {
 

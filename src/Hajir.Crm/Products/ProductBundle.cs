@@ -1,5 +1,6 @@
 ﻿using Hajir.Crm.Entities;
 using Microsoft.Crm.Sdk.Messages;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,12 +80,38 @@ namespace Hajir.Crm.Products
             return result;
         }
 
+        
+        public void SetBattery(Product battery, int count)
+        {
+            if (battery != null)
+            {
+                var row = this.GetRows(HajirProductEntity.Schema.ProductTypes.Battery).FirstOrDefault();
+                if (row == null)
+                {
+                    this.AddRow(battery, count);
+                }
+                else
+                {
+                    row.Product = battery;
+                    row.Quantity = count;
+                }
+            }
+            else
+            {
+                this.Remove(HajirCrmConstants.Schema.Product.ProductTypes.Battery);
+            }
+        }
+
+        public int? BatteryCount => this.GetRows(HajirProductEntity.Schema.ProductTypes.Battery).FirstOrDefault()?.Quantity;
+
+
         public Product Battery
         {
             get
             {
                 return this.GetRows(HajirProductEntity.Schema.ProductTypes.Battery).FirstOrDefault()?.Product;
             }
+            
         }
 
         public Product UPS
@@ -156,6 +183,7 @@ namespace Hajir.Crm.Products
             return this;
         }
 
+        public IEnumerable<BundleRow> Cabinets=> this.GetRows(HajirCrmConstants.Schema.Product.ProductTypes.Cabinet);
         public CabinetSet GetDesign(bool refersh = false)
         {
             if (this._design == null || refersh)

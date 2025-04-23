@@ -40,9 +40,15 @@ namespace Hajir.Crm.Infrastructure.Xrm
             result.ProductSeries = product.ProductSerie ?? HajirProductEntity.Schema.ProductSeries.UNKOWN;
             result.UOMId = product.GetAttributeValue<EntityReference>("defaultuomid")?.Id.ToString();
             result.SupportedBattries = product.SupportedBatteries;
-            result.NumberOfRows = product.GetNumberIfFloors();
+            //result.NumberOfRows = product.GetNumberIfFloors();
             result.Vendor = CabinetVendors.Hajir;
-            result.BatteryPower = int.TryParse(product.BatteryCurrent?.ToString(), out var p) ? p : 0;
+            //result.BatteryPower = int.TryParse(product.BatteryCurrent?.ToString(), out var p) ? p : 0;
+
+
+            /// Get Datasheet
+
+
+
             return result;
         }
         public static IntegrationProduct ToIntegrationProduct(this XrmHajirProduct product)
@@ -114,6 +120,7 @@ namespace Hajir.Crm.Infrastructure.Xrm
             {
                 res.QuoteDetailId = _quote_detail_id;
             }
+            res.ParentBundleId = Guid.TryParse(line.ParentBundleId, out var _p) ? _p : (Guid?)null;
             var _ProductId = Guid.TryParse(line.ProductId, out var _pid) ? _pid : (Guid?)null;
             if (_ProductId.HasValue)
             {

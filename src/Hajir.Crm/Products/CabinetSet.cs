@@ -64,6 +64,11 @@ namespace Hajir.Crm.Products
         {
             return Cabinets.OrderByDescending(x => x.Free).FirstOrDefault();
         }
+        public void ClearAll()
+        {
+            this.Cabinets = new List<Cabinet>();
+           
+        }
         public void Clear()
         {
             Cabinets.ToList().ForEach(x => x.Clear());
@@ -150,7 +155,7 @@ namespace Hajir.Crm.Products
 
         public bool IsSame(CabinetSet other)
         {
-            return false;
+            //return false;
             if (other == null) return false;
             if (Capacity != other.Capacity) return false;
             if (Cabinets.Count() != other.Cabinets.Count()) return false;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Hajir.Crm.Products
 {
@@ -28,10 +29,48 @@ namespace Hajir.Crm.Products
         public HajirProductEntity.Schema.ProductSeries ProductSeries { get; set; }
         public string SupportedBattries { get; set; }
         public IEnumerable<BatterySpec> GetSupportedBatteryConfig() => BatterySpec.ParseCollection(SupportedBattries);
-        public int BatteryPower { get; set; }
-        public CabinetVendors Vendor { get; set; }
+        public int BatteryPower
+        {
+            get
+            {
+                var result = this.GetAttributeValue<decimal?>(Schema.SpecBatteryAmperage);
+                if (result.HasValue) return Convert.ToInt32(result.Value);
 
-        public int NumberOfRows { get; set; }
+                var power = HajirUtils.Instance.GetBatteryPowerFromName(Name);
+                if (power.HasValue)
+                {
+                    return Convert.ToInt32(power.Value);
+                }
+
+                return 0;
+            }
+            set
+            {
+                this.SetAttributeValue(Schema.SpecBatteryAmperage, value == null ? (decimal?)null : Convert.ToDecimal(value));
+
+
+
+            }
+        }
+        public CabinetVendors Vendor { get {
+
+                return this.Name != null && this.Name.Contains("پیلتن") ? CabinetVendors.Piltan : CabinetVendors.Hajir;
+            } set { } }
+
+        public int NumberOfRows
+        {
+            get
+            {
+                var result = this.GetAttributeValue<int?>(Schema.CabinetNumberOfFloors);
+                if (result.HasValue)
+                    return result.Value;
+                return HajirUtils.Instance.GetCabinetFloorsFromName(this.Name) ?? 0;
+            }
+            set
+            {
+                this.SetAttributeValue(Schema.CabinetNumberOfFloors, value);
+            }
+        }
         public CabinetSpec GetCabintSpec(int power)
         {
             /// 

@@ -20,6 +20,8 @@ namespace Hajir.Crm.Blazor.Components.Products
         public string Label { get; set; }
         [Parameter]
         public string Placeholder { get; set; }
+        [Parameter]
+        public bool Small { get; set; }
 
         public IProductBundlingService BundlingService => this.ServiceProvider.GetService<IProductBundlingService>();
 
@@ -34,16 +36,26 @@ namespace Hajir.Crm.Blazor.Components.Products
         {
             this.OnSelected?.Invoke(product);
         }
+        public string GetClass()
+        {
+            return this.Small? "my-control1":"";
+
+        }
         public async Task<IEnumerable<Product>> SearchUps(string e)
         {
             var items = BundlingService.Products
-                    .Where(x => x.ProductType == this.ProductTypes);
+                    .Where(x => this.ProductTypes==null || x.ProductType == this.ProductTypes);
 
             if (!string.IsNullOrWhiteSpace(e))
             {
-                return items
-                    .Where(x => x.Name.ToLower().Contains(e.ToLower()))
-                    .ToArray();
+
+                var searchitems = e?.ToLowerInvariant().Split(' ');
+                var q = items;
+                foreach (var sitem in e?.ToLowerInvariant().Split(' '))
+                {
+                    q = q.Where(x => x.Name.ToLower().Contains(sitem.ToLower()));
+                }
+                return q.ToArray();
 
             }
             return items;

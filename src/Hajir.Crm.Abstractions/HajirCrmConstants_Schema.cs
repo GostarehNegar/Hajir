@@ -24,7 +24,7 @@ namespace Hajir.Crm
                 public const string TypeProducts_deprecated = "rhs_typeproducts";
                 public const string ProductSerie = "rhs_productseries";
                 public const string SpecSupportedBatteries = SolutionPerfix + "spec_ups_supported_batteries";
-                public const string NumberOfFloors = "rhs_numberoffloors";
+                public const string CabinetNumberOfFloors = "spec_cabinet_rows";
                 public const string SpecBatteryAmperage = SolutionPerfix + "spec_batterty_amperage";
                 //public const string ProductCategoryCode = SolutionPerfix + "categorycode";
                 public const string SynchedOn = SolutionPerfix + "synchedon";

@@ -8,8 +8,9 @@ namespace Hajir.Crm.Blazor.ViewModels
 {
     public class ErrorModel
     {
-        public Exception Error { get;set; }
-        public bool HasError=> Error!=null;
-        public void Clear()=> this.Error = null;
+        public Exception Error { get; set; }
+        public bool HasError => Error != null;
+        public void Clear() => this.Error = null;
     }
+   
 }

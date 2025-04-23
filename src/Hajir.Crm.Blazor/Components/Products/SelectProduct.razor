@@ -6,9 +6,13 @@
                  SearchFunc="e=>SearchUps(e)"
                  ToStringFunc="e=>ProductToString(e)"
                  OnClearButtonClick="ClearUps"
+                 Lines="2"
                  Label="@Label"
                  Placeholder="@Placeholder"
+                 Class="@GetClass()"
+                 MaxItems="10"
                  MaxHeight="160"
+                 FullWidth="true"
                  OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
                  CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
                       AutoFocus
@@ -21,3 +25,22 @@
 @code {
 
 }
+<style>
+    .my-control1 {
+        margin-top: 0px;
+    }
+
+        .my-control1 > .mud-input-control-input-container > div.mud-input.mud-input-text {
+            margin-top: 0px;
+        }
+
+        .my-control1 .mud-input {
+            font-size: 0.8rem;
+        }
+    /* text of the control */
+
+    .my-popover1 .mud-typography-body1 {
+        font-size: 0.8rem;
+    }
+    /* elements in the control list */
+</style>

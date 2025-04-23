@@ -56,5 +56,20 @@ namespace Hajir.Crm
         {
            
         }
+
+        public T GetStateEx<T>(string name = null, Func<T> constructor = null) where T : State<T>, new()
+        {
+            var key = this.GetKey<T>(name);
+            if (items.TryGetValue(key, out var state) && state is T result)
+            {
+                return result;
+            }
+            result = constructor == null
+                ? new T()
+                : constructor();
+            items.TryAdd(key, result);
+            return result;
+            
+        }
     }
 }

@@ -65,7 +65,7 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
                : new SaleQuote();
             if (id.HasValue && sale.Lines == null || sale.Lines.Count() == 0)
             {
-                sale.AddLine(null);
+                //sale.AddLine(null);
             }
             return new State<SaleQuote>(sale);
         }

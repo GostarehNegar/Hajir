@@ -5,6 +5,7 @@ using GN.Library.Xrm.StdSolution;
 using Hajir.Crm.Common;
 using Hajir.Crm.Sales;
 using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -109,7 +110,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             {
                 ProductId = x.ProductId?.ToString(),
                 Quantity = Convert.ToDecimal((x.Quantity ?? 0)),
-                AggregateId = x.AggregateProductId?.ToString(),
+                ParentBundleId = x.AggregateProductId?.ToString(),
                 Id = x.Id.ToString(),
                 Name = this.cache.Products.FirstOrDefault(p => p.Id == x.ProductId?.ToString())?.Name,
                 PricePerUnit = x.PricePerUnit,
@@ -169,7 +170,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                     //});
                     var pl = cache.PriceLists.FirstOrDefault(x => x.Id == xrm_quote.PriceLevelId?.ToString());
 
-                    quote = new SaleQuote(xrm_quote.QuoteId.ToString(), xrm_quote.QuoteNumber, lines,  pl);
+                    quote = new SaleQuote(xrm_quote.QuoteId.ToString(), xrm_quote.QuoteNumber, lines, pl);
                     quote.PyamentDeadline = xrm_quote.PaymentDeadLine;
                     quote.IsOfficial = xrm_quote.QuoteType;
                     quote.ExpirationDate = xrm_quote.ExpiresOn;
@@ -220,7 +221,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             var id = this.dataServices
                 .GetRepository<XrmHajirQuote>()
                 .Queryable
-                .FirstOrDefault(x => x.HajirQuoteId == quoteNumber)
+                .FirstOrDefault(x => x.QuoteNumber == quoteNumber)
                 ?.Id;
             if (!id.HasValue)
             {
@@ -285,16 +286,52 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 
         public async Task<SaleQuoteLine> SaveLine(SaleQuoteLine line)
         {
-           
+
+            await Task.CompletedTask;
 
             var l = line.ToXrmQuoteDetail();
-
             l.IsProductOverridden = l.ProductId == null;
-            var _id = this.dataServices
+            if (!l.IsProductOverridden ?? false)
+            {
+                l.UnitOfMeasureId = Guid.TryParse(this.cache.UnitOfMeasurements.FirstOrDefault()?.Id, out var _v) ? _v : (Guid?)null;
+            }
+
+
+            var existing = l.Id == Guid.Empty ? null : this.dataServices.GetRepository<XrmHajirQuoteDetail>()
+                .Queryable
+                .FirstOrDefault(x => x.QuoteDetailId == l.Id);
+
+
+            if (existing != null)
+            {
+                this.dataServices
                 .GetRepository<XrmHajirQuoteDetail>()
-                .Upsert(l);
-            await Task.CompletedTask;
-            line.Id = _id.ToString();
+                .Update(l);
+            }
+            else
+            {
+                Guid? _save_parent = null;
+                if (l.ParentBundleId == l.Id)
+                {
+                    _save_parent = l.ParentBundleId;
+                    l.ParentBundleId = null;
+                }
+                line.Id = this.dataServices
+                    .GetRepository<XrmHajirQuoteDetail>()
+                    .Insert(l).ToString();
+                if (_save_parent.HasValue)
+                {
+                    this.dataServices
+                        .GetRepository<XrmHajirQuoteDetail>()
+                        .Update(new XrmHajirQuoteDetail
+                        {
+                            QuoteDetailId = Guid.Parse(line.Id),
+                            ParentBundleId = _save_parent
+                        });
+
+                }
+
+            }
             return line;
         }
 

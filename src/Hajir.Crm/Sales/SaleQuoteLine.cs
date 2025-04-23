@@ -11,7 +11,7 @@ namespace Hajir.Crm.Sales
         public string Id { get; set; }
         public string QuoteId { get; set; }
         public string ProductId { get; set; }
-        public string AggregateId { get; set; }
+        public string ParentBundleId { get; set; }
         public decimal? Quantity { get; set; }
         public decimal? PricePerUnit { get; set; }
         public string Name { get; set; }
@@ -24,6 +24,25 @@ namespace Hajir.Crm.Sales
         public int? PercentTax { get; set; }
         public bool IsProductOverriden => string.IsNullOrWhiteSpace(ProductId);
         public bool IsBlank => string.IsNullOrWhiteSpace(Name) && string.IsNullOrEmpty(ProductId);
+        public bool IsParentBundle => this.Id == this.ParentBundleId && !string.IsNullOrWhiteSpace(this.Id);
+        public bool IsFree => false;
+        public bool Edit { get; set; }
+
+        ////private List<SaleQuoteLine> bundleLines = new List<SaleQuoteLine>();
+        //public SaleQuoteLine ClearBundleLines()
+        //{
+        //    bundleLines = new List<SaleQuoteLine>();
+        //    return this;
+        //}
+        //public SaleQuoteLine AddBundleLine(SaleQuoteLine line)
+        //{
+        //    this.bundleLines.Add(line);
+        //    return this;
+        //}
+        //public IEnumerable<SaleQuoteLine> BundleLines => this.bundleLines;
+
+
+
 
         public void Recalculate()
         {
@@ -39,5 +58,7 @@ namespace Hajir.Crm.Sales
             ExtendedAmount = BaseAmount + (Tax ?? 0) - (Discount ?? 0);
 
         }
+   
+        
     }
 }

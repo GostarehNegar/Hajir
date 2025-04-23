@@ -33,5 +33,6 @@ namespace Hajir.Crm
 
             return good != null && SynchableProductTypes.Contains(good.GetProdcutType() ?? HajirCrmConstants.Schema.Product.ProductTypes.Other);
         }
+       
     }
 }

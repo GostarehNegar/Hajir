@@ -130,7 +130,7 @@ namespace Hajir.Crm.Products.Internals
 
         public CabinetSet[] Design(Product UPS, int power, int numberOfBatteries, CabinetVendors vendor, IEnumerable<Product> cabinets = null)
         {
-            var _cabinets = (cabinets ?? GetAllCabinets()).Where(x => x.Vendor == vendor).ToArray();
+            var _cabinets = (cabinets ?? GetAllCabinets()).Where(x => x.Vendor == vendor && x.NumberOfRows>0).ToArray();
             //var power = Battery.BatteryPower;
             /// Get the largest cabinet;
             /// 

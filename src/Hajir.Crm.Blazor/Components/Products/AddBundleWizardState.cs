@@ -30,5 +30,7 @@ namespace Hajir.Crm.Blazor.Components.Products
                 }
             }
         }
+   
+        
     }
 }

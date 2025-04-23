@@ -1,6 +1,8 @@
 ﻿using Hajir.Crm.Blazor.Components.Products;
+using Hajir.Crm.Products;
 using Hajir.Crm.Sales;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
@@ -14,10 +16,17 @@ namespace Hajir.Crm.Blazor.Components.Sales
     {
         [Parameter]
         public QuoteProductsViewModes ViewMode { get; set; } = QuoteProductsViewModes.Block;
+
+        [Parameter]
+        public State<SaleQuote> Quote { get; set; }
+
         [Inject]
         public IDialogService DialogService { get; set; }
 
-        
+        protected override void OnParametersSet()
+        {
+            base.OnParametersSet();
+        }
         void Recalculate()
         {
             this.Value.Recalculate();
@@ -27,10 +36,36 @@ namespace Hajir.Crm.Blazor.Components.Sales
         public bool ITaxDisabled => this.Value.PercentTax.HasValue;
         public IMask mask = new PatternMask("###,###");
 
+        public async Task Edit()
+        {
+            this.State.SetState(x => x.Edit = true);
+        }
+        public async Task Save()
+        {
+            this.State.SetState(x => x.Edit = false);
+        }
+        public async Task Delete()
+        {
+            this.Quote.SetState(q => q.RemoveLine(this.Value));
+            //this.Quote.Value.RemoveLine(this.State.Value);
+
+        }
         public async Task Insert(State<SaleQuoteLine> state)
         {
             var dialog = this.DialogService.Show<AddBundleWizard>("", new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth=true, Position = DialogPosition.TopCenter});
             var result = await dialog.Result;
+            var quote = this.Quote.Value;
+            if (!result.Canceled && result.Data!=null && result.Data is ProductBundle bundle)
+            {
+                //quote.AddBundle(bundle);
+                this.Quote.SetState(q => {
+                    q.AddBundle(bundle);
+                    this.ServiceProvider.CreateHajirServiceContext().RecalculateQuote(quote);
+                });
+
+            }
+            
+            
         }
     }
 }

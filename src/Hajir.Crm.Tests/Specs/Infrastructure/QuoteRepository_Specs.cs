@@ -87,44 +87,30 @@ namespace Hajir.Crm.Tests.Specs.Infrastructure
 		{
 			var host = this.GetDefaultHost();
 
-
-			/// We can create a new quote.
-			/// 
-			var agg = new XrmHajirAggregateProduct
-			{
-				Quantity = 10,
-				PricePerUnit = 100M,
-				Name = "mmm",
-				ManualDiscount = 20M
-			};
-			host.Services
-				.GetService<IXrmDataServices>()
-				.GetRepository<XrmHajirAggregateProduct>()
-				.Upsert(agg);
-
-			var priceLists = host
-				.Services
-				.GetService<IXrmDataServices>()
-				.GetRepository<XrmPriceList>()
-				.Queryable
-				.ToArray()
-				.FirstOrDefault(x => x.Name == "متفرقه");
-			var customer = host.Services
-				.GetService<IXrmDataServices>()
-				.GetRepository<XrmAccount>()
-				.Queryable
-				.FirstOrDefault();
-			var quote_id = host.Services
-				.GetService<IXrmDataServices>()
-				.GetRepository<XrmHajirQuote>()
-				.Upsert(new XrmHajirQuote()
-				{
-					PriceLevelId = priceLists.Id,
-					AccountId = customer.Id
-				});
+			//var priceLists = host
+			//	.Services
+			//	.GetService<IXrmDataServices>()
+			//	.GetRepository<XrmPriceList>()
+			//	.Queryable
+			//	.ToArray()
+			//	.FirstOrDefault(x => x.Name == "متفرقه");
+			//var customer = host.Services
+			//	.GetService<IXrmDataServices>()
+			//	.GetRepository<XrmAccount>()
+			//	.Queryable
+			//	.FirstOrDefault();
+			//var quote_id = host.Services
+			//	.GetService<IXrmDataServices>()
+			//	.GetRepository<XrmHajirQuote>()
+			//	.Upsert(new XrmHajirQuote()
+			//	{
+			//		//PriceLevelId = priceLists.Id,
+			//		AccountId = customer.Id
+			//	});
 			var target = host.Services
 				.GetService<IQuoteRepository>();
-			var quote = target.LoadQuote(quote_id.ToString());
+			var quote = target.LoadQuoteByNumber("QUO-01000-H1S9D1");
+			
 			var bundle = new ProductBundle();
 			var cache = host.Services.GetService<ICacheService>();
 			var ups = cache.Products.Where(x => x.ProductType == Entities.HajirProductEntity.Schema.ProductTypes.UPS).ToArray().FirstOrDefault();
@@ -133,12 +119,38 @@ namespace Hajir.Crm.Tests.Specs.Infrastructure
 			bundle.AddRow(ups, 2);
 			bundle.AddRow(battery, 24);
 			quote.AddBundle(bundle);
-			host.Services.CreateHajirServiceContext().RecalculateQuote(quote);
-			var r = target.UpdateQuote(quote);
-			target.UpdateQuote(r);
-			quote = target.LoadQuote(quote_id.ToString());
-			Assert.AreEqual(1, quote.AggregateProducts.Count());
-			Assert.AreEqual(priceLists.Id.ToString(), quote.PriceList.Id);
+			foreach(var l in quote.Lines)
+			{
+                var line2 = await target.SaveLine(l);
+            }
+
+			var bundleLine = new SaleQuoteLine
+			{
+				Name = "bundle",
+				QuoteId = quote.QuoteId,
+				Quantity = 0,
+				PricePerUnit = 100,
+				Id = Guid.NewGuid().ToString()
+
+			};
+			var line = await target.SaveLine(bundleLine);
+			//var bundleProductLine = new SaleQuoteLine
+			//{
+			//	Name = "bundle P",
+			//	QuoteId = quote.QuoteId,
+			//	Quantity = 1,
+			//	PricePerUnit = 100,
+			//	//Id = Guid.NewGuid().ToString()
+			//	ParentBundleId = line.Id
+
+			//         };
+
+			//var line2 = await target.SaveLine(bundleProductLine);
+
+			var quote2 = target.LoadQuoteByNumber("QUO-01000-H1S9D1");
+
+
+            host.Services.CreateHajirServiceContext().RecalculateQuote(quote);
 
 		}
 

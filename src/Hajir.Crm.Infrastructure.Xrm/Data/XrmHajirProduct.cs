@@ -56,11 +56,11 @@ namespace Hajir.Crm.Entities
             set => this.SetAttribiuteValue(Schema.SpecSupportedBatteries, value);
         }
 
-        [AttributeLogicalName(Schema.NumberOfFloors)]
-        public string NumberOfFloors
+        [AttributeLogicalName(Schema.CabinetNumberOfFloors)]
+        public int? NumberOfFloors
         {
-            get => this.GetAttributeValue<string>(Schema.NumberOfFloors);
-            set => this.SetAttribiuteValue(Schema.NumberOfFloors, value);
+            get => this.GetAttributeValue<int?>(Schema.CabinetNumberOfFloors);
+            set => this.SetAttribiuteValue(Schema.CabinetNumberOfFloors, value);
         }
 
         [AttributeLogicalName(Schema.SpecBatteryAmperage)]
@@ -81,7 +81,8 @@ namespace Hajir.Crm.Entities
             get => this.GetAttributeValue<string>(Schema.JsonProps);
             set => this.SetAttributeValue(Schema.JsonProps, value);
         }
-        public int GetNumberIfFloors() => int.TryParse(NumberOfFloors, out var _r) ? _r : 0;
+        
+
 
 
 

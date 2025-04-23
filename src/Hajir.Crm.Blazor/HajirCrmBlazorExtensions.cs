@@ -67,6 +67,12 @@ namespace Hajir.Crm.Blazor
         public static State<T> GetState<T>(this IServiceProvider services, string name = null, Func<State<T>> constructor = null) where T : class, new() =>
             services.GetService<IStateManager>().GetState<T>(name, constructor);
 
+        public static T GetStateEx<T>(this IServiceProvider services, string name = null, Func<T> constructor = null) where T : State<T>, new()
+        {
+            var res = services.GetService<IStateManager>().GetStateEx<T>(name, constructor);
+            
+            return res;
+        }
         public static IServiceScope CreateScopeEx(this IServiceProvider service)
         {
             var result = service.CreateScope();

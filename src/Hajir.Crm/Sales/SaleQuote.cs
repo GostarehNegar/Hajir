@@ -64,10 +64,24 @@ namespace Hajir.Crm.Sales
         {
             _lines = new List<SaleQuoteLine>();
         }
+        public string[] GetBundleIds()
+        {
+            return this._lines
+                .GroupBy(x => x.ParentBundleId)
+                .Select(x => x.Key)
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .ToArray();
+        }
+        public SaleQuoteLine[] GetBundle(string id)
+        {
+            return this._lines.Where(x => x.ParentBundleId == id).ToArray();
+        }
         public SaleQuote AddLine(SaleQuoteLine line)
         {
             //line = line ?? new SaleQuoteLine();
-            _lines.Add(line ?? new SaleQuoteLine());
+            var l = line ?? new SaleQuoteLine();
+            l.QuoteId = this.QuoteId;
+            _lines.Add(l);
             return this;
         }
         public SaleQuote RemoveLine(SaleQuoteLine line)
@@ -87,6 +101,30 @@ namespace Hajir.Crm.Sales
 
         public void AddBundle(ProductBundle bundle, int quantity = 1, decimal manualDiscount = 0M)
         {
+            var bundleId = Guid.NewGuid().ToString();
+            // Add Parent Bundle
+            var bundleProduct = new SaleQuoteLine
+            {
+                ParentBundleId = bundleId,
+                Name = bundle.Name,
+                Quantity = 0,
+                PricePerUnit = 1000,
+                //IsParentBundle = true,
+                Id = bundleId,
+                QuoteId = this.QuoteId
+            };
+            this.AddLine(bundleProduct);
+            
+
+            foreach (var r in bundle.Rows)
+            {
+                //var uom = r.Product.DefaultUomId;
+                var l = new SaleQuoteLine { ProductId = r.Product.Id, Quantity = r.Quantity, Name = r.Product.Name, ParentBundleId = bundleId };
+                this.AddLine(l);
+                //bundleProduct.AddBundleLine(l);
+            }
+            return;
+
             var ag_product = new SaleAggergateProduct()
             {
                 Quantity = quantity,

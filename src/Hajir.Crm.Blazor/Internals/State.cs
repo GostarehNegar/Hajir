@@ -122,5 +122,7 @@ namespace Hajir.Crm
     public interface IStateManager
     {
         State<T> GetState<T>(string name = null, Func<State<T>> constructor = null) where T : class, new();
+        T GetStateEx<T>(string name = null, Func<T> constructor = null) where T:State<T> , new();
+
     }
 }

@@ -1,10 +1,13 @@
-﻿
+﻿@inherits BaseComponent<AddBundleWizardState>
 <MudGrid>
     <MudItem xs="6">
         <SelectProduct 
+            Product="Bunlde.Battery"
             Label="انتخاب باتری"
             Placeholder="جستجوی باتری"
-            ProductTypes="HajirCrmConstants.Schema.Product.ProductTypes.Battery"/>
+            ProductTypes="HajirCrmConstants.Schema.Product.ProductTypes.Battery"
+            OnSelected="SelectBattery"
+            />
     </MudItem>
     <MudItem xs="3">
         <MudSelect T="int"

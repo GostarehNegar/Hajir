@@ -18,5 +18,6 @@ namespace Hajir.Crm.Entities
         {
             get => this.GetAttributeValue<Schema.StateCodes?>(Schema.StateCode);
         }
+        public string DefaultUomId => this.GetAttributeValue<DynamicEntityReference>(Schema.DefaultUoMId)?.Id;
     }
 }
