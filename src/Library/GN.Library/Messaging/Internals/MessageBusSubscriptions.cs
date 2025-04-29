@@ -30,6 +30,12 @@ namespace GN.Library.Messaging.Internals
             var ret = this._subscriptions.Values.Where(x => x.Matches(ctx) && !x.IsDeactive).ToArray();
             return ret;
         }
-
+        public void Clear()
+        {
+            foreach(var sub in this._subscriptions.Values.Where(x => x.IsDeactive))
+            {
+                this._subscriptions.TryRemove(sub.Id, out var _);
+            }
+        }
     }
 }

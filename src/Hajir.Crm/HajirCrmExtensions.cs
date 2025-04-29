@@ -11,6 +11,7 @@ namespace Hajir.Crm
     {
         public static IHajirCrmServiceContext CreateHajirServiceContext(this IServiceProvider serviceProvider)
         {
+            
             return new HajirCrmServiceContext(serviceProvider);
         }
 

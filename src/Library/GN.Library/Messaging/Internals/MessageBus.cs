@@ -344,11 +344,31 @@ namespace GN.Library.Messaging.Internals
             }
             await base.StopAsync(cancellationToken);
         }
-
+        public override void Dispose()
+        {
+            //base.Dispose();
+        }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             this._cancellationToken = stoppingToken;
+
+            return Task.Run(async () =>
+            {
+
+
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    try
+                    {
+                        await Task.Delay(6 * 1000, stoppingToken);
+                        this.subscriptions.Clear();
+                    }
+                    catch { }
+
+                }
+
+            });
             return this.queue != null
                 ? this.queue.Start(stoppingToken)
                 : Task.CompletedTask;

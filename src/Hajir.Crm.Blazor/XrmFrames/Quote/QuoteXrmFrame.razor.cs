@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using GN;
 using GN.Library;
+using GN.Library.Messaging;
 
 namespace Hajir.Crm.Blazor.XrmFrames.Quote
 {
@@ -35,7 +36,7 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
         }
     }
 
-    public partial class QuoteXrmFrame
+    public partial class QuoteXrmFrame : IXrmFrame
     {
         public Guid? Id { get; set; }
         public RemarksItemModel[] RemarkLines = RemarksItemModel.GetDefaults();
@@ -44,7 +45,9 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
             if (!this.EntityId.HasValue)
             {
                 var id = await this.GetDataEntityId();
+
             }
+           
 
             return await base.XrmInitializeAsync();
         }
@@ -60,6 +63,7 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
         public async Task<State<SaleQuote>> LoadState(Guid? id)
         {
             await Task.CompletedTask;
+
             var sale = id.HasValue ? this.ServiceProvider.GetService<IQuoteRepository>()
                .LoadQuote(id.ToString())
                : new SaleQuote();
@@ -70,10 +74,13 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
             return new State<SaleQuote>(sale);
         }
         public State<QuoteRemarksModel> RemarksState { get; set; }
+
+
+
         public string GetPrintLink() => this.ServiceProvider.GetService<NavigationManager>()
             .ToAbsoluteUri($"/reports/quote/{this.Value.QuoteNumber}").ToString();
         private MudDatePicker _picker;
-        public  Task RebuildComments()
+        public Task RebuildComments()
         {
             this.State.SetState(x => x.Remarks = x.RebuildRemarks());
             return Task.CompletedTask;
@@ -84,6 +91,8 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
             {
                 if (1 == 1 || !this.EntityId.HasValue)
                 {
+
+
                     if (!string.IsNullOrWhiteSpace(this.Value.PriceList?.Id) && Guid.TryParse(this.Value.PriceList?.Id, out var _id))
                     {
                         await this.SetLookupValue(XrmQuote.Schema.PriceLevelId, _id.ToString(), XrmPriceList.Schema.LogicalName);
@@ -105,13 +114,18 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
                     //await this.SetAttributeValue(XrmHajirQuote.Schema.PaymentMethod,
                     //    this.Value.NonCash ? XrmHajirQuote.Schema.PaymentMethods.NonCash : XrmHajirQuote.Schema.PaymentMethods.Cash);
                     await this.SetAttributeValue(XrmHajirQuote.Schema.PrintHeader, this.Value.PrintHeader);
-                    
+
                     //await this.SetAttributeValue("", this.Value.PyamentDeadline ?? 0);
                     await this.SaveData().TimeOutAfter(3000);
                     var id = await this.GetDataEntityId();
                     if (id.HasValue)
                     {
-                        foreach (var line in this.Value.Lines.Where(x=>!x.IsBlank))
+                        foreach (var line in this.Value.DeletedLines)
+                        {
+                            await this.ServiceProvider.GetService<IQuoteRepository>()
+                                .DeleteQuoteDetailLine(line.Id);
+                        }
+                        foreach (var line in this.Value.Lines.Where(x => !x.IsBlank))
                         {
                             line.QuoteId = id.Value.ToString();
                             line.PercentTax = Value.IsOfficial ? 10 : 0;
@@ -139,6 +153,6 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
 
             });
         }
-        
+
     }
 }

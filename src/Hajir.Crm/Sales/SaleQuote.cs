@@ -60,6 +60,8 @@ namespace Hajir.Crm.Sales
 
 
         }
+        public List<SaleQuoteLine> DeletedLines = new List<SaleQuoteLine>();
+        public int? PercentTax => this.IsOfficial ? 10 : (int?)null;
         public SaleQuote()
         {
             _lines = new List<SaleQuoteLine>();
@@ -76,6 +78,19 @@ namespace Hajir.Crm.Sales
         {
             return this._lines.Where(x => x.ParentBundleId == id).ToArray();
         }
+        public SaleQuote RecalculateBundles()
+        {
+            var bundles = this.GetBundleIds();
+            foreach (var _bundle in bundles)
+            {
+                var _b = this.Lines.FirstOrDefault(x => x.Id == _bundle);
+                if (_b != null && _b.ParentBundleId != _bundle)
+                {
+                    _b.ParentBundleId = _bundle;
+                }
+            }
+            return this;
+        }
         public SaleQuote AddLine(SaleQuoteLine line)
         {
             //line = line ?? new SaleQuoteLine();
@@ -86,6 +101,7 @@ namespace Hajir.Crm.Sales
         }
         public SaleQuote RemoveLine(SaleQuoteLine line)
         {
+            this.DeletedLines.Add(line);
             _lines.Remove(line);
             return this;
         }
@@ -114,7 +130,7 @@ namespace Hajir.Crm.Sales
                 QuoteId = this.QuoteId
             };
             this.AddLine(bundleProduct);
-            
+
 
             foreach (var r in bundle.Rows)
             {

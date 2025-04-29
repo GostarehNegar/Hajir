@@ -16,8 +16,14 @@ namespace Hajir.Crm.Blazor.XrmFrames
         IServiceProvider ServiceProvider { get; }
         public XrmFrameAdapter Adapter { get; }
     }
+    class XrmUserSettings
+    {
+        public string UserName { get; set; }
+        public string UserId { get; set; }
+    }
     public static class XrmFrameAdapterExtensions
     {
+
         public const int DEFAULT_TIMEOUT = 15000;
         public static XrmFrameAdapter GetAdapter(this BaseComponent component)
         {
@@ -54,6 +60,27 @@ namespace Hajir.Crm.Blazor.XrmFrames
         {
             var exp = $"var aval=[]; var val = {{}};val.id = '{id}';val.entityType = '{entityType}';aval.push(val); parent.Xrm.Page.getAttribute('{attributeName}').setValue(aval);";
             await frame.Adapter.Evaluate<int>(exp);
+
+        }
+        
+        public static async Task<CurrentUser> GetCurrentUser(this IXrmFrame frame )
+        {
+            var user = frame.ServiceProvider.GetUserContext().CurrentUser();
+            if (user != null)
+            {
+                return user;
+            }
+            var res = await frame.Adapter.Evaluate<string>(
+                $"parent.Xrm.Utility.getGlobalContext().userSettings.userName +'::'+parent.Xrm.Utility.getGlobalContext().userSettings.userId;");
+            var parts = res.Split("::");
+            
+            user =  new CurrentUser
+            {
+                UserName = parts[0],
+                UserId = parts.Length > 1 ? parts[1] : null
+            };
+            frame.ServiceProvider.GetUserContext().CurrentUser(user);
+            return user;
 
         }
         public static async Task SetAttributeValue(this IXrmFrame frame, string attributeName, object value)

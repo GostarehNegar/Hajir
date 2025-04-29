@@ -286,6 +286,7 @@ namespace GN.Library.Xrm.StdSolution
             public const string IsProductOverridden = "isproductoverridden";
             public const string SequenceNumber = "sequencenumber";
             public const string ParentBundleId = "parentbundleid";
+            public const string LineItemNumber = "lineitemnumber";
         }
 
         public XrmQuoteDetail() : base(Schema.LogicalName) { }
@@ -471,7 +472,12 @@ namespace GN.Library.Xrm.StdSolution
             get { return this.GetAttributeValue<int?>(Schema.SequenceNumber); }
             set { this.SetAttribiuteValue(Schema.SequenceNumber, value); }
         }
-
+        [AttributeLogicalName(Schema.LineItemNumber)]
+        public int? LineItemNumber
+        {
+            get { return this.GetAttributeValue<int?>(Schema.LineItemNumber); }
+            set { this.SetAttribiuteValue(Schema.LineItemNumber, value); }
+        }
         [AttributeLogicalName(Schema.ParentBundleId)]
         public Guid? ParentBundleId
         {

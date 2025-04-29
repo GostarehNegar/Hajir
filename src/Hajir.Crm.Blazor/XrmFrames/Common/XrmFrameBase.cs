@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace Hajir.Crm.Blazor.XrmFrames
 {
     
-    public class XrmFrameBaseEx<T> : BaseComponent<T> where T : class, new()
+    public class XrmFrameBaseEx<T> : BaseComponent<T>,IXrmFrame where T : class, new()
     {
         private const int DEFAULT_TIMEOUT = XrmFrameAdapter.DEFAULT_TIMEOUT;
         protected XrmFrameAdapter Adapter;
@@ -27,7 +27,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
 
         public const string XrmFrames = "xrmframes";
         public string ErrorMessage { get; set; }
-
+        XrmFrameAdapter IXrmFrame.Adapter => this.Adapter;
 
         protected override void OnInitialized()
         {
@@ -50,7 +50,9 @@ namespace Hajir.Crm.Blazor.XrmFrames
             if (firstRender && !this._adapterInitialized)
             {
                 var id = this.EntityId;
-                await this.Adapter.Evaluate<int>("2*2");
+                //await this.Adapter.Evaluate<int>("2*2");
+                await this.GetCurrentUser();
+                
                 this._adapterInitialized = true;
                 await base.OnAfterRenderAsync(firstRender);
                 if (await XrmInitializeAsync())

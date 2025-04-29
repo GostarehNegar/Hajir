@@ -34,10 +34,21 @@ else if (this.ViewMode == QuoteProductsViewModes.Tabular)
                         کالا/خدمات
                     </MudText>
                     <MudSpacer />
-                    <MudButtonGroup style="text-align:center" Variant="Variant.Filled">
-                        <MudIconButton Icon="@Icons.Material.Filled.AddBox" Color="Color.Primary" OnClick="@(()=>InsertLine(null))" />
-                        <MudIconButton Icon="@Icons.Material.Filled.AddCard" Color="Color.Secondary" OnClick="InsertBundle" />
+
+                    <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+                        <MudIconButton Icon="@Icons.Material.Filled.AddBox" />
+                        <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown" Style="align-self: auto;">
+                            <MudMenuItem OnClick="() => AddProduct(HajirCrmConstants.Schema.Product.ProductTypes.UPS)">یوپی‌اس</MudMenuItem>
+                            <MudMenuItem OnClick="() => AddProduct(HajirCrmConstants.Schema.Product.ProductTypes.Battery)">باتری</MudMenuItem>
+                            <MudMenuItem OnClick="() => AddProduct(HajirCrmConstants.Schema.Product.ProductTypes.Stabilizer)">استبیلایزر</MudMenuItem>
+                            <MudMenuItem OnClick="() => AddProduct(HajirCrmConstants.Schema.Product.ProductTypes.Other,false,true)">متفرقه</MudMenuItem>
+                            <MudMenuItem OnClick="() => AddProduct(HajirCrmConstants.Schema.Product.ProductTypes.Other,true)">یاندل</MudMenuItem>
+                        </MudMenu>
                     </MudButtonGroup>
+                    @*<MudButtonGroup style="text-align:center" Variant="Variant.Filled">
+                <MudIconButton Icon="@Icons.Material.Filled.AddBox" Color="Color.Primary" OnClick="@(()=>InsertLine(null))" />
+                <MudIconButton Icon="@Icons.Material.Filled.AddCard" Color="Color.Secondary" OnClick="InsertBundle" />
+                </MudButtonGroup>*@
                 </MudStack>
             </MudTh>
             <MudTh style="width:8%">تعداد</MudTh>

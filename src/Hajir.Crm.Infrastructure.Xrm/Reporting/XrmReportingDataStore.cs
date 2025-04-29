@@ -80,7 +80,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                             BaseAmount = x.BaseAmount ?? 0,
                             Discount = x.ManualDiscountAmount ?? 0,
                             Quantity = Convert.ToDecimal(x.Quantity ?? 0),
-                            RowNumber = x.SequenceNumber ?? 1
+                            RowNumber = x.LineItemNumber ?? 1
 
                         })
                         .ToArray()

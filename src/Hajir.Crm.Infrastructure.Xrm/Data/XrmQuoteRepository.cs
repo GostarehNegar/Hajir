@@ -110,7 +110,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             {
                 ProductId = x.ProductId?.ToString(),
                 Quantity = Convert.ToDecimal((x.Quantity ?? 0)),
-                ParentBundleId = x.AggregateProductId?.ToString(),
+                ParentBundleId = x.ParentBundleId?.ToString(),
                 Id = x.Id.ToString(),
                 Name = this.cache.Products.FirstOrDefault(p => p.Id == x.ProductId?.ToString())?.Name,
                 PricePerUnit = x.PricePerUnit,
@@ -120,6 +120,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                 GuaranteeMonth = x.GuaranteeMonths,
                 PercentDiscount = x.PercentDiscount,
                 PercentTax = x.PercentTax,
+                LineItemNumber = x.LineItemNumber,
                 Tax = x.Tax,
             };
             if (x.IsProductOverridden.HasValue && x.IsProductOverridden.Value)
@@ -212,7 +213,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 
             }
 
-            return quote;
+            return quote.RecalculateBundles();
 
         }
 

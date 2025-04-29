@@ -2,7 +2,7 @@
 @inherits BaseComponent<SaleQuote>
 
 <MudGrid>
-    <MudItem xs="8">
+    <MudItem xs="7">
         <MudGrid>
             <MudItem xs="12">
                 <MudAutocomplete T="SaleAccount" Label="خریدار" @bind-Value="Value.Customer" @ondblclick="CustomerDblClick"
@@ -18,7 +18,7 @@
         </MudGrid>
         <MudText></MudText>
     </MudItem>
-    <MudItem xs="4">
+    <MudItem xs="5">
         <MudGrid>
             <MudItem xs="12">
                 <MudTextField  T="string" Label="شماره " Text="@Value.QuoteNumber" style="direction:ltr;font-family:Arial" Disabled="true"></MudTextField>

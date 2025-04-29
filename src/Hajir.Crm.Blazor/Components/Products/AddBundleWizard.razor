@@ -4,7 +4,7 @@
 
     <TitleContent>
         <MudGrid>
-            <MudItem xs="8" Class="pa-1" >
+            <MudItem xs="8" Class="pa-1">
                 <MudIconButton Icon="@Icons.Material.Filled.ArrowRight" OnClick="PrevStep" Class="pa-1"></MudIconButton>
                 <span>@Step </span> <span></span> @State.Value.StepName
                 <MudIconButton Icon="@Icons.Material.Filled.ArrowLeft" OnClick="NextStep" Class="pa-1"></MudIconButton>
@@ -37,10 +37,16 @@
 
     </DialogContent>
     <DialogActions>
-        <div class="actions-container">
-            <MudButton Variant="Variant.Filled" OnClick="AddAsBundle">افزودن به صورت باندل</MudButton>
-            <MudButton Color="Color.Error" >Cancel</MudButton>
-        </div>
+        <MudStack Row=true>
+
+
+           
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.AddBox" Color="Color.Success" OnClick="AddAsBundle"> باندل</MudButton>
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Cancel" Color="Color.Error" OnClick="Cancel">Cancel</MudButton>
+           
+
+        </MudStack>
+
     </DialogActions>
 
 </MudDialog>

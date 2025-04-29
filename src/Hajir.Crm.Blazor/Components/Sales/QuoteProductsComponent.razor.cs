@@ -18,7 +18,14 @@ namespace Hajir.Crm.Blazor.Components.Sales
     public enum QuoteProductsViewModes
     {
         Block = 0,
-        Tabular =1,
+        Tabular = 1,
+    }
+    public enum AddProductOptions
+    {
+        UPS,
+        Battery,
+        Stabilizer,
+        BundleWizard,
     }
     public partial class QuoteProductsComponent : IXrmFrame
     {
@@ -34,7 +41,7 @@ namespace Hajir.Crm.Blazor.Components.Sales
         private int selectedRowNumber = -1;
 
         public IEnumerable<SaleQuoteLineState> Lines =>
-            Value.Lines.Select(x => new SaleQuoteLineState(x));
+            Value.Lines.OrderBy(x=>x.LineItemNumber).Select(x => new SaleQuoteLineState(x));
         public async Task SaveLine(SaleQuoteLine q)
         {
             await this.SafeExecute(async () =>
@@ -52,7 +59,8 @@ namespace Hajir.Crm.Blazor.Components.Sales
         }
         public async Task RemoveLine(SaleQuoteLine line)
         {
-            await this.SafeExecute(async () => {
+            await this.SafeExecute(async () =>
+            {
                 this.Value.RemoveLine(line);
                 await this.ServiceProvider.GetService<IQuoteRepository>()
                 .DeleteQuoteDetailLine(line.Id);
@@ -82,13 +90,40 @@ namespace Hajir.Crm.Blazor.Components.Sales
         {
             //clickedEvents.Add("Row has been clicked");
         }
-        
+
+        public async Task AddProduct(HajirCrmConstants.Schema.Product.ProductTypes type,bool bundle=false,bool writein=false)
+        {
+            if (bundle)
+            {
+                await this.InsertBundle();
+            }
+            else
+            {
+                var _params = new DialogParameters<AddProductDialog>();
+                _params.Add(x => x.Quote, this.Value);
+                _params.Add(x => x.ProductType, type);
+                _params.Add(x => x.WriteIn, writein);
+                //_params.Add(x => x.Quote, this.State.Value);
+
+                var dialog = this.DialogService.Show<AddProductDialog>("", _params, new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.TopCenter });
+                var result = await dialog.Result;
+                if (!result.Canceled && result.Data is SaleQuoteLine l)
+                {
+                    this.State.SetState(q =>
+                    {
+
+                        this.Value.AddLine(l);
+                    });
+
+                }
+            }
+        }
         public async Task InsertLine(SaleQuoteLine q)
         {
-            
+
             await this.SafeExecute(async () =>
             {
-                this.Value.AddLine(null);
+                this.Value.AddLine(new SaleQuoteLine { Edit = true });
 
             });
         }
@@ -100,7 +135,8 @@ namespace Hajir.Crm.Blazor.Components.Sales
             if (!result.Canceled && result.Data != null && result.Data is ProductBundle bundle)
             {
                 //quote.AddBundle(bundle);
-                this.State.SetState(q => {
+                this.State.SetState(q =>
+                {
                     q.AddBundle(bundle);
                     this.ServiceProvider.CreateHajirServiceContext().RecalculateQuote(quote);
                 });

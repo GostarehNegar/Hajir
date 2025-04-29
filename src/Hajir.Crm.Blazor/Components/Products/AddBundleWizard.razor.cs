@@ -43,5 +43,9 @@ namespace Hajir.Crm.Blazor.Components.Products
         {
             DialogInstance.Close(DialogResult.Ok(this.State.Value.Bundle));
         }
+        public async Task Cancel()
+        {
+            DialogInstance.Cancel();
+        }
     }
 }

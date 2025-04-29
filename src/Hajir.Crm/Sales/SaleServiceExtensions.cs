@@ -29,7 +29,8 @@ namespace Hajir.Crm.Sales
                     .ToList()
                     .ForEach(x =>
                     {
-                        x.PricePerUnit = pl.GetPrice(x.ProductId);
+                       
+                        x.PricePerUnit = x.PricePerUnit ?? pl.GetPrice(x.ProductId) ;
                         x.Recalculate();
                     });
                 var _bundle_product = _bundle.FirstOrDefault(x => x.IsParentBundle);

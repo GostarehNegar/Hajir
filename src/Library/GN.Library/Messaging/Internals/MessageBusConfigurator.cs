@@ -64,7 +64,7 @@ namespace GN.Library.Messaging.Internals
             services.AddSingleton<IProcedureCall>(s => s.GetServiceEx<MessageBus>());
             services.AddTransient<IMessageBusEx>(s => s.GetServiceEx<MessageBus>());
             services.AddTransient<IMessageBus>(s => s.GetServiceEx<MessageBus>());
-            services.AddTransient<IHostedService>(s => s.GetServiceEx<MessageBus>());
+            services.AddSingleton<IHostedService>(s => s.GetServiceEx<MessageBus>());
             services.AddTransient<IMessagingServices>(s => s.GetServiceEx<MessageBus>());
             services.AddTransient<IMessageBusConfiguration>(s => s.GetServiceEx<MessageBus>());
 

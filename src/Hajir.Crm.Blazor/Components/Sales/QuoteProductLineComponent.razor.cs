@@ -38,7 +38,18 @@ namespace Hajir.Crm.Blazor.Components.Sales
 
         public async Task Edit()
         {
-            this.State.SetState(x => x.Edit = true);
+            //this.State.SetState(x => x.Edit = true);
+            var _parms = new DialogParameters<AddProductDialog>();
+            _parms.Add(x => x.Quote, this.Quote.Value);
+            _parms.Add(x => x.Line, this.State.Value);
+            var dialog = this.DialogService.Show<AddProductDialog>("", _parms, new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.TopCenter });
+            var result = await dialog.Result;
+            //if (!result.Cancelled)
+            this.Quote.SetState(q =>
+            {
+                this.ServiceProvider.CreateHajirServiceContext().RecalculateQuote(q);
+            });
+            //this.ServiceProvider.CreateHajirServiceContext().RecalculateQuote(this.Quote.Value);
         }
         public async Task Save()
         {
@@ -46,26 +57,32 @@ namespace Hajir.Crm.Blazor.Components.Sales
         }
         public async Task Delete()
         {
-            this.Quote.SetState(q => q.RemoveLine(this.Value));
+
+            this.Quote.SetState(q =>
+            {
+                q.RemoveLine(this.Value);
+                this.ServiceProvider.CreateHajirServiceContext().RecalculateQuote(q);
+            });
             //this.Quote.Value.RemoveLine(this.State.Value);
 
         }
         public async Task Insert(State<SaleQuoteLine> state)
         {
-            var dialog = this.DialogService.Show<AddBundleWizard>("", new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth=true, Position = DialogPosition.TopCenter});
+            var dialog = this.DialogService.Show<AddBundleWizard>("", new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.TopCenter });
             var result = await dialog.Result;
             var quote = this.Quote.Value;
-            if (!result.Canceled && result.Data!=null && result.Data is ProductBundle bundle)
+            if (!result.Canceled && result.Data != null && result.Data is ProductBundle bundle)
             {
                 //quote.AddBundle(bundle);
-                this.Quote.SetState(q => {
+                this.Quote.SetState(q =>
+                {
                     q.AddBundle(bundle);
                     this.ServiceProvider.CreateHajirServiceContext().RecalculateQuote(quote);
                 });
 
             }
-            
-            
+
+
         }
     }
 }

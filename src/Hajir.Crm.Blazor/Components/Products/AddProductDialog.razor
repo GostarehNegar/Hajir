@@ -1,0 +1,65 @@
+﻿@inherits BaseComponent
+<MudDialog>
+    <TitleContent>
+
+    </TitleContent>
+    <DialogContent>
+        <MudStack Row="true">
+
+            <MudStack Style="width:80%">
+                @if (this.WriteIn)
+                {
+                    <MudTextField T="string" Variant="Variant.Outlined" @bind-Text="Line.Name" Lines="2" />
+                }
+                else
+                {
+                    <SelectProduct Product="Product"
+                               OnSelected="x=>SelectProduct(x)" ProductTypes="@this.ProductType" />
+                }
+                <MudStack Row=true>
+                    <MudTextField T="decimal?"
+                                  @bind-Value="Line.Quantity"
+                                  Variant="Variant.Outlined"
+                                  Margin="Margin.Dense"
+                                  Label="تعداد"
+                                  @onfocusout="Recalculate" />
+                    <MudTextField T="decimal?"
+                                  @bind-Value="Line.PricePerUnit"
+                                  Variant="Variant.Outlined"
+                                  Margin="Margin.Dense"
+                                  Label="قیمت"
+                                  @onfocusout="Recalculate" />
+                </MudStack>
+                <MudStack Row=true>
+                    <MudTextField T="int?" @bind-Value="Line.PercentDiscount" Label="درصد تخفیف"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Adornment="Adornment.End" AdornmentText="%" @onfocusout="Recalculate" Disabled="false" />
+                    <MudTextField T="decimal?" @bind-Value="Line.Discount" Label="تخفیف" Format="###,####"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense" @onfocusout="Recalculate" Disabled="Line.PercentDiscount.HasValue" />
+                    <MudTextField T="int?" @bind-Value="Line.PercentTax" Label="درصد مالیات" Variant="Variant.Outlined"
+                                  Adornment="Adornment.End" AdornmentText="%" Margin="Margin.Dense" @onfocusout="Recalculate" Disabled="false" />
+                    <MudTextField T="decimal?" @bind-Value="Line.Tax" Label="مالیات" Variant="Variant.Outlined" Format="###,####"
+                                  Margin="Margin.Dense" @onfocusout="Recalculate" Disabled="Line.PercentDiscount.HasValue" />
+                </MudStack>
+            </MudStack>
+
+            <MudStack AlignItems="AlignItems.Center">
+                <MudTextField T="decimal?" @bind-Value="Line.ExtendedAmount" Label="مبلغ" Variant="Variant.Outlined" Format="###,####"
+                              Margin="Margin.Dense" Disabled="true" />
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Success"
+                           OnClick="Close"
+                           EndIcon="@Icons.Material.Filled.Add">
+                    Ok
+                </MudButton>
+                <MudButton Variant="Variant.Filled" OnClick="Cancel" EndIcon="@Icons.Material.Filled.Cancel">لغو</MudButton>
+            </MudStack>
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+
+    </DialogActions>
+</MudDialog>
+@code {
+
+}

@@ -191,6 +191,7 @@ namespace Hajir.Crm.Blazor.Components.Sales
             {
                 if (1 == 1 )
                 {
+                    await this.GetCurrentUser();
                     if (!string.IsNullOrWhiteSpace(this.Value.PriceList?.Id) && Guid.TryParse(this.Value.PriceList?.Id, out var _id))
                     {
                         await this.SetLookupValue(XrmQuote.Schema.PriceLevelId, _id.ToString(), XrmPriceList.Schema.LogicalName);

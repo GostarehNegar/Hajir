@@ -22,6 +22,7 @@ namespace Hajir.Crm.Sales
         public decimal? BaseAmount { get; set; }
         public decimal? Tax { get; set; }
         public int? PercentTax { get; set; }
+        public int? LineItemNumber { get; set; }
         public bool IsProductOverriden => string.IsNullOrWhiteSpace(ProductId);
         public bool IsBlank => string.IsNullOrWhiteSpace(Name) && string.IsNullOrEmpty(ProductId);
         public bool IsParentBundle => this.Id == this.ParentBundleId && !string.IsNullOrWhiteSpace(this.Id);

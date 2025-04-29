@@ -34,6 +34,8 @@ namespace Hajir.Crm.Blazor
                 .AddScoped<IStateManager>(sp => sp.GetService<StateManager>())
                 .AddScoped<IScopedHostedService>(sp => sp.GetService<StateManager>());
             services.AddScoped<UserContextContainer>();
+
+
             //services.AddScoped(typeof(State<>), typeof(State<>));
             //services.AddScoped(typeof(StateCollection<>), typeof(StateCollection<>));
 
@@ -79,6 +81,8 @@ namespace Hajir.Crm.Blazor
             result.ServiceProvider.GetService<UserContextContainer>().Context = service.GetService<UserContextContainer>().Context;
             return result;
         }
+        public static UserContext GetUserContext (this IServiceProvider service)=>
+            service.GetService<UserContextContainer>().Context;
     }
 
 

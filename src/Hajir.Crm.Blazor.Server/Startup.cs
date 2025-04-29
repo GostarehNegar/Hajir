@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using GN;
 using GN.Library.Xrm;
 using Hajir.Crm.Reporting;
+using GN.Library.Messaging;
 
 namespace Hajir.Crm.Blazor.Server
 {
@@ -34,6 +35,8 @@ namespace Hajir.Crm.Blazor.Server
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddGNLib(Configuration, cfg => { });
+            services.AddMessagingServices(Configuration, cfg => { });
+
             services.AddXrmServices(Configuration, cfg =>
             {
                 cfg.UseHttoClientSynchronouslyDueToUnknownBugInAwaitingInBlazor = true;

@@ -136,11 +136,21 @@ else if (this.ViewMode == QuoteProductsViewModes.Tabular)
     <MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="delete" Size="Size.Small" OnClick="Edit" />*@
     </MudTd>
     <MudTd DataLabel="Nr">
-        <MudButtonGroup Variant="Variant.Filled">
+
+        <MudButtonGroup Variant="Variant.Outlined">
+            <MudIconButton Icon="@Icons.Material.Filled.MoveUp" aria-label="delete" Size="Size.Small" OnClick="Delete" />
+            <MudIconButton Icon="@Icons.Material.Filled.MoveDown" aria-label="delete" Size="Size.Small" OnClick="Delete" />
             <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" OnClick="Delete" />
-            <MudIconButton Icon="@Icons.Material.Filled.Save" aria-label="delete" Size="Size.Small" OnClick="Save" />
-            <MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="delete" Size="Size.Small" OnClick="Edit" />
+            @if (this.Value.Edit)
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.Save" aria-label="delete" Size="Size.Small" OnClick="Save" />
+            }
+            else
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="delete" Size="Size.Small" OnClick="Edit" />
+            }
         </MudButtonGroup>
+
     </MudTd>
 
 }
