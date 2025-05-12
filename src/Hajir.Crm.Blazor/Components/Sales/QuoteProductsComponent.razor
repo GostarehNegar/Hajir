@@ -1,78 +1,83 @@
 ﻿@using Hajir.Crm.Sales;
 @inherits BaseComponent<SaleQuote>
 
-@if (this.ViewMode == QuoteProductsViewModes.Block)
-{
-    <MudGrid>
-        @foreach (var item in this.Lines)
-        {
-            <div style="border:solid;padding:3px;">
-                <MudItem xs="12" style="">
-                    <QuoteProductLineComponent Quote="@this.State" State="@item" ViewMode="@this.ViewMode" />
-                </MudItem>
-                <MudItem xs="12">
-                    <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="()=>InsertLine(item.Value)">Add</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="()=> RemoveLine(item.Value)">Delete</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Warning" OnClick="()=>SaveLine(item.Value)">ذخیره</MudButton>
-                </MudItem>
-            </div>
-            <div></div>
-            <MudDivider />
-        }
-    </MudGrid>
-}
-else if (this.ViewMode == QuoteProductsViewModes.Tabular)
-{
-    <MudTable T="SaleQuoteLineState" Items="@this.Lines" Bordered="true" Dense="true" Striped="true"
-          FixedHeader="true" Height="400px" style="font-size:small"
+
+@*          FixedHeader="true" Height="300px"
+*@
+<MudTable T="SaleQuoteLineState" Items="@this.Lines" Bordered="true" Dense="true" Striped="true"
+          style="font-size:small"
           Class="ma-4 pa-4" @ref="mudTable">
 
-        <HeaderContent>
-            <MudTh style="width:40%">
-                <MudStack Row=true>
-                    <MudText>
-                        کالا/خدمات
-                    </MudText>
-                    <MudSpacer />
+    <HeaderContent>
+        <MudTh Style="width:5%">
+            ردیف
+        </MudTh>
+        <MudTh style="width:50%">
+            <MudStack Row=true>
+                <MudText>
+                    کالا/خدمات
+                </MudText>
+                <MudSpacer />
 
-                    <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
-                        <MudIconButton Icon="@Icons.Material.Filled.AddBox" />
-                        <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown" Style="align-self: auto;">
-                            <MudMenuItem OnClick="() => AddProduct(HajirCrmConstants.Schema.Product.ProductTypes.UPS)">یوپی‌اس</MudMenuItem>
-                            <MudMenuItem OnClick="() => AddProduct(HajirCrmConstants.Schema.Product.ProductTypes.Battery)">باتری</MudMenuItem>
-                            <MudMenuItem OnClick="() => AddProduct(HajirCrmConstants.Schema.Product.ProductTypes.Stabilizer)">استبیلایزر</MudMenuItem>
-                            <MudMenuItem OnClick="() => AddProduct(HajirCrmConstants.Schema.Product.ProductTypes.Other,false,true)">متفرقه</MudMenuItem>
-                            <MudMenuItem OnClick="() => AddProduct(HajirCrmConstants.Schema.Product.ProductTypes.Other,true)">یاندل</MudMenuItem>
-                        </MudMenu>
-                    </MudButtonGroup>
-                    @*<MudButtonGroup style="text-align:center" Variant="Variant.Filled">
+                <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+                    <MudIconButton Icon="@Icons.Material.Filled.AddBox" />
+                    <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown" Style="align-self: auto;">
+                        <MudMenuItem OnClick="() => AddProduct(HajirCrmConstants.Schema.Product.ProductTypes.UPS)">یوپی‌اس</MudMenuItem>
+                        <MudMenuItem OnClick="() => AddProduct(HajirCrmConstants.Schema.Product.ProductTypes.Battery)">باتری</MudMenuItem>
+                        <MudMenuItem OnClick="() => AddProduct(HajirCrmConstants.Schema.Product.ProductTypes.Stabilizer)">استبیلایزر</MudMenuItem>
+                        <MudMenuItem OnClick="() => AddProduct(HajirCrmConstants.Schema.Product.ProductTypes.Other,false,true)">متفرقه</MudMenuItem>
+                        <MudMenuItem OnClick="() => AddProduct(HajirCrmConstants.Schema.Product.ProductTypes.Other,true)">یاندل</MudMenuItem>
+                    </MudMenu>
+                </MudButtonGroup>
+                @*<MudButtonGroup style="text-align:center" Variant="Variant.Filled">
                 <MudIconButton Icon="@Icons.Material.Filled.AddBox" Color="Color.Primary" OnClick="@(()=>InsertLine(null))" />
                 <MudIconButton Icon="@Icons.Material.Filled.AddCard" Color="Color.Secondary" OnClick="InsertBundle" />
                 </MudButtonGroup>*@
+            </MudStack>
+        </MudTh>
+        <MudTh style="width:8%">تعداد</MudTh>
+        <MudTh style="padding:2px;width:15%; ">قیمت</MudTh>
+        <MudTh style="width:10%">تخفیف</MudTh>
+        @*<MudTh style="width:10%">مالیات</MudTh>*@
+        <MudTh style="width:15%;">
+            مبلغ
+        </MudTh>
+        <MudTh style="width:15%;">
+            Actions
+        </MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <QuoteProductLineComponent Quote="@this.State" State="context" ViewMode="this.ViewMode" />
+    </RowTemplate>
+    <PagerContent>
+        <MudPaper Class="pa-4" style="background-color:gold">
+            <MudText Typo="Typo.h6">
+                <MudStack Row=true>
+                    <MudSpacer />
+                    <MudStack> @Value.ExtendedAmountInText </MudStack>
+                    <MudSpacer />
+                    <MudStack>جمع</MudStack>
+                    <MudStack>  @Value.ExtendedAmount</MudStack>
+                    <MudSpacer />
                 </MudStack>
-            </MudTh>
-            <MudTh style="width:8%">تعداد</MudTh>
-            <MudTh style="padding:2px;width:15%; ">قیمت</MudTh>
-            <MudTh style="width:10%">تخفیف</MudTh>
-            <MudTh style="width:10%">مالیات</MudTh>
-            <MudTh style="width:15%;">
-                مبلغ
-            </MudTh>
-            <MudTh style="width:15%;">
-                Actions
-            </MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <QuoteProductLineComponent Quote="@this.State" State="context" ViewMode="this.ViewMode" />
-        </RowTemplate>
-    </MudTable>
+            </MudText>
 
-}
+
+        </MudPaper>
+
+    </PagerContent>
+</MudTable>
+
+
+
 
 @code {
 
 }
 <style>
+    .bundle {
+    }
+
     .mud-table-small-cell {
         padding: 4px !important;
         background-color: lightsteelblue;

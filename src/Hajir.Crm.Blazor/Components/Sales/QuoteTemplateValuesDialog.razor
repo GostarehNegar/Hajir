@@ -1,0 +1,23 @@
+﻿
+<MudDialog>
+    <TitleContent>
+
+    </TitleContent>
+    <DialogContent>
+        @foreach(var item in Inputs)
+        {
+
+            <MudTextField T="string" Label="@item.Caption" @bind-Value="item.Value"  Variant="Variant.Outlined" Style="width:80%" />
+            
+        }
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Close">تایید</MudButton>
+        <MudButton OnClick="Cancel">لغو</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+}

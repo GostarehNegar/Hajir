@@ -1,0 +1,20 @@
+﻿@inherits QuoteRemarksDialogBase
+
+<MudDialog>
+    <TitleContent>
+
+    </TitleContent>
+    <DialogContent>
+        <MudTable Items="@Lines" MultiSelection="true" >
+            <RowTemplate>
+                <MudTd>
+                    @context
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+
+    </DialogContent>
+    <DialogActions>
+
+    </DialogActions>
+</MudDialog>

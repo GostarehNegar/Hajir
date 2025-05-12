@@ -55,6 +55,22 @@ namespace Hajir.Crm.Blazor.Components.Sales
         {
             this.State.SetState(x => x.Edit = false);
         }
+        public async Task MoveUp()
+        {
+            this.Quote.SetState(q =>
+            {
+
+                q.MoveUp(this.State.Value);
+            });
+        }
+        public async Task MoveDown()
+        {
+            this.Quote.SetState(q =>
+            {
+
+                q.MoveDown(this.State.Value);
+            });
+        }
         public async Task Delete()
         {
 
@@ -83,6 +99,10 @@ namespace Hajir.Crm.Blazor.Components.Sales
             }
 
 
+        }
+        public string FormatAmount(decimal? val)
+        {
+            return val == null ? null : string.Format("{0:###,###}", val);
         }
     }
 }

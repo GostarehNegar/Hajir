@@ -3,8 +3,37 @@
 
 <MudGrid>
     <MudItem xs="10">
-        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="()=>RebuildComments()">Rebuild</MudButton>
-        <MudTextField T="string" Label="توضیحات" Variant="Variant.Outlined" @bind-Text="State.Value.Remarks" Lines="8" style="width:100%" />
+
+        
+        
+        @if (this.Mode == 1)
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.Save" OnClick="EndEdit" />
+            <MudTable Items="@LINES.Selectable" MultiSelection="true" T="CommentLine"
+                  OnRowClick="@OnRowClick"
+                  @bind-SelectedItems="@LINES.Selected">
+                <RowTemplate>
+                    <MudTd>
+                        @context.Value
+                    </MudTd>
+                    <MudTd>
+                        <MudButtonGroup Variant="Variant.Outlined">
+                            <MudIconButton Icon="@Icons.Material.Filled.ArrowCircleUp" OnClick="()=> MoveUp(context)" />
+                            <MudIconButton Icon="@Icons.Material.Filled.EditAttributes" OnClick="()=> EditTemplate(context)" />
+                        </MudButtonGroup>
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+
+        }
+        else
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="SetEditMode" />
+            <MudTextField @ref="_field" T="string" Label="توضیحات" Variant="Variant.Outlined" @bind-Text="State.Value.Remarks" Lines="8" style="width:100%" />
+        }
+    </MudItem>
+    <MudItem xs="2">
+
     </MudItem>
 </MudGrid>
 @code {

@@ -114,7 +114,7 @@ namespace Hajir.Crm.Infrastructure.Xrm
                     PercentTax = line.PercentTax,
                     PercentDiscount = line.PercentDiscount,
                     GuaranteeMonths = line.GuaranteeMonth,
-                    LineItemNumber = new Random().Next(1,10)
+                    LineItemNumber = line.LineItemNumber
 
                 };
             if (Guid.TryParse(line.Id, out var _quote_detail_id))

@@ -21,6 +21,7 @@ namespace Hajir.Crm.Sales
 
             var cache = context.GetService<ICacheService>();
             var pl = quote.PriceList;
+            
             var bundles = quote.GetBundleIds();
             foreach (var bundle in quote.GetBundleIds())
             {

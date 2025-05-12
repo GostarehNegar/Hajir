@@ -18,7 +18,7 @@ namespace Hajir.Crm.Sales
         public bool NonCash { get; set; }
         public double? PyamentDeadline { get; set; }
         public string QuoteId { get; }
-        public IEnumerable<SaleQuoteLine> Lines => _lines;
+        public IEnumerable<SaleQuoteLine> Lines => _lines.OrderBy(x => x.LineItemNumber);
         private List<SaleAggergateProduct> aggergareProducts = new List<SaleAggergateProduct>();
         public IEnumerable<SaleAggergateProduct> AggregateProducts => aggergareProducts;
         public PriceList PriceList { get; set; }
@@ -115,6 +115,15 @@ namespace Hajir.Crm.Sales
             PriceList = pl;
         }
 
+
+        public void ReorderLines()
+        {
+            var n = 0;
+            this.Lines.ToList().ForEach(x => {
+                n++;
+                x.LineItemNumber = n;
+            });
+        }
         public void AddBundle(ProductBundle bundle, int quantity = 1, decimal manualDiscount = 0M)
         {
             var bundleId = Guid.NewGuid().ToString();
@@ -160,6 +169,50 @@ namespace Hajir.Crm.Sales
             aggergareProducts = aggergareProducts.Where(x => x.Id != product.Id).ToList();
 
         }
+        public void MoveUp(SaleQuoteLine line)
+        {
+           
+            var prev_line_num = this.Lines
+                .Where(x => x.LineItemNumber < line.LineItemNumber)
+                .Max(x => x.LineItemNumber);
+            var prev_line = this.Lines.FirstOrDefault(x => x.LineItemNumber == prev_line_num);
+            if (prev_line != null)
+            {
+                var save = prev_line.LineItemNumber;
+                prev_line.LineItemNumber = line.LineItemNumber;
+                line.LineItemNumber= save;
+            }
+            var n = 0;
+            this.Lines.ToList().ForEach(x => {
+                n++;
+                x.LineItemNumber = n;
+            });
+
+        }
+        public void MoveDown(SaleQuoteLine line)
+        {
+
+            var next_line_num = this.Lines
+                .Where(x => x.LineItemNumber > line.LineItemNumber)
+                .Min(x => x.LineItemNumber);
+            var next_line = this.Lines.FirstOrDefault(x => x.LineItemNumber == next_line_num);
+            if (next_line != null)
+            {
+                var save = next_line.LineItemNumber;
+                next_line.LineItemNumber = line.LineItemNumber;
+                line.LineItemNumber = save;
+            }
+            var n = 0;
+            this.Lines.ToList().ForEach(x => {
+                n++;
+                x.LineItemNumber = n;
+            });
+
+        }
+
+        public decimal ExtendedAmount => this.Lines.Sum(x => x.ExtendedAmount??0);
+        public string FormattedExtendedAmount => HajirUtils.Instance.FormatAmount(this.ExtendedAmount);
+        public string ExtendedAmountInText => HajirCrmExtensions.NumberToString(this.ExtendedAmount);
 
     }
 }

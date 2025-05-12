@@ -18,8 +18,8 @@ namespace Hajir.Crm.Tests.Specs
         [TestMethod]
         public async Task DataSheetTests()
         {
-            
-            
+
+            var str = string.Format("{0:###,###}", 534324675.3M);
             var host = TestUtils.GetDefaultHost((c, s) => {
                 s.AddHajirCrm(c, null);
             
