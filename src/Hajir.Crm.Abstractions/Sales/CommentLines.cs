@@ -95,11 +95,13 @@ namespace Hajir.Crm.Sales
             this.comments = new List<CommentLine>();
             value = value ?? "";
             this.Selected = new HashSet<CommentLine>();
-            var _comments = value.Split('\n').Select(x => x.Replace("\r", ""));
+            var _comments = value.Split('\n')
+                .Select(x => x.Replace("\r", ""))
+                .Where(x => !string.IsNullOrWhiteSpace(x));
             foreach (var comment in _comments)
             {
-                var line = Find(comment);
 
+                var line = Find(comment);
                 this.comments.Add(new CommentLine(line?.Template ?? comment, comment));
                 this.Selected.Add(new CommentLine(line?.Template ?? comment, comment));
             }
