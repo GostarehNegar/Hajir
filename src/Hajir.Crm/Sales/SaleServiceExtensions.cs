@@ -32,6 +32,7 @@ namespace Hajir.Crm.Sales
                     {
                        
                         x.PricePerUnit = x.PricePerUnit ?? pl.GetPrice(x.ProductId) ;
+                        x.PercentTax = quote.PercentTax;
                         x.Recalculate();
                     });
                 var _bundle_product = _bundle.FirstOrDefault(x => x.IsParentBundle);
@@ -39,6 +40,14 @@ namespace Hajir.Crm.Sales
                 {
                     _bundle_product.PricePerUnit = _bundle.Where(x => !x.IsParentBundle)
                         .Sum(x => x.PricePerUnit * x.Quantity);
+                }
+            }
+            foreach(var line in quote.Lines)
+            {
+                if (string.IsNullOrWhiteSpace(line.ParentBundleId))
+                {
+                    line.PercentTax = quote.PercentTax;
+                    line.Recalculate();
                 }
             }
             //foreach (var agg in quote.AggregateProducts)

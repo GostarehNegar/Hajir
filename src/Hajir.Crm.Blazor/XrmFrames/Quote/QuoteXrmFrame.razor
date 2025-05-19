@@ -4,13 +4,22 @@
 
 <div style="width:100%">
     <ErrorComponent />
+
     <MudGrid>
 
         <MudItem xs="12">
-            <MudStack Row="true">
-                <MudText Style="font-family:Arial">@this.State.Value.QuoteNumber</MudText>
-                <MudButton Link="@GetPrintLink()" Target="_blank" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Print" Color="Color.Info" Size="Size.Small">Print </MudButton>
-                <MudButton Variant="Variant.Filled" @onclick="DoSave" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small">ذخیره</MudButton>
+            <MudStack Row="true" Justify="Justify.SpaceBetween">
+                <MudStack Style="text-align:right" Row="true">
+                    <MudChip Color="Color.Info" Style="font-family:Arial; background-color:burlywood">@this.State.Value.QuoteNumber</MudChip>
+                    <MudChip T="string" Color="Color.Success" OnClose="Recalc" CloseIcon="@Icons.Material.Filled.Calculate">@Value.ExtendedAmountInText</MudChip>
+                </MudStack>
+                <MudStack Style="text-align:left" Row="true">
+                    <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Calculate" Color="Color.Warning">محاسبه</MudButton>
+                    <QuotePrintOptions Quote="this.Value"/>
+                   
+                    <MudButton Variant="Variant.Filled" @onclick="DoSave" StartIcon="@Icons.Material.Filled.Save" Color="Color.Info" Size="Size.Small">ذخیره</MudButton>
+                </MudStack>
+               
             </MudStack>
         </MudItem>
         <MudItem xs="12">

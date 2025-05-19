@@ -77,8 +77,10 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
 
 
 
-        public string GetPrintLink() => this.ServiceProvider.GetService<NavigationManager>()
-            .ToAbsoluteUri($"/reports/quote/{this.Value.QuoteNumber}").ToString();
+        private async Task Recalc()
+        {
+            this.ServiceProvider.CreateHajirServiceContext().RecalculateQuote(this.Value);
+        }
         private MudDatePicker _picker;
         public Task RebuildComments()
         {

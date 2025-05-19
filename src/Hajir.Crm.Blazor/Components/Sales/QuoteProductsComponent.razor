@@ -5,7 +5,7 @@
 @*          FixedHeader="true" Height="300px"
 *@
 <MudTable T="SaleQuoteLineState" Items="@this.Lines" Bordered="true" Dense="true" Striped="true"
-          style="font-size:small"
+          style="font-size:small" CustomFooter="true" FixedHeader="true" Height="300px" FixedFooter="true"
           Class="ma-4 pa-4" @ref="mudTable">
 
     <HeaderContent>
@@ -49,23 +49,50 @@
     <RowTemplate>
         <QuoteProductLineComponent Quote="@this.State" State="context" ViewMode="this.ViewMode" />
     </RowTemplate>
-    <PagerContent>
-        <MudPaper Class="pa-4" style="background-color:gold">
-            <MudText Typo="Typo.h6">
-                <MudStack Row=true>
-                    <MudSpacer />
-                    <MudStack> @Value.ExtendedAmountInText </MudStack>
-                    <MudSpacer />
-                    <MudStack>جمع</MudStack>
-                    <MudStack>  @Value.ExtendedAmount</MudStack>
-                    <MudSpacer />
-                </MudStack>
-            </MudText>
+    <FooterContent>
+
+        <MudTFootRow Class="bold-text">
+            <MudTd></MudTd>
+            <MudTd colspan="3"></MudTd>
+            <MudTd>تخفیف</MudTd>
+            <MudTd> @this.Value.FormattedDiscount</MudTd>
+            <MudTd></MudTd>
+        </MudTFootRow>
+        <MudTFootRow Class="bold-text">
+            <MudTd></MudTd>
+            <MudTd colspan="3" ></MudTd>
+            <MudTd>مالیات</MudTd>
+            <MudTd>@this.Value.FormattedTax</MudTd>
+            <MudTd></MudTd>
+        </MudTFootRow>
+        <MudTFootRow Class="bold-text" Style="font-weight:500">
+            <MudTd></MudTd>
+            <MudTd colspan="3">@Value.ExtendedAmountInText</MudTd>
+
+            <MudTd>جمع</MudTd>
+            <MudTd>@Value.FormattedExtendedAmount</MudTd>
+            <MudTd></MudTd>
+        </MudTFootRow>
 
 
-        </MudPaper>
+    </FooterContent>
+    @* <PagerContent>
+    <MudPaper Class="pa-4" style="background-color:gold">
+    <MudText Typo="Typo.h6">
+    <MudStack Row=true>
+    <MudSpacer />
+    <MudStack> @Value.ExtendedAmountInText </MudStack>
+    <MudSpacer />
+    <MudStack>جمع</MudStack>
+    <MudStack>  @Value.ExtendedAmount</MudStack>
+    <MudSpacer />
+    </MudStack>
+    </MudText>
 
-    </PagerContent>
+
+    </MudPaper>
+
+    </PagerContent>*@
 </MudTable>
 
 
@@ -94,4 +121,20 @@
             .selected > td .mud-input {
                 color: white !important;
             }
+</style>
+
+<style type="text/css">
+    .mud-table-head .header-centered th {
+        text-align: center;
+        font-size: 1.2em;
+    }
+
+    
+
+    .mud-button-group-root.mud-button-group-text-size-small .mud-button-root.mud-icon-button .mud-icon-root {
+        font-size: 1.022rem
+    }
+    .mud-table-foot .bold-text .mud-table-cell {
+        font-weight: 600;
+    }
 </style>

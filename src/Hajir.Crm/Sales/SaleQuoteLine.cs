@@ -56,6 +56,10 @@ namespace Hajir.Crm.Sales
             {
                 Tax = Math.Round((BaseAmount.Value - (Discount ?? 0)) * ((decimal)PercentTax.Value / 100));
             }
+            else
+            {
+                Tax = 0;
+            }
             ExtendedAmount = BaseAmount + (Tax ?? 0) - (Discount ?? 0);
 
         }

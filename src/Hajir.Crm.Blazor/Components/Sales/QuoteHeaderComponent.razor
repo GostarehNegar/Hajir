@@ -6,14 +6,15 @@
         <MudGrid>
             <MudItem xs="12">
                 <MudAutocomplete T="SaleAccount" Label="خریدار" @bind-Value="Value.Customer" @ondblclick="CustomerDblClick"
-                                 SearchFunc="@Search1" Variant="Variant.Outlined" ShowProgressIndicator="true" Dense="true" />
+                                 SearchFunc="@Search1" Variant="Variant.Text" Margin="Margin.Dense" ShowProgressIndicator="true" Dense="true" />
             </MudItem>
             <MudItem xs="6">
                 <MudAutocomplete T="SaleContact" Label="شخص" Dense="true"
-                @bind-Value="Value.Contact" SearchFunc="@SearchContact" Variant="Variant.Outlined" ShowProgressIndicator="true" />
+                @bind-Value="Value.Contact" SearchFunc="@SearchContact" Margin="Margin.Dense" Variant="Variant.Text" ShowProgressIndicator="true" />
             </MudItem>
             <MudItem xs="6">
-                <MudAutocomplete T="PriceList" Label="لیست قیمت" @bind-Value="Value.PriceList" SearchFunc="@SearchPriceList" Variant="Variant.Outlined" ShowProgressIndicator="true" />
+                <MudAutocomplete T="PriceList" Label="لیست قیمت" @bind-Value="Value.PriceList" Margin="Margin.Dense" SearchFunc="@SearchPriceList" 
+                Variant="Variant.Text" ShowProgressIndicator="true" />
             </MudItem>
         </MudGrid>
         <MudText></MudText>

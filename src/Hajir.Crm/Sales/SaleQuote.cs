@@ -213,6 +213,10 @@ namespace Hajir.Crm.Sales
         public decimal ExtendedAmount => this.Lines.Sum(x => x.ExtendedAmount??0);
         public string FormattedExtendedAmount => HajirUtils.Instance.FormatAmount(this.ExtendedAmount);
         public string ExtendedAmountInText => HajirCrmExtensions.NumberToString(this.ExtendedAmount);
+        public decimal Tax => this.Lines.Sum(x => x.Tax ?? 0);
+        public string FormattedTax => HajirUtils.Instance.FormatAmount(this.Tax);
+        public decimal Discount => this.Lines.Sum(x => x.Discount ?? 0);
+        public string FormattedDiscount => HajirUtils.Instance.FormatAmount(this.Discount);
 
     }
 }

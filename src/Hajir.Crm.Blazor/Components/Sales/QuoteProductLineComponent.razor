@@ -6,20 +6,20 @@
 
 <MudTd DataLabel="Nr">
 
-    <MudText> @Value.LineItemNumber </MudText>
+     @Value.LineItemNumber 
 </MudTd>
 <MudTd DataLabel="Nr">
 
-    <MudText> @Value.Name</MudText>
+     @Value.Name
 </MudTd>
 <MudTd DataLabel="Nr">
-    <MudText> @Value.Quantity</MudText>
+     @Value.Quantity
 </MudTd>
 <MudTd DataLabel="Nr" style="padding:2px">
-    <MudText> @FormatAmount(Value.PricePerUnit)</MudText>
+     @FormatAmount(Value.PricePerUnit)
 </MudTd>
 <MudTd DataLabel="Nr">
-    <MudText>@FormatAmount(Value.Discount)</MudText>
+    @FormatAmount(Value.Discount)
     @*   <MudTextField T="decimal?" @bind-Value="Value.Discount" Label="" Format="###,####"
     Variant="Variant.Text" Margin="Margin.Dense" @onfocusout="Recalculate" Disabled="true" />*@
 
@@ -35,14 +35,14 @@
 <MudTd DataLabel="Nr">
     @* <MudTextField T="decimal?" @bind-Value="Value.ExtendedAmount" Label="مبلغ" Variant="Variant.Outlined" Format="###,####"
     Margin="Margin.Dense" Disabled="true" />*@
-    <MudText>@FormatAmount(Value.ExtendedAmount)</MudText>
+    @FormatAmount(Value.ExtendedAmount)
     @*<MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" OnClick="Delete" />
     <MudIconButton Icon="@Icons.Material.Filled.Save" aria-label="delete" Size="Size.Small" OnClick="Save" />
     <MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="delete" Size="Size.Small" OnClick="Edit" />*@
 </MudTd>
 <MudTd DataLabel="Nr">
 
-    <MudButtonGroup Variant="Variant.Outlined">
+    <MudButtonGroup Variant="Variant.Filled" Size="Size.Small" Color="Color.Info" >
         <MudIconButton Icon="@Icons.Material.Filled.MoveUp" aria-label="delete" Size="Size.Small" OnClick="MoveUp" />
         <MudIconButton Icon="@Icons.Material.Filled.MoveDown" aria-label="delete" Size="Size.Small" OnClick="MoveDown" />
         <MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="delete" Size="Size.Small" OnClick="Delete" />
@@ -60,11 +60,9 @@
 
 }
 
-@*<style>
-    .mud-input,
-    .mud-input-adornment,
-    .mud-input-control > .mud-input-control-input-container > .mud-input-label-inputcontrol  {
-        font-size: 0.575rem /* 0.875rem;  1 rem is default */
+<style>
+    .mud-button-group-root .mud-button-root.mud-icon-button .mud-icon-root {
+        font-size: 1.016rem;
     }
 
-</style>*@
+</style>

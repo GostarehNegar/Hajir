@@ -1,0 +1,26 @@
+﻿@inherits BaseComponent
+<MudButtonGroup Variant="Variant.Filled" Color="Color.Info" Size="Size.Small">
+    <MudButton Link="@GetPrintLink()" Target="_blank" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Print" Color="Color.Info" Size="Size.Small">چاپ </MudButton>
+    <MudIconButton OnClick="ToggleOpen" Icon="@Icons.Material.Filled.ArrowDropDown" />
+</MudButtonGroup>
+<MudPopover Open="@_open" Fixed="true" Class="px-4 pt-4" Style="width:300px;">
+    <MudStack>
+        <MudStack Row="true">
+            <MudCheckBox Dense="true" T="bool" Label="سربرگ" />
+            <MudCheckBox Dense="true" T="bool" Label="تجمیعی" />
+        </MudStack>
+
+        <MudSelect @bind-Value="template" Dense="true" Margin="Margin.Dense">
+            @foreach (var item in Templates)
+            {
+                <MudSelectItem Value="item">@item</MudSelectItem>
+            }
+        </MudSelect>
+        <MudStack Row="true">
+            <MudButton Color="Color.Success" Variant="Variant.Filled">Print</MudButton>
+            <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="ToggleOpen">بستن</MudButton>
+        </MudStack>
+
+    </MudStack>
+
+</MudPopover>
