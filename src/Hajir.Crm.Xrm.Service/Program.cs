@@ -49,13 +49,15 @@ namespace Hajir.Crm.Xrm.Service
 
                         opt.AddXrmMessageBus = true;
                         opt.ConnectionOptions = ConnectionOptions.OrganizationService;
+                        
                     });
+                    s.AddXrmEntityWatcherService(c.Configuration, opt => { });
                     s.AddLibraryApi();
                     s.AddSignalRTransport(c.Configuration, opt => { });
                     s.AddMvc();
                     //s.AddTransient<IXrmMessageHandler, XrmContactHandler>();
                     //s.AddTransient<IXrmMessageHandler, XrmQuoteProductHandler>();
-                    s.AddSalesSolution();
+                    //s.AddSalesSolution();
 
                 })
 

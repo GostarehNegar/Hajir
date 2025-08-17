@@ -6,8 +6,8 @@
 <MudPopover Open="@_open" Fixed="true" Class="px-4 pt-4" Style="width:300px;">
     <MudStack>
         <MudStack Row="true">
-            <MudCheckBox Dense="true" T="bool" Label="سربرگ" />
-            <MudCheckBox Dense="true" T="bool" Label="تجمیعی" />
+            <MudCheckBox Dense="true" T="bool" Label="سربرگ" @bind-Value="Quote.PrintHeader" />
+            <MudCheckBox Dense="true" T="bool" Label="تجمیعی" @bind-Value="Quote.PrintBundle" />
         </MudStack>
 
         <MudSelect @bind-Value="template" Dense="true" Margin="Margin.Dense">
@@ -17,7 +17,7 @@
             }
         </MudSelect>
         <MudStack Row="true">
-            <MudButton Color="Color.Success" Variant="Variant.Filled">Print</MudButton>
+            <MudButton @ref="LinkButton" Href="@GetPrintLink()" Color="Color.Success" Variant="Variant.Filled" OnClick="ToggleOpen">Print</MudButton>
             <MudButton Color="Color.Success" Variant="Variant.Filled" OnClick="ToggleOpen">بستن</MudButton>
         </MudStack>
 

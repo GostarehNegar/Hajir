@@ -51,12 +51,20 @@ namespace Hajir.Crm.Xrm.Service
                     s.AddMessagingServices(c.Configuration, opt => { });
                     s.AddXrmServices(c.Configuration, opt => { opt.ConnectionOptions = ConnectionOptions.OrganizationService; });
                     s.AddHajirCrm(c.Configuration, opt => { });
-                    s.AddHajirIntegrationServices(c.Configuration, opt => { });
+                    s.AddHajirIntegrationServices(c.Configuration, opt => {
+                        //opt.LegacyImportEnabled = false;
+                        //opt.ProductIntegration.Disabled = true;
+                        //opt.SanadIntegration.Disabled = false;
+                    
+                    });
                     s.AddSignalRTransport(c.Configuration, opt => { });
                     //s.AddLibraryApi();
                     s.AddHajirIntegrationInfrastructure(c.Configuration);
                     //s.AddMvc();
-                    s.AddSanadPardazIntegration(c.Configuration, opt => { });
+                    s.AddSanadPardazInfrastructure(c.Configuration, opt => { 
+                        
+                    
+                    });
 
 
 

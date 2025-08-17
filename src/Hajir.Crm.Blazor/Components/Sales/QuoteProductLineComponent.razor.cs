@@ -42,6 +42,7 @@ namespace Hajir.Crm.Blazor.Components.Sales
             var _parms = new DialogParameters<AddProductDialog>();
             _parms.Add(x => x.Quote, this.Quote.Value);
             _parms.Add(x => x.Line, this.State.Value);
+            _parms.Add(x => x.WriteIn, this.State?.Value?.IsProductOverriden ?? false);
             var dialog = this.DialogService.Show<AddProductDialog>("", _parms, new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, Position = DialogPosition.TopCenter });
             var result = await dialog.Result;
             //if (!result.Cancelled)

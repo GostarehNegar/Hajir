@@ -9,6 +9,8 @@
     <None Remove="Solutions\HajirSales_1_0_0_managed.zip" />
     <None Remove="Solutions\HajirSales_1_0_1.zip" />
     <None Remove="Solutions\HajirSales_1_0_11_managed.zip" />
+    <None Remove="Solutions\HajirSales_1_0_13.zip" />
+    <None Remove="Solutions\HajirSales_1_0_13_managed.zip" />
     <None Remove="Solutions\HajirSales_1_0_1_managed.zip" />
     <None Remove="Solutions\HajirSales_1_0_2.zip" />
     <None Remove="Solutions\HajirSales_1_0_2_managed.zip" />
@@ -29,6 +31,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Solutions\HajirSales_1_0_11_managed.zip" />
+    <EmbeddedResource Include="Solutions\HajirSales_1_0_13.zip" />
+    <EmbeddedResource Include="Solutions\HajirSales_1_0_13_managed.zip" />
     <EmbeddedResource Include="Solutions\HajirSales_1_0_1_managed.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

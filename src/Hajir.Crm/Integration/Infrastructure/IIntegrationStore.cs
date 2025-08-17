@@ -19,6 +19,9 @@ namespace Hajir.Crm.Integration.Infrastructure
         IntegrationUser GetUserByFullName(string fullName);
         void ImportGeoData(GeoData geoData);
 
-
+        IEnumerable<IntegrationQuote> GetQuotesReadyToIntgrate(int skip, int take);
+        IntegrationAccount LoadAccountById(string accountId);
+        IntegrationQuote LoadQuoteById(string quoteId);
+        IntegrationProduct LoadProcuct(string productId);
     }
 }

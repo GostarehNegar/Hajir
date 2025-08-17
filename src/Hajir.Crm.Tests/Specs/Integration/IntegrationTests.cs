@@ -1,4 +1,9 @@
-﻿using Hajir.Crm.Integration;
+﻿using GN.Library;
+using GN.Library.Functional;
+using GN.Library.Helpers;
+using GN.Library.Xrm;
+using Hajir.Crm.Infrastructure.Xrm.Data;
+using Hajir.Crm.Integration;
 using Hajir.Crm.Integration.Infrastructure;
 using Hajir.Crm.Integration.SanadPardaz;
 
@@ -23,6 +28,7 @@ namespace Hajir.Crm.Tests.Specs.Integration
             return this.GetDefaultHost((c, s) =>
             {
                 s.AddHajirIntegrationInfrastructure(c, cfg => { });
+                s.AddHajirIntegrationServices(c, cfg => { });
             });
         }
 
@@ -49,8 +55,17 @@ namespace Hajir.Crm.Tests.Specs.Integration
                 var target = scope
                     .ServiceProvider
                     .GetService<ISanadApiClientService>();
-                var detials = await target.GetDetials(2, 10);
-               
+                var page = 1;
+                while (true)
+                {
+                    var detials = await target.GetDetials(page, 1000);
+                    if (detials.Count() < 1000)
+                    {
+                        break;
+                    }
+                    page++;
+                }
+
 
             }
         }
@@ -86,11 +101,80 @@ namespace Hajir.Crm.Tests.Specs.Integration
             }
             finally
             {
-                
+
             }
 
 
         }
 
+        [TestMethod]
+        public async Task Api_Orde_Works()
+        {
+            var host = this.GetDefaultHost();
+            using (var scope = host.Services.CreateScope())
+            {
+                var target = scope
+                    .ServiceProvider
+                    .GetService<ISanadApiClientService>();
+                await target.InsertOrder(req => { });
+
+
+            }
+        }
+
+        [TestMethod]
+        public async Task Api_Find_ACcountWorks()
+        {
+            var host = this.GetDefaultHost();
+            using (var scope = host.Services.CreateScope())
+            {
+                //var target = scope
+                //    .ServiceProvider
+                //    .GetService<ISanadApiClientService>();
+                //await target.GetCachedDetails();
+
+                var accounts = host.Services.GetService<IXrmDataServices>()
+                    .GetRepository<XrmHajirAccount>()
+                    .Queryable
+                    .OrderByDescending(x => x.CreatedOn)
+                    .Where(x => x.EconomicCode != null)
+                    .Take(200)
+                    .ToArray();
+                var target = scope
+                    .ServiceProvider
+                    .GetService<ISanadApiClientService>();
+                foreach (var acc in accounts)
+                {
+                    var d = await target.FindDetailByEconomicCode(acc.EconomicCode);
+                    if (d != null)
+                    {
+
+                    }
+                }
+
+            }
+
+        }
+
+        [TestMethod]
+        public async Task OrdersIntegrationWorks()
+        {
+            var host = this.GetHost();
+            await host.StartAsync();
+            WithPipe<string>.Setup()
+                 .Then(x => x.Trim());
+
+            var quotes = host.Services.GetService<IIntegrationStore>()
+                .GetQuotesReadyToIntgrate(0, 10).FirstOrDefault();
+            var account = host.Services.GetService<IIntegrationStore>()
+                .LoadAccountById(quotes.AccountId);
+            host.Services.GetService<ISanadOrdersIntegrationService>().Enqueue(quotes.Id);
+
+            await Task.Delay(100 * 1000);
+            
+
+           
+
+        }
     }
 }

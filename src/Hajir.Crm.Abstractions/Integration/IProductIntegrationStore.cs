@@ -13,5 +13,6 @@ namespace Hajir.Crm.Integration
         Task DeleteProduct(IntegrationProduct product);
         Task<DateTime?> GetLastSynchDate();
         Task<IntegrationProduct> UpdateJsonProps(string productNamber, Datasheet datasheet);
+        IntegrationProduct LoadProductById(string productId);
     }
 }

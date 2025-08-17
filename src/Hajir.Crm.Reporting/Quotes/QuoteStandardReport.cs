@@ -25,7 +25,11 @@ namespace Hajir.Crm.Reporting.Quotes
 
             report.Dictionary.RegisterBusinessObject(new QuoteReportData[]{data },"ll",4,true);
             report.Save("qq.frx");
-            var p = new FastReport.Export.PdfSimple.PDFSimpleExport();
+            var p = new FastReport.Export.PdfSimple.PDFSimpleExport()
+            {
+
+            };
+            
             report.Prepare();
             //var p = new FastReport.Export.PdfSimple.PDFSimpleExport();
             report.Export(p, "1.pdf");

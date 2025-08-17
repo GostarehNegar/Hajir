@@ -178,6 +178,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                     quote.NonCash = !xrm_quote.Cash;
                     quote.Remarks = xrm_quote.GetAttributeValue<string>("hajir_remarks");
                     quote.PrintHeader = xrm_quote.PrintHeader ?? true;
+                    quote.PrintBundle = xrm_quote.PrintBundle ?? false;
                     quote.EffectiveFrom = xrm_quote.EffectiveFrom;
                     quote.EffectiveTo = xrm_quote.EffectiveTo;
                     quote.PaymentTermCode = xrm_quote.PaymentTermsCode?.Value;
@@ -431,7 +432,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             }
             x.QuoteType = quote.IsOfficial;
             //x["rhs_type"] = quote.NoOfficial;
-            x["rhs_paymentdeadline"] = quote.PyamentDeadline ?? 0;
+            x.PaymentDeadLine = quote.PyamentDeadline ?? 0;
 
             this.dataServices
                 .GetRepository<XrmHajirQuote>()

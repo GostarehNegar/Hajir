@@ -21,7 +21,7 @@ namespace Hajir.Crm.Reporting.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Quote([FromRoute] string id, [FromQuery] bool update=false)
+        public async Task<IActionResult> Quote([FromRoute] string id,  [FromQuery] bool update=false,[FromQuery] bool? Header = null, bool? bundle = null)
         {
             var store = this.serviceProvider.GetService<IReportingDataStore>();
             var data = await store.GetQuote(id);
@@ -29,6 +29,11 @@ namespace Hajir.Crm.Reporting.Controllers
             {
                 return this.NotFound();
             }
+            data.PrintHeader = Header.HasValue ? Header.Value : data.PrintHeader;
+            data.PrintBundle = bundle.HasValue? bundle.Value:data.PrintBundle;
+            data.PrepareBundles();
+            
+
             
             var reportFileName = Path.Combine(Path.GetDirectoryName(this.GetType().Assembly.Location),
                 $"Reports\\{HajirCrmConstants.Reporting.ReportNames.QuoteStandardReport}");

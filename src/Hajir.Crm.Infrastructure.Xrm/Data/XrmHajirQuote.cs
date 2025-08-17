@@ -13,16 +13,18 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
     {
         public new class Schema : XrmQuote.Schema
         {
-            public const string SOlutionPerfix = HajirCrmConstants.RahsamSolutionPerfix;
+            public const string SOlutionPerfix_Deprecated = HajirCrmConstants.RahsamSolutionPerfix;
+            public const string SolutionPerfix = HajirCrmConstants.HajirSolutionPerfix;
             public const int SolutionBaeIndex = HajirCrmConstants.RahsamSolutionIndex;
-            public const string RhsQuoteType = SOlutionPerfix + "type";
-            public const string HajirQuoteId = SOlutionPerfix + "quoteid";
-            public const string ExternalId = SOlutionPerfix + "externalid";
-            public const string PaymentDeadLine = SOlutionPerfix + "paymentdeadline";
-            public const string ValidityPeriod = SOlutionPerfix + "validityperiod";
-            public const string PaymentMethod = SOlutionPerfix + "paymentmethod";
-            public const string RhsContact = SOlutionPerfix + "contact";
+            public const string RhsQuoteType = SOlutionPerfix_Deprecated + "type";
+            public const string HajirQuoteId = SOlutionPerfix_Deprecated + "quoteid";
+            public const string ExternalId = SOlutionPerfix_Deprecated + "externalid";
+            public const string PaymentDeadLine =SolutionPerfix+ "paymentdeadline";
+            public const string ValidityPeriod = SOlutionPerfix_Deprecated + "validityperiod";
+            public const string PaymentMethod = SOlutionPerfix_Deprecated + "paymentmethod";
+            public const string RhsContact = SOlutionPerfix_Deprecated + "contact";
             public const string PrintHeader = HajirCrmConstants.HajirSolutionPerfix + "printheader";
+            public const string PrintBundle = SolutionPerfix + "printbundle";
             public const string Remarks = HajirCrmConstants.HajirSolutionPerfix + "remarks";
             public const string Contact = HajirCrmConstants.HajirSolutionPerfix + "contactid";
             public const string QuoteType = HajirCrmConstants.HajirSolutionPerfix + "type";
@@ -82,9 +84,9 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
 
         }
         [AttributeLogicalName(Schema.PaymentDeadLine)]
-        public double? PaymentDeadLine
+        public int? PaymentDeadLine
         {
-            get => this.GetAttributeValue<double?>(Schema.PaymentDeadLine);
+            get => this.GetAttributeValue<int?>(Schema.PaymentDeadLine);
             set => this.SetAttributeValue(Schema.PaymentDeadLine, value);
 
         }
@@ -120,7 +122,12 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             get => this.GetAttributeValue<bool?>(Schema.PrintHeader);
             set => this.SetAttribiuteValue(Schema.PrintHeader, value);
         }
-    
-       
+        [AttributeLogicalName(Schema.PrintBundle)]
+        public bool? PrintBundle
+        {
+            get => this.GetAttributeValue<bool?>(Schema.PrintBundle);
+            set => this.SetAttribiuteValue(Schema.PrintBundle, value);
+        }
+
     }
 }

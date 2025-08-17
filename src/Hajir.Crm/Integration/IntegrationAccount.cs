@@ -1,15 +1,24 @@
 ﻿using GN.Library.Shared.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Hajir.Crm.Integration
 {
     public class IntegrationAccount : DynamicEntity
     {
-        public new class Schema : DynamicEntity.Schema
+        public new class Schema : HajirCrmConstants.Schema.Account // DynamicEntity.Schema
         {
 
+        }
+        public IntegrationAccount(IEnumerable<KeyValuePair<string, object>> attribs) : this()
+        {
+            attribs.ToList().ForEach(x => SetAttributeValue(x.Key, x.Value));
+        }
+        public IntegrationAccount()
+        {
+            LogicalName = "account";
         }
 
         public int Type { get; set; }
@@ -47,6 +56,7 @@ namespace Hajir.Crm.Integration
 
         public string SanadPardazCode { get; set; }
 
+        public string NationalId => this.GetAttributeValue<string>(Schema.NationalId);
         public override string ToString()
         {
             return $"{Id} {Name}";

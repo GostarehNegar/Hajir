@@ -10,6 +10,7 @@ namespace Hajir.Crm.Integration.SanadPardaz
         public string ApiUrl { get; set; }
         public string UserName { get; set; } = "admin";
         public string Password { get; set; } = "123456";
+        public int DetailCacheLifetime { get; set; } = 60;
 
         internal string GetBaseApiAddress()
         {
@@ -27,7 +28,7 @@ namespace Hajir.Crm.Integration.SanadPardaz
         {
             this.ApiUrl = Uri.IsWellFormedUriString(this.ApiUrl, uriKind: UriKind.Absolute)
                 ? this.ApiUrl
-                : "http://192.168.20.7:82/";
+                : "http://192.168.20.14/";
             if (!this.ApiUrl.Trim().EndsWith("/"))
             {
                 this.ApiUrl = this.ApiUrl + "/";

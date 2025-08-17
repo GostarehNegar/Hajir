@@ -10,5 +10,14 @@ namespace Hajir.Crm.Integration
     {
         Task<IEnumerable<SanadPardazGoodModel>> GetGoods(int page = 1, int pageLength = 100);
         Task<IEnumerable<SanadPardazDetialModel>> GetDetials(int page = 1, int pageLength = 500);
+        Task<InsertOrderResponse> InsertOrder(InsertOrderRequest request);
+        Task<InsertOrderResponse> InsertOrder(Action<InsertOrderRequest> configure);
+        Task<IEnumerable<SanadPardazDetialModel>> GetCachedDetails();
+        Task<IEnumerable<SanadPardazGoodModel>> GetCachedGoods();
+        Task<SanadPardazGoodModel> GetCachedGoodByCode(string code);
+        Task<SanadPardazDetialModel> FindDetailByNationalId(string nationalId);
+        Task<SanadPardazDetialModel> FindDetailByEconomicCode (string economiCode);
+        Task<SanadPardazDetialModel> FindDetailByRegistrationNo(string regNo);
+
     }
 }

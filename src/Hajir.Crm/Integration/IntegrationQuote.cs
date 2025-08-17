@@ -3,6 +3,7 @@ using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Hajir.Crm.Integration
@@ -55,6 +56,11 @@ namespace Hajir.Crm.Integration
     {
 
         public string ProductDescription => GetAttributeValue<string>("productdescription");
+        public string ProcuctId => GetAttributeValue<DynamicEntityReference>("productid")?.Id;
+
+       
+        public string ProductNumber { get; set; }
+
 
     }
 }

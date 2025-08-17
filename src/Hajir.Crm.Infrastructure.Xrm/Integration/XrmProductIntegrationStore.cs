@@ -154,5 +154,19 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             return Task.FromResult(product?.ToDynamic().To<IntegrationProduct>());
 
         }
+
+        public IntegrationProduct LoadProductById(string productId)
+        {
+            if (Guid.TryParse(productId, out var _id))
+            {
+                return this.dataServices
+                    .GetRepository<XrmHajirProduct>()
+                    .Queryable
+                    .FirstOrDefault(x => x.ProductId == _id)?
+                    .ToIntegrationProduct();
+
+            }
+            return null;
+        }
     }
 }

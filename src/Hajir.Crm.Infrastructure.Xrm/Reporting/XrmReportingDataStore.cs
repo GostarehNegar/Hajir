@@ -46,7 +46,18 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                     .GetRepository<XrmHajirQuoteDetail>()
                     .Queryable
                     .Where(x => x.QuoteId == q.Id)
+                    .OrderBy(x => x.LineItemNumber)
                     .ToArray();
+
+                foreach (var _b in lines.Select(x => x.ParentBundleId))
+                {
+                    var p = lines.FirstOrDefault(x => x.Id == _b);
+                    if (p != null)
+                    {
+                        p.ParentBundleId = _b;
+                    }
+                }
+
 
                 result = new QuoteReportData
                 {
@@ -59,6 +70,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                     TotalAmount = q.TotalAmount ?? 0,
                     TotalLineBaseAmount = lines.Sum(x => x.BaseAmount ?? 0),
                     PrintHeader = q.PrintHeader ?? true,
+                    PrintBundle = q.PrintBundle ?? false,
                     FormattedDate = q.CreatedOn.FormatPersianDate(),
                     EffectiveFrom = q.EffectiveFrom,
                     EffectiveTo = q.EffectiveTo,
@@ -68,7 +80,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                     FormattedExpiresOn = q.ExpiresOn.FormatPersianDate(),
                     PaymentTermsCode = q.PaymentTermsCode?.Value,
                     PaymentTerms = GetPaymentCode(q.PaymentTermsCode?.Value),
-                    Payable = q.TotalAmount.HasValue ? HajirCrmExtensions.NumberToString(q.TotalAmount ?? 0) +" ریال" : "",
+                    Payable = q.TotalAmount.HasValue ? HajirCrmExtensions.NumberToString(q.TotalAmount ?? 0) + " ریال" : "",
 
 
                     Items = lines
@@ -80,7 +92,9 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
                             BaseAmount = x.BaseAmount ?? 0,
                             Discount = x.ManualDiscountAmount ?? 0,
                             Quantity = Convert.ToDecimal(x.Quantity ?? 0),
-                            RowNumber = x.LineItemNumber ?? 1
+                            RowNumber = x.LineItemNumber ?? 1,
+                            Id = x.Id,
+                            ParentBundelId = x.ParentBundleId
 
                         })
                         .ToArray()

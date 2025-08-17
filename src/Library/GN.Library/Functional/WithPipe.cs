@@ -45,7 +45,17 @@ namespace GN.Library.Functional
             });
             return this;
         }
+        public WithPipe<T> Then(Action<T> step)
+        {
+            this.steps.Add(async (x, p, n) =>
+            {
+                //await Task.CompletedTask;
+                step(x);
+                await n(x);
 
+            });
+            return this;
+        }
         public WithPipe<T> Retrials(int count)
         {
             this.trialCounts = count;

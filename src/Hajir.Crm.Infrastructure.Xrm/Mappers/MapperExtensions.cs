@@ -158,7 +158,7 @@ namespace Hajir.Crm.Infrastructure.Xrm
         }
         public static IntegrationAccount ToIntegrationAccount(this XrmHajirAccount c)
         {
-            return c == null ? null : new IntegrationAccount
+            return c == null ? null : new IntegrationAccount(c.Attributes)
             {
                 Name = c.Name,
 

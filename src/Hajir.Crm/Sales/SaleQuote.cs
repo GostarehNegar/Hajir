@@ -16,7 +16,7 @@ namespace Hajir.Crm.Sales
         public string QuoteNumber { get; private set; }
         public bool IsOfficial { get; set; }
         public bool NonCash { get; set; }
-        public double? PyamentDeadline { get; set; }
+        public int? PyamentDeadline { get; set; }
         public string QuoteId { get; }
         public IEnumerable<SaleQuoteLine> Lines => _lines.OrderBy(x => x.LineItemNumber);
         private List<SaleAggergateProduct> aggergareProducts = new List<SaleAggergateProduct>();
@@ -25,6 +25,7 @@ namespace Hajir.Crm.Sales
         public DateTime? ExpirationDate { get; set; }
         public string Remarks { get; set; }
         public bool PrintHeader { get; set; }
+        public bool PrintBundle { get; set; }
         public DateTime? EffectiveFrom { get; set; }
         public DateTime? EffectiveTo { get; set; }
         public int? PaymentTermCode { get; set; }

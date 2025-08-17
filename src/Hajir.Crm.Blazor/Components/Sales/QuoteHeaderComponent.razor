@@ -6,15 +6,15 @@
         <MudGrid>
             <MudItem xs="12">
                 <MudAutocomplete T="SaleAccount" Label="خریدار" @bind-Value="Value.Customer" @ondblclick="CustomerDblClick"
-                                 SearchFunc="@Search1" Variant="Variant.Text" Margin="Margin.Dense" ShowProgressIndicator="true" Dense="true" />
+                                 SearchFunc="@Search1" Variant="Variant.Outlined" Margin="Margin.Dense" ShowProgressIndicator="true" Dense="true" />
             </MudItem>
             <MudItem xs="6">
                 <MudAutocomplete T="SaleContact" Label="شخص" Dense="true"
-                @bind-Value="Value.Contact" SearchFunc="@SearchContact" Margin="Margin.Dense" Variant="Variant.Text" ShowProgressIndicator="true" />
+                @bind-Value="Value.Contact" SearchFunc="@SearchContact" Margin="Margin.Dense" Variant="Variant.Outlined" ShowProgressIndicator="true" />
             </MudItem>
             <MudItem xs="6">
                 <MudAutocomplete T="PriceList" Label="لیست قیمت" @bind-Value="Value.PriceList" Margin="Margin.Dense" SearchFunc="@SearchPriceList" 
-                Variant="Variant.Text" ShowProgressIndicator="true" />
+                Variant="Variant.Outlined" ShowProgressIndicator="true" />
             </MudItem>
         </MudGrid>
         <MudText></MudText>
@@ -25,7 +25,7 @@
                 <MudTextField  T="string" Label="شماره " Text="@Value.QuoteNumber" style="direction:ltr;font-family:Arial" Disabled="true"></MudTextField>
             </MudItem>*@
             <MudItem xs="6">
-                <MudDatePicker Label="تاریخ اعتبار" @bind-Date="Value.ExpirationDate" Culture="@GetPersianCulture()" />
+                <MudDatePicker Label="تاریخ اعتبار" @bind-Date="Value.ExpirationDate" Culture="@GetPersianCulture()" Margin="Margin.Dense"/>
                 @* <MudDatePicker @ref="_picker" Label="تاریخ اعتبار" @bind-Date="Value.ExpirationDate" Culture="@GetPersianCulture()" TitleDateFormat="dddd, dd MMMM">
                 <PickerActions>
                 <MudButton Class="mr-auto align-self-start" OnClick="TodayAsync">Today</MudButton>
@@ -33,12 +33,12 @@
                 </MudDatePicker>*@
             </MudItem>
             <MudItem xs="6">
-                @*<MudTextField T="double?" @bind-Value="Value.PyamentDeadline" Label="مهلت پرداخت (روز)" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="false" />*@
-                <MudSelect @bind-Value="this.PaymentTerm" Label="پرداخت">
+                <MudTextField T="int?" @bind-Value="Value.PyamentDeadline" Label="مهلت پرداخت (روز)" Variant="Variant.Text" Margin="Margin.Dense" Disabled="false" />
+               @* <MudSelect @bind-Value="this.PaymentTerm" Label="پرداخت">
                     @foreach(var item in this.PaymentTerms){
                         <MudSelectItem Value="item.Key">@item.Value</MudSelectItem>
                     }
-                </MudSelect>
+                </MudSelect>*@
             </MudItem>
 
             <MudItem xs="4" style="text-align:right">
@@ -48,7 +48,7 @@
                 <MudCheckBox T="bool" @bind-Checked="Value.NonCash" Color="Color.Primary" Label="غیر نقدی" style="text-align:right"></MudCheckBox>
             </MudItem>
             <MudItem xs="4" style="text-align:right">
-                <MudCheckBox T="bool" @bind-Checked="Value.PrintHeader" Color="Color.Primary" Label="چاپ سربرگ" style="text-align:right"></MudCheckBox>
+                @*<MudCheckBox T="bool" @bind-Checked="Value.PrintHeader" Color="Color.Primary" Label="چاپ سربرگ" style="text-align:right"></MudCheckBox>*@
             </MudItem>
 
         </MudGrid>

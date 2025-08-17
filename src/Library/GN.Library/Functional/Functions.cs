@@ -17,9 +17,9 @@ namespace GN.Library.Functional
                 .CreateInstance<T>(This)
                 .Init(state, This.CreateScope(), null) as T;
         }
-        public static IPipeContext<T> CreateContext<T>(this IServiceProvider This, T state)
-        {
-            return new PipeContext<T>().Init(state, This.CreateScope(), null);
-        }
+        //public static IPipeContext<T> CreateContext<T>(this IServiceProvider This, T state)
+        //{
+        //    return new PipeContext<T>().Init(state, This.CreateScope(), null);
+        //}
     }
 }

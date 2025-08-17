@@ -622,9 +622,9 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
                 .ToIntegrationContact()
                 : null;
         }
-        public IntegrationAccount LoadAccount(string contactId)
+        public IntegrationAccount LoadAccount(string accountId)
         {
-            return contactId != null && Guid.TryParse(contactId, out var _id)
+            return accountId != null && Guid.TryParse(accountId, out var _id)
                 ? this.dataServices
                 .GetRepository<XrmHajirAccount>()
                 .Queryable
@@ -821,31 +821,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
 
             }
 
-            if (1 == 0)
-            {
-                xrm_account[XrmHajirAccount.Schema.rhs_BrandName] = account.AccountNumber;
-                xrm_account.MethodIntroductionId = GetMetodIntroduction(account.Nahve_Ahnaei);
-                xrm_account[XrmHajirAccount.Schema.ExternalId] = account.Id;
-                xrm_account.RhsConectionTypeCode = GetConnectionType(account.RelationShipType);
-                xrm_account.RhsAccountType = GetRhsAccountType(account.gn_hesab_no);
-                xrm_account.IndustryId = GetIndustry(account.Industry);
-                xrm_account.RhsNationalCode = account.gn_shenasemeli;
-                xrm_account.RhsRegistrationNauber = account.gn_sabt;
-                xrm_account.RhsEconomicCode = account.gn_eco_code;
-                xrm_account["rhs_sendfax"] = !account.DoNotFax;
-                xrm_account["rhs_sendpost"] = !account.DoNotPost;
-                xrm_account["rhs_sendemail"] = !account.DonotEmail;
-                xrm_account[XrmHajirAccount.Schema.DegreeImportance] = GetDegreeImportance(account.Daraje_Ahamiat);
-                xrm_account["rhs_address"] = account.address1_name;
-                xrm_account["rhs_address2"] = account.GetAttributeValue("address1_line1");
-                xrm_account["rhs_address3"] = account.GetAttributeValue("address1_line2");
-                xrm_account[XrmHajirAccount.Schema.rhs_MainPhone] = account.MainPhone;
-                xrm_account["rhs_subphone"] = account.Telephone2;
-                xrm_account["rhs_postalcode"] = account.address1_postalcode;
 
-
-
-            }
 
             if (1 == 0)
             {
@@ -1169,7 +1145,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             }
             catch (Exception err)
             {
-
+                Console.WriteLine($"$$$ An error occured while trying to db update quote:{err.Message}");
             }
 
 
@@ -1462,10 +1438,10 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
 
                     if (!categories.Any(cat => cat.Code == x.Code))
                     {
-                        var type= HajirCrmConstants.Schema.Product.GetProductTypeFromProductCategory(HajirCrmConstants.Schema.Product.IntToProductCategory(x.Code));
+                        var type = HajirCrmConstants.Schema.Product.GetProductTypeFromProductCategory(HajirCrmConstants.Schema.Product.IntToProductCategory(x.Code));
                         var _cat = new XrmHajirProductCategory
                         {
-                            Code = x.Code, 
+                            Code = x.Code,
                             Name = x.Name,
                             ProductType = type
                         };
@@ -1480,6 +1456,36 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
 
 
             this.logger.LogInformation($"Finished Importing GeoData");
+        }
+
+        public IEnumerable<IntegrationQuote> GetQuotesReadyToIntgrate(int skip, int take)
+        {
+            return this.dataServices
+                .GetRepository<XrmHajirQuote>()
+                .Queryable
+                .Where(x => x.QuoteNumber == "QUO-01000-H1S9D1")
+                .ToArray()
+                .Select(x => LoadQuote(x.QuoteId.ToString()))
+                .ToArray();
+
+
+
+
+        }
+
+        public IntegrationAccount LoadAccountById(string accountId)
+        {
+            return this.LoadAccount(accountId);
+        }
+
+        public IntegrationQuote LoadQuoteById(string quoteId)
+        {
+            return this.LoadQuote(quoteId);
+        }
+
+        public IntegrationProduct LoadProcuct(string productId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

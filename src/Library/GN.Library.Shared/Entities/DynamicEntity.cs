@@ -24,7 +24,7 @@ namespace GN.Library.Shared.Entities
             {
                 I = this.Id,
                 L = this.LogicalName,
-                N=this.Name,
+                N = this.Name,
                 T = time
 
             };
@@ -34,13 +34,13 @@ namespace GN.Library.Shared.Entities
 
     public class DynamicEntity
     {
-        public class Schema:LibraryConstants.Schema.EntitySchema
+        public class Schema : LibraryConstants.Schema.EntitySchema
         {
             public const string Description = "description";
             public const string ModiefiedOn = "modifiedon";
-            
+
             public const string TimeStamp = "$timestamp";
-            
+
         }
         public DynamicEntity()
         {

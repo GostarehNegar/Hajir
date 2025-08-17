@@ -11,7 +11,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
     [EntityLogicalNameAttribute(Schema.LogicalName)]
     public class XrmHajirAccount : XrmAccount
     {
-        public new class Schema : XrmAccount.Schema
+        public new class Schema : HajirCrmConstants.Schema.Account
         {
             public const string ExternalId = "rhs_externalid";
             public const string Description = "description";
@@ -28,17 +28,6 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             public const string rhs_MainPhone = "rhs_mainphone";
             public const string rhs_MainCityCode = "rhs_maincitycode";
             public const string rhs_BrandName = "rhs_brandname";
-            public const string NationalId = HajirCrmConstants.HajirSolutionPerfix + "nationalid";
-            public const string RegistrationNumber = HajirCrmConstants.HajirSolutionPerfix + "registrationnumber";
-            public const string EconomicCode = HajirCrmConstants.HajirSolutionPerfix + "economiccode";
-            public const string IntroductionMethod = HajirCrmConstants.HajirSolutionPerfix + "introductionmethod";
-            public const string RelationTypeCode = HajirCrmConstants.HajirSolutionPerfix+ "relationshiptype";
-            public const string AccountType = HajirCrmConstants.HajirSolutionPerfix + "accounttype";
-            public const string BrandName = HajirCrmConstants.HajirSolutionPerfix + "brandname";
-            public const string CityId = HajirCrmConstants.HajirSolutionPerfix + "cityid";
-            public const string ProvinceId = HajirCrmConstants.HajirSolutionPerfix + "provinceid";
-            public const string CountryId = HajirCrmConstants.HajirSolutionPerfix + "countryid";
-            public const string ImportanceCode = HajirCrmConstants.HajirSolutionPerfix + "importancecode";
             
         }
 
@@ -166,23 +155,23 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
                 this.MethodIntroduction = value.HasValue ? new EntityReference(XrmHajirMethodIntroduction.Schema.LogicalName, value.Value) : null;
             }
         }
-        [AttributeLogicalName(Schema.RhsEconomicCode)]
-        public string RhsEconomicCode
+        [AttributeLogicalName(Schema.EconomicCode)]
+        public string EconomicCode
         {
-            get => this.GetAttributeValue<string>(Schema.RhsEconomicCode);
-            set => this.SetAttributeValue(Schema.RhsEconomicCode, value);
+            get => this.GetAttributeValue<string>(Schema.EconomicCode);
+            set => this.SetAttributeValue(Schema.EconomicCode, value);
         }
-        [AttributeLogicalName(Schema.RhsNationalCode)]
-        public string RhsNationalCode
+        [AttributeLogicalName(Schema.NationalId)]
+        public string NationalId
         {
-            get => this.GetAttributeValue<string>(Schema.RhsNationalCode);
-            set => this.SetAttributeValue(Schema.RhsNationalCode, value);
+            get => this.GetAttributeValue<string>(Schema.NationalId);
+            set => this.SetAttributeValue(Schema.NationalId, value);
         }
-        [AttributeLogicalName(Schema.RhsRegistrationNauber)]
-        public string RhsRegistrationNauber
+        [AttributeLogicalName(Schema.RegistrationNumber)]
+        public string RegistrationNumber
         {
-            get => this.GetAttributeValue<string>(Schema.RhsRegistrationNauber);
-            set => this.SetAttributeValue(Schema.RhsRegistrationNauber, value);
+            get => this.GetAttributeValue<string>(Schema.RegistrationNumber);
+            set => this.SetAttributeValue(Schema.RegistrationNumber, value);
         }
 
         [AttributeLogicalName(Schema.IntroductionMethod)]

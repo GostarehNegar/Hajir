@@ -33,10 +33,11 @@ namespace Hajir.Crm.Blazor.Components.Products
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
+            //this.WriteIn = this.Line?.IsProductOverriden ?? false;
             this.Line = this.Line ?? new SaleQuoteLine();
             if (!string.IsNullOrWhiteSpace(this.Line.ProductId))
             {
-                this.Product= this.ServiceProvider.GetService<ICacheService>()
+                this.Product = this.ServiceProvider.GetService<ICacheService>()
                     .Products.FirstOrDefault(x => x.Id == this.Line.ProductId);
                 if (this.Product != null)
                 {
@@ -49,7 +50,7 @@ namespace Hajir.Crm.Blazor.Components.Products
         }
         private void SelectProduct(Product product)
         {
-            
+
             this.Line.ProductId = product?.Id;
             this.Line.Name = product?.Name;
             this.Product = product;

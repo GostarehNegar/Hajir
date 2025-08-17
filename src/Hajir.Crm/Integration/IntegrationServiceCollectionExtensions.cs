@@ -21,6 +21,7 @@ namespace Hajir.Crm.Integration
 
             configure?.Invoke(opt.Validate()); ;
             services.AddSingleton(opt.Validate());
+            services.AddSingleton(opt.SanadIntegration);
             if (opt.LegacyImportEnabled)
             {
                 //services.AddSingleton<IntegrationBackgroundService>();
@@ -40,6 +41,16 @@ namespace Hajir.Crm.Integration
                     services.AddSingleton<DatasheetIntegrationService>();
                     services.AddHostedService(sp => sp.GetService<DatasheetIntegrationService>());
                 }
+
+            }
+            if (!opt.SanadIntegration.Disabled)
+            {
+                services.AddSingleton<SanadAccountIntegrationService>();
+                services.AddHostedService(sp=>sp.GetService<SanadAccountIntegrationService>());
+                services.AddSingleton<SanadOrdersIntegrationService>();
+                services.AddSingleton<ISanadOrdersIntegrationService>(sp => sp.GetService<SanadOrdersIntegrationService>());
+                services.AddHostedService(sp=>sp.GetService<SanadOrdersIntegrationService>());
+
 
             }
             //
