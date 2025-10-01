@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GN.Library.NATS\GN.Library.NATS.csproj" />
+    <ProjectReference Include="..\GN.Library\GN.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Agents\py\AgentSelector\" />
+    <Folder Include="WebScraping\py\WebScraper\" />
+  </ItemGroup>
+
+</Project>

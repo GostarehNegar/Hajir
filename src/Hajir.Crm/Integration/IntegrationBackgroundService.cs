@@ -18,6 +18,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+
 namespace Hajir.Crm.Integration
 {
     public class IntegrationBackgroundServiceEx : BackgroundMultiBlockingTaskHostedService
@@ -341,6 +342,89 @@ namespace Hajir.Crm.Integration
             store.ImportGeoData(data);
         }
 
+        private Task ImportLatestItems(ILegacyCrmStore store, CancellationToken stoppingToken)
+        {
+            return Task.Run(async () =>
+            {
+                var last = DateTime.Now.AddDays(-2);
+                
+                var items_done = new HashSet<string>();
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    try
+                    {
+                        var count = 0;
+                        var take = 30;
+
+                      
+                        store.ReadContacts(0, take)
+                        .Where(x => x.ModifiedOn>last)
+                        .ToList()
+                        .ForEach(async x =>
+                        {
+                            var ctx = new IntegrationServiceContext(serviceProvider, "Import Context", stoppingToken, x);
+                            try
+                            {
+                                await ctx.ImportLegacyContact(x);
+                                count++;
+                            }
+                            catch (Exception err)
+                            {
+                                this.logger.LogError($"An error occured while trying to import item. Err:{err.Message}");
+                            }
+
+                        });
+                        store.ReadAccounts(0, take)
+                        .Where(x => x.ModifiedOn>last)
+                        .ToList()
+                        .ForEach(async x =>
+                        {
+                           
+                            var ctx = new IntegrationServiceContext(serviceProvider, "Import Context", stoppingToken, x);
+                            try
+                            {
+                                await ctx.ImportAccount(x);
+                                count++;
+                            }
+                            catch (Exception err)
+                            {
+                                this.logger.LogError($"An error occured while trying to import item. Err:{err.Message}");
+                            }
+
+                        });
+                        store.ReadQuotes(0, take)
+                        .Where(x => x.ModifiedOn > last)
+                        .ToList()
+                        .ForEach(async x =>
+                        {
+                            
+                            var ctx = new IntegrationServiceContext(serviceProvider, "Import Context", stoppingToken, x);
+                            try
+                            {
+                                await ctx.ImportQuote(x);
+                                count++;
+                            }
+                            catch (Exception err)
+                            {
+                                this.logger.LogError($"An error occured while trying to import item. Err:{err.Message}");
+                            }
+
+                        });
+                        this.logger.LogInformation($"{count} latest items imported.");
+
+
+                    }
+                    catch (Exception err)
+                    {
+
+                    }
+                    
+                    last = DateTime.Now.AddMinutes(-30);
+                    await Task.Delay(1 * 60 * 1000, stoppingToken);
+                }
+
+            });
+        }
         protected async override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var tasks = new List<Task>();
@@ -353,10 +437,6 @@ namespace Hajir.Crm.Integration
             {
                 await EnsureLookUpTables(scope.ServiceProvider.GetService<IIntegrationStore>(), stoppingToken);
                 var store = scope.ServiceProvider.GetService<ILegacyCrmStore>();
-                //var total = store.GetContatCount() + store.GetAccountsCount();
-                //tasks.Add(ImportAccounts(store, stoppingToken));
-                //tasks.Add(ImportContacts(store, stoppingToken));
-                //tasks.Add(ImportQuotes(store, stoppingToken));
                 tasks.Add(EnqueueItems(store, stoppingToken));
                 tasks.Add(DequeueItems(store, stoppingToken));
                 tasks.Add(Task.Run(async () =>
@@ -376,7 +456,7 @@ namespace Hajir.Crm.Integration
                         await Task.Delay(5 * 1000, stoppingToken);
                     }
                 }));
-
+                tasks.Add(ImportLatestItems(store, stoppingToken));
                 await Task.WhenAll(tasks);
             }
         }

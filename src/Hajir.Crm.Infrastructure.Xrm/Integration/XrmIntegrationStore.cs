@@ -498,6 +498,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
             //
             xrm_contact[XrmHajirContact.Schema.SalutaionCode] = GetSalutaionCode(contact.Salutation);
             xrm_contact["address1_postalcode"] = contact.PostalCode;
+            xrm_contact["hajir_donotallowsms"] = false;
             //address1_postalcode
             var city = this.GetCity(contact.City);
             if (city != null && Guid.TryParse(city.Id, out var cityId))
@@ -781,6 +782,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Integration
 
             xrm_account.Telephone1 = account.MainPhone;
             xrm_account["telephone2"] = account.Telephone2;
+            xrm_account.Fax = account.Fax;
             xrm_account[XrmHajirAccount.Schema.BrandName] = account.AccountNumber;
             xrm_account["address1_postalcode"] = account.address1_postalcode;
             xrm_account[XrmHajirAccount.Schema.WebSiteUrl] = account.WebSite;

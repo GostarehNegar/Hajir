@@ -1,0 +1,52 @@
+﻿@using MudBlazor
+
+<div class="chatbox-container" id="chatbox">
+
+        @foreach (var Message in this.Conversation.Messages)
+        {
+            @if (Message.Role == "assistant")
+            {
+                
+                <MudChat ArrowPosition="ChatArrowPosition.Middle" ChatPosition="ChatBubblePosition.End" Color="Color.Tertiary">
+                    <MudAvatar> AI
+                        @* <MudImage Src="img/logo.png" /> *@
+                    </MudAvatar>
+                    <MudChatBubble Style="text-align:justify" Variant="Variant.Filled">@Message.Message</MudChatBubble>
+                </MudChat>
+            }
+            else
+            {
+                <MudChat ArrowPosition="ChatArrowPosition.Middle" ChatPosition="ChatBubblePosition.Start" Color="Color.Primary">
+                    <MudAvatar>
+                        <MudImage Src="img/av1.png" />
+                    </MudAvatar>
+                    <MudChatBubble Style="text-align:justify" Variant="Variant.Filled">@Message.Message</MudChatBubble>
+                </MudChat>
+            }
+        }
+
+        @if (1==0)
+        {
+            <MudChat Color="Color.Tertiary" ChatPosition="ChatBubblePosition.End">
+                <MudAvatar>
+                    <MudImage Src="img/logo.png" />
+                </MudAvatar>
+                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Pulse" Width="150px" Height="30px"></MudSkeleton>
+            </MudChat>
+        }
+
+    </div>
+<div class=@GetClass()>
+    <input autofocus="true" type="text" @bind-value=this.Prompt placeholder="پیام خود را وارد کنید" @onkeyup="this.TriggerSearch" />
+    <MudIconButton OnClick="this.Submit"
+                   Icon="@Icons.Material.Outlined.ArrowUpward"
+                   Disabled="this.IsDisabled"
+                   Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Style="border-radius:4rem">
+    </MudIconButton>
+</div>
+
+@code {
+
+}

@@ -10,6 +10,7 @@ namespace Hajir.Crm.Integration.SanadPardaz.Entities
     [Table("Good")]
     public class Good
     {
+
         [Key]
         public string GoodCode { get; set; }
         public string GoodName { get; set;}

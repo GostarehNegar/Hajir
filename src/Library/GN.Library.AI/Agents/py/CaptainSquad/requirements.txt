@@ -1,0 +1,10 @@
+requests
+pydantic 
+argparse
+nats-py
+fastapi
+uvicorn
+agent-squad[all]
+dotenv
+openai
+tenacity 

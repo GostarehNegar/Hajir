@@ -27,8 +27,16 @@
         </MudItem>
     </MudGrid>
     <QuoteHeaderComponent State="@this.State" />
-    <QuoteProductsComponent State="@this.State" ViewMode="QuoteProductsViewModes.Tabular" />
-    <QuoteRemarksComponent State="@this.State" />
+    @if (this.EntityId.HasValue)
+    {
+        <QuoteProductsComponent State="@this.State" ViewMode="QuoteProductsViewModes.Tabular" />
+        <QuoteRemarksComponent State="@this.State" />
+    }
+    else
+    {
+        <MudPaper><MudText Color="Color.Info"><h3>قبل از افزودن کالا  لازم است ابتدا پیش فاکتور ذخیره شود.</h3></MudText></MudPaper>
+    }
+   
     <MudDivider style="height:20px;" />
 
 

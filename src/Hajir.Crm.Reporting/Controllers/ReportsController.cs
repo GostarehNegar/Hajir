@@ -31,6 +31,11 @@ namespace Hajir.Crm.Reporting.Controllers
             }
             data.PrintHeader = Header.HasValue ? Header.Value : data.PrintHeader;
             data.PrintBundle = bundle.HasValue? bundle.Value:data.PrintBundle;
+            if (data.QuoteNumber.Split('-').Length == 3)
+            {
+                data.QuoteNumber = data.QuoteNumber.Split('-')[1];
+            }
+            
             data.PrepareBundles();
             
 

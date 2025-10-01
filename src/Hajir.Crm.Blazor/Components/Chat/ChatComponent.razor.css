@@ -1,0 +1,140 @@
+
+.chatbox-container {
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	top: 2rem;
+	padding: 1rem;
+	/*margin-top: 1rem;*/
+	width: 60%;
+	max-height: calc(100vh - 8rem);
+	/*border: 1px solid #55aaff15;*/
+	/*height: 81%;*/
+	/*border-radius: 2rem;*/
+	overflow-y: auto;
+	/*background: linear-gradient(45deg, #55aaff15, #55aaff10)*/
+	animation-name: move;
+	animation-duration: 0.5s;
+	animation-timing-function: ease-in-out
+}
+
+@keyframes move {
+	0% {
+		position: absolute;
+		top: 30%
+	}
+
+	100% {
+		position: absolute;
+		top: 1rem
+	}
+}
+
+.header {
+	display: flex;
+	gap: 2rem;
+	align-items: center;
+}
+
+.h-title {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+}
+
+.hello {
+	font-size: x-large;
+	font-weight: bold
+}
+
+.help {
+	text-align: center;
+	font-size: large
+}
+
+@media (max-width:600px) {
+	.chatbox-container {
+		width: 90%;
+		margin-right: 60px
+	}
+
+	.header {
+		flex-direction: column;
+		margin-right: 60px;
+		gap: 16px;
+	}
+
+	.h-title {
+	}
+
+	.hello {
+		font-size: medium;
+		font-weight: bold;
+		text-align: center;
+	}
+
+	.help {
+		font-size: medium;
+		text-align: center;
+	}
+}
+
+.promptbox-container {
+	display: flex;
+	justify-content: space-between;
+	/*flex-direction: column;*/
+	/*position: sticky;*/
+	bottom: 0;
+	padding-block: 1rem;
+	padding-inline-start: 2rem;
+	padding-inline-end: 1rem;
+	width: 60%;
+	/*border: 1px solid #55aaff;*/
+	border: 1px solid #594ae299;
+	border-radius: 2rem;
+	background-color: white;
+	/*background: linear-gradient(45deg, #55aaff15, #55aaff10)*/
+}
+
+.center {
+	/*position: absolute;*/
+	box-shadow: 20px 10px 60px -20px #5948E2, -20px -10px 60px -20px #55aaff;
+	/*bottom: 50%;*/
+}
+
+.bottom {
+	position: absolute;
+	box-shadow: 0 0 30px -15px #594ae2, 0 0 30px -15px #55aaff;
+	animation-name: move;
+	animation-duration: 0.5s;
+	animation-timing-function: ease-in-out;
+	bottom: 2rem;
+}
+
+
+
+@keyframes move {
+	0% {
+		bottom: 50%
+	}
+
+	100% {
+		bottom: 2rem;
+	}
+}
+
+
+input[type="text"] {
+	all: unset;
+	width: 100%;
+	font-size: larger
+}
+
+@media (max-width:600px) {
+	.promptbox-container {
+		width: 80%;
+		margin-right: 60px
+	}
+}

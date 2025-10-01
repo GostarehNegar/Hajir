@@ -1,0 +1,10 @@
+requests 
+beautifulsoup4 
+chromadb 
+lxml
+pydantic 
+argparse
+nats-py
+fastapi
+uvicorn
+sentence-transformers

@@ -47,7 +47,7 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
                 var id = await this.GetDataEntityId();
 
             }
-           
+
 
             return await base.XrmInitializeAsync();
         }
@@ -75,7 +75,25 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
         }
         public State<QuoteRemarksModel> RemarksState { get; set; }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
 
+            if (this.State != null && this.State.Value != null && this.State.Value.Customer == null)
+            {
+                var customer = await (this as IXrmFrame).GetLookupValue(XrmQuote.Schema.CustomerId);
+                if (customer != null)
+                {
+                    this.State.Value.Customer = new SaleAccount
+                    {
+                        Id = customer.Id,
+                        Name = customer.Name
+                    };
+                    this.StateHasChanged();
+                }
+            }
+
+            await base.OnAfterRenderAsync(firstRender);
+        }
 
         private async Task Recalc()
         {
@@ -109,7 +127,7 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
                     }
                     await this.SetAttributeValue(XrmHajirQuote.Schema.ExpiresOn, this.Value.ExpirationDate);
                     await this.SetAttributeValue("hajir_remarks", this.Value.Remarks);//?.Replace("\r\n", ""));
-                    
+
                     await this.SetAttributeValue(XrmHajirQuote.Schema.PaymentDeadLine, this.Value.PyamentDeadline ?? 0);
                     await this.SetAttributeValue(XrmHajirQuote.Schema.QuoteType, this.Value.IsOfficial);
                     await this.SetAttributeValue(XrmHajirQuote.Schema.PaymentTermsCode, this.Value.PaymentTermCode);

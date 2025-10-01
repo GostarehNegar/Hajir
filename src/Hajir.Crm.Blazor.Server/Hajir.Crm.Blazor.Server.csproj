@@ -12,7 +12,6 @@
     <ProjectReference Include="..\Hajir.Crm.Blazor\Hajir.Crm.Blazor.csproj" />
     <ProjectReference Include="..\Hajir.Crm.Infrastructure.Xrm\Hajir.Crm.Infrastructure.Xrm.csproj" />
     <ProjectReference Include="..\Hajir.Crm.Reporting\Hajir.Crm.Reporting.csproj" />
-    <ProjectReference Include="..\Library\GN.Library.PDF\GN.Library.PDF.csproj" />
     <ProjectReference Include="..\Library\GN.Library.Win32\GN.Library.Win32.csproj" />
   </ItemGroup>
 

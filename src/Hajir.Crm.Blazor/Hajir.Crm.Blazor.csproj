@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Hajir.Crm.Infrastructure.Xrm\Hajir.Crm.Infrastructure.Xrm.csproj" />
     <ProjectReference Include="..\Hajir.Crm\Hajir.Crm.csproj" />
+    <ProjectReference Include="..\Library\GN.Library.NATS\GN.Library.NATS.csproj" />
   </ItemGroup>
 
 </Project>

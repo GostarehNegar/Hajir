@@ -1,0 +1,16 @@
+beautifulsoup4 
+sentence-transformers 
+chromadb
+requests
+webdriver-manager
+langchain-chroma
+langchain-community
+sentence-transformers
+selenium
+pydantic 
+SpeechRecognition 
+argparse
+nats-py
+opentelemetry.instrumentation
+opentelemetry-instrumentation-fastapi
+

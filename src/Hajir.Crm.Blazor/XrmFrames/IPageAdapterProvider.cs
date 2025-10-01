@@ -1,4 +1,5 @@
-﻿using Hajir.Crm.Blazor.Components;
+﻿using GN.Library.Shared.Entities;
+using Hajir.Crm.Blazor.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
@@ -61,6 +62,13 @@ namespace Hajir.Crm.Blazor.XrmFrames
             var exp = $"var aval=[]; var val = {{}};val.id = '{id}';val.entityType = '{entityType}';aval.push(val); parent.Xrm.Page.getAttribute('{attributeName}').setValue(aval);";
             await frame.Adapter.Evaluate<int>(exp);
 
+        }
+        
+        public static async Task<DynamicEntityReference> GetLookupValue(this IXrmFrame frame, string attributeName)
+        {
+            var exp = $"parent.Xrm.Page.getAttribute('{attributeName}').getValue();";
+            var values = await frame.Evaluate<DynamicEntityReference[]>(exp);
+            return values.FirstOrDefault();
         }
         
         public static async Task<CurrentUser> GetCurrentUser(this IXrmFrame frame )

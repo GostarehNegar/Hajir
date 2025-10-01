@@ -1,0 +1,10 @@
+requests
+pydantic 
+argparse
+nats-py
+fastapi
+uvicorn
+langchain 
+langchain-openai 
+langchain-community
+
