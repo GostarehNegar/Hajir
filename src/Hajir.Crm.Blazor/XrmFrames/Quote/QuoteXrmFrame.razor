@@ -10,7 +10,7 @@
         <MudItem xs="12">
             <MudStack Row="true" Justify="Justify.SpaceBetween">
                 <MudStack Style="text-align:right" Row="true">
-                    <MudChip Color="Color.Info" Style="font-family:Arial; background-color:burlywood">@this.State.Value.QuoteNumber</MudChip>
+                    <MudChip T="string" Color="Color.Info" Style="font-family:Arial; background-color:burlywood">@this.State.Value.QuoteNumber</MudChip>
                     <MudChip T="string" Color="Color.Success" OnClose="Recalc" CloseIcon="@Icons.Material.Filled.Calculate">@Value.ExtendedAmountInText</MudChip>
                 </MudStack>
                 <MudStack Style="text-align:left" Row="true">

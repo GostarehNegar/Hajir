@@ -3,7 +3,7 @@ using GN.Library.Shared;
 using GN.Library.Messaging.Pipeline;
 using GN.Library.Messaging.Streams;
 using GN.Library.Messaging.Streams.LiteDb;
-using GN.Library.Natilus.Messaging.Internals;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,7 +11,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GN.Library.Natilus;
+
 using GN.Library.ServiceDiscovery;
 using GN.Library.Messaging.Queues;
 

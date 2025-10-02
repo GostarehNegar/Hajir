@@ -23,5 +23,7 @@ namespace Hajir.Crm.Common
         IEnumerable<HajirUserEntity> Users { get; }
         IEnumerable<HajirProvinceEntity> Provinces { get; }
         IEnumerable<HajirProductCategoryEntity> ProductCategories { get; }
+        UnitOfMeasurements UOM_adad { get; }
+        UnitOfMeasurements UOM_dastgah { get; }
     }
 }

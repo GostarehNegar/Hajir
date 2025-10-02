@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using GN.Library.Xrm;
 using Hajir.Crm.Entities;
+using ExcelDataReader;
+using System.IO;
 
 namespace Hajir.Crm.Tests.Specs
 {
@@ -42,6 +44,39 @@ namespace Hajir.Crm.Tests.Specs
 
 
         }
-        
+
+        [TestMethod]
+        public async Task XlPriceList()
+        {
+            var filePath = @".\assets\pl.xlsx";
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = ExcelReaderFactory.CreateReader(stream))
+                {
+                    var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                    {
+                        ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
+                        {
+                            UseHeaderRow = true // Use first row as column headers
+                        }
+                    });
+
+                    // Access data from the DataSet
+                    foreach (System.Data.DataTable table in result.Tables)
+                    {
+                        Console.WriteLine($"Sheet: {table.TableName}");
+                        foreach (System.Data.DataRow row in table.Rows)
+                        {
+                            foreach (var cell in row.ItemArray)
+                            {
+                                Console.Write($"{cell}\t");
+                            }
+                            Console.WriteLine();
+                        }
+                    }
+                }
+            }
+
+        }
     }
 }

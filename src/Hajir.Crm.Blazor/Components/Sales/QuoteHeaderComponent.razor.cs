@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hajir.Crm.Blazor.Components.Sales
@@ -16,7 +17,7 @@ namespace Hajir.Crm.Blazor.Components.Sales
     {
         public int? PaymentTerm { get=> this.Value.PaymentTermCode; set=> this.Value.PaymentTermCode=value; }
         public  List<KeyValuePair<int?, string>> PaymentTerms { get; set; }
-        private async Task<IEnumerable<SaleAccount>> Search1(string value)
+        private async Task<IEnumerable<SaleAccount>> Search1(string value, CancellationToken token)
         {
             // In real life use an asynchronous function for fetching data from an api.
             // if text is null or empty, show complete list
@@ -42,7 +43,7 @@ namespace Hajir.Crm.Blazor.Components.Sales
             this.PaymentTerms.Insert(0, new KeyValuePair<int?, string>(null, ""));
             await base.OnInitializedAsync();
         }
-        public async Task<IEnumerable<SaleContact>> SearchContact(string text)
+        public async Task<IEnumerable<SaleContact>> SearchContact(string text, CancellationToken token)
         {
             var res = await this.ServiceProvider.GetService<IQuoteRepository>()
                 .GetAccountContacts(Value.Customer?.Id);
@@ -53,7 +54,7 @@ namespace Hajir.Crm.Blazor.Components.Sales
                 new SaleContact{Id="1", Name="babak"}
            };
         }
-        public async Task<IEnumerable<PriceList>> SearchPriceList(string text)
+        public async Task<IEnumerable<PriceList>> SearchPriceList(string text, CancellationToken token)
         {
             var res = await this.ServiceProvider.GetService<IQuoteRepository>()
                 .SearchPriceList(text);

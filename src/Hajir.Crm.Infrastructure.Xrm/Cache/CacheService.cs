@@ -4,6 +4,7 @@ using Hajir.Crm.Common;
 using Hajir.Crm.Entities;
 
 using Hajir.Crm.Infrastructure.Xrm.Data;
+using Hajir.Crm.Infrastructure.Xrm.Sales;
 using Hajir.Crm.Products;
 using Hajir.Crm.Sales;
 using Microsoft.Extensions.Caching.Memory;
@@ -53,7 +54,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
                     entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
                     using (var scope = this.serviceProvider.CreateScope())
                     {
-                        return scope.ServiceProvider.GetService<XrmQuoteRepository>()
+                        return scope.ServiceProvider.GetService<XrmSalesRepository>()
                         .LoadAllPriceLists();
                     }
                 });
@@ -252,6 +253,10 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
 
                     }
                 });
+
+        public UnitOfMeasurements UOM_adad => this.UnitOfMeasurements.FirstOrDefault(x => x.Name.Contains("عدد"));
+
+        public UnitOfMeasurements UOM_dastgah => this.UnitOfMeasurements.FirstOrDefault(x => x.Name.Contains("دستگاه"));
 
         public CacheService(IServiceProvider serviceProvider, IMemoryCache cache)
         {

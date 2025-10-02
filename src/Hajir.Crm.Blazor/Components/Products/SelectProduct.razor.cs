@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hajir.Crm.Blazor.Components.Products
@@ -41,7 +42,7 @@ namespace Hajir.Crm.Blazor.Components.Products
             return this.Small? "my-control1":"";
 
         }
-        public async Task<IEnumerable<Product>> SearchUps(string e)
+        public async Task<IEnumerable<Product>> SearchUps(string e, CancellationToken token)
         {
             var items = BundlingService.Products
                     .Where(x => this.ProductTypes==null || x.ProductType == this.ProductTypes);

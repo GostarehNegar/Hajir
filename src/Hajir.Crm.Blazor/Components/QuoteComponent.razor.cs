@@ -60,7 +60,7 @@ namespace Hajir.Crm.Blazor.Components
         {
             var dialog = DialogService.Show<AddBundleDialog>("");
             var result = await dialog.Result;
-            if (!result.Cancelled)
+            if (!result.Canceled)
             {
                 var addedBundle = (ProductBundle)result.Data;
                 this.Quote.AddBundle(addedBundle);

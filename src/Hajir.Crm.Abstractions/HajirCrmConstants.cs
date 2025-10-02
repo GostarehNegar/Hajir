@@ -106,5 +106,10 @@ namespace Hajir.Crm
 وزارتخانه	وزارتخانه
 ";
 
+   
+        public class Subjects : LibraryConstants.Subjects
+        {
+
+        }
     }
 }

@@ -10,12 +10,12 @@
     "Hajir.Crm.Blazor.Server": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:80",
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "dotnetRunMessages": "true",
-      "applicationUrl": "http://localhost:80"
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5000"
     }
   },
   "iisSettings": {

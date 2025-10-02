@@ -6,22 +6,35 @@
         {
             @if (Message.Role == "assistant")
             {
-                
-                <MudChat ArrowPosition="ChatArrowPosition.Middle" ChatPosition="ChatBubblePosition.End" Color="Color.Tertiary">
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot-message">
+                    @Message.Message
+                </div>
+            </div>
+               @* <MudChat ArrowPosition="ChatArrowPosition.Middle" ChatPosition="ChatBubblePosition.End" Color="Color.Tertiary">
                     <MudAvatar> AI
-                        @* <MudImage Src="img/logo.png" /> *@
+                        <MudImage Src="img/logo.png" /
                     </MudAvatar>
                     <MudChatBubble Style="text-align:justify" Variant="Variant.Filled">@Message.Message</MudChatBubble>
-                </MudChat>
+                </MudChat>*@
             }
             else
             {
-                <MudChat ArrowPosition="ChatArrowPosition.Middle" ChatPosition="ChatBubblePosition.Start" Color="Color.Primary">
+            <div class="chat-messages" id="chat-messages">
+                <div class="message user-message">
+                    <MudAvatar>
+                        <MudImage Src="img/av1.png" />
+                    </MudAvatar>
+
+                    @Message.Message
+                </div>
+            </div>
+               @* <MudChat ArrowPosition="ChatArrowPosition.Middle" ChatPosition="ChatBubblePosition.Start" Color="Color.Primary">
                     <MudAvatar>
                         <MudImage Src="img/av1.png" />
                     </MudAvatar>
                     <MudChatBubble Style="text-align:justify" Variant="Variant.Filled">@Message.Message</MudChatBubble>
-                </MudChat>
+                </MudChat>*@
             }
         }
 

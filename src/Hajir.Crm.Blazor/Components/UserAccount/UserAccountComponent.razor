@@ -1,0 +1,17 @@
+﻿
+
+
+<Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+    
+    <Authorized>
+        <span>@context.User.Identity.Name</span>
+        <MudButton OnClick="Logout"> Logout</MudButton>
+    </Authorized>
+    <NotAuthorized>
+        <MudButton Href="/login">Login</MudButton>
+        
+    </NotAuthorized>
+</Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+@code {
+
+}

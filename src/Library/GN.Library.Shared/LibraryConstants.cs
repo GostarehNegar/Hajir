@@ -143,6 +143,22 @@ namespace GN.Library
                 public static string MyUpdate => Perfix + ".my.update";
                 public const string GetUpdate = Perfix + ".my.get";
             }
+            public class Ai
+            {
+                public const string prefix = "ai";
+                public class Agents
+                {
+                    public const string Perfix = Ai.prefix + ".agents";
+                    // ai.agents.request.
+                    public static string AgentRequest(string agent) => Perfix + $".request.{agent}";
+                    public class Management
+                    {
+                        public const string Perfix = Agents.Perfix + ".management";
+                        public const string HeartBeat = Perfix + ".heartbeat";
+                        public const string ListAgents = Perfix + ".list";
+                    }
+                }
+            }
         }
 
         public class Schema
@@ -227,5 +243,8 @@ namespace GN.Library
            
 
         }
+
+
+        
     }
 }

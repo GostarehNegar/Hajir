@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @using Hajir.Crm.Blazor.XrmFrames;
 @using MudBlazor;
-<MudRTLProvider RightToLeft>
+<MudRTLProvider RightToLeft="true">
     <MudThemeProvider Theme="MyCustomTheme" />
     <MudDialogProvider />
     <MudSnackbarProvider />
@@ -14,6 +14,10 @@
             </div>
         }
         <div class="main">
+            <div class="top-row px-4">
+
+                <Hajir.Crm.Blazor.Components.UserAccount.UserAccountComponent />
+            </div>
             @*<div class="top-row px-4">
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
             </div>*@

@@ -5,6 +5,13 @@ using System.Text;
 
 namespace Hajir.Crm.Sales
 {
+    public enum PriceListSource
+    {
+        CRM,
+        Excel
+    }
+
+
     public class PriceList
     {
         private List<PriceListItem> items = new List<PriceListItem>();
@@ -25,11 +32,18 @@ namespace Hajir.Crm.Sales
             return $"{Name}";
 
         }
+        public IEnumerable<PriceListItem> Items => items;
+        
     }
     public class PriceListItem
     {
         public string Id { get; set; }
         public string ProductId { get; set; }
         public decimal Price { get; set; }
+
+        public string ProductNumber { get; set; }
+
+        public decimal? Price1 { get; set; }
+        public decimal? Price2 { get; set; }
     }
 }

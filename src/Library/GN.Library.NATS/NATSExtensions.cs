@@ -382,6 +382,7 @@ namespace GN.Library.Nats
             private static ConcurrentDictionary<string, StreamInfo> streams = new ConcurrentDictionary<string, StreamInfo>();
             internal StreamManager(INatsConnection connection)
             {
+                //NATS.Client.JetStream.StreamInfo
                 this.connection = connection;
             }
             public async Task<StreamInfo> Create(string name, Action<StreamConfig> configure = null)

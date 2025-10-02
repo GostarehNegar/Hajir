@@ -1,6 +1,7 @@
 ﻿using Hajir.Crm.SanadPardaz;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -33,6 +34,14 @@ namespace Hajir.Crm
 
             return good != null && SynchableProductTypes.Contains(good.GetProdcutType() ?? HajirCrmConstants.Schema.Product.ProductTypes.Other);
         }
-       
+        public static string FormatPersianDate(this DateTime dateTime, string format = "yyyy/MM/dd")
+        {
+            return dateTime.ToString(format, new CultureInfo("fa-IR"));
+        }
+        public static string FormatPersianDate(this DateTime? dateTime, string format = "yyyy/MM/dd")
+        {
+            return dateTime.HasValue ? dateTime.Value.ToString(format, new CultureInfo("fa-IR")) : null;
+        }
+
     }
 }

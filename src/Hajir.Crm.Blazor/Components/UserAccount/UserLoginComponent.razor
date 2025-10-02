@@ -1,0 +1,20 @@
+﻿
+
+<MudPaper Width="50%" Class="pa-16 ma-2">
+    <MudTextField T="string"
+                  Variant="Variant.Outlined"
+                  Label="UserName"
+                  @bind-Text="UserName">
+    </MudTextField>
+    <MudTextField T="string" 
+                  InputType="InputType.Password"
+                  Variant="Variant.Outlined"
+                  Label="Password"
+                  @bind-Text="Password">
+    </MudTextField>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Login">Login</MudButton>
+</MudPaper>
+
+@code {
+
+}

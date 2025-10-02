@@ -12,6 +12,7 @@ using MudBlazor;
 using Hajir.Crm.Blazor.ViewModels;
 using System.Reflection.Metadata;
 using Hajir.Crm.Blazor;
+using System.Threading;
 
 namespace Hajir.Crm.Blazor.Components.Sales
 {
@@ -73,7 +74,7 @@ namespace Hajir.Crm.Blazor.Components.Sales
             await base.OnInitializedAsync();
         }
 
-        public async Task<IEnumerable<Product>> SearchUps(Input e)
+        public async Task<IEnumerable<Product>> SearchUps(Input e, CancellationToken t)
         {
             if (!string.IsNullOrWhiteSpace(e.Value))
                 return AllUpses.Where(x => x.Name.ToLower().Contains(e.Value.ToLower()));

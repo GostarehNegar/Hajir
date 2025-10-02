@@ -6,6 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Primitives;
+using System.Threading;
+
 namespace Hajir.Crm.Blazor.Components
 {
     public partial class BundleEditorComponent
@@ -42,7 +45,7 @@ namespace Hajir.Crm.Blazor.Components
             await base.OnInitializedAsync();
         }
 
-        public async Task<IEnumerable<Product>> SearchUps(Input e)
+        public async Task<IEnumerable<Product>> SearchUps(Input e, CancellationToken t)
         {
             if (!string.IsNullOrWhiteSpace(e.Value))
                 return AllUpses.Where(x => x.Name.ToLower().Contains(e.Value.ToLower()));

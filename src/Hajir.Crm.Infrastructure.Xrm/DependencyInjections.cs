@@ -14,6 +14,8 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using System;
 using Hajir.Crm.Integration;
+using Hajir.Crm.Infrastructure.Xrm.Sales;
+using Hajir.Crm.Sales.PriceLists;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -29,8 +31,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IProductRepository>(s => s.GetService<XrmProductRepository>());
             //services.AddScoped<InMemoryProductRepository>();
             //services.AddTransient<IProductRepository>(s => s.GetService<InMemoryProductRepository>());
-            services.AddTransient<XrmQuoteRepository>();
-            services.AddTransient<IQuoteRepository, XrmQuoteRepository>();
+            services.AddTransient<XrmSalesRepository>();
+            services.AddTransient<IQuoteRepository, XrmSalesRepository>();
             services.AddTransient<IMemoryCache, MemoryCache>();
             services.AddSingleton<CacheService>();
             services.AddSingleton<ICacheService>(sp => sp.GetService<CacheService>());
@@ -56,8 +58,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IProductRepository>(s => s.GetService<XrmProductRepository>());
             //services.AddScoped<InMemoryProductRepository>();
             //services.AddTransient<IProductRepository>(s => s.GetService<InMemoryProductRepository>());
-            services.AddScoped<XrmQuoteRepository>();
-            services.AddScoped<IQuoteRepository>(sp => sp.GetService<XrmQuoteRepository>());
+            services.AddScoped<XrmSalesRepository>();
+            services.AddScoped<XrmSalesRepository>()
+                .AddScoped<IQuoteRepository>(sp => sp.GetService<XrmSalesRepository>())
+                .AddScoped<IPriceListRepository>(sp => sp.GetService<XrmSalesRepository>());
+
             services.AddTransient<IMemoryCache, MemoryCache>();
             services.AddSingleton<CacheService>();
             services.AddSingleton<ICacheService>(sp => sp.GetService<CacheService>());
@@ -85,8 +90,10 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<XrmProductRepository>();
             services.AddTransient<IProductRepository>(s => s.GetService<XrmProductRepository>());
 
-            services.AddScoped<XrmQuoteRepository>();
-            services.AddScoped<IQuoteRepository>(sp => sp.GetService<XrmQuoteRepository>());
+            services.AddScoped<XrmSalesRepository>()
+                .AddScoped<IQuoteRepository>(sp => sp.GetService<XrmSalesRepository>())
+                .AddScoped<IPriceListRepository>(sp => sp.GetService<XrmSalesRepository>());
+
             services.AddTransient<IMemoryCache, MemoryCache>();
             services.AddSingleton<CacheService>();
             services.AddSingleton<ICacheService>(sp => sp.GetService<CacheService>());

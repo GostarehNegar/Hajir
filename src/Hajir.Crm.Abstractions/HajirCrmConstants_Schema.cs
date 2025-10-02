@@ -158,7 +158,17 @@ namespace Hajir.Crm
                 public const string Code = HajrSolutionPerfix + "code";
                 public const string ProductTypeCode = HajrSolutionPerfix + "producttypecode";
             }
-       
+            public class PriceRecord
+            {
+                public const string LogicalName = HajrSolutionPerfix + "pricerecord";
+                public const string PriceRecordId = LogicalName + "id";
+                public const string ProductId = HajrSolutionPerfix + "productid";
+                public const string Price1 = HajrSolutionPerfix + "price1";
+                public const string Price2 = HajrSolutionPerfix + "price2";
+                public const string Name = HajrSolutionPerfix + "name";
+
+            }
+
             public class Datasheet
             {
 

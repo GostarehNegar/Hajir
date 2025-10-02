@@ -28,7 +28,7 @@
             <div class="form-container">
                 <MudAutocomplete T="Product"
                                  @bind-Value="this.BundleModel.UPS"
-                                 SearchFunc="e=>SearchUps(new Input(e))"
+                                 SearchFunc="(e,t)=>SearchUps(new Input(e),t)"
                                  ToStringFunc="e=>ProductToString(e)"
                                  OnClearButtonClick="ClearUps"
                                  Label="مدل UPS"
@@ -41,7 +41,7 @@
                                                   ResetValueOnEmptyText
                                                   SelectValueOnTab>
                 </MudAutocomplete>
-                <MudCheckBox @bind-Checked="@HasBattery">باتری دارد؟</MudCheckBox>
+                <MudCheckBox T="bool" @bind-Checked="@HasBattery">باتری دارد؟</MudCheckBox>
                 @if (HasBattery)
                 {
                     <div class="battery-container">
@@ -88,7 +88,7 @@
                     </div>
                 }
 
-                <MudCheckBox @bind-Checked="HasCabinet">کابینت دارد؟</MudCheckBox>
+                <MudCheckBox T="bool" @bind-Checked="HasCabinet">کابینت دارد؟</MudCheckBox>
                 @if (HasCabinet)
                 {
                     <div class="cabinet-container">
@@ -122,7 +122,7 @@
                     </div>
                 }
 
-                <MudCheckBox @bind-Checked="HasSNMP">کارت SNMP دارد؟</MudCheckBox>
+                <MudCheckBox T="bool" @bind-Checked="HasSNMP">کارت SNMP دارد؟</MudCheckBox>
                 @if (HasSNMP)
                 {
                     <MudSelect T="int"
@@ -138,7 +138,7 @@
                     </MudSelect>
                 }
 
-                <MudCheckBox @bind-Checked="HasParallel">کارت Parallel دارد؟</MudCheckBox>
+                <MudCheckBox T="bool" @bind-Checked="HasParallel">کارت Parallel دارد؟</MudCheckBox>
                 @if (HasParallel)
                 {
                     <MudSelect T="int"

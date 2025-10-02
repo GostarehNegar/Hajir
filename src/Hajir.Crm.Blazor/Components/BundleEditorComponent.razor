@@ -6,7 +6,7 @@
     <div class="form-container">
         <MudAutocomplete T="Product"
                          @bind-Value="this.BundleModel.UPS"
-                         SearchFunc="e=>SearchUps(new Input(e))"
+                         SearchFunc="(e,t)=>SearchUps(new Input(e),t)"
                          ToStringFunc="e=>ProductToString(e)"
                          OnClearButtonClick="ClearUps"
                          Label="UPS Model"

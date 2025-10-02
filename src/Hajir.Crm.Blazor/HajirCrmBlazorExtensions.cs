@@ -13,6 +13,8 @@ using Hajir.Crm.Blazor.ViewModels;
 using Hajir.Crm.Blazor.XrmFrames;
 using Hajir.Crm.Internals;
 using Hajir.Crm.Blazor.Internals;
+using Microsoft.AspNetCore.Components.Authorization;
+using Blazored.LocalStorage;
 
 namespace Hajir.Crm.Blazor
 {
@@ -22,6 +24,7 @@ namespace Hajir.Crm.Blazor
         {
             var options = new HajirCrmBlazorOptions();
             configure?.Invoke(options);
+            services.AddBlazoredLocalStorage();
             services.AddSingleton<CircuitService>();
             services.AddSingleton<ICircuitService>(sp => sp.GetService<CircuitService>());
             services.AddScoped<BlazorAppServices>();
@@ -29,11 +32,21 @@ namespace Hajir.Crm.Blazor
             services.AddScoped<IScopedHostedService>(sp => sp.GetService<BlazorAppServices>());
             services.AddScoped<WebResourceBus>();
             services.AddScoped<XrmPageHelper>();
-            services.AddScoped<XrmFrameAdapter>();
-            services.AddScoped<StateManager>()
-                .AddScoped<IStateManager>(sp => sp.GetService<StateManager>())
-                .AddScoped<IScopedHostedService>(sp => sp.GetService<StateManager>());
+            services.AddScoped<StateManagerAccessor>();
+            services.AddScoped<StateManager>(sp => sp.GetService<StateManagerAccessor>().StateManager);
+            services.AddScoped<IStateManager>(sp => sp.GetService<StateManager>())
+                    .AddScoped<IScopedHostedService>(sp => sp.GetService<StateManager>());
+
+            services.AddScoped<ExampleJsInterop>();
             services.AddScoped<UserContextContainer>();
+
+            //services.AddScoped<PortalAuthenticationService>();
+            services.AddAuthorizationCore();
+            services.AddScoped<PortalAuthenticationStateProvider>();
+            services.AddScoped<IPortalAuthenticationStateProvider>(sp => sp.GetService<PortalAuthenticationStateProvider>());
+            services.AddScoped<AuthenticationStateProvider>(sp => sp.GetService<PortalAuthenticationStateProvider>());
+            services.AddScoped<IPortalAuthenticationService, PortalAuthenticationService>();
+
 
 
             //services.AddScoped(typeof(State<>), typeof(State<>));
@@ -72,16 +85,17 @@ namespace Hajir.Crm.Blazor
         public static T GetStateEx<T>(this IServiceProvider services, string name = null, Func<T> constructor = null) where T : State<T>, new()
         {
             var res = services.GetService<IStateManager>().GetStateEx<T>(name, constructor);
-            
+
             return res;
         }
         public static IServiceScope CreateScopeEx(this IServiceProvider service)
         {
             var result = service.CreateScope();
             result.ServiceProvider.GetService<UserContextContainer>().Context = service.GetService<UserContextContainer>().Context;
+            result.ServiceProvider.GetService<StateManagerAccessor>().StateManager = service.GetService<StateManagerAccessor>().StateManager;
             return result;
         }
-        public static UserContext GetUserContext (this IServiceProvider service)=>
+        public static UserContext GetUserContext(this IServiceProvider service) =>
             service.GetService<UserContextContainer>().Context;
     }
 

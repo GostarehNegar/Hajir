@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Caching.Memory;
 using GN.Library.Shared;
 using System.Diagnostics;
-using GN.Library.Natilus.Messaging;
+
 using GN.Library.Messaging.Messages;
 using System.Reflection;
 using GN.Library.Messaging.Queues;
@@ -503,16 +503,7 @@ namespace GN.Library.Messaging.Internals
             return result;
         }
 
-        public virtual INatilusMessageContext CreateNatilusMessage(string subject, object message)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual INatilusSubscriptionBuilder CreateNatilusSubscription(string subject)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public void CancelRequest(IMessageContext request)
         {
             this.requests.TryRemove(request.Message.MessageId, out var _);

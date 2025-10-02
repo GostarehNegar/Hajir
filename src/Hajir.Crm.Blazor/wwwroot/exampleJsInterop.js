@@ -4,3 +4,9 @@
 export function showPrompt(message) {
   return prompt(message, 'Type anything here');
 }
+export function scrollToBottom() {
+    const chatContainer = document.getElementById('chatbox');
+    if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+}

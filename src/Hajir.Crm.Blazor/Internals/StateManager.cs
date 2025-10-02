@@ -8,6 +8,14 @@ namespace Hajir.Crm
     internal class StateManager : IStateManager, IScopedHostedService
     {
         private ConcurrentDictionary<string, object> items = new ConcurrentDictionary<string, object>();
+
+        public IServiceProvider ServiceProvider { get; private set; }
+
+        public StateManager() { }
+        public StateManager(IServiceProvider serviceProvider)
+        {
+            this.ServiceProvider = serviceProvider;
+        }
         private string GetKey<T>(string name) => typeof(T).FullName + "-" + name ?? "noname";
         public State<T> GetState<T>(string name = null, Func<State<T>> constructor = null) where T : class, new()
         {
@@ -71,5 +79,16 @@ namespace Hajir.Crm
             return result;
             
         }
+    }
+
+    class StateManagerAccessor
+    {
+        public StateManagerAccessor(IServiceProvider serviceProvider)
+        {
+            this.StateManager = new StateManager();
+        }
+        public StateManager StateManager { get; set; }
+
+
     }
 }

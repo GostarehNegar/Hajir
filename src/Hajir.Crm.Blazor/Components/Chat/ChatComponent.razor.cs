@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using GN.Library.Nats;
 using Microsoft.AspNetCore.Components;
 using Hajir.Crm.Portal.Chat;
+using Hajir.Crm.Portal;
 
 namespace Hajir.Crm.Blazor.Components.Chat
 {
@@ -40,7 +41,7 @@ namespace Hajir.Crm.Blazor.Components.Chat
                         user_id = "babak@gnco.ir",
                         session_id = this.Conversation.Id
                     })
-                    .WithSubject(PortalConstants.Subjects.Ai.Agents.AgentRequest("captain"))
+                    .WithSubject(HajirCrmConstants.Subjects.Ai.Agents.AgentRequest("captain"))
                     .Request();
                 var g = reply.GetData<AgentResponse>();
                 this.Conversation.AddMessage(g.text, ChatConversation.Roles.Assistant);

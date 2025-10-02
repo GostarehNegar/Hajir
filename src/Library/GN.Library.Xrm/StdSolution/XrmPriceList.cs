@@ -74,7 +74,10 @@ namespace GN.Library.Xrm.StdSolution
 			public const string ProcuctId = "productid";
 			public const string Name = "name";
 			public const string Amount = "amount";
-		}
+			public const string uomid = "uomid";
+			public const string uomscheduleid = "uomscheduleid";
+
+        }
 		public XrmPriceListItem() : base(Schema.LogicalName) { }
 
 		[AttributeLogicalName(Schema.PriceListItemId)]
