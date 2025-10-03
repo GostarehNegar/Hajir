@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Hajir.Crm;
 using Hajir.Crm.Blazor.ViewModels;
+using MudBlazor;
 
 namespace Hajir.Crm.Blazor.Components
 {
@@ -18,6 +19,8 @@ namespace Hajir.Crm.Blazor.Components
         [Inject]
         public IServiceProvider ServiceProvider { get; set; }
 
+        [Inject]
+        public ISnackbar Snackbar { get; set; }
         public IBlazorAppServices AppServices => this.ServiceProvider.GetService<IBlazorAppServices>();
         public void AddDisposable(IDisposable disposable) => _disposables.Add(disposable);
         public void Dispose()
@@ -26,7 +29,12 @@ namespace Hajir.Crm.Blazor.Components
         }
         public void SetError(Exception err)
         {
+            this.Snackbar.Add(err.Message, Severity.Error);
             this.ServiceProvider.GetState<ErrorModel>().SetState(new ErrorModel { Error = err });
+        }
+        public void SendInfo(string message)
+        {
+            this.Snackbar.Add(message, Severity.Info);
         }
         public async Task SafeExecute(Func<Task> func)
         {

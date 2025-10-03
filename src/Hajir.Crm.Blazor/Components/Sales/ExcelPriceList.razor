@@ -1,0 +1,16 @@
+﻿@using Microsoft.AspNetCore.Components.Forms;
+
+@inherits BaseComponent
+<MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
+    <ActivatorContent>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.CloudUpload">
+            Upload Files
+        </MudButton>
+    </ActivatorContent>
+</MudFileUpload>
+
+@code {
+
+}

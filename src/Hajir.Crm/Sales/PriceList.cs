@@ -17,7 +17,7 @@ namespace Hajir.Crm.Sales
         private List<PriceListItem> items = new List<PriceListItem>();
         public string Name { get; set; }
         public string Id { get; set; }
-
+        public PriceListSource? Source { get; set; }
         public decimal? GetPrice(string productId)
         {
             return items.FirstOrDefault(x => x.ProductId == productId)?.Price;
@@ -42,6 +42,8 @@ namespace Hajir.Crm.Sales
         public decimal Price { get; set; }
 
         public string ProductNumber { get; set; }
+        public string ProductName { get; set; }
+
 
         public decimal? Price1 { get; set; }
         public decimal? Price2 { get; set; }

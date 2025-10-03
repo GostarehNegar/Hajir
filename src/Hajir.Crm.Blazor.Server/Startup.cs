@@ -16,6 +16,7 @@ using GN;
 using GN.Library.Xrm;
 using Hajir.Crm.Reporting;
 using GN.Library.Messaging;
+using Hajir.Crm.Sales.PriceLists;
 
 namespace Hajir.Crm.Blazor.Server
 {
@@ -43,6 +44,7 @@ namespace Hajir.Crm.Blazor.Server
                 cfg.ConnectionOptions = ConnectionOptions.WebAPI;
             });
             services.AddHajirCrm(Configuration, cfg => { });
+            services.AddHajirPriceListServices(Configuration, opt => { });
             services.AddHajirSalesInfrastructure(Configuration);
             services.AddHajirReportingServices(Configuration, cfg => { });
 

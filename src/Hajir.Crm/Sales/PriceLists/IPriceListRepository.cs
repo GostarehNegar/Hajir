@@ -7,6 +7,7 @@ namespace Hajir.Crm.Sales.PriceLists
 {
     public interface IPriceListRepository
     {
-        Task ImportExcelPriceList(PriceList priceList);
+        Task<int> ImportExcelPriceList(PriceList priceList);
+        
     }
 }

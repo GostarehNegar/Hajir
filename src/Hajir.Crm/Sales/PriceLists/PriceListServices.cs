@@ -1,9 +1,11 @@
 ﻿using ExcelDataReader;
+using Hajir.Crm.Common;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,11 +16,13 @@ namespace Hajir.Crm.Sales.PriceLists
     {
         private readonly IServiceProvider serviceProvider;
         private readonly ILogger<PriceListServices> logger;
+        private readonly ICacheService cache;
 
-        public PriceListServices(IServiceProvider serviceProvider, ILogger<PriceListServices> logger)
+        public PriceListServices(IServiceProvider serviceProvider, ILogger<PriceListServices> logger, ICacheService cache)
         {
             this.serviceProvider = serviceProvider;
             this.logger = logger;
+            this.cache = cache;
         }
 
         public async Task<PriceList> LoadFromExcel(Stream xlStream)
@@ -26,17 +30,19 @@ namespace Hajir.Crm.Sales.PriceLists
             await Task.CompletedTask;
             var pl = new PriceList()
             {
-                Name = $"PriceList from Excel Sheet on {DateTime.Now.FormatPersianDate()}"
+                Name = $"PriceList from Excel Sheet on {DateTime.Now.FormatPersianDate()}",
+                Source = PriceListSource.Excel,
             };
             try
             {
-                using (var reader = ExcelReaderFactory.CreateReader(xlStream))
+                using (var reader = ExcelReaderFactory.CreateReader(xlStream, new ExcelReaderConfiguration { FallbackEncoding = Encoding.ASCII }))
                 {
                     var result = reader.AsDataSet(new ExcelDataSetConfiguration()
                     {
                         ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
                         {
                             UseHeaderRow = true // Use first row as column headers
+
                         }
                     });
 
@@ -53,6 +59,7 @@ namespace Hajir.Crm.Sales.PriceLists
                                     ProductNumber = row[0].ToString(),
                                     Price1 = decimal.TryParse(row[4].ToString(), out var p1) ? p1 : (decimal?)null,
                                     Price2 = decimal.TryParse(row[5].ToString(), out var p2) ? p2 : (decimal?)null,
+                                    ProductName = this.cache.Products.FirstOrDefault(x => x.ProductNumber == row[0].ToString())?.Name ?? "N/A"
 
                                 });
                         }

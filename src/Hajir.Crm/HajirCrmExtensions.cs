@@ -1,9 +1,13 @@
 ﻿using GN;
 using GN.Library.Shared.Entities;
+using Hajir.Crm.Common;
 using Hajir.Crm.Internals;
+using Hajir.Crm.Products;
+using Hajir.Crm.Sales;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Hajir.Crm
 {
@@ -109,6 +113,14 @@ namespace Hajir.Crm
                 ? _res
                 : (Guid?)null;
 
+        }
+        public static PriceList GetPriceList(this ICacheService cacheService, int no=1)
+        {
+            return cacheService.PriceLists.FirstOrDefault(x => x.Name == $"لیست قیمت {no}");
+        }
+        public static Product GetProductById(this ICacheService cacheService, string productId)
+        {
+            return cacheService.Products.FirstOrDefault(x => x.Id == productId);
         }
     }
 }

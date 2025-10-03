@@ -460,15 +460,19 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales
             return Task.CompletedTask;
         }
 
-        public Task ImportExcelPriceList(PriceList priceList)
+        public async Task<int> ImportExcelPriceList(PriceList priceList)
         {
             var pl1 = this.LoadPriceList("1");
             var pl2 = this.LoadPriceList("2");
             var products = this.cache.Products;
+            var result = 0;
+
+
 
             foreach (var item in priceList.Items)
             {
                 var product = products.FirstOrDefault(x => x.ProductNumber == item.ProductNumber);
+                await Task.CompletedTask;
                 try
                 {
                     if (product != null)
@@ -535,6 +539,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales
                         }
                         if (change)
                         {
+                            result++;
                             this.dataServices
                                 .GetRepository<XrmPriceRecord>()
                                 .Insert(new XrmPriceRecord
@@ -561,8 +566,8 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales
                 }
             }
 
-
-            throw new NotImplementedException();
+            return result;
+            
         }
         public PriceList LoadPriceList(string name)
         {
