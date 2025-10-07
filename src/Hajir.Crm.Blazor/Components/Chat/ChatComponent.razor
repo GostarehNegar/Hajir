@@ -1,56 +1,56 @@
 ﻿@using MudBlazor
-
+@inherits BaseComponent
 <div class="chatbox-container" id="chatbox">
 
-        @foreach (var Message in this.Conversation.Messages)
+    @foreach (var Message in this.Conversation.Messages)
+    {
+        @if (Message.Role == "assistant")
         {
-            @if (Message.Role == "assistant")
-            {
-            <div class="chat-messages" id="chat-messages">
-                <div class="message bot-message">
-                    @Message.Message
-                </div>
-            </div>
-               @* <MudChat ArrowPosition="ChatArrowPosition.Middle" ChatPosition="ChatBubblePosition.End" Color="Color.Tertiary">
-                    <MudAvatar> AI
-                        <MudImage Src="img/logo.png" /
-                    </MudAvatar>
-                    <MudChatBubble Style="text-align:justify" Variant="Variant.Filled">@Message.Message</MudChatBubble>
-                </MudChat>*@
-            }
-            else
-            {
-            <div class="chat-messages" id="chat-messages">
-                <div class="message user-message">
-                    <MudAvatar>
-                        <MudImage Src="img/av1.png" />
-                    </MudAvatar>
 
-                    @Message.Message
-                </div>
-            </div>
-               @* <MudChat ArrowPosition="ChatArrowPosition.Middle" ChatPosition="ChatBubblePosition.Start" Color="Color.Primary">
-                    <MudAvatar>
-                        <MudImage Src="img/av1.png" />
-                    </MudAvatar>
-                    <MudChatBubble Style="text-align:justify" Variant="Variant.Filled">@Message.Message</MudChatBubble>
-                </MudChat>*@
-            }
-        }
-
-        @if (1==0)
-        {
-            <MudChat Color="Color.Tertiary" ChatPosition="ChatBubblePosition.End">
+            <div class="message bot-message">
+                @((MarkupString) ToHtml(Message.Message))
                 <MudAvatar>
-                    <MudImage Src="img/logo.png" />
+                    <MudImage Src="img/av2.png" />
                 </MudAvatar>
-                <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Pulse" Width="150px" Height="30px"></MudSkeleton>
-            </MudChat>
+            </div>
+            @* <MudChat ArrowPosition="ChatArrowPosition.Middle" ChatPosition="ChatBubblePosition.End" Color="Color.Tertiary">
+    <MudAvatar> AI
+    <MudImage Src="img/logo.png" /
+    </MudAvatar>
+    <MudChatBubble Style="text-align:justify" Variant="Variant.Filled">@Message.Message</MudChatBubble>
+    </MudChat>*@
         }
+        else
+        {
+            <div class="message user-message">
+                <MudAvatar>
+                    <MudImage Src="img/av1.png" />
+                </MudAvatar>
 
-    </div>
+                @Message.Message
+            </div>
+            @* <MudChat ArrowPosition="ChatArrowPosition.Middle" ChatPosition="ChatBubblePosition.Start" Color="Color.Primary">
+    <MudAvatar>
+    <MudImage Src="img/av1.png" />
+    </MudAvatar>
+    <MudChatBubble Style="text-align:justify" Variant="Variant.Filled">@Message.Message</MudChatBubble>
+    </MudChat>*@
+        }
+    }
+
+    @if (1 == 0)
+    {
+        <MudChat Color="Color.Tertiary" ChatPosition="ChatBubblePosition.End">
+            <MudAvatar>
+                <MudImage Src="img/logo.png" />
+            </MudAvatar>
+            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Animation="Animation.Pulse" Width="150px" Height="30px"></MudSkeleton>
+        </MudChat>
+    }
+
+</div>
 <div class=@GetClass()>
-    <input autofocus="true" type="text" @bind-value=this.Prompt placeholder="پیام خود را وارد کنید" @onkeyup="this.TriggerSearch" />
+    <input autofocus="true" style="text-align:right" type="text" @bind-value=this.Prompt placeholder="پیام خود را وارد کنید" @onkeyup="this.TriggerSearch" />
     <MudIconButton OnClick="this.Submit"
                    Icon="@Icons.Material.Outlined.ArrowUpward"
                    Disabled="this.IsDisabled"

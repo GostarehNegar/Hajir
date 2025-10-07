@@ -16,12 +16,16 @@ url = "https://openrouter.ai/api/v1"
 logger = logging.getLogger(__name__)
 GPT_OSS = "openai/gpt-oss-120b"
 
+url ="https://api.deepseek.com"
+api_key = "sk-fec93ba732c046b38b35263b0a4c004d" #"sk-3b8842c4b8de41b48ad350662886e849"
+GPT_OSS ="deepseek-chat"
+
 template = """Question: {question}
 Answer: Let's think step by step."""
 
 
 def ToChatMessage(msg: ConversationMessage) -> models.ChatMessage:
-    return models.ChatMessage(role='user' if msg.role == ParticipantRole.USER else 'assistant',
+    return models.ChatMessage(role=msg.role,
                               content=msg.content)
 
 
@@ -88,6 +92,7 @@ class AgentProxy(Agent):
 
         _history = [ToChatMessage(msg)
                     for msg in chat_history]
+        
         msg = models.AgentRequest(
             input_text=input_text,
             user_id=user_id,

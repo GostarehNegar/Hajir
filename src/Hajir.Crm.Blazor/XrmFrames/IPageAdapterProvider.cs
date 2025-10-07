@@ -68,7 +68,8 @@ namespace Hajir.Crm.Blazor.XrmFrames
         {
             var exp = $"parent.Xrm.Page.getAttribute('{attributeName}').getValue();";
             var values = await frame.Evaluate<DynamicEntityReference[]>(exp);
-            return values.FirstOrDefault();
+
+            return values?.FirstOrDefault();
         }
         
         public static async Task<CurrentUser> GetCurrentUser(this IXrmFrame frame )
@@ -78,15 +79,19 @@ namespace Hajir.Crm.Blazor.XrmFrames
             {
                 return user;
             }
-            var res = await frame.Adapter.Evaluate<string>(
-                $"parent.Xrm.Utility.getGlobalContext().userSettings.userName +'::'+parent.Xrm.Utility.getGlobalContext().userSettings.userId;");
-            var parts = res.Split("::");
-            
-            user =  new CurrentUser
+            try
             {
-                UserName = parts[0],
-                UserId = parts.Length > 1 ? parts[1] : null
-            };
+                var res = await frame.Adapter.Evaluate<string>(
+                    $"parent.Xrm.Utility.getGlobalContext().userSettings.userName +'::'+parent.Xrm.Utility.getGlobalContext().userSettings.userId;",5000);
+                var parts = res.Split("::");
+
+                user = new CurrentUser
+                {
+                    UserName = parts[0],
+                    UserId = parts.Length > 1 ? parts[1] : null
+                };
+            }
+            catch { }
             frame.ServiceProvider.GetUserContext().CurrentUser(user);
             return user;
 

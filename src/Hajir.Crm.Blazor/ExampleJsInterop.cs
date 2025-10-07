@@ -18,7 +18,7 @@ namespace Hajir.Crm.Blazor
         public ExampleJsInterop(IJSRuntime jsRuntime)
         {
             moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
-                "import", $"./_content/{GetType().Assembly.GetName()}/exampleJsInterop.js").AsTask());
+                "import", $"./_content/{GetType().Assembly.GetName().Name}/exampleJsInterop.js").AsTask());
         }
 
         public async ValueTask<string> Prompt(string message)

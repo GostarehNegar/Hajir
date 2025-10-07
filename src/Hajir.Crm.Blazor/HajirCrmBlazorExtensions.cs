@@ -32,6 +32,7 @@ namespace Hajir.Crm.Blazor
             services.AddScoped<IScopedHostedService>(sp => sp.GetService<BlazorAppServices>());
             services.AddScoped<WebResourceBus>();
             services.AddScoped<XrmPageHelper>();
+            services.AddScoped<XrmFrameAdapter>();
             services.AddScoped<StateManagerAccessor>();
             services.AddScoped<StateManager>(sp => sp.GetService<StateManagerAccessor>().StateManager);
             services.AddScoped<IStateManager>(sp => sp.GetService<StateManager>())

@@ -98,6 +98,9 @@ namespace Hajir.Crm.Sales
             var l = line ?? new SaleQuoteLine();
             l.QuoteId = this.QuoteId;
             _lines.Add(l);
+            ReorderLines();
+
+
             return this;
         }
         public SaleQuote RemoveLine(SaleQuoteLine line)
@@ -116,11 +119,16 @@ namespace Hajir.Crm.Sales
             PriceList = pl;
         }
 
+        public SaleQuote Validate()
+        {
+            ReorderLines();
+            return this;
+        }
 
         public void ReorderLines()
         {
             var n = 0;
-            this.Lines.ToList().ForEach(x => {
+            this.Lines.OrderBy(x=>x.LineItemNumber).ToList().ForEach(x => {
                 n++;
                 x.LineItemNumber = n;
             });

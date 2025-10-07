@@ -27,7 +27,7 @@
         </MudItem>
     </MudGrid>
     <QuoteHeaderComponent State="@this.State" />
-    @if (this.EntityId.HasValue)
+    @if (!this.IsNew)
     {
         <QuoteProductsComponent State="@this.State" ViewMode="QuoteProductsViewModes.Tabular" />
         <QuoteRemarksComponent State="@this.State" />

@@ -4,4 +4,13 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="PriceAgent\py\NewFolder\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hajir.Crm\Hajir.Crm.csproj" />
+    <ProjectReference Include="..\Library\GN.Library.NATS\GN.Library.NATS.csproj" />
+  </ItemGroup>
+
 </Project>

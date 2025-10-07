@@ -53,6 +53,7 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
         }
         public override async Task<State<SaleQuote>> LoadState()
         {
+            this.IsNew = !this.EntityId.HasValue;
             return await this.LoadState(this.EntityId);
             var id = this.EntityId;//?? await this.GetDataEntityId();
             var sale = id.HasValue ? this.ServiceProvider.GetService<IQuoteRepository>()
@@ -107,12 +108,12 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
         }
         public async Task DoSave()
         {
+
             await this.SafeExecute(async () =>
             {
                 if (1 == 1 || !this.EntityId.HasValue)
                 {
-
-
+                    this.Value.Validate();
                     if (!string.IsNullOrWhiteSpace(this.Value.PriceList?.Id) && Guid.TryParse(this.Value.PriceList?.Id, out var _id))
                     {
                         await this.SetLookupValue(XrmQuote.Schema.PriceLevelId, _id.ToString(), XrmPriceList.Schema.LogicalName);
@@ -158,6 +159,7 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
                     await this.Evaluate<string>("parent.Xrm.Page.getControl('quotedetailsGrid').refresh()");
                     var st = await this.LoadState(id);
                     this.SetState(st);
+                    this.SendInfo("Saved");
                     StateHasChanged();
                 }
                 else

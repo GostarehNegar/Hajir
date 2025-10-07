@@ -12,6 +12,7 @@ using GN.Library.Win32;
 using GN.Library.Win32.Hosting;
 using NLog.Web;
 using System.Reflection;
+using NLog.Extensions.Logging;
 
 namespace GN.Library.ServerBase
 {
@@ -33,7 +34,6 @@ namespace GN.Library.ServerBase
 
             public RunOptions()
             {
-                GN.Library.Api.Extensions.AddLibraryApi(null);
                 this._applicationParts.Add(typeof(GN.Library.Api.Extensions).Assembly);
             }
             public RunOptions WithNoHttpSupport()
@@ -41,6 +41,14 @@ namespace GN.Library.ServerBase
                 this.NoHttpSupport = true;
                 return this;
             }
+            public RunOptions AsConsole()
+            {
+                this.NoHttpSupport = true;
+                return this;
+
+            }
+
+
             public RunOptions WithServiceName(string serviceName, string description)
             {
                 this.ServiceName = serviceName;
@@ -106,6 +114,17 @@ namespace GN.Library.ServerBase
 
 #if (NET461_OR_GREATER)
 
+public static IHostBuilder CreateHostBuilderEx(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+            .UseDefaultServiceProvider(s => s.ValidateScopes = false)
+                //.UseWindowsService()
+                .ConfigureAppConfiguration(c => ConfigureAppConfiguration(c, args))
+                .ConfigureLogging(logging => ConfigureLogging(logging))
+                .ConfigureServices((c, s) =>
+                {
+                    NetCore = true;
+                    DefaultConfigureServices(c.Configuration, s, args);
+                });
         public static IWebHostBuilder CreateHostBuilder(string[] args)
         {
             return AppHost.GetWebHostBuilder()
@@ -148,18 +167,31 @@ namespace GN.Library.ServerBase
 
         public static void TT()
         {
-            
+
         }
+
+        public static IHostBuilder CreateHostBuilderEx(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+            .UseDefaultServiceProvider(s => s.ValidateScopes = false)
+                //.UseWindowsService()
+                .ConfigureAppConfiguration(c => ConfigureAppConfiguration(c, args))
+                .ConfigureLogging(logging => ConfigureLogging(logging))
+                .ConfigureServices((c, s) =>
+                {
+                    NetCore = true;
+                    DefaultConfigureServices(c.Configuration, s, args);
+                });
+
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
             .UseDefaultServiceProvider(s => s.ValidateScopes = false)
-            //.UseWindowsService()
+                //.UseWindowsService()
                 .ConfigureAppConfiguration(c => ConfigureAppConfiguration(c, args))
                 .ConfigureLogging(logging => ConfigureLogging(logging))
                 .ConfigureWebHostDefaults(cfg =>
                 {
                     cfg.UseUrlsEx();
-                    cfg.UseNLog();
+                    //cfg.UseNLog();
                     cfg.Configure(app =>
                     {
                         if (!Options.NoHttpSupport)
@@ -202,20 +234,10 @@ namespace GN.Library.ServerBase
             {
                 cfg.SkipRedis();
             });
-            //s.AddLibraryApi();
-            //s.AddMessagingServices(configuration, cfg => { cfg.Name = AppInfo.Current.Name; });
-            //s.AddSignalRTransport(configuration);
-            //s.AddSignalRHub(configuration, cfg => { });
-            //s.AddXrmServices(configuration, cfg =>
-            //{
-            //    cfg.ConnectionOptions = NetCore ? ConnectionOptions.WebAPI : ConnectionOptions.OrganizationService;
-            //});
-            //s.AddXrmDbQueryService(configuration, opt => { });
-            //s.AddChat(configuration, cfg => { });
+
             Options.ConfigureServices?.Invoke(configuration, s);
-            //_configureServices(configuration, s);
         }
-        
+
         public static void ConfigureAppConfiguration(IConfigurationBuilder c, string[] args)
         {
             var configFile = "appsettings.json";
@@ -240,6 +262,7 @@ namespace GN.Library.ServerBase
                      { "--name", "name" },
                      { "-c", "configfile" },
                      { "--config", "configfile" },
+
                  };
             c.AddCommandLine(args, switchMappings);
         }
@@ -252,9 +275,18 @@ namespace GN.Library.ServerBase
         {
             logging.ClearProviders();
             logging.AddConsole();
+            logging.AddNLog();
         }
         public static IWindowsServiceHost CreateWindowsService(string[] args)
         {
+            if (Options.NoHttpSupport)
+            {
+                return WindowsServiceHost.CreateDefaultBuilder(args)
+                    .UseWebHostBuilder(CreateHostBuilderEx(args))
+                    .ConfigureWindowsService(Options.ServiceName, Options.ServiceDescription, null)
+                    .Build();
+
+            }
 
             return WindowsServiceHost.CreateDefaultBuilder(args)
                 .UseWebHostBuilder(CreateHostBuilder(args))

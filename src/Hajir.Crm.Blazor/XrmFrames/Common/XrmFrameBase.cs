@@ -35,7 +35,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
             base.OnInitialized();
         }
 
-
+        public bool IsNew { get; set; }
         protected override Task OnInitializedAsync()
         {
 
@@ -47,6 +47,7 @@ namespace Hajir.Crm.Blazor.XrmFrames
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            this.Adapter = ServiceProvider.GetService<XrmFrameAdapter>();
             if (firstRender && !this._adapterInitialized)
             {
                 var id = this.EntityId;

@@ -1,0 +1,14 @@
+requests
+pydantic 
+argparse
+nats-py
+fastapi
+uvicorn
+dotenv
+openai
+tenacity 
+langgraph 
+langchain-openai
+langchain 
+langchain-core
+

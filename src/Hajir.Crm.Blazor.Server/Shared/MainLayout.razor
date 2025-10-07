@@ -8,26 +8,22 @@
     <MudSnackbarProvider />
 
     <div class="page">
-        @if (!URL.Contains("/quote/") && !XrmFrameBaseEx.IsXrmPage(URL) && !URL.Contains("/print/"))
+        @if (IsNotXrmFrame)
         {
             <div class="sidebar">
                 <NavMenu />
             </div>
+            
         }
         <div class="main">
-            <div class="top-row px-4">
+            @if (IsNotXrmFrame)
+            {
+                <div class="top-row px-4">
 
                 <Hajir.Crm.Blazor.Components.UserAccount.UserAccountComponent />
             </div>
-            @*<div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-            </div>*@
+            }
             <ErrorComponent />
-            @*<div class="top-row px-4">
-            </div>*@
-            @*<div class="top-row px-4">
-            <AlertComponent />
-            </div>*@
             <div class="content px-4 background">
                 @Body
             </div>

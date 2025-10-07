@@ -10,6 +10,10 @@ api_key = "sk-or-v1-3370e5ac2c59e6cebc96b00968464d7ae3a420a251e090d053fa63dbde3b
 url = "https://openrouter.ai/api/v1"
 GPT_OSS = "openai/gpt-oss-120b"
 
+url ="https://api.deepseek.com"
+api_key = "sk-fec93ba732c046b38b35263b0a4c004d" #"sk-3b8842c4b8de41b48ad350662886e849"
+GPT_OSS ="deepseek-chat"
+
 client = OpenAI(base_url=url, api_key=api_key)
 openai_agent = OpenAIAgent(OpenAIAgentOptions(
     name='OpenAI Agent',
@@ -39,7 +43,7 @@ class AgnetSmith(BaseAgent):
         res = await openai_agent.process_request(req.input_text,
                                                  user_id=req.user_id,
                                                  session_id=req.session_id,
-                                                 chat_history=_history,
+                                                 chat_history=req.chat_history,
                                                  additional_params=req.additional_params)
         logger.info(f"Smith finishes. {res.content[0]}")
         return models.AgentResponse(text=res.content[0].get('text'))

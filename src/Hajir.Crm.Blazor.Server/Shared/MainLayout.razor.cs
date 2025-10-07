@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Hajir.Crm.Blazor.XrmFrames;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace Hajir.Crm.Blazor.Server.Shared
@@ -13,7 +14,8 @@ namespace Hajir.Crm.Blazor.Server.Shared
             URL = Nav.Uri;
             base.OnParametersSet();
         }
-
+        public bool IsNotXrmFrame => !URL.Contains("/quote/") && !XrmFrameBaseEx.IsXrmPage(URL) && !URL.Contains("/print/");
+        
         private static readonly string[] Fonts = new[] { "Sahel", "Poppins", "Helvetica", "Arial", "sans-serif" };
 
         public MudTheme MyCustomTheme = new()
