@@ -35,6 +35,7 @@ namespace Hajir.Crm.Xrm.Service
                 .ConfigureLogging(opt => {
                     opt.ClearProviders();
                     //ConfigureNLog(args, opt.Configuration)
+                   // opt.AddConsole();
                 
                 })
                 .ConfigureAppConfiguration((ctx,opt) => { 
@@ -55,6 +56,7 @@ namespace Hajir.Crm.Xrm.Service
                         //opt.LegacyImportEnabled = false;
                         //opt.ProductIntegration.Disabled = true;
                         //opt.SanadIntegration.Disabled = false;
+                        
                     
                     });
                     s.AddSignalRTransport(c.Configuration, opt => { });

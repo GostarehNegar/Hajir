@@ -116,7 +116,8 @@ namespace Hajir.Crm
         }
         public static PriceList GetPriceList(this ICacheService cacheService, int no=1)
         {
-            return cacheService.PriceLists.FirstOrDefault(x => x.Name == $"لیست قیمت {no}");
+            
+            return cacheService.PriceLists.FirstOrDefault(x => x.Name == HajirCrmConstants.GetPriceListName(no));
         }
         public static Product GetProductById(this ICacheService cacheService, string productId)
         {

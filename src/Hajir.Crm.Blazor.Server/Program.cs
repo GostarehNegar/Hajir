@@ -17,6 +17,7 @@ namespace Hajir.Crm.Blazor.Server
         {
             //CreateHostBuilder(args).Build().UseGNLib().Run();
             CreateWindowsService(args).Run();
+
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

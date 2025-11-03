@@ -59,13 +59,35 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales
             }
         }
 
-        public IEnumerable<PriceList> LoadAllPriceLists()
+        private void EnsurePriceLists()
         {
-            var result = new List<PriceList>();
+            HajirCrmConstants.GetPriceListName(1);
             var pricelists = dataServices
                 .GetRepository<XrmPriceList>()
                 .Queryable
                 .ToArray();
+            if (!pricelists.Any(x => x.Name == HajirCrmConstants.GetPriceListName(1)))
+            {
+                dataServices.GetRepository<XrmPriceList>()
+                    .Insert(new XrmPriceList { Name = HajirCrmConstants.GetPriceListName(1) });
+            }
+            if (!pricelists.Any(x => x.Name == HajirCrmConstants.GetPriceListName(2)))
+            {
+                dataServices.GetRepository<XrmPriceList>()
+                    .Insert(new XrmPriceList { Name = HajirCrmConstants.GetPriceListName(2) });
+            }
+
+        }
+        public IEnumerable<PriceList> LoadAllPriceLists()
+        {
+            var result = new List<PriceList>();
+            EnsurePriceLists();
+            var pricelists = dataServices
+                .GetRepository<XrmPriceList>()
+                .Queryable
+                .ToArray();
+
+
             foreach (var pl in pricelists)
             {
                 var skip = 0;

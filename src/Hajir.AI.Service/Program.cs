@@ -13,6 +13,7 @@ namespace Hajir.AI.Service
         {
             ProgramBaseEx.Run(args, o =>
             o.AsConsole()
+            .WithServiceName("Hajir.AI.Service","Hajir AI Service")
             .WithServices((c, s) => {
 
 

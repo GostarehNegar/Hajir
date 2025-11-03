@@ -16,6 +16,7 @@ namespace Hajir.Crm.Integration.SanadPardaz.Entities
         public string GoodName { get; set;}
         public Int16? CatCode { get; set;}
         public int? Gid { get; set; }
-        public DateTime ActionDate { get; set; }
+        public string CountUnit { get; set; }
+        //public DateTime ActionDate { get; set; }
     }
 }

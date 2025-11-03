@@ -45,6 +45,9 @@
     <None Update="assets\pl.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="assets\pl2.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="temp.jpeg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

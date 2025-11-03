@@ -19,6 +19,22 @@ namespace Hajir.Crm.Integration
             return this;
         }
     }
+    public class ProductDbIntegrationOptions
+    {
+        public bool Disabled { get; set; } = true;
+        public short[] Categories { get; set; } =Array.Empty<short>();
+        public int WaitSeconds { get; set;} = 60;
+        public ProductDbIntegrationOptions Validate()
+        {
+            Categories = Categories?? Array.Empty<short>();
+            if (Categories.Length == 0)
+            {
+                Categories = HajirCrmConstants.GoodCategoriesForIntegration;
+            }
+            this.WaitSeconds = this.WaitSeconds < 60 ? 60 : 60;
+            return this;
+        }
+    }
     public class HajirIntegrationOptions
     {
 
@@ -28,12 +44,13 @@ namespace Hajir.Crm.Integration
         public bool LegacyImportEnabled { get; set; } = false;
         public ProductIntegrationOptions ProductIntegration { get; set; } = new ProductIntegrationOptions();
         public SanadAccountIntegrationOptions SanadIntegration { get; set; }
-
+        public ProductDbIntegrationOptions ProductSanadDbIntegrationOptions { get; set; } = new ProductDbIntegrationOptions { };
         public HajirIntegrationOptions Validate()
         {
             LegacyConnectionString = string.IsNullOrEmpty(LegacyConnectionString) ? HajirCrmConstants.DefaultLegacyCrmConnectionString : LegacyConnectionString;
             ProductIntegration = this.ProductIntegration ?? new ProductIntegrationOptions();
             this.SanadIntegration = (this.SanadIntegration ?? new SanadAccountIntegrationOptions()).Validate();
+            this.ProductSanadDbIntegrationOptions = (this.ProductSanadDbIntegrationOptions ?? new ProductDbIntegrationOptions()).Validate();
             return this;
         }
         public string GetQueueStorageConnectionString()

@@ -41,7 +41,7 @@ namespace Hajir.Crm.Tests.Specs.Sales
             var host = this.GetHost();
             var target = host.Services.GetService<IPriceListServices>();
             var repo = host.Services.GetService<IPriceListRepository>();
-            var filePath = @".\assets\pl.xlsx";
+            var filePath = @".\assets\pl2.xlsx";
             using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
             {
                 var pl = await target.LoadFromExcel(stream);

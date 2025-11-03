@@ -97,6 +97,7 @@ namespace Hajir.Crm.Sales
             //line = line ?? new SaleQuoteLine();
             var l = line ?? new SaleQuoteLine();
             l.QuoteId = this.QuoteId;
+            l.LineItemNumber = 10000;
             _lines.Add(l);
             ReorderLines();
 

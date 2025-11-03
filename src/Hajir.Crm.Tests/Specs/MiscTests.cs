@@ -48,7 +48,7 @@ namespace Hajir.Crm.Tests.Specs
         [TestMethod]
         public async Task XlPriceList()
         {
-            var filePath = @".\assets\pl.xlsx";
+            var filePath = @".\assets\pl2.xlsx";
             using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = ExcelReaderFactory.CreateReader(stream))

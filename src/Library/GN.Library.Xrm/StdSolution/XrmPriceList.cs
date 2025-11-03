@@ -57,10 +57,11 @@ namespace GN.Library.Xrm.StdSolution
 		}
 
 		[AttributeLogicalName(Schema.Name)]
-		public string Name { get => this.GetAttributeValue<string>(Schema.Name); }
+		public string Name { get => this.GetAttributeValue<string>(Schema.Name); set => this.SetAttributeValue(Schema.Name, value); }
+        
 
 
-	}
+    }
 
 
 	[EntityLogicalNameAttribute(Schema.LogicalName)]

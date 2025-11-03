@@ -22,6 +22,7 @@ namespace Hajir.Crm.Integration
             configure?.Invoke(opt.Validate()); ;
             services.AddSingleton(opt.Validate());
             services.AddSingleton(opt.SanadIntegration);
+            services.AddSingleton(opt.ProductSanadDbIntegrationOptions);
             if (opt.LegacyImportEnabled)
             {
                 //services.AddSingleton<IntegrationBackgroundService>();
@@ -43,6 +44,12 @@ namespace Hajir.Crm.Integration
                 }
 
             }
+            if (!opt.ProductSanadDbIntegrationOptions.Disabled)
+            {
+                services.AddSingleton<ProductSanadDbIntegrationService>()
+                    .AddHostedService(sp=>sp.GetService<ProductSanadDbIntegrationService>());
+            }
+
             if (!opt.SanadIntegration.Disabled)
             {
                 services.AddSingleton<SanadAccountIntegrationService>();

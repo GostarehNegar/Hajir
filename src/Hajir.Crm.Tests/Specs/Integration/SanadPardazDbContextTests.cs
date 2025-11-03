@@ -28,7 +28,10 @@ namespace Hajir.Crm.Tests.Specs.Integration
                 var f = await db.CanConnectAsync();
 
                 var goods = target.Goods.ToArray();
+                var g = goods.FirstOrDefault(x => x.GoodCode == "90500101");
                 var cats = target.GoodCategories.ToArray();
+                var cat = cats.FirstOrDefault(x => x.CatCode == g.CatCode);
+                
                 var groups = target.GoodGroups.ToArray();
                 var types = target.GoodGroupsType.ToArray();
                 var ff = goods.Where(x => x.GoodName.Contains("UPS")).ToArray();

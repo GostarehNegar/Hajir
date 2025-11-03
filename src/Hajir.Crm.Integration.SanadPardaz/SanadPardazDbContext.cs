@@ -95,5 +95,26 @@ namespace Hajir.Crm.Integration.SanadPardaz
                 .ToArray();
 
         }
+
+        public IEnumerable<IntegrationProduct> GetProductsByCategory(short catCode)
+        {
+            var q = from p in this.Goods
+                    join c in this.GoodCategories on p.CatCode equals c.CatCode into cats
+                    from cat in cats.DefaultIfEmpty()
+                    where p.CatCode==catCode
+                    select new IntegrationProduct
+                    {
+                        Id = p.GoodCode,
+                        Name = p.GoodName,
+                        CatName = cat == null ? string.Empty : cat.CatName,
+                        CatCode = p.CatCode,
+                        GroupId = p.Gid,
+                        ProductNumber = p.GoodCode,
+                        UnitOfMeasurement =p.CountUnit
+                        
+                        //GroupName = grp == null ? string.Empty : grp.GName
+                    };
+            return q.ToArray();
+        }
     }
 }
