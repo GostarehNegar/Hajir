@@ -14,5 +14,7 @@
 
 @if (this.ExcelPriceList != null)
 {
+    <MudDivider></MudDivider>
+    <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="Import">Import</MudButton>
     <PriceListComponent State="@(new State<PriceList>(this.ExcelPriceList))" />
 }

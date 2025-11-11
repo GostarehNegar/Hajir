@@ -8,9 +8,14 @@
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+    <PackageReference Include="Markdig" Version="0.42.0" />
     <PackageReference Include="Telegram.Bot" Version="19.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Hajir.AI.Agents\Hajir.AI.Agents.csproj" />
+    <ProjectReference Include="..\..\Hajir.Crm.Abstractions\Hajir.Crm.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Hajir.Crm\Hajir.Crm.csproj" />
+    <ProjectReference Include="..\..\Library\GN.Library.NATS\GN.Library.NATS.csproj" />
     <ProjectReference Include="..\..\Library\GN.Library.Odoo\GN.Library.Odoo.csproj" />
     <ProjectReference Include="..\..\Library\GN.Library\GN.Library.csproj" />
   </ItemGroup>

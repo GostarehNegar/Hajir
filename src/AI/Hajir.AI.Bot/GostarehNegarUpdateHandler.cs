@@ -17,6 +17,7 @@ using Hajir.AI.Bot.Internals;
 using Microsoft.Extensions.Caching.Memory;
 using System.IO;
 using System.Net.Http;
+using Markdig;
 
 namespace GostarehNegarBot
 {
@@ -28,12 +29,12 @@ namespace GostarehNegarBot
         private readonly IContactStore contactStore;
 
         public GostarehNegarUpdateHandler(IServiceProvider serviceProvider,
-            ILogger<GostarehNegarUpdateHandler> logger, ChatMemoryCache cache, IContactStore contactStore)
+            ILogger<GostarehNegarUpdateHandler> logger, ChatMemoryCache cache)
         {
             this.serviceProvider = serviceProvider;
             this.logger = logger;
             this.cache = cache;
-            this.contactStore = contactStore;
+            this.contactStore = null;// contactStore;
         }
         public Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
@@ -112,6 +113,13 @@ namespace GostarehNegarBot
             return true;
 
         }
+        public string ToHtml(string md)
+        {
+            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+            string html = Markdown.ToHtml(md, pipeline);
+            return html;
+
+        }
         public async Task HandleTextUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
             var task = Task<bool>.Run(async () =>
@@ -124,7 +132,7 @@ namespace GostarehNegarBot
                         var ReplyMarkup = new ReplyKeyboardRemove();
                         //ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup(new KeyboardButton(""));
                         var repl = await ReplyPipe.Setup().Run(new TelegramBotContext(scope, update, botClient, cancellationToken)).TimeoutAfter(120000, token: cancellationToken);
-                        await botClient.SendTextMessageAsync(update.Message.Chat.Id, text: repl.Reply, replyMarkup: ReplyMarkup, cancellationToken: cancellationToken);
+                        await botClient.SendTextMessageAsync(update.Message.Chat.Id, text:  repl.Reply, replyMarkup: ReplyMarkup, parseMode:ParseMode.Markdown, cancellationToken: cancellationToken);
                         this.logger.LogInformation(
                             $"Text update successfully handled. User:{update.Message.From.LastName}");
                     }
@@ -194,21 +202,21 @@ namespace GostarehNegarBot
                 return;
             try
             {
-                this.cache.GetContactFromCache(update.Message.From.Id,
-                       c =>
-                       {
-                           c.FirstName = update.Message?.From?.FirstName;
-                           c.LastName = update.Message?.From?.LastName;
-                           c.ChatId = update.Message.Chat?.Id ?? 0;
-                           c.TelegramId = update.Message.From.Id;
+                //this.cache.GetContactFromCache(update.Message.From.Id,
+                //       c =>
+                //       {
+                //           c.FirstName = update.Message?.From?.FirstName;
+                //           c.LastName = update.Message?.From?.LastName;
+                //           c.ChatId = update.Message.Chat?.Id ?? 0;
+                //           c.TelegramId = update.Message.From.Id;
 
 
-                       });
-                //await this.EnsurePhoto(botClient, update, cancellationToken);
+                //       });
+                ////await this.EnsurePhoto(botClient, update, cancellationToken);
                 switch (update.Message.Type)
                 {
                     case MessageType.Text:
-                        if (await this.EnsureSignedIn(botClient, update, cancellationToken))
+                        if ( true || await this.EnsureSignedIn(botClient, update, cancellationToken))
                         {
                             await this.HandleTextUpdateAsync(botClient, update, cancellationToken);
                         }

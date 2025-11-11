@@ -89,5 +89,11 @@ namespace Hajir.Crm
 
             return distances[lengthA, lengthB];
         }
+
+        public string RemoveArabic(string str)
+        {
+            return str == null ? str : str.Replace("ك", "ک").Replace("ي", "ی");
+
+        }
     }
 }

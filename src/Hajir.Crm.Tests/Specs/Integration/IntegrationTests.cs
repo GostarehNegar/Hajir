@@ -171,9 +171,29 @@ namespace Hajir.Crm.Tests.Specs.Integration
             host.Services.GetService<ISanadOrdersIntegrationService>().Enqueue(quotes.Id);
 
             await Task.Delay(100 * 1000);
-            
 
-           
+
+
+
+        }
+        [TestMethod]
+        public async Task FixCityNames()
+        {
+            var host = this.GetHost();
+            var cities = host.Services.GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirCity>()
+                .Queryable
+                .ToArray();
+            foreach(var city in cities)
+            {
+                host.Services.GetService<IXrmDataServices>()
+                    .GetRepository<XrmHajirCity>()
+                    .Update(new XrmHajirCity
+                    {
+                        Id = city.Id,
+                        Name = HajirUtils.Instance.RemoveArabic(city.Name)
+                    });
+            }
 
         }
     }

@@ -85,7 +85,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GN.Library.AI", "Library\GN
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.AI.Agents", "Hajir.AI.Agents\Hajir.AI.Agents.csproj", "{836D3799-AC9B-4EA8-A95C-EFA6BBD19A62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hajir.AI.Service", "Hajir.AI.Service\Hajir.AI.Service.csproj", "{E1B4986A-FA73-491C-A650-6CD9188982AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hajir.AI.Service", "Hajir.AI.Service\Hajir.AI.Service.csproj", "{E1B4986A-FA73-491C-A650-6CD9188982AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

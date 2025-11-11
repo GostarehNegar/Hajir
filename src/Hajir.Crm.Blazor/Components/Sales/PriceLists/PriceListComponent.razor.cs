@@ -1,4 +1,5 @@
-﻿using Hajir.Crm.Sales;
+﻿using Hajir.Crm.Common;
+using Hajir.Crm.Sales;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace Hajir.Crm.Blazor.Components.Sales.PriceLists
 {
     public partial class PriceListComponent
     {
+        [Inject]
+        private ICacheService CacheService { get; set; }
         private string filterString;
         bool Filter(PriceListItem item)
         {
@@ -36,6 +39,22 @@ namespace Hajir.Crm.Blazor.Components.Sales.PriceLists
         public void change(object p)
         {
 
+        }
+        public override Task<State<PriceList>> LoadState()
+        {
+            if (this.State==null ||  this.Value == null || this.Value.Items == null || this.Value.Items.Count() == 0)
+            {
+                //this.PriceList = this.CacheService.GetPriceList(1);
+                var q = new State<PriceList>(this.CacheService.GetPriceList(1));
+                q.Value.Items.ToList().ForEach(item =>
+                {
+                    item.ProductName = this.CacheService.GetProductById(item.ProductId)?.Name;
+                    item.ProductNumber = this.CacheService.GetProductById(item.ProductId)?.ProductNumber;
+                });
+                return Task.FromResult(q);
+            }
+
+            return base.LoadState();
         }
     }
 }

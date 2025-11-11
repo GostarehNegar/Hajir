@@ -25,7 +25,9 @@ namespace Hajir.Crm.Infrastructure.Xrm.Reporting
             var q = this.dataServices
                .GetRepository<XrmHajirQuote>()
                .Queryable
-               .FirstOrDefault(x => x.QuoteNumber == id);
+               .Where(x => x.QuoteNumber == id)
+               .OrderByDescending(x => x.CreatedOn)
+               .FirstOrDefault();
 
             var schema = this.dataServices.GetSchemaService().GetSchema(XrmHajirQuote.Schema.LogicalName);
             string GetPaymentCode(int? val)

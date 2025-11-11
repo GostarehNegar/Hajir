@@ -40,6 +40,7 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
     {
         public Guid? Id { get; set; }
         public RemarksItemModel[] RemarkLines = RemarksItemModel.GetDefaults();
+        public bool IsNew => string.IsNullOrWhiteSpace(this.State?.Value?.QuoteId);
         public async override Task<bool> XrmInitializeAsync()
         {
             if (!this.EntityId.HasValue)
@@ -53,7 +54,7 @@ namespace Hajir.Crm.Blazor.XrmFrames.Quote
         }
         public override async Task<State<SaleQuote>> LoadState()
         {
-            this.IsNew = !this.EntityId.HasValue;
+            
             return await this.LoadState(this.EntityId);
             var id = this.EntityId;//?? await this.GetDataEntityId();
             var sale = id.HasValue ? this.ServiceProvider.GetService<IQuoteRepository>()

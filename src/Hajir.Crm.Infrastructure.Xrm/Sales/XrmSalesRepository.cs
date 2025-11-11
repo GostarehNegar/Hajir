@@ -12,6 +12,7 @@ using Microsoft.Xrm.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -589,7 +590,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales
             }
 
             return result;
-            
+
         }
         public PriceList LoadPriceList(string name)
         {
@@ -629,6 +630,70 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales
             }
             return result;
 
+        }
+
+        public SaleQuote UpsertOpportunity(SaleQuote opportunity)
+        {
+
+            var target = new XrmHajirOpportunity();
+            if (opportunity.Customer?.Id == null || !Guid.TryParse(opportunity.Customer.Id, out var _accountid))
+            {
+                throw new Exception("خریدار");
+            }
+            target.AccountId = _accountid;
+            target.PriceLevelId = !string.IsNullOrWhiteSpace(opportunity.PriceList?.Id) && Guid.TryParse(opportunity.PriceList?.Id, out var _plid) ? _plid :(Guid?) null;
+            target[XrmHajirOpportunity.Schema.isrevenuesystemcalculated] = true;
+            target.EstimavetRevenue = opportunity.ExtendedAmount;
+            target.Topic = $"فروش {opportunity.Lines.FirstOrDefault()?.Name} به {opportunity.Customer.Name}";
+            target.Id = this.dataServices.GetRepository<XrmHajirOpportunity>().Insert(target);
+            foreach (var line in opportunity.Lines)
+            {
+                var prod =
+                new XrmHajirOpportunityProduct
+                {
+                    OpportunityId = target.Id,//  Guid.TryParse(line.QuoteId, out var __iid) ? __iid : (Guid?)null,
+                    //QuoteDetailId = Guid.TryParse(line.Id, out var _id) ? _id : (Guid?)null,
+                    ProductId = Guid.TryParse(line.ProductId, out var _pid) ? _pid : (Guid?)null,
+                    Quantity = line.Quantity,
+                    BaseAmount = line.BaseAmount,
+                    ManualDiscountAmount = line.Discount,
+                    ExtendedAmount = line.ExtendedAmount,
+                    IsProductOverridden = line.IsProductOverriden,
+                    PricePerUnit = line.PricePerUnit,
+                    Tax = line.Tax,
+                    //PercentTax = line.PercentTax,
+                    //PercentDiscount = line.PercentDiscount,
+                    //GuaranteeMonths = line.GuaranteeMonth,
+                    LineItemNumber = line.LineItemNumber
+
+                };
+                prod.IsProductOverridden = prod.ProductId == null;
+                if (!prod.IsProductOverridden ?? false)
+                {
+                    prod.UnitOfMeasureId = Guid.TryParse(cache.UnitOfMeasurements.FirstOrDefault()?.Id, out var _v) ? _v : (Guid?)null;
+                }
+                var _ProductId = Guid.TryParse(line.ProductId, out var __pid) ? __pid : (Guid?)null;
+                if (_ProductId.HasValue)
+                {
+                    prod.ProductId = _ProductId.Value;
+                }
+                if (!prod.ProductId.HasValue)
+                {
+                    prod.ProductDescription = line.Name;
+                }
+                this.dataServices.GetRepository<XrmHajirOpportunityProduct>()
+                    .Insert(prod);
+
+
+            }
+
+            return opportunity;
+
+
+
+
+
+            //throw new NotImplementedException();
         }
     }
 }

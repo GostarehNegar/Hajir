@@ -34,7 +34,7 @@ namespace GostarehNegarBot.Models
    
     public class ConversationModel
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         public ConversationMemoryModel Memory { get; set; }
 
         public ConversationModel AddHumanMessage(string message)

@@ -38,7 +38,19 @@ namespace Hajir.Crm.Blazor.Components.Sales.PriceLists
                 }
             });
 
+
             //TODO upload the files to the server
+        }
+
+        private async Task Import()
+        {
+            await this.SafeExecute(async () =>
+            {
+                var repo = this.ServiceProvider.GetService<IPriceListRepository>();
+                await repo.ImportExcelPriceList(this.ExcelPriceList);
+                await Task.CompletedTask;
+
+            });
         }
     }
 }

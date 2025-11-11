@@ -168,7 +168,39 @@ namespace Hajir.Crm
                 public const string Name = HajrSolutionPerfix + "name";
 
             }
+            public class Opportunity : EntitySchema
+            {
+                public const string LogicalName = "opportunity";
+                public const string OpportunityId = LogicalName + "id";
+                public const string Name = "name";
+                public const string parentaccountid = "parentaccountid";
+                public const string pricelevelid = "pricelevelid";
+                public const string isrevenuesystemcalculated = "isrevenuesystemcalculated";
+                public const string estimatedvalue = "estimatedvalue";
 
+
+            }
+            public class OpportunityProduct : EntitySchema
+            {
+                public const string LogicalName = "opportunityproduct";
+                public const string OpportunityProcutId = LogicalName + "id";
+                public const string Description = "description";
+                public const string OpportunityId = "opportunityid";
+                public const string Quantity = "quantity";
+                public const string PricePerUnit = "priceperunit";
+                public const string Tax = "tax";
+                public const string ProductId = "productid";
+                public const string ProductDescription = "productdescription";
+                public const string BaseAmount = "baseamount";
+                public const string ExtendedAmount = "extendedamount";
+                public const string ManualDiscountAmount = "manualdiscountamount";
+                public const string VolumeDiscountAmount = "volumediscountamount";
+                public const string UnitOfMeasureId = "uomid";
+                public const string IsProductOverridden = "isproductoverridden";
+                public const string SequenceNumber = "sequencenumber";
+                public const string ParentBundleId = "parentbundleid";
+                public const string LineItemNumber = "lineitemnumber";
+            }
             public class Datasheet
             {
 

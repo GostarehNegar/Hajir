@@ -35,7 +35,7 @@ namespace Hajir.Crm.Reporting.Controllers
             {
                 data.QuoteNumber = data.QuoteNumber.Split('-')[1];
             }
-            
+
             data.PrepareBundles();
             
 

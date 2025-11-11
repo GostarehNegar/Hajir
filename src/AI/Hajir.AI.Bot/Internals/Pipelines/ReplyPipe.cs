@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GN;
+using GN.Library.Nats;
 using GostarehNegarBot.Contracts;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Caching.Memory;
-using GostarehNegarBot.Models;
 using GostarehNegarBot.Lib;
+using GostarehNegarBot.Models;
+using Hajir.Crm;
+using Hajir.Crm.Portal;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Net.Http;
-
+using System.Threading.Tasks;
 namespace GostarehNegarBot.Internals
 {
-   
+
     public class ReplyPipe
     {
         public static async Task MakeReply_Dep(TelegramBotContext context)
@@ -19,15 +20,16 @@ namespace GostarehNegarBot.Internals
             context.Reply = "hey";
             var _mem = context.ServiceProvider.GetService<ChatMemoryCache>().Cache.Get<MemoryModel>(context.Update.Message.Chat.Id);
 
-            var ret = await context.ServiceProvider.GetService<Bus>().Request("makereply", new MakeReplyContract {
+            var ret = await context.ServiceProvider.GetService<Bus>().Request("makereply", new MakeReplyContract
+            {
                 Input = context.Question,
                 Memory = _mem,
-                ChatId= context.Update.Message.Chat.Id.ToString()
+                ChatId = context.Update.Message.Chat.Id.ToString()
 
             });
-                
+
             var dic = ret.GetDataAsDicionary();
-            if (dic.TryGetValue("status", out var _status) && int.TryParse(_status.ToString(), out var __status) && __status!=0)
+            if (dic.TryGetValue("status", out var _status) && int.TryParse(_status.ToString(), out var __status) && __status != 0)
             {
                 dic.TryGetValue("error", out var _err);
                 throw new Exception($"AI Failure. Error:{_err}");
@@ -39,7 +41,33 @@ namespace GostarehNegarBot.Internals
             if (dic.TryGetValue("memory", out var memory))
             {
                 var mem = Utils.Deserialize<MemoryModel>(memory.ToString());
-                context.ServiceProvider.GetService<ChatMemoryCache>().Cache.Set(context.Update.Message.Chat.Id, mem,TimeSpan.FromMinutes(10));
+                context.ServiceProvider.GetService<ChatMemoryCache>().Cache.Set(context.Update.Message.Chat.Id, mem, TimeSpan.FromMinutes(10));
+            }
+
+        }
+        public static async Task Submit(TelegramBotContext ctx)
+        {
+           var conversation = ctx.ServiceProvider.GetService<ChatMemoryCache>().Cache.Get<ConversationModel>(ctx.Update.Message.Chat.Id)
+                ?? new ConversationModel();
+
+            try
+            {
+                var reply = await AppHost.Services.CreateNatsConnection().CreateMessageContext()
+                    .WithData(new
+                    {
+                        input_text = ctx.Question,
+                        user_id = "babak@gnco.ir",
+                        session_id = conversation.Id  //"this.Conversation.Id"
+                    })
+                    .WithSubject(HajirCrmConstants.Subjects.Ai.Agents.AgentRequest("captain"))
+                    .Request();
+                var g = reply.GetData<AgentResponse>();
+                ctx.Reply = g.text;
+
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
 
         }
@@ -52,6 +80,8 @@ namespace GostarehNegarBot.Internals
             {
                 Input = context.Question
             };
+
+
             request.Conversation = context.ServiceProvider.GetService<ChatMemoryCache>().Cache.Get<ConversationModel>(context.Update.Message.Chat.Id)
                 ?? new ConversationModel();
             //var response= await context.ServiceProvider.GetService<Bus>().Request("makereply", request);
@@ -100,8 +130,8 @@ namespace GostarehNegarBot.Internals
         {
 
             return WithPipe<TelegramBotContext>.Setup()
-                .Then(MakeReply);
-                
+                .Then(Submit);
+
 
         }
     }

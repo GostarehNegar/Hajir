@@ -35,7 +35,8 @@ namespace Hajir.Crm.Blazor.XrmFrames
             base.OnInitialized();
         }
 
-        public bool IsNew { get; set; }
+        
+
         protected override Task OnInitializedAsync()
         {
 

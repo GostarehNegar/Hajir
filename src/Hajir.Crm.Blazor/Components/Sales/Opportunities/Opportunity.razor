@@ -1,0 +1,108 @@
+﻿@using Hajir.Crm.Sales;
+@inherits BaseComponent<SaleQuote>
+
+<MudGrid>
+    <MudItem xs="10">
+        <MudAutocomplete T="SaleAccount" Label="خریدار" @bind-Value="Value.Customer" @ondblclick="CustomerDblClick"
+                         SearchFunc="@SearchAccount" Variant="Variant.Outlined" Margin="Margin.Dense" ShowProgressIndicator="true" Dense="true" />
+
+    </MudItem>
+    <MudItem xs="2">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Recalculate">محاسبه</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveOpportunity">ذخیره</MudButton>
+        <MudSwitch @bind-Value="Quote.IsOfficial" Color="Color.Primary" Label="مالیات" />
+    </MudItem>
+
+</MudGrid>
+<MudStack Row="true">
+</MudStack>
+<MudGrid>
+    @foreach (var line in this.Value.Lines)
+    {
+        <MudItem xs="5">
+            <MudStack Row="true">
+                <MudButtonGroup Variant="Variant.Filled" Size="Size.Small">
+                    <MudIconButton Icon="@Icons.Material.Filled.RemoveCircle" OnClick="@(()=>RemoveLine(line))" />
+                    <MudIconButton Icon="@Icons.Material.Filled.AddCircle" OnClick="@(()=>AddLine(line))" />
+                </MudButtonGroup>
+                <MudAutocomplete T="PriceListItem"
+                             Value="@PL(line)"
+                             ValueChanged="(id)=>ValueChanged(id,line)"
+                             SearchFunc="SearchUps"
+                             ToStringFunc="e=>ProductToString(e)"
+                             Variant="Variant.Outlined"
+                             Lines="2"
+                             Label=""
+                             Placeholder="کالا"
+                             Class="GetClass()"
+                             MaxItems="10"
+                             FullWidth="true"
+                             OpenIcon="@Icons.Material.Filled.KeyboardArrowDown"
+                             CloseIcon="@Icons.Material.Filled.KeyboardArrowUp"
+                                      AutoFocus
+                                      Immediate
+                                      Clearable
+                                      ResetValueOnEmptyText
+                                      SelectValueOnTab>
+            </MudAutocomplete>
+        </MudStack>
+    </MudItem>
+        <MudItem xs="2">
+            <MudTextField T="decimal?"
+                      @bind-Value="line.PricePerUnit"
+                      Label="قیمت" Variant="Variant.Outlined"
+                      Format="###,####"
+                      @onfocusout="Recalculate"
+                      Margin="Margin.Dense" Disabled="false" />
+        </MudItem>
+        <MudItem xs="1">
+            <MudTextField T="decimal?"
+                      @bind-Value="line.Quantity"
+                      Label="تعداد"
+                      Variant="Variant.Outlined"
+                      Format="###,####"
+                      @onfocusout="Recalculate"
+                      Margin="Margin.Dense" Disabled="false" />
+        </MudItem>
+        <MudItem xs="2">
+            <MudTextField T="decimal?"
+                      @bind-Value="line.Discount"
+                      Label="تخفیف" Variant="Variant.Outlined"
+                      Format="###,####"
+                      @onfocusout="Recalculate"
+                      Margin="Margin.Dense" Disabled="false" />
+        </MudItem>
+        <MudItem xs="2">
+            <MudTextField T="decimal?" @bind-Value="line.BaseAmount" Label="مبلغ" Variant="Variant.Outlined" Format="###,####"
+                      Margin="Margin.Dense" Disabled="true" />
+        </MudItem>
+
+    }
+
+    <MudItem xs="10">
+        <MudStack Row="true">
+            <MudIconButton Icon="@Icons.Material.Filled.AddBox" @onclick="Add" />
+            <MudText Color="Color.Secondary" Typo="Typo.h5">@Quote.ExtendedAmountInText</MudText>
+        </MudStack>
+    </MudItem>
+
+    <MudItem xs="2">
+        <MudTextField T="decimal"
+                      Value="Quote.Tax"
+                      Label="مالیات" Variant="Variant.Outlined"
+                      Format="###,####"
+                      Margin="Margin.Dense" Disabled="true" />
+        <MudTextField T="decimal"
+                      Value="Quote.ExtendedAmount"
+                      Label="مبلغ" Variant="Variant.Outlined"
+                      Format="###,####"
+                      Margin="Margin.Dense" Disabled="true" />
+    </MudItem>
+
+</MudGrid>
+
+
+
+@code {
+
+}

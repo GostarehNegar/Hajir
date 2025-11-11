@@ -25,7 +25,7 @@ namespace Hajir.Crm.Blazor.Components.Chat
         public ChatComponent()
         {
             
-            this.Conversation.AddMessage("hi", ChatConversation.Roles.Assistant);
+            //this.Conversation.AddMessage("hi", ChatConversation.Roles.Assistant);
         }
 
         public string GetClass() => "promptbox-container bottom";

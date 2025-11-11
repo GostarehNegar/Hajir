@@ -32,9 +32,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<TelegramBotService>();
             services.AddHostedService(sp => sp.GetService<TelegramBotService>());
             services.AddSingleton<LiteDbContactStore>();
-            //services.AddSingleton<IContactStore>(sp => sp.GetService<LiteDbContactStore>());
-            services.AddSingleton<OdooContactStore>(); 
-            services.AddSingleton<IContactStore>(sp => sp.GetService<OdooContactStore>());
+            services.AddSingleton<IContactStore>(sp => sp.GetService<LiteDbContactStore>());
+            //services.AddSingleton<OdooContactStore>(); 
+            //services.AddSingleton<IContactStore>(sp => sp.GetService<OdooContactStore>());
             //services.AddSingleton<OdooService>();
             //services.AddHostedService(sp => sp.GetService<OdooService>());
             return services;

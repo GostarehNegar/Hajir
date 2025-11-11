@@ -5,6 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.0" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\AI\Hajir.AI.Bot\Hajir.AI.Bot.csproj" />
     <ProjectReference Include="..\Library\GN.Library.Api\GN.Library.Api.csproj" />
     <ProjectReference Include="..\Library\GN.Library.Messaging.Transports.SignalR\GN.Library.Messaging.Transports.SignalR.csproj" />

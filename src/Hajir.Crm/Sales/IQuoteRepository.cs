@@ -22,5 +22,6 @@ namespace Hajir.Crm.Sales
         Task<IEnumerable<SaleContact>> GetAccountContacts(string accountId);
         Task<IEnumerable<PriceList>> SearchPriceList(string text);
         Task DeleteQuoteDetailLine(string id);
+        SaleQuote UpsertOpportunity(SaleQuote opportunity);
     }
 }

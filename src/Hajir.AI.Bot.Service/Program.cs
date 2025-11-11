@@ -74,7 +74,7 @@ namespace Hajir.AI.Bot.Service
                     s.AddSignalRTransport(c.Configuration, opt => { });
                     var ff = s.AddControllers();
                     s.AddHajirAIBot(c.Configuration, opt => { });
-                    s.AddOdoo(c.Configuration, opt => { });
+                    //s.AddOdoo(c.Configuration, opt => { });
                     //foreach (var asm in Options.ApplicationParts ?? new Assembly[] { })
                     //{
                     //    ff.AddApplicationPart(asm);
