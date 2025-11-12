@@ -11,8 +11,11 @@ namespace Hajir.Crm.Blazor.Components.Sales.PriceLists
 {
     public partial class PriceListComponent
     {
+        [Parameter]
+        public string Options { get; set; }
         [Inject]
         private ICacheService CacheService { get; set; }
+        private bool isLoading = true;
         private string filterString;
         bool Filter(PriceListItem item)
         {
@@ -40,8 +43,11 @@ namespace Hajir.Crm.Blazor.Components.Sales.PriceLists
         {
 
         }
-        public override Task<State<PriceList>> LoadState()
+        public override async Task<State<PriceList>> LoadState()
         {
+            this.isLoading = true;
+            this.StateHasChanged();
+            await Task.Delay(1);
             if (this.State == null || this.Value == null || this.Value.Items == null || this.Value.Items.Count() == 0)
             {
                 var q = new State<PriceList>(this.CacheService.GetPriceList(1).Merge(this.CacheService.GetPriceList(2)));
@@ -51,10 +57,14 @@ namespace Hajir.Crm.Blazor.Components.Sales.PriceLists
                     item.ProductName = this.CacheService.GetProductById(item.ProductId)?.Name;
                     item.ProductNumber = this.CacheService.GetProductById(item.ProductId)?.ProductNumber;
                 });
-                return Task.FromResult(q);
+                this.isLoading = false;
+                return await Task.FromResult(q);
             }
+            this.isLoading = false;
+            this.StateHasChanged();
+            return await base.LoadState();
 
-            return base.LoadState();
+
         }
     }
 }

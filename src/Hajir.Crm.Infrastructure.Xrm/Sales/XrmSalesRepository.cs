@@ -95,7 +95,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales
             foreach (var pl in pricelists)
             {
                 var skip = 0;
-                var take = 100;
+                var take = 500;
                 var _pl = new PriceList
                 {
                     Id = pl.Id.ToString(),

@@ -149,6 +149,7 @@ namespace Hajir.Crm.Integration.SanadPardaz
         public async Task<IEnumerable<IntegrationPriceListItem>> GetPriceListItems()
         {
             var result = new List<IntegrationPriceListItem>();
+            var cats = this.GoodCategories.ToArray();
             using (var db = this.Database.GetDbConnection())
             {
                 await db.OpenAsync();

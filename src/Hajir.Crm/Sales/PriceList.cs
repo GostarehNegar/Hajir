@@ -42,7 +42,7 @@ namespace Hajir.Crm.Sales
             foreach (var item in this.Items)
             {
                 item.Price1 = item.Price;
-                item.Price2 = other.GetPriceByProductNumber(item.ProductNumber);
+                item.Price2 = other.GetPrice(item.ProductId);
             }
 
             return this;

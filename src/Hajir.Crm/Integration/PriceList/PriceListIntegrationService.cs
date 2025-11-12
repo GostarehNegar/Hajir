@@ -59,6 +59,8 @@ namespace Hajir.Crm.Integration.PriceList
                         {
                             try
                             {
+                                if (stoppingToken.IsCancellationRequested)
+                                    break;
                                 var price = await service.GetPriceAsync(product.ProductNumber);
                                 if (price != null)
                                 {

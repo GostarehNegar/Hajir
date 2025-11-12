@@ -77,9 +77,10 @@ namespace Hajir.Crm.Blazor.Components
         }
         protected override async Task OnParametersSetAsync()
         {
+            await base.OnParametersSetAsync(); 
             this.SetState(await LoadState());
 
-            await base.OnParametersSetAsync();
+            
         }
         public virtual Task<State<T>> LoadState()
         {

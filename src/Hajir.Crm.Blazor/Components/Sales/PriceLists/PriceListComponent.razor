@@ -2,30 +2,35 @@
 
 @inherits BaseComponent<PriceList>
 
+@if (this.isLoading)
+{
+    <LoadingComponent/>
+}
+else
+{
+    <MudTable Items="@this.Value.Items" Dense="false" Hover="false" Bordered="false" Striped="false" Filter="new Func<PriceListItem,bool>(Filter)">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">@this.Value.Name</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="this.filterString" DebounceInterval="500" Immediate="true" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>کد</MudTh>
+            <MudTh>نام</MudTh>
+            @*<MudTh>قیمت</MudTh>*@
+            <MudTh>قیمت 1</MudTh>
+            <MudTh>قیمت 2</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nr">@context.ProductNumber</MudTd>
+            <MudTd DataLabel="Sign">@context.ProductName</MudTd>
+            @*<MudTd DataLabel="Name">@HajirUtils.Instance.FormatAmount(context.Price)</MudTd>*@
+            <MudTd DataLabel="Position">@context.Price1</MudTd>
+            <MudTd DataLabel="Molar mass">@context.Price2</MudTd>
+        </RowTemplate>
 
-
-<MudTable Items="@this.Value.Items" Dense="false" Hover="false" Bordered="false" Striped="false" Filter="new Func<PriceListItem,bool>(Filter)" >
-    <ToolBarContent>
-        <MudText Typo="Typo.h6">@this.Value.Name</MudText>
-        <MudSpacer />
-        <MudTextField @bind-Value="this.filterString"  DebounceInterval="500" Immediate="true" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-    </ToolBarContent>
-    <HeaderContent>
-        <MudTh>کد</MudTh>
-        <MudTh>نام</MudTh>
-        <MudTh>قیمت</MudTh>
-        <MudTh>قیمت 1</MudTh>
-        <MudTh>قیمت 2</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Nr">@context.ProductNumber</MudTd>
-        <MudTd DataLabel="Sign">@context.ProductName</MudTd>
-        <MudTd DataLabel="Name">@HajirUtils.Instance.FormatAmount(context.Price)</MudTd>
-        <MudTd DataLabel="Position">@context.Price1</MudTd>
-        <MudTd DataLabel="Molar mass">@context.Price2</MudTd>
-    </RowTemplate>
-    
-</MudTable>
+    </MudTable>
+}
 
 
 @code {
