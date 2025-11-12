@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Hajir.Crm.Integration
+namespace Hajir.Crm.Integration.Accounts
 {
     public class SanadAccountIntegrationService : BackgroundService
     {
@@ -18,11 +18,11 @@ namespace Hajir.Crm.Integration
         private readonly ILogger<SanadAccountIntegrationService> logger;
         private readonly HajirIntegrationOptions options;
         private readonly IMemoryCache cache;
-        
-        
 
-        public SanadAccountIntegrationService(IServiceProvider serviceProvider, 
-            ILogger<SanadAccountIntegrationService> logger, 
+
+
+        public SanadAccountIntegrationService(IServiceProvider serviceProvider,
+            ILogger<SanadAccountIntegrationService> logger,
             HajirIntegrationOptions options,
             IMemoryCache cache)
         {
@@ -30,13 +30,13 @@ namespace Hajir.Crm.Integration
             this.logger = logger;
             this.options = options;
             this.cache = cache;
-            
+
         }
-       
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             //await this.GetCachedDetails();
-            using(var scope = this.serviceProvider.CreateScope())
+            using (var scope = serviceProvider.CreateScope())
             {
                 var items = await scope.ServiceProvider.GetService<ISanadApiClientService>().GetCachedDetails();
             }

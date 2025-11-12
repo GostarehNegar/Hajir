@@ -4,9 +4,11 @@ using GN.Library.Xrm;
 using GN.Library.Xrm.StdSolution;
 using Hajir.Crm.Common;
 using Hajir.Crm.Infrastructure.Xrm.Data;
+using Hajir.Crm.Integration;
 using Hajir.Crm.Sales;
 using Hajir.Crm.Sales.PriceLists;
 using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Xrm.Sdk;
 using System;
@@ -16,6 +18,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace Hajir.Crm.Infrastructure.Xrm.Sales
 {
@@ -641,7 +644,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales
                 throw new Exception("خریدار");
             }
             target.AccountId = _accountid;
-            target.PriceLevelId = !string.IsNullOrWhiteSpace(opportunity.PriceList?.Id) && Guid.TryParse(opportunity.PriceList?.Id, out var _plid) ? _plid :(Guid?) null;
+            target.PriceLevelId = !string.IsNullOrWhiteSpace(opportunity.PriceList?.Id) && Guid.TryParse(opportunity.PriceList?.Id, out var _plid) ? _plid : (Guid?)null;
             target[XrmHajirOpportunity.Schema.isrevenuesystemcalculated] = true;
             target.EstimavetRevenue = opportunity.ExtendedAmount;
             target.Topic = $"فروش {opportunity.Lines.FirstOrDefault()?.Name} به {opportunity.Customer.Name}";
@@ -694,6 +697,78 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales
 
 
             //throw new NotImplementedException();
+        }
+
+        public bool UpdatePriceList(Guid pl, Guid productId, UnitOfMeasurements uom, decimal price)
+        {
+            var repo = this.dataServices.GetRepository<XrmPriceListItem>();
+            var current = repo
+                .Queryable
+                .FirstOrDefault(x => x.ProcuctId == productId && x.PriceListId == pl);
+            if (current == null)
+            {
+                repo
+                 .Insert(new XrmPriceListItem
+                 {
+                     Amount = price,
+                     PriceListId = pl,
+                     ProcuctId = productId,
+                     [XrmPriceListItem.Schema.uomid] = new EntityReference(XrmUnitOfMeasure.Schema.LogicalName, Guid.Parse(uom.Id)),
+                     [XrmPriceListItem.Schema.uomscheduleid] = new EntityReference(XrmUnitOfMeasurementGroup.Schema.LogicalName, Guid.Parse(uom.UnitId))
+                 });
+                return true;
+            }
+            else if (current.Amount != price)
+            {
+                repo.Update(new XrmPriceListItem
+                {
+                    PriceListItemId = current.Id,
+                    Amount = price
+                });
+                return true;
+            }
+            return false;
+        }
+        public async Task<bool> UpdatePrice(IntegrationPriceListItem plItem)
+        {
+            if (plItem == null)
+            {
+                return false;
+            }
+            var product = this.cache.GetProductByProductNumber(plItem.ProductNumber);
+            if (product == null)
+            {
+                return false;
+            }
+
+            var isChanged = false;
+            var uom = this.cache.UnitOfMeasurements.FirstOrDefault(x => x.Id == product.UOMId);
+            if (uom == null)
+            {
+                throw new Exception($"UOM not found. Product:{product.Name}");
+            }
+            var pl1 = this.cache.GetPriceList(1);
+            var pl2 = this.cache.GetPriceList(2);
+            var p1 = this.cache.GetPriceList(1).GetPriceByProductNumber(plItem.ProductNumber);
+            var p2 = this.cache.GetPriceList(2).GetPriceByProductNumber(plItem.ProductNumber);
+            isChanged = (p1 != plItem.Price1 && plItem.Price1.HasValue && UpdatePriceList(Guid.Parse(pl1.Id), product.GetId<Guid>(), uom, plItem.Price1.Value)) || isChanged;
+            isChanged = (p2 != plItem.Price2 && plItem.Price2.HasValue && UpdatePriceList(Guid.Parse(pl2.Id), product.GetId<Guid>(), uom, plItem.Price2.Value)) || isChanged;
+            if (isChanged)
+            {
+
+                this.dataServices
+                    .GetRepository<XrmPriceRecord>()
+                    .Insert(new XrmPriceRecord
+                    {
+                        ProductId = Guid.Parse(product.Id),
+                        Name = $"{product.ProductNumber} {product.Name}",
+                        Price1 = plItem.Price1.HasValue ? new Money(plItem.Price1.Value) : null,
+                        Price2 = plItem.Price2.HasValue ? new Money(plItem.Price2.Value) : null
+                    });
+                return true;
+            }
+            return false;
+
         }
     }
 }

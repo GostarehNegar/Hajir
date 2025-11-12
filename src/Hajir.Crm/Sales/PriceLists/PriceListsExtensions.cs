@@ -11,8 +11,13 @@ namespace Hajir.Crm.Sales.PriceLists
         public static IServiceCollection AddHajirPriceListServices(this IServiceCollection services, IConfiguration configuration, Action<PriceListOptions> configure = null)
         {
             var opt = new PriceListOptions();
+            configure?.Invoke(opt.Validate());
+            return services.AddHajirPriceListServices(opt);
+        }
+        public static IServiceCollection AddHajirPriceListServices(this IServiceCollection services, PriceListOptions options)
+        {
             return services
-                .AddSingleton<PriceListOptions>(opt)
+                .AddSingleton<PriceListOptions>(options)
                 .AddSingleton<ExcelPriceListReader>()
                 .AddSingleton<IExcelPriceListReader>(sp => sp.GetService<ExcelPriceListReader>())
                 .AddSingleton<PriceListServices>()

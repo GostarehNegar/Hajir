@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Hajir.Crm.Integration
+namespace Hajir.Crm.Integration.Datasheets
 {
     public class DatasheetIntegrationService : BackgroundService
     {
@@ -29,15 +29,15 @@ namespace Hajir.Crm.Integration
         {
             return Task.Run(async () =>
             {
-                this.logger.LogInformation(
+                logger.LogInformation(
                     $"Datsheet Integration Service Starts. We will synchronize JsonDatasheet from Datasheet CSV file. ");
                 while (!stoppingToken.IsCancellationRequested)
                 {
                     try
                     {
-                        using (var scope = this.serviceProvider.CreateScope())
+                        using (var scope = serviceProvider.CreateScope())
                         {
-                            var data = await this.datasheetProvider.GetDatasheets();
+                            var data = await datasheetProvider.GetDatasheets();
                             var store = scope.ServiceProvider.GetService<IProductIntegrationStore>();
                             foreach (var ds in data)
                             {
@@ -47,7 +47,7 @@ namespace Hajir.Crm.Integration
                                 }
                                 catch (Exception err)
                                 {
-                                    this.logger.LogError(
+                                    logger.LogError(
                                         $"An error occured while trying to synch json datasheet for this product. Product:{ds.ProductCode}, Err:{err.Message}");
                                 }
                             }
@@ -55,10 +55,10 @@ namespace Hajir.Crm.Integration
                     }
                     catch (Exception err)
                     {
-                        this.logger.LogError(
+                        logger.LogError(
                             $"An error occured while trying to synch json datasheets. Err:{err.Message}");
                     }
-                    this.logger.LogInformation(
+                    logger.LogInformation(
                         $"Finished Synching Product Datasheets.");
                     await Task.Delay(60 * 60 * 1000);
                 }

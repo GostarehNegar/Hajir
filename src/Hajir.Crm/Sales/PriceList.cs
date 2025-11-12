@@ -22,9 +22,29 @@ namespace Hajir.Crm.Sales
         {
             return items.FirstOrDefault(x => x.ProductId == productId)?.Price;
         }
+
+        public decimal? GetPriceByProductNumber(string productNumber)
+        {
+            return items.FirstOrDefault(x => x.ProductNumber == productNumber)?.Price;
+        }
         public PriceList AddItems(params PriceListItem[] items)
         {
             this.items.AddRange(items);
+            return this;
+        }
+        public PriceList Merge(PriceList other)
+        {
+            var isPriceList1 = this.Name.Contains("1");
+            if (!this.Name.Contains("1") && !other.Name.Contains("2"))
+            {
+                throw new InvalidOperationException();
+            }
+            foreach (var item in this.Items)
+            {
+                item.Price1 = item.Price;
+                item.Price2 = other.GetPriceByProductNumber(item.ProductNumber);
+            }
+
             return this;
         }
         public override string ToString()
@@ -33,7 +53,7 @@ namespace Hajir.Crm.Sales
 
         }
         public IEnumerable<PriceListItem> Items => items;
-        
+
     }
     public class PriceListItem
     {

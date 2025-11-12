@@ -1,5 +1,6 @@
 ﻿using GN.Library.Shared.Entities;
 using Hajir.Crm.Integration;
+using Hajir.Crm.Integration.LegacyCrm;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
 using System;

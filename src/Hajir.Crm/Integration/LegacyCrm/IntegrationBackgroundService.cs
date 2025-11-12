@@ -19,7 +19,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace Hajir.Crm.Integration
+namespace Hajir.Crm.Integration.LegacyCrm
 {
     public class IntegrationBackgroundServiceEx : BackgroundMultiBlockingTaskHostedService
     {
@@ -347,7 +347,7 @@ namespace Hajir.Crm.Integration
             return Task.Run(async () =>
             {
                 var last = DateTime.Now.AddDays(-2);
-                
+
                 var items_done = new HashSet<string>();
                 while (!stoppingToken.IsCancellationRequested)
                 {
@@ -356,9 +356,9 @@ namespace Hajir.Crm.Integration
                         var count = 0;
                         var take = 30;
 
-                      
+
                         store.ReadContacts(0, take)
-                        .Where(x => x.ModifiedOn>last)
+                        .Where(x => x.ModifiedOn > last)
                         .ToList()
                         .ForEach(async x =>
                         {
@@ -370,16 +370,16 @@ namespace Hajir.Crm.Integration
                             }
                             catch (Exception err)
                             {
-                                this.logger.LogError($"An error occured while trying to import item. Err:{err.Message}");
+                                logger.LogError($"An error occured while trying to import item. Err:{err.Message}");
                             }
 
                         });
                         store.ReadAccounts(0, take)
-                        .Where(x => x.ModifiedOn>last)
+                        .Where(x => x.ModifiedOn > last)
                         .ToList()
                         .ForEach(async x =>
                         {
-                           
+
                             var ctx = new IntegrationServiceContext(serviceProvider, "Import Context", stoppingToken, x);
                             try
                             {
@@ -388,7 +388,7 @@ namespace Hajir.Crm.Integration
                             }
                             catch (Exception err)
                             {
-                                this.logger.LogError($"An error occured while trying to import item. Err:{err.Message}");
+                                logger.LogError($"An error occured while trying to import item. Err:{err.Message}");
                             }
 
                         });
@@ -397,7 +397,7 @@ namespace Hajir.Crm.Integration
                         .ToList()
                         .ForEach(async x =>
                         {
-                            
+
                             var ctx = new IntegrationServiceContext(serviceProvider, "Import Context", stoppingToken, x);
                             try
                             {
@@ -406,11 +406,11 @@ namespace Hajir.Crm.Integration
                             }
                             catch (Exception err)
                             {
-                                this.logger.LogError($"An error occured while trying to import item. Err:{err.Message}");
+                                logger.LogError($"An error occured while trying to import item. Err:{err.Message}");
                             }
 
                         });
-                        this.logger.LogInformation($"{count} latest items imported.");
+                        logger.LogInformation($"{count} latest items imported.");
 
 
                     }
@@ -418,7 +418,7 @@ namespace Hajir.Crm.Integration
                     {
 
                     }
-                    
+
                     last = DateTime.Now.AddMinutes(-30);
                     await Task.Delay(1 * 60 * 1000, stoppingToken);
                 }

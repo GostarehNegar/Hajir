@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hajir.Crm.Integration
+namespace Hajir.Crm.Integration.Orders
 {
     public interface ISanadOrdersIntegrationService
     {
@@ -26,7 +26,7 @@ namespace Hajir.Crm.Integration
         public SanadOrdersIntegrationService(IServiceProvider serviceProvider) : base(1, 100)
         {
             this.serviceProvider = serviceProvider;
-            this.pipe = WithPipe<SanadOrderIntegrationContext>.Setup()
+            pipe = WithPipe<SanadOrderIntegrationContext>.Setup()
                .Then(SanadOrderIntegrationSteps.LoadQuote)
                .Then(SanadOrderIntegrationSteps.LoadAccout)
                .Then(SanadOrderIntegrationSteps.LoadDetail)
@@ -39,28 +39,28 @@ namespace Hajir.Crm.Integration
         {
 
         }
-       
+
 
         public void Enqueue(string id)
         {
-            if (!this.contexts.ContainsKey(id))
+            if (!contexts.ContainsKey(id))
             {
 
 
-                var ctx = new SanadOrderIntegrationContext(this.serviceProvider)
+                var ctx = new SanadOrderIntegrationContext(serviceProvider)
                     .WithQuoteId(id);
-                this.contexts[id] = ctx;
-                this.Enqueue(async t =>
+                contexts[id] = ctx;
+                Enqueue(async t =>
                 {
                     try
                     {
-                        await this.pipe.Run(ctx);
+                        await pipe.Run(ctx);
                     }
                     catch (Exception err)
                     {
 
                     }
-                    this.contexts.TryRemove(id, out var _);
+                    contexts.TryRemove(id, out var _);
                     ctx.Dispose();
 
                 });

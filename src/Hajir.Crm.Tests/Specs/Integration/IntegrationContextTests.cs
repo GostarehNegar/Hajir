@@ -20,6 +20,7 @@ using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
 using Hajir.Crm.Integration;
+using Hajir.Crm.Integration.LegacyCrm;
 
 namespace Hajir.Crm.Tests.Specs.Integration
 {

@@ -5,6 +5,8 @@ using GN.Library.Xrm;
 using Hajir.Crm.Infrastructure.Xrm.Data;
 using Hajir.Crm.Integration;
 using Hajir.Crm.Integration.Infrastructure;
+using Hajir.Crm.Integration.Orders;
+using Hajir.Crm.Integration.PriceList;
 using Hajir.Crm.Integration.SanadPardaz;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -195,6 +197,13 @@ namespace Hajir.Crm.Tests.Specs.Integration
                     });
             }
 
+        }
+        [TestMethod]
+        public async Task GetPriceListItemWorks()
+        {
+            var host = this.GetHost();
+            var target = host.Services.GetService<ISanadPardazPriceProvider>();
+            var item =await target.GetPriceAsync("10101001069");
         }
     }
 }

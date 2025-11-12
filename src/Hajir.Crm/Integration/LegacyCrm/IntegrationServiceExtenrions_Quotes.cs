@@ -1,4 +1,5 @@
 ﻿using Hajir.Crm.Integration;
+using Hajir.Crm.Integration.LegacyCrm;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

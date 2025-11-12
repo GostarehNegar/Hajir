@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Hajir.Crm.Common;
 using Hajir.Crm.Integration;
+using Hajir.Crm.Integration.LegacyCrm;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

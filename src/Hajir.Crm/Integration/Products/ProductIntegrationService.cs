@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Hajir.Crm.Integration
+namespace Hajir.Crm.Integration.Products
 {
     public class ProductIntegrationService : BackgroundService
     {
@@ -27,7 +27,7 @@ namespace Hajir.Crm.Integration
         }
         public override Task StartAsync(CancellationToken cancellationToken)
         {
-            this.logger.LogInformation(
+            logger.LogInformation(
                 $"Product Integration Service Starts.");
             return base.StartAsync(cancellationToken);
         }
@@ -38,7 +38,7 @@ namespace Hajir.Crm.Integration
 
         public async Task SynchProducts(CancellationToken stoppingToken)
         {
-            using (var scope = this.serviceProvider.CreateScope())
+            using (var scope = serviceProvider.CreateScope())
             {
 
                 var sanad = scope.ServiceProvider.GetService<ISanadApiClientService>();
@@ -59,7 +59,7 @@ namespace Hajir.Crm.Integration
                     var lastupdate = items.FirstOrDefault()?.ActionDate ?? DateTime.Now;
                     if (1 == 0 && lastupdate < lastsyncdate)
                     {
-                        this.logger.LogInformation(
+                        logger.LogInformation(
                             $"Lastupdate {lastupdate} is before latest synchronization date {lastsyncdate}. We will wait 10 minutes and then retry.");
                         await Task.Delay(10 * 60 * 1000, stoppingToken);
                         page = 1;
@@ -67,13 +67,13 @@ namespace Hajir.Crm.Integration
                     }
                     if (items.Count() < pageLength)
                     {
-                        this.logger.LogInformation(
+                        logger.LogInformation(
                             $"Finished product synchrnization for now. We will wait 1 hour for new updates.");
                         await Task.Delay(60 * 60 * 1000, stoppingToken);
                         page = 1;
                         continue;
                     }
-                    this.logger.LogInformation(
+                    logger.LogInformation(
                         $"{items.Count()} Goods read by SanadPardazApi. We will try to synch them.");
                     foreach (var item in items.Where(x => x.ShouldBeSynchedWithCrm()))
                     {
@@ -83,7 +83,7 @@ namespace Hajir.Crm.Integration
                             //
                             //
 
-                            var isChanged = true ||  prod == null
+                            var isChanged = true || prod == null
                                 || prod.Name != item.GoodName || prod.CatCode != item.CatCode;
                             //if (prod == null || !prod.SynchedOn.HasValue || prod.SynchedOn < item.ActionDate)
                             if (isChanged)
@@ -96,13 +96,13 @@ namespace Hajir.Crm.Integration
                                     UnitOfMeasurement = item.CountUnit,
 
                                 });
-                                this.logger.LogInformation(
+                                logger.LogInformation(
                                     $"Product '{item.GoodCode}' Successfully Updated.");
                             }
                         }
                         catch (Exception err)
                         {
-                            this.logger.LogError(
+                            logger.LogError(
                                 $"An error occured while trying to synch this product. {item.GoodCode}, {item.GoodName}. " +
                                 $"Err:{err.GetBaseException().Message}");
                         }

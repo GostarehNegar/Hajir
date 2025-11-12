@@ -1,8 +1,11 @@
 ﻿using Hajir.Crm.Integration.Infrastructure;
+using Hajir.Crm.Integration.PriceList;
+using Hajir.Crm.Integration.SanadPardaz.Internals;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Data.Common;
 
 namespace Hajir.Crm.Integration.SanadPardaz
 {
@@ -17,10 +20,15 @@ namespace Hajir.Crm.Integration.SanadPardaz
             {
                 opt.UseSqlServer(configuration.GetConnectionString("sanadpardaz"));
             });
-            services.AddScoped<ISanadPardazDbContext>(sp => sp.GetService<SanadPardazDbContext>());
+            services.AddScoped<ISanadPardazDbConext>(sp => sp.GetService<SanadPardazDbContext>());
             services.AddScoped<SanadPardazApiClient>();
             services.AddScoped<ISanadApiClientService>(sp => sp.GetService<SanadPardazApiClient>());
+            services.AddSingleton<SanadPardazIntegrationServices>();
+            services.AddSingleton<ISanadPardazPriceProvider>(sp => sp.GetService<SanadPardazIntegrationServices>());
+            services.AddHostedService(sp => sp.GetService<SanadPardazIntegrationServices>());
             return services;
         }
+
+        
     }
 }

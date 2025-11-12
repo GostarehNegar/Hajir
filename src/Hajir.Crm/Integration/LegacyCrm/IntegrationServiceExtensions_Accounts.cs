@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using GN.Library.Shared.Entities;
 using Hajir.Crm.Integration;
+using Hajir.Crm.Integration.LegacyCrm;
 
 namespace Hajir.Crm.Features.Integration
 {

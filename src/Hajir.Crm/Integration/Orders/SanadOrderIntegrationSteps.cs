@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hajir.Crm.Integration
+namespace Hajir.Crm.Integration.Orders
 {
     internal static class SanadOrderIntegrationSteps
     {
@@ -22,7 +22,7 @@ namespace Hajir.Crm.Integration
             }
             ctx.Quote(quote);
             return ctx;
-            
+
         }
         public static async Task<SanadOrderIntegrationContext> LoadAccout(SanadOrderIntegrationContext ctx)
         {
@@ -49,7 +49,7 @@ namespace Hajir.Crm.Integration
         }
         public static async Task<SanadOrderIntegrationContext> LoadProcucts(SanadOrderIntegrationContext ctx)
         {
-            foreach(var p in ctx.Quote().Products)
+            foreach (var p in ctx.Quote().Products)
             {
                 var id = p.ProcuctId;
                 var _p = ctx.ServiceProvider.GetService<IProductIntegrationStore>().LoadProductById(p.ProcuctId);
@@ -64,14 +64,15 @@ namespace Hajir.Crm.Integration
         }
         public static async Task<SanadOrderIntegrationContext> InsertOrder(SanadOrderIntegrationContext ctx)
         {
-            
-            var order = await ctx.SanadApi.InsertOrder(req => {
+
+            var order = await ctx.SanadApi.InsertOrder(req =>
+            {
 
 
                 //req.detailCode1 = ctx.Detail().DetailAccCode;
-            
+
             });
-            
+
             return ctx;
         }
     }

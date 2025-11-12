@@ -14,10 +14,10 @@ using GN.Library.Xrm;
 using GN.Library.Api;
 using GN.Library.Messaging;
 using Microsoft.Extensions.DependencyInjection;
-using Hajir.Crm.Integration;
 using Hajir.Crm.Integration.SanadPardaz;
 using Microsoft.AspNetCore.Builder;
 using NLog.Web;
+using Hajir.Crm.Integration;
 
 namespace Hajir.Crm.Xrm.Service
 {
@@ -52,6 +52,7 @@ namespace Hajir.Crm.Xrm.Service
                     s.AddMessagingServices(c.Configuration, opt => { });
                     s.AddXrmServices(c.Configuration, opt => { opt.ConnectionOptions = ConnectionOptions.OrganizationService; });
                     s.AddHajirCrm(c.Configuration, opt => { });
+                    
                     s.AddHajirIntegrationServices(c.Configuration, opt => {
                         //opt.LegacyImportEnabled = false;
                         //opt.ProductIntegration.Disabled = true;

@@ -1,6 +1,7 @@
 ﻿using GN.Library;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Hajir.Crm
@@ -53,6 +54,10 @@ namespace Hajir.Crm
                     }
                     return null;
                 }
+                public static short[] GetProductCategories() => Enum.GetValues(typeof(ProductCategories))
+                        .OfType<ProductCategories>()
+                        .Select(x => (short)x)
+                        .ToArray();
                 public static ProductTypes? GetProductTypeFromProductCategory(int? category)
                 {
                     return GetProductTypeFromProductCategory(IntToProductCategory(category));
@@ -117,7 +122,30 @@ namespace Hajir.Crm
                     Battery = 504,
                     Battery_Pack = 403,
                     Cabinet_Tolidi = 412,
-                    Cabinet_Majazi = 905
+                    Cabinet_Majazi = 905,
+                    PAK_TRANS_ISOLEH = 406,
+                    TABLO_NIMEH_SAKHTEH = 407,
+                    KALAHAYE_SEFARESHI = 408,
+                    BASTEH_SIM_RABET = 409,
+                    TABLO_DC = 410,
+                    SHARJ_TOLIDI = 411,
+                    KABINET_BATRY = 503,
+                    TABLO_BARGH = 507,
+                    SHARJ = 508,
+                    GENRATOR = 509,
+                    ILUEST = 510,
+                    UPS_BAZARGANI_BEDOON_BATERY_DAKHELI = 511,
+                    MODULE = 512,
+                    PAK_BATRY_BAZARGANIN_BEDOON_BATERY = 514,
+                    MODULAR_RECTIFIER_BOM = 515,
+                    BATTERY_MONITOR = 516,
+                    OFF_GRID_INVERTER = 517,
+                    KIT = 304
+
+
+
+
+
                 }
                 public enum ProductSeries
                 {

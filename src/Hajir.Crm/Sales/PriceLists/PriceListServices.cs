@@ -1,5 +1,6 @@
 ﻿using ExcelDataReader;
 using Hajir.Crm.Common;
+using Hajir.Crm.Integration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -87,6 +88,17 @@ namespace Hajir.Crm.Sales.PriceLists
                 $"PriceList Services Started.");
             return base.StartAsync(cancellationToken);
         }
+
+        public Task UpdatePriceAsync(PriceListItem price)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdatePriceAsync(IntegrationPriceListItem price)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             return Task.WhenAll();

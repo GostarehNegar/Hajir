@@ -51,7 +51,7 @@ namespace Hajir.Crm.Tests.Specs.Integration
             var host = this.GetDefaultHost();
             using (var scope = host.Services.CreateScope())
             {
-                var target = scope.ServiceProvider.GetService<ISanadPardazDbContext>();
+                var target = scope.ServiceProvider.GetService<ISanadPardazDbConext>();
                 var accounts = target.GetAccounts(0, 300);
 
 
@@ -64,7 +64,7 @@ namespace Hajir.Crm.Tests.Specs.Integration
             var host = this.GetDefaultHost();
             using (var scope = host.Services.CreateScope())
             {
-                var target = scope.ServiceProvider.GetService<ISanadPardazDbContext>();
+                var target = scope.ServiceProvider.GetService<ISanadPardazDbConext>();
                 var contacts = target.GetContacts(0, 300);
 
 
@@ -77,12 +77,25 @@ namespace Hajir.Crm.Tests.Specs.Integration
             var host = this.GetDefaultHost();
             using (var scope = host.Services.CreateScope())
             {
-                var target = scope.ServiceProvider.GetService<ISanadPardazDbContext>();
+                var target = scope.ServiceProvider.GetService<ISanadPardazDbConext>();
                 var products = target.GetProducts(0, 300);
 
 
             }
 
+        }
+        [TestMethod]
+        public async Task DbConext_should_suport_pricelists()
+        {
+            var host = this.GetDefaultHost();
+            using (var scope = host.Services.CreateScope())
+            {
+                var target = scope.ServiceProvider.GetService<ISanadPardazDbConext>();
+                var items = await target.GetPriceListItems();
+                //var products = target.GetProducts(0, 300);
+
+
+            }
         }
     }
 }

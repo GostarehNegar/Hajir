@@ -123,5 +123,9 @@ namespace Hajir.Crm
         {
             return cacheService.Products.FirstOrDefault(x => x.Id == productId);
         }
+        public static Product GetProductByProductNumber(this ICacheService cacheService, string productNumber)
+        {
+            return cacheService.Products.FirstOrDefault(x => x.ProductNumber == productNumber);
+        }
     }
 }

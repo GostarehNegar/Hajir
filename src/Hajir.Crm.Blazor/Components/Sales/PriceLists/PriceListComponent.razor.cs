@@ -24,10 +24,10 @@ namespace Hajir.Crm.Blazor.Components.Sales.PriceLists
 
             }
             if (string.IsNullOrEmpty(filterString)) return true;
-            
+
             return !filterString.Split(' ')
                 .ToList()
-                .Any(x=> !filter(x));
+                .Any(x => !filter(x));
             return
                 (string.IsNullOrEmpty(filterString)) ||
                 (item != null && item.ProductNumber != null && item.ProductNumber.Contains(filterString)) ||
@@ -42,10 +42,10 @@ namespace Hajir.Crm.Blazor.Components.Sales.PriceLists
         }
         public override Task<State<PriceList>> LoadState()
         {
-            if (this.State==null ||  this.Value == null || this.Value.Items == null || this.Value.Items.Count() == 0)
+            if (this.State == null || this.Value == null || this.Value.Items == null || this.Value.Items.Count() == 0)
             {
-                //this.PriceList = this.CacheService.GetPriceList(1);
-                var q = new State<PriceList>(this.CacheService.GetPriceList(1));
+                var q = new State<PriceList>(this.CacheService.GetPriceList(1).Merge(this.CacheService.GetPriceList(2)));
+
                 q.Value.Items.ToList().ForEach(item =>
                 {
                     item.ProductName = this.CacheService.GetProductById(item.ProductId)?.Name;

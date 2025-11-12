@@ -90,8 +90,8 @@ namespace Hajir.Crm
             }
 
         }
-        
-        
+
+
 
         public static string MAP1 = @"
 شرکت	شرکت
@@ -106,7 +106,7 @@ namespace Hajir.Crm
 وزارتخانه	وزارتخانه
 ";
 
-   
+
         public class Subjects : LibraryConstants.Subjects
         {
 
@@ -115,13 +115,7 @@ namespace Hajir.Crm
         {
             return $"لیست قیمت {no}";
         }
-        public static short[] GoodCategoriesForIntegration => new short[]
-        {
-            401, // یو پی اس تولیدی
-            402, // استبیلایزر تولیدی
-            504, // باتری
-            505, // اینورتر بازرگانی
-            304, // کیت
-        };
+       
+
     }
 }

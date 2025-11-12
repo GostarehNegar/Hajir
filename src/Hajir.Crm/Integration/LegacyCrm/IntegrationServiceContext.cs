@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Hajir.Crm.Integration
+namespace Hajir.Crm.Integration.LegacyCrm
 {
     internal class IntegrationServiceContext : IDisposable
     {
@@ -36,7 +36,7 @@ namespace Hajir.Crm.Integration
 
         public ILegacyCrmStore LegacyCrmStore => ServiceProvider.GetService<ILegacyCrmStore>();
         public IIntegrationStore Store => ServiceProvider.GetRequiredService<IIntegrationStore>();
-        public ISanadPardazDbContext SanadPardaz => ServiceProvider.GetRequiredService<ISanadPardazDbContext>();
+        public ISanadPardazDbConext SanadPardaz => ServiceProvider.GetRequiredService<ISanadPardazDbConext>();
         public void Dispose()
         {
             _scope?.Dispose();

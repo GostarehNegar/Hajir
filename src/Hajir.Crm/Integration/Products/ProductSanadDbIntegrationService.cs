@@ -6,12 +6,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace Hajir.Crm.Integration
+namespace Hajir.Crm.Integration.Products
 {
     internal class ProductSanadDbIntegrationService : BackgroundService
     {
@@ -33,9 +34,9 @@ namespace Hajir.Crm.Integration
         {
             try
             {
-                using (var scope = this.serviceProvider.CreateScope())
+                using (var scope = serviceProvider.CreateScope())
                 {
-                    var context = scope.ServiceProvider.GetService<ISanadPardazDbContext>();
+                    var context = scope.ServiceProvider.GetService<ISanadPardazDbConext>();
                     var goods = context.GetProducts(0, 5);
 
 
@@ -49,17 +50,17 @@ namespace Hajir.Crm.Integration
         }
         public override Task StartAsync(CancellationToken cancellationToken)
         {
-            if (this.TestDbConnection())
+            if (TestDbConnection())
             {
-                this.logger.LogInformation(
+                logger.LogInformation(
                     $"Product Integration Service using SanadPradaz Database Successfuly Started." +
-                    $" Connection String:{this.serviceProvider.GetService<IConfiguration>().GetConnectionString("sanadpardaz")}");
+                    $" Connection String:{serviceProvider.GetService<IConfiguration>().GetConnectionString("sanadpardaz")}");
             }
             else
             {
-                this.logger.LogInformation(
+                logger.LogInformation(
                     $"Product Integration Service using SanadPradaz Database Failed to Connect to SanadPardaz." +
-                    $" Connection String:{this.serviceProvider.GetService<IConfiguration>().GetConnectionString("sanadpardaz")}");
+                    $" Connection String:{serviceProvider.GetService<IConfiguration>().GetConnectionString("sanadpardaz")}");
 
             }
 
@@ -78,19 +79,24 @@ namespace Hajir.Crm.Integration
                 {
                     try
                     {
-                        using (var scope = this.serviceProvider.CreateScope())
+                        using (var scope = serviceProvider.CreateScope())
                         {
-                            var context = scope.ServiceProvider.GetService<ISanadPardazDbContext>();
+                            var context = scope.ServiceProvider.GetService<ISanadPardazDbConext>();
                             var store = scope.ServiceProvider.GetService<IProductIntegrationStore>();
+                            
                             foreach (var cat in options.Categories)
                             {
                                 try
                                 {
                                     var goods = context.GetProductsByCategory(cat);
+                                    this.logger.LogInformation(
+                                        $"Start Updating Products with SanadPardaz Database. Category:{cat} with {goods.Count()} products.");
                                     foreach (var item in goods)
                                     {
                                         try
                                         {
+                                            if (stoppingToken.IsCancellationRequested)
+                                                break;
                                             item.Name = item.Name.Replace("ك", "ک").Replace("ي", "ی");
                                             var prod = await store.GetByProductNumber(item.ProductNumber);
                                             var isChanged = prod == null
@@ -98,11 +104,13 @@ namespace Hajir.Crm.Integration
                                             if (isChanged)
                                             {
                                                 await store.SaveProduct(item);
+                                                this.logger.LogInformation                                                (
+                                                    $"Product Updated. Name:{item.Name}, ProductNumber:{item.ProductNumber}");
                                             }
                                         }
                                         catch (Exception exp)
                                         {
-                                            this.logger.LogWarning(
+                                            logger.LogWarning(
                                                 $"An error occured while trying to integrate this product using SanadPardaz database." +
                                                 " We will continue with other products." +
                                                 $"Product:{item.ProductNumber}, Err:{exp.Message}");
@@ -111,7 +119,7 @@ namespace Hajir.Crm.Integration
                                 }
                                 catch (Exception err)
                                 {
-                                    this.logger.LogWarning(
+                                    logger.LogWarning(
                                         $"An error occured while trying to integrate this product category using SanadPardaz database." +
                                         $"Cat:{cat}, Err:{err.Message}");
                                 }
@@ -121,12 +129,12 @@ namespace Hajir.Crm.Integration
                     }
                     catch (Exception err)
                     {
-                        this.logger.LogError(
+                        logger.LogError(
                             $"An error occured while trying to import products from SanadPardaz Db. Err: {err.Message}");
                     }
-                    this.logger.LogInformation(
-                        $"Finished integration products using SanadPardaz database. We will wait {this.options.WaitSeconds} seconds befor next run.");
-                    await Task.Delay(this.options.WaitSeconds * 60, stoppingToken);
+                    logger.LogInformation(
+                        $"Finished integration products using SanadPardaz database. We will wait {options.WaitSeconds} seconds befor next run.");
+                    await Task.Delay(options.WaitSeconds * 60, stoppingToken);
 
                 }
 
