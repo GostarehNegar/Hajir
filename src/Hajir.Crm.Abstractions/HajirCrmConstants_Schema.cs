@@ -202,6 +202,7 @@ namespace Hajir.Crm
                 public const string OpportunityId = LogicalName + "id";
                 public const string Name = "name";
                 public const string parentaccountid = "parentaccountid";
+                public const string parentcontactid = "parentcontactid";
                 public const string pricelevelid = "pricelevelid";
                 public const string isrevenuesystemcalculated = "isrevenuesystemcalculated";
                 public const string estimatedvalue = "estimatedvalue";

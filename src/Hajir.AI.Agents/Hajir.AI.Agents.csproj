@@ -6,10 +6,12 @@
 
   <ItemGroup>
     <Folder Include="ActivityManagement\py\" />
+    <Folder Include="OpportunityManagerAgent\py\" />
     <Folder Include="PriceAgent\py\NewFolder\" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Hajir.Crm.Infrastructure.Xrm\Hajir.Crm.Infrastructure.Xrm.csproj" />
     <ProjectReference Include="..\Hajir.Crm\Hajir.Crm.csproj" />
     <ProjectReference Include="..\Library\GN.Library.AI\GN.Library.AI.csproj" />
     <ProjectReference Include="..\Library\GN.Library.NATS\GN.Library.NATS.csproj" />
@@ -41,6 +43,60 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="ActivityManagement\py\requirements.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="OpportunityManagerAgent\py\app.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="OpportunityManagerAgent\py\lib.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="OpportunityManagerAgent\py\lib_langchain.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="OpportunityManagerAgent\py\main.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="OpportunityManagerAgent\py\models.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="OpportunityManagerAgent\py\requirements.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ProductsAgent\py\app.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ProductsAgent\py\lib.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ProductsAgent\py\lib_langchain.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ProductsAgent\py\main.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ProductsAgent\py\models.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ProductsAgent\py\requirements.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ProductsAgnet\py\app.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ProductsAgnet\py\lib.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ProductsAgnet\py\lib_langchain.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ProductsAgnet\py\main.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ProductsAgnet\py\models.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ProductsAgnet\py\requirements.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

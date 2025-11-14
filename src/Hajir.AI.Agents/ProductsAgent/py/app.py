@@ -3,7 +3,7 @@ from lib import bus, MsgContext, BaseAgent, CancellationToken, Subjects
 from typing import List, Optional, Dict
 import models
 import logging
-from langchain.tools import tool, StructuredTool
+from langchain_classic.tools import tool
 from openai import OpenAI
 from tenacity import retry, stop_after_attempt, wait_exponential
 from lib_langchain import toolsRegistry, LangchainAgent
@@ -13,7 +13,7 @@ import math
 
 logger = logging.getLogger(__name__)
 
-agent_name = "prdocut_agent"
+agent_name = "products_agent"
 agent_description = """
                 An agent that can provide informaion about products and prices:
                 1. It can list for profucts.

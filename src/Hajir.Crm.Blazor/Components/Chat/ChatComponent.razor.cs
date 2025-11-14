@@ -25,7 +25,7 @@ namespace Hajir.Crm.Blazor.Components.Chat
         public ChatConversation Conversation { get; set; } = new ChatConversation();
         public ChatComponent()
         {
-            
+
             //this.Conversation.AddMessage("hi", ChatConversation.Roles.Assistant);
         }
 
@@ -38,7 +38,7 @@ namespace Hajir.Crm.Blazor.Components.Chat
         {
             var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
             string html = Markdown.ToHtml(md, pipeline);
-           return html;
+            return html;
 
         }
         public async Task Submit()
@@ -47,8 +47,14 @@ namespace Hajir.Crm.Blazor.Components.Chat
             this.Conversation.Query = Prompt;
             var str = Prompt;
             this.Prompt = "";
+            var user = this.serviceProvider.GetState<PortalUser>();
+
             try
             {
+                if (user == null || user.Value == null || string.IsNullOrWhiteSpace(user.Value.UserName))
+                {
+                    throw new Exception("Permission Denied.");
+                }
                 var reply = await this.serviceProvider.CreateNatsConnection().CreateMessageContext()
                     .WithData(new
                     {
@@ -56,15 +62,15 @@ namespace Hajir.Crm.Blazor.Components.Chat
                         session_id = this.Conversation.Id,
                         context = new AgentSessionContext
                         {
-                            UserId = "mohsen@gnco.ir",
+                            UserId = user.Value.UserName.Replace("#", "%SHARP%"),
                             SessionId = this.Conversation.Id
                         }
                     })
                     .WithSubject(HajirCrmConstants.Subjects.Ai.Agents.AgentRequest(
                         HajirCrmConstants.Subjects.Ai.Agents.CaptainSquad))
-                    .Request();
+                    .Request(timout: 60);
                 var g = reply.GetData<AgentResponse>();
-                this.Conversation.AddMessage(g.text, ChatConversation.Roles.Assistant);
+                this.Conversation.AddMessage(g?.text ?? "No Response", ChatConversation.Roles.Assistant);
 
             }
             catch (Exception ex)

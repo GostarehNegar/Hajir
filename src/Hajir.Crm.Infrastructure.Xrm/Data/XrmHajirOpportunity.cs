@@ -73,6 +73,18 @@ namespace Hajir.Crm.Infrastructure.Xrm.Data
             get => this.Account?.Id;
             set => this.Account = value.HasValue ? new EntityReference(XrmHajirAccount.Schema.LogicalName, value.Value) : null;
         }
+        [AttributeLogicalName(Schema.parentcontactid)]
+        public EntityReference Contact
+        {
+            get => this.GetAttributeValue<EntityReference>(Schema.parentcontactid);
+            set => this.SetAttribiuteValue(Schema.parentcontactid, value);
+        }
+        [AttributeLogicalName(Schema.parentcontactid)]
+        public Guid? ContactId
+        {
+            get => this.Contact?.Id;
+            set => this.Contact = value.HasValue ? new EntityReference(XrmHajirContact.Schema.LogicalName, value.Value) : null;
+        }
         [AttributeLogicalName(Schema.pricelevelid)]
         public EntityReference PriceLevel { get => this.GetAttributeValue<EntityReference>(Schema.pricelevelid); set => this.SetAttribiuteValue(Schema.pricelevelid, value); }
 

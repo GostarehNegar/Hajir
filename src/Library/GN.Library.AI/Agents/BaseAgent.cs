@@ -24,10 +24,18 @@ namespace GN.Library.AI.Agents
         protected readonly ILogger logger;
         PythonExecutionContext python;
 
-        public BaseAgent(IServiceProvider serviceProvider) 
+        public BaseAgent(IServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider;
             this.logger = this.serviceProvider.GetService<ILoggerFactory>().CreateLogger(Options.Name);
+        }
+        public override Task StopAsync(CancellationToken cancellationToken)
+        {
+            if (this.python != null)
+            {
+                this.python.Dispose();
+            }
+            return base.StopAsync(cancellationToken);
         }
         public Task RunAgentAsync(CancellationToken cancellationToken)
         {
@@ -42,10 +50,10 @@ namespace GN.Library.AI.Agents
                             .WithWoringPath(working_path)
                             .EnsureRequirements();
                     var ctx = python.ExecutePythonCode("main.py");
-                    while (!cancellationToken.IsCancellationRequested)
-                    {
-                        await Task.Delay(1000);
-                    }
+                    //while (!cancellationToken.IsCancellationRequested)
+                    //{
+                    //    await Task.Delay(60 * 1000, cancellationToken);
+                    //}
 
 
                 }

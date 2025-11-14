@@ -1,6 +1,8 @@
 ﻿using Hajir.AI.Agents.ActivityManagement;
 using Hajir.AI.Agents.ContactsAgent;
+using Hajir.AI.Agents.OpportunityManagerAgent;
 using Hajir.AI.Agents.PriceAgent;
+using Hajir.AI.Agents.ProductsAgent;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -13,8 +15,10 @@ namespace Hajir.AI.Agents
             return services.AddSingleton<PriceAgentService>()
                 .AddHostedService(sp => sp.GetService<PriceAgentService>())
                 .AddSingleton<ContactAgentService>()
-                .AddHostedService(sp => sp.GetService<ContactAgentService>());
-                //.AddHostedService<ActivityManagerAgent>();
+                .AddHostedService(sp => sp.GetService<ContactAgentService>())
+                .AddHostedService<ActivityManagerAgent>()
+                .AddHostedService<OpportunityManagementAgent>()
+                .AddHostedService<ProductsAgentService>();
         }
         
     }

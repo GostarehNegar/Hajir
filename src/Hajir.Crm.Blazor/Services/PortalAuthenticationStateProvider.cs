@@ -32,7 +32,6 @@ namespace Hajir.Crm.Blazor.Services
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            Console.WriteLine("Auth");
             try
             {
                 await Task.CompletedTask;
@@ -41,6 +40,7 @@ namespace Hajir.Crm.Blazor.Services
                 if (user != null)
                 {
                     //Console.WriteLine(se.UserId);
+                    this.serviceProvider.GetState<PortalUser>().SetState(user);
                     return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                     {
                     new Claim(ClaimTypes.Name, user.UserName),

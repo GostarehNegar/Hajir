@@ -10,7 +10,7 @@ namespace GN.Library.AI.Agents
     public class ToolParameter
     {
         public string name { get; set; }
-        public string type { get; set; }
+        public string type { get; set; } = "string";
         public string description { get; set; }
         public bool required { get; set; } = true;
         public object @default { get; set; } = null;

@@ -78,22 +78,22 @@ namespace GN.Library.AI.Agents
                    {
                        LLMs = Array.Empty<GetAvialablLLMsResponse.LLM>(),
                        // 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
-                       //Default = new GetAvialablLLMsResponse.LLM
-                       //{
-
-                       //    Url = "https://api.deepseek.com",
-                       //    ApiKey = "sk-fec93ba732c046b38b35263b0a4c004d",// #"sk-3b8842c4b8de41b48ad350662886e849"
-                       //    Model = "deepseek-chat"
-
-                       //}
                        Default = new GetAvialablLLMsResponse.LLM
                        {
 
-                           Url = "https://openrouter.ai/api/v1",
-                           ApiKey = "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",// #"sk-3b8842c4b8de41b48ad350662886e849"
-                           Model = "openai/gpt-oss-120b",// "deepseek/deepseek-chat-v3.1:free"
+                           Url = "https://api.deepseek.com",
+                           ApiKey = "sk-fec93ba732c046b38b35263b0a4c004d",// #"sk-3b8842c4b8de41b48ad350662886e849"
+                           Model = "deepseek-chat"
 
                        }
+                       //Default = new GetAvialablLLMsResponse.LLM
+                       //{
+
+                       //    Url = "https://openrouter.ai/api/v1",
+                       //    ApiKey = "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",// #"sk-3b8842c4b8de41b48ad350662886e849"
+                       //    Model = "openai/gpt-oss-120b",// "deepseek/deepseek-chat-v3.1:free"
+
+                       //}
                    });
                });
 
@@ -105,13 +105,13 @@ namespace GN.Library.AI.Agents
             {
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    this.logger.LogInformation("Agents:");
-                    foreach (var item in agents.Values.Where(x => x.IsAlive()))
-                    {
-                        this.logger.LogInformation($"{item.Name}\t {item.Description}");
-                    }
+                    var sb = new StringBuilder();
+                    this.agents.Values
+                        .Where(x => x.IsAlive())
+                        .ToList()
+                        .ForEach(x => sb.AppendLine($"{x.Name}:\t{x.Description?.Substring(0, 30)}"));
+                    this.logger.LogInformation($"Agents:\r\n**********\r\n{sb.ToString()}");
                     await Task.Delay(30 * 1000);
-
                 }
 
             });
@@ -129,7 +129,7 @@ namespace GN.Library.AI.Agents
                     .Where(x => x.IsAlive())    
                     .ToList()
                     .ForEach(x=> str.AppendLine($"{x.name}\t{x.description}"));
-                    this.logger.LogInformation($"Tools:\r\n {str.ToString()}");
+                    this.logger.LogInformation($"Tools:\r\n{str.ToString()}");
                     await Task.Delay(10 * 1000, token);
 
                 }

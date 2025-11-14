@@ -17,7 +17,7 @@ namespace Hajir.AI.Agents.CommonService
             .WithServices((c, s) => {
 
 
-                s.AddAiAgentsServices(c, opt => { });
+                s.AddAiAgentsServices(c, opt => {});
                 //s.AddXrmServices(c, cfg =>
                 //{
                 //    cfg.ConnectionOptions = ConnectionOptions.WebAPI;

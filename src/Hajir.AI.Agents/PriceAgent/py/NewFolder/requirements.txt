@@ -1,6 +1,5 @@
 requests
 pydantic 
-cachetools
 argparse
 nats-py
 fastapi
@@ -10,7 +9,6 @@ openai
 tenacity 
 langgraph 
 langchain-openai
-langchain
+langchain 
 langchain-core
-langchain-classic
 

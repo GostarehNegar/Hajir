@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Tools\NewFolder\**" />
+    <EmbeddedResource Remove="Tools\NewFolder\**" />
+    <None Remove="Tools\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GN.Library.NATS\GN.Library.NATS.csproj" />
     <ProjectReference Include="..\GN.Library.Python\GN.Library.Python.csproj" />
     <ProjectReference Include="..\GN.Library\GN.Library.csproj" />
@@ -12,7 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Agents\py\AgentSelector\" />
-    <Folder Include="Tools\NewFolder\" />
     <Folder Include="WebScraping\py\WebScraper\" />
   </ItemGroup>
 

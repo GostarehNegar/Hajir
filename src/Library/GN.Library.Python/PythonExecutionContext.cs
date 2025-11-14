@@ -157,6 +157,11 @@ namespace GN.Library.Python
 
         public void Dispose()
         {
+            try
+            {
+                this.Process?.Kill();
+            }
+            catch { }
             this.Process?.Dispose();
             this.serviceScope?.Dispose();
         }

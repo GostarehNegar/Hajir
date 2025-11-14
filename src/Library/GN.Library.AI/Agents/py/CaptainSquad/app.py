@@ -17,10 +17,10 @@ url = "https://openrouter.ai/api/v1"
 logger = logging.getLogger(__name__)
 GPT_OSS = "openai/gpt-oss-120b"
 
-# url = "https://api.deepseek.com"
-# # "sk-3b8842c4b8de41b48ad350662886e849"
-# api_key = "sk-fec93ba732c046b38b35263b0a4c004d"
-# GPT_OSS = "deepseek-chat"
+url = "https://api.deepseek.com"
+# "sk-3b8842c4b8de41b48ad350662886e849"
+api_key = "sk-fec93ba732c046b38b35263b0a4c004d"
+GPT_OSS = "deepseek-chat"
 
 template = """Question: {question}
 Answer: Let's think step by step."""
@@ -102,7 +102,7 @@ class AgentProxy(Agent):
         )
 
         logger.info(f"Proxy Starts")
-        res = await bus.request(Subjects.AI.Agents.agent_request(self.name), msg)
+        res = await bus.request(Subjects.AI.Agents.agent_request(self.name), msg,timeout=60)
         reply = res.GetPayload(models.AgentResponse)
         logger.info(f"Proxy Ends {reply.text} ")
 

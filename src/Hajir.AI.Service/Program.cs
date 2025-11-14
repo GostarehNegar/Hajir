@@ -22,7 +22,7 @@ namespace Hajir.AI.Service
                 //s.AddAiAgentsServices(c, opt => { });
                 s.AddXrmServices(c, cfg =>
                 {
-                    cfg.ConnectionOptions = ConnectionOptions.WebAPI;
+                    cfg.ConnectionOptions = ConnectionOptions.OrganizationService;
                 });
                 s.AddNatsServices(c, cfg => { });
                 s.AddHajirCrm(c, cfg => { });
@@ -30,7 +30,10 @@ namespace Hajir.AI.Service
                 s.AddHajirSalesInfrastructure(c);
                 s.AddHairAgents();
                 s.AddSerarchContactTool(new SearchContactToolOptions { })
-                 .AddRegisterPhoneCallTool(new RegisterPhoneCallToolOptions { });
+                 .AddRegisterPhoneCallTool(new RegisterPhoneCallToolOptions { })
+                 .AddCreateOpportunityCallTool(new CreateOpportunityToolOptions { })
+                 .AddListOpportunityTool(new ListOpportunityToolOptions { })
+                 .AddSearchProductTool(new SearchProdcutsToolOptions { });
 
             }));
 
