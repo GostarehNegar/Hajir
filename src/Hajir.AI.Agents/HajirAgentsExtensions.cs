@@ -1,4 +1,5 @@
-﻿using Hajir.AI.Agents.ContactsAgent;
+﻿using Hajir.AI.Agents.ActivityManagement;
+using Hajir.AI.Agents.ContactsAgent;
 using Hajir.AI.Agents.PriceAgent;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -13,6 +14,8 @@ namespace Hajir.AI.Agents
                 .AddHostedService(sp => sp.GetService<PriceAgentService>())
                 .AddSingleton<ContactAgentService>()
                 .AddHostedService(sp => sp.GetService<ContactAgentService>());
+                //.AddHostedService<ActivityManagerAgent>();
         }
+        
     }
 }

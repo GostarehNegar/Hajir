@@ -5,12 +5,44 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="ActivityManagement\py\" />
     <Folder Include="PriceAgent\py\NewFolder\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Hajir.Crm\Hajir.Crm.csproj" />
+    <ProjectReference Include="..\Library\GN.Library.AI\GN.Library.AI.csproj" />
     <ProjectReference Include="..\Library\GN.Library.NATS\GN.Library.NATS.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ActivityManagement\py\agent.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ActivityManagement\py\app.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ActivityManagement\py\claude_generated.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ActivityManagement\py\ContactAgent.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ActivityManagement\py\lib.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ActivityManagement\py\lib_langchain.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ActivityManagement\py\main.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ActivityManagement\py\models.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ActivityManagement\py\requirements.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

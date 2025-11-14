@@ -7,6 +7,7 @@ import logging
 from openai import OpenAI
 from tenacity import retry, stop_after_attempt, wait_exponential
 from ContactAgent import shima
+from lib_langchain import toolsRegistry
 server = FastAPI()
 api_key = "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"
 url = "https://openrouter.ai/api/v1"
@@ -26,7 +27,7 @@ Answer: Let's think step by step."""
 class App(FastAPI):
 
     async def run(self):
-        
+        await toolsRegistry.initialize()
         await shima.start(bus)
         
 

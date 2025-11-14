@@ -10,15 +10,17 @@ from agent_squad.orchestrator import AgentSquad
 from openai import OpenAI
 from agentsmith import smith
 from tenacity import retry, stop_after_attempt, wait_exponential
+import random
 server = FastAPI()
-api_key = "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"
+api_key = "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"
 url = "https://openrouter.ai/api/v1"
 logger = logging.getLogger(__name__)
 GPT_OSS = "openai/gpt-oss-120b"
 
-url ="https://api.deepseek.com"
-api_key = "sk-fec93ba732c046b38b35263b0a4c004d" #"sk-3b8842c4b8de41b48ad350662886e849"
-GPT_OSS ="deepseek-chat"
+# url = "https://api.deepseek.com"
+# # "sk-3b8842c4b8de41b48ad350662886e849"
+# api_key = "sk-fec93ba732c046b38b35263b0a4c004d"
+# GPT_OSS = "deepseek-chat"
 
 template = """Question: {question}
 Answer: Let's think step by step."""
@@ -92,13 +94,11 @@ class AgentProxy(Agent):
 
         _history = [ToChatMessage(msg)
                     for msg in chat_history]
-        
         msg = models.AgentRequest(
             input_text=input_text,
-            user_id=user_id,
-            session_id=session_id,
+            context=models.SessionContext(
+                SessionId=session_id, UserId=user_id, Parameters=additional_params),
             chat_history=_history,
-            additional_params=additional_params
         )
 
         logger.info(f"Proxy Starts")
@@ -121,23 +121,16 @@ class CaptainSquad():
 
         # get agents
         logger.info("START")
-        # openai_classifier = MyOpenAICalssifier(OpenAIClassifierOptions(
-        #     model_id=GPT_OSS
-        # ))
-        # self.captain = AgentSquad(classifier=openai_classifier)
-
-        # res = await bus.request(Subjects.AI.Agents.Mamagements.listagents, "")
-        # agents: List[models.AgentHearBeat] = res.GetPayload(
-        #     models.ListAgentsResponse).Agents
-        # logger.info(f"{agents.count()} agents discovered")
-        # for agent in agents:
-        #     proxy = AgentProxy(AgentOptions(
-        #         name=agent.Name,
-        #         description=agent.Description))
-        #     self.captain.add_agent(proxy)
-
+        await bus.subscribe(Subjects.AI.Agents.health_request_subject(Subjects.AI.Agents.captainsquad), 
+                            self.handle_health)
         await bus.subscribe(Subjects.AI.Agents.agent_request("captain"), self.handle)
         pass
+    async def handle_health(self,msg:MsgContext):
+        await msg.Reply(
+            f"CaptainSquad: OK"
+            
+        )
+    
 
     @retry(
         stop=stop_after_attempt(3),
@@ -147,21 +140,23 @@ class CaptainSquad():
     async def handle(self, msg: MsgContext):
 
         payload = msg.GetPayload(models.AgentRequest)
-        if not payload.session_id in sessions:
-            sessions[payload.session_id] = await self.create_session(payload.session_id)
-        logger.info(f"Squad starts processing request")
-        resp: AgentResponse = await sessions[payload.session_id].squad.route_request(
+        session_id = payload.context.SessionId
+        user_id = payload.context.UserId
+        if not session_id in sessions:
+            sessions[session_id] = await self.create_session(session_id)
+        logger.info(f"Squad starts processing request.")
+        resp: AgentResponse = await sessions[session_id].squad.route_request(
             user_input=payload.input_text,
-            user_id=payload.user_id,
-            session_id=payload.session_id,
-            additional_params=payload.additional_params,
+            user_id=user_id,
+            session_id=session_id,
+            additional_params=payload.context.Parameters,
             stream_response=False
         )
         # print(resp.output)
         response_text = GetResponseText(resp)
         if 'object is not subscriptable' in response_text:
             print('err')
-            raise RuntimeError("Failed") 
+            raise RuntimeError("Failed")
         await msg.Reply(models.AgentResponse(
             text=GetResponseText(resp)))
         logger.info(f"Squad successfully processed request.")
@@ -193,8 +188,10 @@ class CaptainSquad():
 
 
 class App(FastAPI):
+    port:int = random.randint(23000,24000)
 
     async def run(self):
+        
         cap = CaptainSquad()
         await cap.run()
         await smith.start(bus)

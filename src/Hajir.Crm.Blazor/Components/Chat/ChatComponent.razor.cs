@@ -11,6 +11,7 @@ using Hajir.Crm.Portal.Chat;
 using Hajir.Crm.Portal;
 using Makaretu.Dns;
 using Markdig;
+using GN.Library.AI.Agents;
 
 namespace Hajir.Crm.Blazor.Components.Chat
 {
@@ -44,25 +45,34 @@ namespace Hajir.Crm.Blazor.Components.Chat
         {
             this.Conversation.AddMessage(Prompt, ChatConversation.Roles.User);
             this.Conversation.Query = Prompt;
-            Prompt = "";
+            var str = Prompt;
+            this.Prompt = "";
             try
             {
                 var reply = await this.serviceProvider.CreateNatsConnection().CreateMessageContext()
                     .WithData(new
                     {
-                        input_text =this.Conversation.Query,
-                        user_id = "babak@gnco.ir",
-                        session_id = this.Conversation.Id
+                        input_text = str,
+                        session_id = this.Conversation.Id,
+                        context = new AgentSessionContext
+                        {
+                            UserId = "mohsen@gnco.ir",
+                            SessionId = this.Conversation.Id
+                        }
                     })
-                    .WithSubject(HajirCrmConstants.Subjects.Ai.Agents.AgentRequest("captain"))
+                    .WithSubject(HajirCrmConstants.Subjects.Ai.Agents.AgentRequest(
+                        HajirCrmConstants.Subjects.Ai.Agents.CaptainSquad))
                     .Request();
                 var g = reply.GetData<AgentResponse>();
                 this.Conversation.AddMessage(g.text, ChatConversation.Roles.Assistant);
+
             }
             catch (Exception ex)
             {
-                this.SetError(ex);
+                this.Conversation.AddMessage(ex.Message, ChatConversation.Roles.Assistant);
             }
+
+
 
         }
         public async Task TriggerSearch(KeyboardEventArgs e)

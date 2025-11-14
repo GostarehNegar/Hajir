@@ -17,7 +17,9 @@ async def main():
     await app.run()
     # Note FastApi app is actually preserved
     # in app.api
-    config = uvicorn.Config("main:app", host='0.0.0.0',
+    config = uvicorn.Config("main:app", 
+                             host='0.0.0.0', 
+                             port=app.port,
                              log_level="info", workers=1)
     server = uvicorn.Server(config)
     await server.serve()

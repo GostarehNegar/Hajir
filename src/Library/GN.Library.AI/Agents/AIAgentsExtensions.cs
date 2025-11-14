@@ -11,13 +11,24 @@ namespace GN.Library.AI.Agents
     {
         public static IServiceCollection AddAiAgentsServices(this IServiceCollection services, IConfiguration configuration, Action<AiAgentsOptions> configure)
         {
-            var options = new AiAgentsOptions();
+
+            var options = configuration.GetSection("agents")?.Get<AiAgentsOptions>() ?? new AiAgentsOptions();
+            configure?.Invoke(options);
             if (services.HasService<AiAgentsOptions>())
                 return services;
-            return services
-                .AddSingleton(options)
+            services
+                .AddSingleton(options.Validate())
+                .AddSingleton(options.CaptainSquad)
                 .AddSingleton<AgentsService>()
-                .AddHostedService(sp=>sp.GetService<AgentsService>());
+                .AddHostedService(sp => sp.GetService<AgentsService>());
+
+            if (!options.CaptainSquad.Disabled)
+            {
+                services
+                    .AddSingleton<CaptainSquadService>()
+                    .AddHostedService(sp => sp.GetService<CaptainSquadService>());
+            }
+            return services;
         }
     }
 }

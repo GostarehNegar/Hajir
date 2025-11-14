@@ -1,5 +1,6 @@
 requests
 pydantic 
+cachetools
 argparse
 nats-py
 fastapi

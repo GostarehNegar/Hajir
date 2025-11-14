@@ -440,12 +440,15 @@ namespace GN.Library.Nats
 
         public class NatsConnectionEx : NatsConnection, INatsConnectionEx
         {
+
+            private IServiceScope _scope;
             public IServiceProvider ServiceProvider { get; private set; }
             public INatsConnection Core => this;
             public NatsConnectionEx(NatsOpts opts, IServiceProvider serviceProvider) : base(opts)
             {
-                _ServiceProvider = serviceProvider;
-                this.ServiceProvider = serviceProvider;
+                this._scope = serviceProvider.CreateScope();
+                _ServiceProvider = this._scope.ServiceProvider;
+                this.ServiceProvider = this._scope.ServiceProvider;
 
             }
 
@@ -458,10 +461,10 @@ namespace GN.Library.Nats
             IPublishMessageContext WithData(object data);
             ValueTask PublishAsync();
             ValueTask<PubAckResponse> PublishToStreamAsync(string stream, CancellationToken cancellationToken = default);
-            ValueTask<IMessageContext> Request();
+            ValueTask<IMessageContext> Request(int timout = 30);
 
         }
-        public interface IMessageContext< T> : IDisposable
+        public interface IMessageContext<T> : IDisposable
         {
             T Data { get; }
             string Subject { get; }
@@ -576,7 +579,7 @@ namespace GN.Library.Nats
             }
             public ValueTask Reply<TR>(TR reply)
             {
-                if (this.Msg!=null && TrySerialize(reply, out var __data))
+                if (this.Msg != null && TrySerialize(reply, out var __data))
                 {
                     return this.Msg.ReplyAsync(__data);
                 }
@@ -605,14 +608,18 @@ namespace GN.Library.Nats
                 this.scope?.Dispose();
             }
 
-            public async ValueTask<IMessageContext> Request()
+            public async ValueTask<IMessageContext> Request(int timeout = 30)
             {
-                var r =  await this.Connection.RequestAsync<T,byte[]>(this.message.Subject,this.message.Data);
+                var r = await this.Connection
+                .RequestAsync<T, byte[]>(this.message.Subject, this.message.Data)
+                .AsTask()
+                .TimeOutAfter(timeout * 1000);
+                //var r =  await this.Connection.RequestAsync<T,byte[]>(this.message.Subject,this.message.Data);
                 return r.ToMessageContext();
             }
         }
 
-        public interface  IMessageContext :  IMessageContext<Byte[]>
+        public interface IMessageContext : IMessageContext<Byte[]>
         {
 
         }
@@ -826,12 +833,12 @@ namespace GN.Library.Nats
                 return new NatsJSFetchOpts { MaxMsgs = this.BatchSize };
             }
 
-            public Task<ISubscription> SubscribeAsyncEx(Func<IMessageContext,ValueTask> handler,
+            public Task<ISubscription> SubscribeAsyncEx(Func<IMessageContext, ValueTask> handler,
                 CancellationToken cancellationToken = default)
             {
-                
-                return SubscribeAsync<byte[]>(x => { return handler(x.ToMessageContext());}, cancellationToken);
-                                
+
+                return SubscribeAsync<byte[]>(x => { return handler(x.ToMessageContext()); }, cancellationToken);
+
             }
             public Task<ISubscription> SubscribeAsync<T>(Handler<T> handler,
                 CancellationToken cancellationToken = default)
@@ -1255,9 +1262,9 @@ namespace GN.Library.Nats
             return result as INatsConnectionEx;
         }
 
-        internal static MessageContext ToMessageContext(this IMessageContext<byte[]> msg)=>
-            msg.Msg.ToMessageContext();
-        
+        internal static MessageContext ToMessageContext(this IMessageContext<byte[]> msg) =>
+            new MessageContext(null, msg.Msg, msg.JsMsg);
+
         internal static MessageContext ToMessageContext(this NatsMsg<byte[]> msg)
         {
             return new MessageContext(null, msg, null);

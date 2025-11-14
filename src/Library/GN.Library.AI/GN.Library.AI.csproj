@@ -6,12 +6,35 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GN.Library.NATS\GN.Library.NATS.csproj" />
+    <ProjectReference Include="..\GN.Library.Python\GN.Library.Python.csproj" />
     <ProjectReference Include="..\GN.Library\GN.Library.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Agents\py\AgentSelector\" />
+    <Folder Include="Tools\NewFolder\" />
     <Folder Include="WebScraping\py\WebScraper\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Agents\py\CaptainSquad\agentsmith.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Agents\py\CaptainSquad\app.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Agents\py\CaptainSquad\lib.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Agents\py\CaptainSquad\main.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Agents\py\CaptainSquad\models.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Agents\py\CaptainSquad\requirements.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

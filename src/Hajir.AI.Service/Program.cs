@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Hajir.Crm;
 using Hajir.Crm.Sales.PriceLists;
 using Hajir.AI.Agents;
+using Hajir.AI.Agents.Tools;
+using GN.Library.Nats;
 namespace Hajir.AI.Service
 {
     public class Program
@@ -17,15 +19,18 @@ namespace Hajir.AI.Service
             .WithServices((c, s) => {
 
 
-                s.AddAiAgentsServices(c, opt => { });
+                //s.AddAiAgentsServices(c, opt => { });
                 s.AddXrmServices(c, cfg =>
                 {
                     cfg.ConnectionOptions = ConnectionOptions.WebAPI;
                 });
+                s.AddNatsServices(c, cfg => { });
                 s.AddHajirCrm(c, cfg => { });
                 s.AddHajirPriceListServices(c, opt => { });
                 s.AddHajirSalesInfrastructure(c);
                 s.AddHairAgents();
+                s.AddSerarchContactTool(new SearchContactToolOptions { })
+                 .AddRegisterPhoneCallTool(new RegisterPhoneCallToolOptions { });
 
             }));
 

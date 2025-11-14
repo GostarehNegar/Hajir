@@ -151,11 +151,16 @@ namespace GN.Library
                     public const string Perfix = Ai.prefix + ".agents";
                     // ai.agents.request.
                     public static string AgentRequest(string agent) => Perfix + $".request.{agent}";
+                    public static string AgentHealth(string agent) => $"health.agents.request.{agent}";
+                    public const string CaptainSquad = "captain";
                     public class Management
                     {
                         public const string Perfix = Agents.Perfix + ".management";
                         public const string HeartBeat = Perfix + ".heartbeat";
+                        public const string ToolHeartBeat = Perfix + ".toolheartbeat";
                         public const string ListAgents = Perfix + ".list";
+                        public const string ListTools = Perfix + ".listtools";
+                        public const string GetAvailableLLMS = Perfix + ".getllms";
                     }
                 }
             }

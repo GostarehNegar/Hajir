@@ -17,7 +17,7 @@ namespace GN.Library.AI.Agents
         private readonly ILogger<AgentsService> logger;
         private readonly AiAgentsOptions options;
         private ConcurrentDictionary<string, AgentInfo> agents = new ConcurrentDictionary<string, AgentInfo>();
-
+        private ConcurrentDictionary<string, ToolMetadata> tools = new ConcurrentDictionary<string, ToolMetadata>();
         public AgentsService(IServiceProvider serviceProvider, ILogger<AgentsService> logger, AiAgentsOptions options)
         {
             this.serviceProvider = serviceProvider;
@@ -39,6 +39,15 @@ namespace GN.Library.AI.Agents
                     await Task.CompletedTask;
                 });
             await con.GetSubscriptionBuilder()
+                .WithSubjects(LibraryConstants.Subjects.Ai.Agents.Management.ToolHeartBeat)
+                .SubscribeAsync(async a =>
+                {
+                    var tool = a.GetData<ToolMetadata>();
+                    tool.LastBeatOn = DateTime.UtcNow;
+                    this.tools[tool.name] = tool;
+                    await Task.CompletedTask;
+                });
+            await con.GetSubscriptionBuilder()
                 .WithSubjects(ListAgentsRequest.Subject)
                 .SubscribeAsync(async a =>
                 {
@@ -50,6 +59,43 @@ namespace GN.Library.AI.Agents
                     });
                 });
 
+            await con.GetSubscriptionBuilder()
+            .WithSubjects(LibraryConstants.Subjects.Ai.Agents.Management.ListTools)
+            .SubscribeAsync(async a =>
+            {
+                await a.Reply(this.tools.Values.Where(x => x.IsAlive()).ToArray());
+            });
+
+
+
+            await con.GetSubscriptionBuilder()
+               .WithSubjects(GetAvailableLLMsRequest.Subject)
+               .SubscribeAsync(async a =>
+               {
+
+                   logger.LogInformation("*************LLMS Requested");
+                   await a.Reply(new GetAvialablLLMsResponse
+                   {
+                       LLMs = Array.Empty<GetAvialablLLMsResponse.LLM>(),
+                       // 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
+                       //Default = new GetAvialablLLMsResponse.LLM
+                       //{
+
+                       //    Url = "https://api.deepseek.com",
+                       //    ApiKey = "sk-fec93ba732c046b38b35263b0a4c004d",// #"sk-3b8842c4b8de41b48ad350662886e849"
+                       //    Model = "deepseek-chat"
+
+                       //}
+                       Default = new GetAvialablLLMsResponse.LLM
+                       {
+
+                           Url = "https://openrouter.ai/api/v1",
+                           ApiKey = "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",// #"sk-3b8842c4b8de41b48ad350662886e849"
+                           Model = "openai/gpt-oss-120b",// "deepseek/deepseek-chat-v3.1:free"
+
+                       }
+                   });
+               });
 
             await base.StartAsync(cancellationToken);
         }
@@ -64,15 +110,35 @@ namespace GN.Library.AI.Agents
                     {
                         this.logger.LogInformation($"{item.Name}\t {item.Description}");
                     }
-                    await Task.Delay(6 * 1000);
+                    await Task.Delay(30 * 1000);
 
                 }
 
             });
         }
+        
+        private Task ReportTools(CancellationToken token)
+        {
+            return Task.Run(async () =>
+            {
+
+                while (!token.IsCancellationRequested)
+                {
+                    var str = new StringBuilder();
+                    this.tools.Values
+                    .Where(x => x.IsAlive())    
+                    .ToList()
+                    .ForEach(x=> str.AppendLine($"{x.name}\t{x.description}"));
+                    this.logger.LogInformation($"Tools:\r\n {str.ToString()}");
+                    await Task.Delay(10 * 1000, token);
+
+                }
+            });
+        }
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            return Task.WhenAll(this.ListAgents(stoppingToken));
+            return Task.WhenAll(this.ListAgents(stoppingToken),
+                ReportTools(stoppingToken));
 
         }
     }
