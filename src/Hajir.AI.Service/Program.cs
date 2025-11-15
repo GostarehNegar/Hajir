@@ -33,7 +33,10 @@ namespace Hajir.AI.Service
                  .AddRegisterPhoneCallTool(new RegisterPhoneCallToolOptions { })
                  .AddCreateOpportunityCallTool(new CreateOpportunityToolOptions { })
                  .AddListOpportunityTool(new ListOpportunityToolOptions { })
-                 .AddSearchProductTool(new SearchProdcutsToolOptions { });
+                 .AddSearchProductTool(new SearchProdcutsToolOptions { })
+                 .AddSearchAccountTool(new AccountSearchToolOptions { })
+                 .AddAccountInformationTool(new AccountInformationToolOptions { })
+                 .AddPriceCaomparisonTool(new ProductPriceComparisonToolOptions { });
 
             }));
 

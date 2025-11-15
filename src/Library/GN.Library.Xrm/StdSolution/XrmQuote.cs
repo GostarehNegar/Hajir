@@ -155,7 +155,8 @@ namespace GN.Library.Xrm.StdSolution
         }
         [AttributeLogicalName(Schema.CustomerId)]
         public EntityReference CustomerId { get => this.GetAttributeValue<EntityReference>(Schema.CustomerId); set => this.SetAttribiuteValue(Schema.CustomerId, value); }
-
+        
+        [AttributeLogicalName(Schema.CustomerId)]
         public Guid? AccountId
         {
             get => this.CustomerId != null && this.CustomerId.LogicalName == XrmAccount.Schema.LogicalName ? this.CustomerId.Id : (Guid?)null;

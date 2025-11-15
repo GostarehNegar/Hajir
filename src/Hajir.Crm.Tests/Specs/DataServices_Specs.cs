@@ -35,6 +35,11 @@ namespace Hajir.Crm.Tests.Specs
                 .Queryable
                 .Take(1)
                 .FirstOrDefault();
+            var quotes = host.Services.GetService<IXrmDataServices>()
+                .GetRepository<XrmHajirQuote>()
+                .Queryable
+                .Where(x => x.AccountId == Guid.Empty)
+                .ToArray();
             var actual = target.GetProductById(product.Id.ToString());
             Assert.IsNotNull(actual);
 

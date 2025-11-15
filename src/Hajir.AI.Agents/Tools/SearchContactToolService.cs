@@ -28,10 +28,11 @@ namespace Hajir.AI.Agents.Tools
     internal class SearchContactToolService : BackgroundService
     {
         public const string SUBJECT = "ai.agent.tools.seachcontacts";
+        public const string Name = "search_contacts";
         private readonly INatsConnectionProvider connectionProvider;
         private readonly IXrmDataServices dataServices;
         private readonly ILogger<SearchContactToolService> logger;
-        private ToolMetadata metadata = new ToolMetadata
+        private ToolMetadata metadata = new ToolMetadata(Name)
         {
             name = "search_contacts",
             domain = "crm",

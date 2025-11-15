@@ -20,11 +20,12 @@ namespace Hajir.AI.Agents.Tools
     }
     internal class SearchProdcutsTool : BaseTool
     {
+        public const string Name = "search_products";
         public SearchProdcutsTool(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        public override ToolMetadata MetaData => new ToolMetadata
+        public override ToolMetadata MetaData => new ToolMetadata(Name)
         {
             name = "search_products",
             description = "searches for products.",
@@ -40,7 +41,7 @@ namespace Hajir.AI.Agents.Tools
                 }
             }
 
-        };
+        }.Validate();
 
         protected override async Task<object> Handle(ToolInvokeContext context, NatsExtensions.IMessageContext ctx)
         {

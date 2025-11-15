@@ -10,6 +10,7 @@ using GN.Library.Xrm;
 using Hajir.Crm.Entities;
 using ExcelDataReader;
 using System.IO;
+using Hajir.Crm.Products.ProductCompetition;
 
 namespace Hajir.Crm.Tests.Specs
 {
@@ -24,6 +25,7 @@ namespace Hajir.Crm.Tests.Specs
             var str = string.Format("{0:###,###}", 534324675.3M);
             var host = TestUtils.GetDefaultHost((c, s) => {
                 s.AddHajirCrm(c, null);
+                s.AddCompetitionServices();
             
             }, true);
 
@@ -77,6 +79,20 @@ namespace Hajir.Crm.Tests.Specs
                 }
             }
 
+        }
+
+        [TestMethod]
+        public async Task CompetitionWorks()
+        {
+            var host = TestUtils.GetDefaultHost((c, s) => {
+                s.AddHajirCrm(c, null);
+                s.AddCompetitionServices();
+
+            }, true);
+            var target = host.Services.GetService<IProductCompetitionService>();
+            var items = await target.GetCompetitors();
+            items[0].Items[8].GetKVA();
+            var f = items[0].Items.Select(s => s.GetKVA()).ToList();
         }
     }
 }

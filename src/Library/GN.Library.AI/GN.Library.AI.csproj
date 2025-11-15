@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Folder Include="Agents\py\AgentSelector\" />
+    <Folder Include="WebScraping\py\ProductScraper\" />
     <Folder Include="WebScraping\py\WebScraper\" />
   </ItemGroup>
 

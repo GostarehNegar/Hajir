@@ -109,8 +109,8 @@ namespace GN.Library.AI.Agents
                     this.agents.Values
                         .Where(x => x.IsAlive())
                         .ToList()
-                        .ForEach(x => sb.AppendLine($"{x.Name}:\t{x.Description?.Substring(0, 30)}"));
-                    this.logger.LogInformation($"Agents:\r\n**********\r\n{sb.ToString()}");
+                        .ForEach(x => sb.AppendLine($"{x.Name}:\t{x.Description?.Trim().Left(60)}"));
+                    this.logger.LogInformation($"Agents:\r\n**********\r\n{sb.ToString()}\r\n**************");
                     await Task.Delay(30 * 1000);
                 }
 
@@ -128,8 +128,8 @@ namespace GN.Library.AI.Agents
                     this.tools.Values
                     .Where(x => x.IsAlive())    
                     .ToList()
-                    .ForEach(x=> str.AppendLine($"{x.name}\t{x.description}"));
-                    this.logger.LogInformation($"Tools:\r\n{str.ToString()}");
+                    .ForEach(x=> str.AppendLine($"{x.name}\t{x.description?.Left(60)}"));
+                    this.logger.LogInformation($"Tools:\r\n************\r\n{str.ToString()}\r\n***************");
                     await Task.Delay(10 * 1000, token);
 
                 }

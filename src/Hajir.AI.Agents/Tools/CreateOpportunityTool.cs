@@ -23,12 +23,13 @@ namespace Hajir.AI.Agents.Tools
     internal class CreateOpportunityTool : BackgroundService
     {
         public const string SUBJECT = "ai.agent.tools.create_opportunity";
+        public const string Name = "create_opportunity";
         private readonly INatsConnectionProvider connectionProvider;
         private readonly IServiceProvider serviceProvider;
         private readonly ILogger logger;
-        private ToolMetadata metadata = new ToolMetadata
+        private ToolMetadata metadata = new ToolMetadata(Name)
         {
-            name = "create_opportunity",
+            name = Name,
             domain = "crm",
             description = "Creates an Opportunity.",
             subject = SUBJECT,

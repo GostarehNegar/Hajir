@@ -23,6 +23,7 @@ namespace Hajir.Crm.Infrastructure.Xrm.Cache
         private readonly IMemoryCache cache;
         private static TimeSpan DEFAULT = TimeSpan.FromMinutes(10);
 
+        public IMemoryCache Cache => this.cache;
         public IEnumerable<Product> Products => GetProducts();
 
         public IEnumerable<UnitOfMeasurements> UnitOfMeasurements

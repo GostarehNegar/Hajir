@@ -20,6 +20,7 @@ namespace Hajir.Crm.Products
 
 
         }
+        public decimal GetKVA() => HajirUtils.Instance.GetKVA(this.Name) ?? 0;
         public string UOMId { get; set; }
         public Schema.ProductTypes ProductType
         {
@@ -52,10 +53,15 @@ namespace Hajir.Crm.Products
 
             }
         }
-        public CabinetVendors Vendor { get {
+        public CabinetVendors Vendor
+        {
+            get
+            {
 
                 return this.Name != null && this.Name.Contains("پیلتن") ? CabinetVendors.Piltan : CabinetVendors.Hajir;
-            } set { } }
+            }
+            set { }
+        }
 
         public int NumberOfRows
         {

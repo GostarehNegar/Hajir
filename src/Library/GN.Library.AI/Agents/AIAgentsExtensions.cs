@@ -30,5 +30,12 @@ namespace GN.Library.AI.Agents
             }
             return services;
         }
+
+        public static string Left(string str, int len)
+        {
+            return !string.IsNullOrWhiteSpace(str) && str.Length > len
+                ? str.Substring(0, len)
+                : str;
+        }
     }
 }

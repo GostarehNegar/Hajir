@@ -3,11 +3,15 @@ using GN.Library.Shared.Entities;
 using Hajir.Crm.Common;
 using Hajir.Crm.Internals;
 using Hajir.Crm.Products;
+using Hajir.Crm.Products.ProductCompetition;
 using Hajir.Crm.Sales;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Hajir.Crm
 {
@@ -15,7 +19,7 @@ namespace Hajir.Crm
     {
         public static IHajirCrmServiceContext CreateHajirServiceContext(this IServiceProvider serviceProvider)
         {
-            
+
             return new HajirCrmServiceContext(serviceProvider);
         }
 
@@ -114,9 +118,9 @@ namespace Hajir.Crm
                 : (Guid?)null;
 
         }
-        public static PriceList GetPriceList(this ICacheService cacheService, int no=1)
+        public static PriceList GetPriceList(this ICacheService cacheService, int no = 1)
         {
-            
+
             return cacheService.PriceLists.FirstOrDefault(x => x.Name == HajirCrmConstants.GetPriceListName(no));
         }
         public static Product GetProductById(this ICacheService cacheService, string productId)
@@ -127,5 +131,42 @@ namespace Hajir.Crm
         {
             return cacheService.Products.FirstOrDefault(x => x.ProductNumber == productNumber);
         }
+        public static Competitor[] GetCompetitors()
+        {
+
+            var result = new List<Competitor>();
+            string[] _competitors = new string[] { "hirad", "faratel", "alja", "faran" };
+            foreach (var item in _competitors)
+            {
+                try
+                {
+                    var fileName = Path.Combine(Path.GetDirectoryName(typeof(HajirCrmExtensions).Assembly.Location), $"Products\\ProductCompetition\\Data\\{item}.json");
+                    var d = Directory.Exists(Path.GetDirectoryName(fileName));
+                    var data = File.ReadAllText(fileName);
+                    var pl = Newtonsoft.Json.JsonConvert.DeserializeObject<Competitor.PriceItem[]>(data);
+                    pl.ToList().ForEach(x => x.Manufacturer = item);
+                    result.Add(new Competitor(item, pl));
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+
+
+            return result.ToArray();
+
+
+        }
+        public static Competitor[] GetCompetitors(this ICacheService cache)
+        {
+            return cache.Cache.GetOrCreate<Competitor[]>("_COMPETETORS_", ent =>
+            {
+                ent.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60);
+                return GetCompetitors();
+            });
+
+        }
+
     }
 }

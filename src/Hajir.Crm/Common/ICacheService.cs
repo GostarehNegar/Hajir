@@ -1,7 +1,9 @@
 ﻿using GN.Library.Shared.Entities;
 using Hajir.Crm.Entities;
 using Hajir.Crm.Products;
+using Hajir.Crm.Products.ProductCompetition;
 using Hajir.Crm.Sales;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +12,7 @@ namespace Hajir.Crm.Common
 {
     public interface ICacheService
     {
+        IMemoryCache Cache { get; }
         IEnumerable<Product> Products { get; }
         IEnumerable<UnitOfMeasurements> UnitOfMeasurements { get; }
         IEnumerable<UnitOfMeasurmentGroup> UnitOfMeasuementGroups { get; }
@@ -25,5 +28,7 @@ namespace Hajir.Crm.Common
         IEnumerable<HajirProductCategoryEntity> ProductCategories { get; }
         UnitOfMeasurements UOM_adad { get; }
         UnitOfMeasurements UOM_dastgah { get; }
+
+        
     }
 }

@@ -16,7 +16,7 @@ namespace Hajir.AI.Agents.Tools
         private readonly IServiceProvider serviceProvider;
         private readonly ILogger<CurrentDateTool> logger;
         public const string SUBJECT = "ai.agent.tools.currentdate";
-        private ToolMetadata metadata = new ToolMetadata
+        private ToolMetadata metadata = new ToolMetadata("current_date")
         {
             name = "current_date",
             domain = "utility",

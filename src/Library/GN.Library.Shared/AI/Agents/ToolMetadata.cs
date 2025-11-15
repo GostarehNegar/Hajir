@@ -29,11 +29,21 @@ namespace GN.Library.AI.Agents
         public string description { get; set; }
         public string subject { get; set; }
         public ToolParameter[] parameters { get; set; } = new ToolParameter[0];
+        public ToolMetadata(string name)
+        {
+            this.name = name;
+            this.subject = $"ai.agents.tools.{name}";
 
-        ///    sample: {"type": "object", "description": "Statistics about the text"}
+        }
 
+        //sample: {"type": "object", "description": "Statistics about the text"}
         public Dictionary<string, object> returns { get; set; } = new Dictionary<string, object>();
 
         public bool IsAlive() => DateTime.UtcNow.Subtract(LastBeatOn).TotalSeconds < 60 * 3;
+        public ToolMetadata Validate()
+        {
+            subject = string.IsNullOrWhiteSpace(subject) ? $"ai.agents.tools.{name}" : subject;
+            return this;
+        }
     }
 }

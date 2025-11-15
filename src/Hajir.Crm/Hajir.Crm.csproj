@@ -52,4 +52,19 @@
     <Folder Include="Features\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Products\ProductCompetition\Data\alja.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Products\ProductCompetition\Data\faran.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Products\ProductCompetition\Data\faratel.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Products\ProductCompetition\Data\hirad.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

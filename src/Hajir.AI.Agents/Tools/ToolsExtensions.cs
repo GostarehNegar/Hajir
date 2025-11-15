@@ -38,5 +38,23 @@ namespace Hajir.AI.Agents.Tools
                 .AddHostedService<SearchProdcutsTool>();
 
         }
+        public static IServiceCollection AddSearchAccountTool(this IServiceCollection services, AccountSearchToolOptions options)
+        {
+            return services.AddSingleton(options)
+                .AddHostedService<AccountSearchTool>();
+
+        }
+        public static IServiceCollection AddAccountInformationTool(this IServiceCollection services, AccountInformationToolOptions options)
+        {
+            return services.AddSingleton(options)
+                .AddHostedService<AccountInformationTool>();
+
+        }
+        public static IServiceCollection AddPriceCaomparisonTool(this IServiceCollection services, ProductPriceComparisonToolOptions options)
+        {
+            return services.AddSingleton(options)
+                .AddHostedService<ProductPriceComparisonTool>();
+
+        }
     }
 }

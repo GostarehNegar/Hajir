@@ -21,7 +21,8 @@ namespace Hajir.AI.Agents.Tools
         public const string SUBJECT = "ai.agent.tools.register_phonecall";
         private readonly INatsConnectionProvider connectionProvider;
         private readonly ILogger logger;
-        private ToolMetadata metadata = new ToolMetadata
+        public const string Name = "register_phonecall";
+        private ToolMetadata metadata = new ToolMetadata(Name)
         {
             name = "register_phonecall",
             domain = "crm",

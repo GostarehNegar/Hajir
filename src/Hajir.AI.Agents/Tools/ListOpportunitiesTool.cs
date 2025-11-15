@@ -24,7 +24,8 @@ namespace Hajir.AI.Agents.Tools
     internal class ListOpportunityTool : BaseTool
     {
         public const string SUBJECT = "ai.agent.tools.list_opportunity";
-        public override ToolMetadata MetaData => new ToolMetadata
+        public const string Name = "list_opportunities";
+        public override ToolMetadata MetaData => new ToolMetadata(Name)
         {
             name = "list_opportunities",
             domain = "crm",
@@ -52,7 +53,7 @@ namespace Hajir.AI.Agents.Tools
                 { "type", "object" },
                 { "description", "Result of the operation." }
             }
-        };
+        }.Validate();
 
         public ListOpportunityTool(IServiceProvider serviceProvider)
             : base(serviceProvider)

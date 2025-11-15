@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Hajir.Crm
@@ -31,7 +32,7 @@ namespace Hajir.Crm
             var parts = name.Split(' ');
             for (var i = 0; i < parts.Length; i++)
             {
-                if (parts[i] == "طبقه" && i>0)
+                if (parts[i] == "طبقه" && i > 0)
                 {
                     switch (parts[i - 1])
                     {
@@ -94,6 +95,32 @@ namespace Hajir.Crm
         {
             return str == null ? str : str.Replace("ك", "ک").Replace("ي", "ی");
 
+        }
+        public decimal? GetKVA(string kva, string tag = "KVA")
+        {
+            if (string.IsNullOrWhiteSpace(kva)) return null;
+            kva = kva.Replace("کاوا", "KVA").ToUpperInvariant();
+            var idx = kva.IndexOf(tag) - 1;
+            while (idx > 0 && kva[idx] == ' ')
+                idx--;
+            var digits = "";
+            while (idx > 0 && (char.IsDigit(kva[idx]) || kva[idx] == '.'))
+            {
+                digits = kva[idx] + digits;
+                idx--;
+            }
+            var result = !string.IsNullOrWhiteSpace(digits) && decimal.TryParse(digits, out var _r)
+                ? _r
+                : (decimal?)null;
+            if (result==null && tag == "KVA")
+            {
+                var va = GetKVA(kva, "VA");
+                if (va.HasValue)
+                {
+                    return va / 1000;
+                }
+            }
+            return result;
         }
     }
 }

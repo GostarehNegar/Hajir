@@ -17,7 +17,7 @@ agent_name = "products_agent"
 agent_description = """
                 An agent that can provide informaion about products and prices:
                 1. It can list for profucts.
-                2. It can give prices
+                2. It can give prices.
                 """
 agent_system_prompt = """
                     You are a helpful assistant with access to various tools. 
@@ -28,6 +28,7 @@ agent_system_prompt = """
                     1. Use 'search_products' tool to get information about products.
                     2. It may happen that the user is selecting a number of products to put an order
                        in this case try to calculate the totals.
+                    
                     Always respond in Persian (Farsi) when the user speaks in Persian.
                     
                     """
@@ -64,12 +65,17 @@ class Agent(LangchainAgent):
 
     async def getTools(self, ctx: models.SessionContext):
         _tools = await toolsRegistry.getTools(True, self.select_tool, context=ctx)
+        tool_names = ["search_products"]
         result = []
-        tool = toolsRegistry.getToolByName("search_products")
-        if tool==None:
-            logger.warning(f"search_products tool not found.")
-        else:
-            result.append(tool)
+        for tool_name in tool_names:
+            tool = toolsRegistry.getToolByName(tool_name)
+            if tool == None:
+                logger.warning(f"{tool_name} tool not found.")
+            else:
+                logger.info(f"Tool {tool_name} added.")
+                result.append(tool)
+        
+
         result.append(calculator)
             
         return result
