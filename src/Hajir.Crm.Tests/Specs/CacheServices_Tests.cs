@@ -1,4 +1,5 @@
 ﻿
+using GN.Library.Xrm.StdSolution;
 using Hajir.Crm.Common;
 using Hajir.Crm.Products.ProductCompetition;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Caching;
 
 namespace Hajir.Crm.Tests.Specs
 {
@@ -27,7 +29,13 @@ namespace Hajir.Crm.Tests.Specs
             }
             var host = this.GetDefaultHost();
 			var target = host.Services.GetService<ICacheService>();
-			var pl = target.PriceLists;
+            bool matches(string u1, string u2)
+            {
+                return u1 != null && u2 != null && u1.ToLower().Replace("hsco\\", "") + "@hsco.local" == u2.ToLowerInvariant();
+            }
+            var __a = target.Users.Select(x => x.GetAttributeValue<string>(XrmSystemUser.Schema.DomainName)).ToArray();
+            //var a=target.Users.FirstOrDefault(x => matches(x.GetAttributeValue<string>(XrmSystemUser.Schema.DomainName), userName));
+            var pl = target.PriceLists;
 			var _pl = target.GetPriceList(1);
             decimal power = 3;
 			var hajir = host.Services.GetService<ICacheService>().Products

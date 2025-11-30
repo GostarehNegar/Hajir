@@ -56,7 +56,7 @@ namespace Hajir.AI.Agents.Tools
                 throw new Exception("Search Text is Null or Empty");
             foreach (var part in text.Split(' ').Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => x.Trim()))
             {
-                query = query.Where(x => x.Name.Contains(part));
+                query = query.Where(x => x.Name.Contains(part) && x.StateCode==0);
             }
             return query
                 .Take(15)

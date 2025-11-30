@@ -9,6 +9,12 @@ using System.Threading.Tasks;
 using System.Threading;
 using GN.Library;
 using GN.Library.Shared.AI.Agents;
+using GN.Library.AI.Tools;
+using System.Reactive.Subjects;
+using Microsoft.Extensions.DependencyInjection;
+using Hajir.Crm.Common;
+using GN.Library.Xrm;
+using GN.Library.Xrm.StdSolution;
 
 namespace Hajir.AI.Agents.Tools
 {
@@ -16,24 +22,22 @@ namespace Hajir.AI.Agents.Tools
     {
 
     }
-    internal class RegisterPhoneCallTool : BackgroundService
+    
+
+    internal class RegisterPhoneCallTool : BaseTool
     {
-        public const string SUBJECT = "ai.agent.tools.register_phonecall";
-        private readonly INatsConnectionProvider connectionProvider;
-        private readonly ILogger logger;
         public const string Name = "register_phonecall";
-        private ToolMetadata metadata = new ToolMetadata(Name)
+        public override ToolMetadata MetaData => new ToolMetadata(Name)
         {
             name = "register_phonecall",
             domain = "crm",
             description = "Registers a phone call.",
-            subject = SUBJECT,
             parameters = new ToolParameter[]
             {
                 new ToolParameter
                 {
                     name="contact_id",
-                    description ="Id of the contact",
+                    description ="Id (ContactId شناسه مخاطب) of the contact",
                     required = true,
                     type="string"
                 },
@@ -51,76 +55,36 @@ namespace Hajir.AI.Agents.Tools
                 { "description", "Result of the operation." }
             }
         };
-
-        public RegisterPhoneCallTool(INatsConnectionProvider connectionProvider, ILogger<RegisterPhoneCallTool> logger)
+        public RegisterPhoneCallTool(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            this.connectionProvider = connectionProvider;
-            this.logger = logger;
         }
-        private Task HeartBeat(CancellationToken token)
+        protected override async Task<object> Handle(ToolInvokeContext context, NatsExtensions.IMessageContext ctx)
         {
-            return Task.Run(async () =>
+            var contact_id = context.GetParameterValue<string>(this.MetaData.parameters[0].name);
+            var subject = context.GetParameterValue<string>("subject");
+            var user = this.serviceProvider.GetService<ICacheService>().FindUser(context.Context.UserId);
+            if (user == null)
             {
-                var con = await this.connectionProvider.CreateConnectionAsync();
-                while (!token.IsCancellationRequested)
-                {
-                    metadata.LastBeatOn = DateTime.UtcNow;
-                    try
-                    {
-
-                        await con
-                            .CreateMessageContext(LibraryConstants.Subjects.Ai.Agents.Management.ToolHeartBeat, metadata)
-                            .PublishAsync();
-                    }
-                    catch (Exception err)
-                    {
-                        this.logger.LogError(
-                            $"An error occured while trying to publish heartbeat. Err:{err.Message}");
-                    }
-
-                    await Task.Delay(TimeSpan.FromSeconds(30), token);
-                }
-
-            });
-        }
-        private async ValueTask Handler(NatsExtensions.IMessageContext ctx)
-        {
-            await Task.CompletedTask;
-            try
-            {
-                var args = ctx.GetData<ToolInvokeContext>();
-                var contact_id = args.GetParameterValue<string>(this.metadata.parameters[0].name);
-                var subject = args.GetParameterValue<string>("subject");
-
-
-                await ctx.Reply(new
-                {
-                    Successfull= true,
-                    PhoneCallId = Guid.NewGuid().ToString()
-                });
+                throw new Exception("Permission Denied.");
             }
-            catch (Exception err)
+
+            var call = new XrmPhoneCall()
             {
-                await ctx.Reply(err.Message);
+                Subject = subject,
+                OwnerId = user.GetId<Guid>()
+            };
+            if (contact_id != null && Guid.TryParse(contact_id, out var contactId))
+            {
+                call.AddFromEntity(new XrmEntity("contact") { Id = contactId });
             }
-            
-
-
-            
-
-
-        }
-        public override async Task StartAsync(CancellationToken cancellationToken)
-        {
-            await base.StartAsync(cancellationToken);
-            var con = await this.connectionProvider.CreateConnectionAsync();
-            await con.GetSubscriptionBuilder()
-                .WithSubjects(SUBJECT)
-                .SubscribeAsyncEx(Handler);
-        }
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            return Task.WhenAll(HeartBeat(stoppingToken));
+            var id = this.serviceProvider.GetService<IXrmDataServices>()
+                .GetRepository<XrmPhoneCall>()
+                .Insert(call);
+            return new
+            {
+                Successfull=true,
+                PhoneCallId=id.ToString()
+            };
         }
     }
 }

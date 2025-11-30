@@ -16,6 +16,7 @@ using System;
 using Hajir.Crm.Integration;
 using Hajir.Crm.Infrastructure.Xrm.Sales;
 using Hajir.Crm.Sales.PriceLists;
+using Hajir.Crm.Sales.PhoneCalls;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -33,6 +34,7 @@ namespace Microsoft.Extensions.DependencyInjection
             //services.AddTransient<IProductRepository>(s => s.GetService<InMemoryProductRepository>());
             services.AddTransient<XrmSalesRepository>();
             services.AddTransient<IQuoteRepository, XrmSalesRepository>();
+            services.AddTransient<XrmSalesRepository>();
             services.AddTransient<IMemoryCache, MemoryCache>();
             services.AddSingleton<CacheService>();
             services.AddSingleton<ICacheService>(sp => sp.GetService<CacheService>());
@@ -61,7 +63,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<XrmSalesRepository>();
             services.AddScoped<XrmSalesRepository>()
                 .AddScoped<IQuoteRepository>(sp => sp.GetService<XrmSalesRepository>())
-                .AddScoped<IPriceListRepository>(sp => sp.GetService<XrmSalesRepository>());
+                .AddScoped<IPriceListRepository>(sp => sp.GetService<XrmSalesRepository>())
+                .AddScoped<IPhoneCallRepository>(sp => sp.GetService<XrmSalesRepository>());
 
             services.AddTransient<IMemoryCache, MemoryCache>();
             services.AddSingleton<CacheService>();

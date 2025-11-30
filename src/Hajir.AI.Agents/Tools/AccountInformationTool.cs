@@ -26,7 +26,10 @@ namespace Hajir.AI.Agents.Tools
 
         public override ToolMetadata MetaData => new ToolMetadata("account_information")
         {
-            description = "gives further information about accounts (companies)",
+
+
+
+            description = "gives further account information (e.g. Contacts/Quotes/Opportunities) about accounts (companies)",
             parameters = new ToolParameter[]
             {
                 new ToolParameter

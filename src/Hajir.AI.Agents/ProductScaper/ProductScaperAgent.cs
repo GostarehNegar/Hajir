@@ -14,7 +14,7 @@ namespace Hajir.AI.Agents.ProductScaper
         public override AgentOptions Options => new AgentOptions
         {
             Name = "scraper",
-            PythonPath = "ProductScraper\\py"
+            PythonPath = "ProductScaper\\py"
         };
     }
 }

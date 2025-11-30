@@ -25,8 +25,8 @@ else
             <MudTd DataLabel="Nr">@context.ProductNumber</MudTd>
             <MudTd DataLabel="Sign">@context.ProductName</MudTd>
             @*<MudTd DataLabel="Name">@HajirUtils.Instance.FormatAmount(context.Price)</MudTd>*@
-            <MudTd DataLabel="Position">@context.Price1</MudTd>
-            <MudTd DataLabel="Molar mass">@context.Price2</MudTd>
+            <MudTd DataLabel="Position">@HajirUtils.Instance.FormatAmount(context.Price1)</MudTd>
+            <MudTd DataLabel="Molar mass">@HajirUtils.Instance.FormatAmount(context.Price2)</MudTd>
         </RowTemplate>
 
     </MudTable>

@@ -1,4 +1,5 @@
 ﻿using GN;
+using GN.Library.AI.Agents;
 using GN.Library.Nats;
 using GostarehNegarBot.Contracts;
 using GostarehNegarBot.Lib;
@@ -10,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Telegram.Bot.Types;
+
 namespace GostarehNegarBot.Internals
 {
 
@@ -45,6 +48,7 @@ namespace GostarehNegarBot.Internals
             }
 
         }
+        public static string CID = Guid.NewGuid().ToString();
         public static async Task Submit(TelegramBotContext ctx)
         {
            var conversation = ctx.ServiceProvider.GetService<ChatMemoryCache>().Cache.Get<ConversationModel>(ctx.Update.Message.Chat.Id)
@@ -56,13 +60,18 @@ namespace GostarehNegarBot.Internals
                     .WithData(new
                     {
                         input_text = ctx.Question,
-                        user_id = "babak@gnco.ir",
-                        session_id = conversation.Id  //"this.Conversation.Id"
+                        session_id = conversation.Id,
+                        context = new AgentSessionContext
+                        {
+                            UserId = "miremadi@hsco.local",
+                            SessionId = ctx.Update.Message.Chat.Id.ToString()
+                        }
                     })
-                    .WithSubject(HajirCrmConstants.Subjects.Ai.Agents.AgentRequest("captain"))
-                    .Request();
+                    .WithSubject(HajirCrmConstants.Subjects.Ai.Agents.AgentRequest(
+                        HajirCrmConstants.Subjects.Ai.Agents.CaptainSquad))
+                    .Request(timout: 60);
                 var g = reply.GetData<AgentResponse>();
-                ctx.Reply = g.text;
+                ctx.Reply = g?.text ?? "Nothing";
 
             }
             catch (Exception ex)

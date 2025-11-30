@@ -89,6 +89,14 @@ namespace GN.Library.AI.Agents
                        //Default = new GetAvialablLLMsResponse.LLM
                        //{
 
+                       //    Url = "https://api.deepseek.com",
+                       //    ApiKey = "sk-fec93ba732c046b38b35263b0a4c004d",// #"sk-3b8842c4b8de41b48ad350662886e849"
+                       //    Model = "deepseek-reasoner"
+
+                       //}
+                       //Default = new GetAvialablLLMsResponse.LLM
+                       //{
+
                        //    Url = "https://openrouter.ai/api/v1",
                        //    ApiKey = "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",// #"sk-3b8842c4b8de41b48ad350662886e849"
                        //    Model = "openai/gpt-oss-120b",// "deepseek/deepseek-chat-v3.1:free"

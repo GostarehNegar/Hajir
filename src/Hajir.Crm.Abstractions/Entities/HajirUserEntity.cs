@@ -8,5 +8,6 @@ namespace Hajir.Crm.Entities
     public class HajirUserEntity : DynamicEntity
     {
         public string FulleName => this.GetAttributeValue<string>("fullname");
+        
     }
 }

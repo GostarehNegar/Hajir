@@ -74,7 +74,7 @@ class Agent(LangchainAgent):
 
     async def getTools(self, ctx: models.SessionContext):
         _tools = await toolsRegistry.getTools(True, self.select_tool, context=ctx)
-        tool_names = ["search_accounts","account_information","create_account"]
+        tool_names = ["search_accounts","account_information","create_account","search_contacts","send_sms"]
         result = []
         for tool_name in tool_names:
             tool = toolsRegistry.getToolByName(tool_name)

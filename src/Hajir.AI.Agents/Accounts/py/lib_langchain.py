@@ -458,7 +458,7 @@ class LangchainAgent(BaseAgent):
             ret = cache.get(ctx.SessionId, value_provider=None,
                             strategy=CacheStrategy.TTL, ttl_seconds=60)
             if ret is None:
-                v = await self.create_executor()
+                v = await self.create_executor(ctx)
                 ret = cache.get(
                     ctx.SessionId, value_provider=lambda: v,  strategy=CacheStrategy.TTL, ttl_seconds=60)
             return ret

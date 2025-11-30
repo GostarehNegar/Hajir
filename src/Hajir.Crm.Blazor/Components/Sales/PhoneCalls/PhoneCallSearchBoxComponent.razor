@@ -1,0 +1,57 @@
+﻿@inherits BaseComponent
+@using Hajir.Crm.Sales
+
+@using MudBlazor
+
+<MudGrid>
+    <MudItem xs="12" md="8" lg="6">
+        <MudTextField @bind-Value="SearchText"
+                      Variant="Variant.Outlined"
+                      Placeholder="جستجو کنید"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search"
+                      DebounceInterval=600
+                      Clearable="true">
+        </MudTextField>
+    </MudItem>
+
+</MudGrid>
+
+
+@if (this.isSearching)
+{
+    <div>searcing...</div>
+}
+else
+{
+    <MudGrid>
+
+        @foreach (var item in searchEntities)
+        {
+            <MudItem xs="3">
+                <div @onclick="e=>ItemClicked(item)">
+
+                    @if (item.LogicalName == "contact")
+                    {
+                        <SaleContactComponent  SaleContact="item.To<SaleContact>()" />
+                    }
+
+                    else if (item.LogicalName == "account")
+                    {
+                        <SaleAccountComponent  SaleAccount="item.To<SaleAccount>()" />
+
+                    }
+                    else if (item.LogicalName == "quote")
+                    {
+                        <SaleQuoteComponent saleQuoteBySoheil="item.To<SaleQuoteBySoheil>()" />
+
+                    }
+                </div>
+
+            </MudItem>
+
+        }
+    </MudGrid>
+}
+
+

@@ -29,6 +29,9 @@ class SessionContext(BaseModel):
     UserId: str
     Parameters: Optional[Dict[str, str]] = None
 
+class ToolContext(BaseModel):
+    params:Optional[Dict[str,Any]] = None,
+    context:Optional[SessionContext]=None
 
 class AgentRequest(BaseModel):
     input_text: str = None

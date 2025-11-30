@@ -1,14 +1,24 @@
+"""
+    Version 1.0
+"""
 import json
 import asyncio
 from typing import Any, Dict, List, Optional, Type, Callable
+# from langchain.agents import AgentExecutor, create_tool_calling_agent
+from langchain_classic.agents import AgentExecutor, create_tool_calling_agent
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, AIMessage
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from dataclasses import dataclass
 from pydantic import BaseModel, Field, create_model
-from langchain.tools import Tool, StructuredTool
-from lib import bus, MsgContext,Subjects
+from langchain_classic.tools import Tool, StructuredTool
+from lib import bus, MsgContext, Subjects, BaseAgent, cache, CacheStrategy
 import models
-from models import ToolMetadata,ToolParameter
+from models import ToolMetadata, ToolParameter
+
 import logging
 logger = logging.getLogger(__name__)
+
 
 class ToolRegistry:
     """Registry for managing dynamic NATS-based tools."""
@@ -16,8 +26,8 @@ class ToolRegistry:
     def __init__(self):
         # self.nats_url = nats_url
         # self.nc: Optional[NATS] = None
-        # self.tools: List[Tool] = []
-        self.discovery_subject = Subjects.AI.Agents.Mamagements.listools # "tools.discovery"
+        self.tools: List[Tool] = []
+        self.discovery_subject = Subjects.AI.Agents.Mamagements.listools  # "tools.discovery"
         self.metadata: List[ToolMetadata] = None
 
     async def connect(self):
@@ -242,13 +252,11 @@ class ToolRegistry:
 
                 # Send request to NATS and wait for response
 
+                data = models.ToolContext(params=params, context=context)
                 response: MsgContext = await bus.request(
                     metadata.subject,
-                    {
-                        "parameters": params,
-                        "context":context
-                    },
-                    timeout=5.0
+                    data,
+                    timeout=15.0
                 )
 
                 # response = await self.nc.request(
@@ -268,9 +276,33 @@ class ToolRegistry:
             except Exception as e:
                 return f"Error executing tool '{metadata.name}': {str(e)}"
 
+        async def tool_func_ex(*args, **kwargs):
+            params = {}
+
+            if args:
+                for i, arg in enumerate(args):
+                    params[f"arg_{i}"] = arg
+            if kwargs:
+                params.update(kwargs)
+            missing_params = []
+            for param in metadata.parameters:
+                if param.required and param.name not in params:
+                    missing_params.append(param.name)
+            if missing_params:
+                return f"Error: Missing required parameters: {', '.join(missing_params)}"
+            data = models.ToolContext(params=params, context=context)
+            response: MsgContext = await bus.request(
+                metadata.subject,
+                data,
+                timeout=15.0
+            )
+            result = json.loads(response.msg.data.decode())
+            return self._format_result_for_llm(result)
+
         # Set function name for better debugging
         tool_func.__name__ = metadata.name
-        return tool_func
+        tool_func_ex.__name__ = metadata.name
+        return tool_func_ex
 
     def _build_tool_description(self, metadata: ToolMetadata) -> str:
         """Build a comprehensive description with parameter details and usage examples."""
@@ -321,12 +353,12 @@ class ToolRegistry:
             args_schema = self._create_pydantic_schema(metadata.parameters)
 
             # Create the tool function
-            tool_func = self._create_tool_function(metadata,context)
+            tool_func = self._create_tool_function(metadata, context)
 
             # Build comprehensive description
             description = self._build_tool_description(metadata)
 
-            if 1 == 1:
+            if 1 == 0:
                 # Create simple Tool with string input
                 tool = Tool(
                     name=metadata.name,
@@ -356,13 +388,14 @@ class ToolRegistry:
         Returns:
             List of registered tools
         """
-        #await self.connect()
+        # await self.connect()
         print("here")
         self.metadata = await self.discover_tools()
         return self.register_tools(self.metadata)
 
-    async def getTools(self, refersh: bool = False, 
-                       callable: Optional[Callable[[ToolMetadata], bool]] = None,
+    async def getTools(self, refersh: bool = False,
+                       callable: Optional[Callable[[
+                           ToolMetadata], bool]] = None,
                        context: models.SessionContext = None) -> List[Tool]:
         """
         Initialize the registry by connecting and discovering tools.
@@ -373,7 +406,84 @@ class ToolRegistry:
         # await self.connect()
         if self.metadata == None or refersh:
             self.metadata = await self.discover_tools()
-        return self.register_tools(self.metadata,context)
+        if self.tools == None or refersh:
+            self.register_tools(self.metadata, context)
+        return self.tools
+
+    def getToolByName(self, name: str) -> Tool:
+        return next((x for x in self.tools if x.name == name), None)
+
+
+class LangchainAgent(BaseAgent):
+    def __init__(self, name: str, description: str, system_prompt: str):
+        super().__init__(name, description)
+        self._executor: AgentExecutor = None
+        self._llm: ChatOpenAI = None
+        self.system_prompt: str = system_prompt
+
+    def ToMessage(self, msg: models.ChatMessage):
+        return HumanMessage(msg.content[0].get('text')) if msg.role == 'user' else AIMessage(msg.content[0].get('text'))
+
+    async def llm(self) -> ChatOpenAI:
+        if (self._llm == None):
+            params: models.LLMParameters = (await self.get_llm_params())
+            logger.info(
+                f"LLM successfully initialize. Name:{params.Name}, Model:{params.Model}, Url:{params.Url}")
+            self._llm = ChatOpenAI(model=params.Model, temperature=0,
+                                   base_url=params.Url, api_key=params.ApiKey)
+        return self._llm
+
+    async def getTools(self, ctx: models.SessionContext = None) -> List[Tool]:
+        return []
+
+    async def create_executor(self, context: models.SessionContext = None) -> AgentExecutor:
+        llm = await self.llm()
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", self.system_prompt),
+            MessagesPlaceholder(variable_name="chat_history"),
+            ("human", "{input}"),
+            ("placeholder", "{agent_scratchpad}"),
+        ])
+        tools = await self.getTools(context)
+        agent = create_tool_calling_agent(llm, tools, prompt)
+        return AgentExecutor(
+            agent=agent,
+            tools=tools,
+            verbose=True,
+            handle_parsing_errors=True
+        )
+
+    async def executor(self, ctx: models.SessionContext = None, refresh: bool = False):
+        if ctx is not None:
+            ret = cache.get(ctx.SessionId, value_provider=None,
+                            strategy=CacheStrategy.TTL, ttl_seconds=60)
+            if ret is None:
+                v = await self.create_executor(ctx)
+                ret = cache.get(
+                    ctx.SessionId, value_provider=lambda: v,  strategy=CacheStrategy.TTL, ttl_seconds=60)
+            return ret
+        if self._executor is None:
+            self._executor = await self.create_executor(context=ctx)
+        return self._executor
+
+    async def reply(self, req: models.AgentRequest):
+        logger.info(f"{self.name} starts.")
+        _history = [self.ToMessage(msg)
+                    for msg in req.chat_history]
+        ex = await self.executor(req.context)
+        response = await ex.ainvoke({
+            "input": req.input_text,
+            "chat_history": _history
+        })
+
+        return models.AgentResponse(text=response['output'])
+
+
+async def get_llm() -> ChatOpenAI:
+    res: MsgContext = await bus.request(Subjects.AI.Agents.Mamagements.get_available_llms, {})
+    params = res.GetPayload(models.GetAvailableLLMsResponse)
+    ChatOpenAI(model=params.Model, temperature=0,
+               base_url=params.Url, api_key=params.ApiKey)
 
 
 toolsRegistry = ToolRegistry()

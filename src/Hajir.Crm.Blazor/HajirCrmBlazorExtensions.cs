@@ -47,7 +47,7 @@ namespace Hajir.Crm.Blazor
             services.AddScoped<IPortalAuthenticationStateProvider>(sp => sp.GetService<PortalAuthenticationStateProvider>());
             services.AddScoped<AuthenticationStateProvider>(sp => sp.GetService<PortalAuthenticationStateProvider>());
             services.AddScoped<IPortalAuthenticationService, PortalAuthenticationService>();
-
+            
 
 
             //services.AddScoped(typeof(State<>), typeof(State<>));

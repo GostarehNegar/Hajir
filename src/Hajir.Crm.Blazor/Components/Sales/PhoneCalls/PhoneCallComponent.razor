@@ -1,0 +1,102 @@
+﻿@inherits BaseComponent
+@using MudBlazor
+@using Hajir.Crm.Sales
+@using Hajir.Crm.Blazor.Services
+@using System.Threading
+@using Hajir.Crm.Blazor.Services.Store
+@inject IBlazorAppServices Api;
+<MudStack>
+    <PhoneCallSearchBoxComponent OnItemSelected="OnItemSelected" />
+
+    <MudGrid>
+
+        <MudItem xs="8">
+            <MudPaper Class="ma-2 pa-2" Elevation="3">
+
+                <MudGrid>
+                    <MudItem xs="4">
+                        <MudPaper>
+                            <MudStack>
+                                <MudText>@this.selectedContact?.FullName</MudText>
+                                <MudText>@this.selectedContact?.Mobile</MudText>
+                            </MudStack>
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem xs="4">
+                        <MudPaper>
+                            <MudStack>
+                                <MudText>@this.selectedAccount?.Name</MudText>
+                            </MudStack>
+                        </MudPaper>
+
+                    </MudItem>
+                    <MudItem xs="4"></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="8">
+                        <MudTextField T="string" />
+                    </MudItem>
+                    <MudItem xs="4"></MudItem>
+                </MudGrid>
+
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="4">
+
+            @*            @foreach (var item in selectedContacts)
+
+            {
+            if (item.LogicalName == "contact")
+            {
+            <p>@(item.To<SaleContact>().FullName)</p>
+            }
+            else
+            {
+            <p>@(item.To<SaleAccount>().Name)</p>
+
+            }
+            }*@
+
+            <MudTable Items="@selectedContacts" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+                <HeaderContent>
+                    <MudTh>نوع</MudTh>
+                    <MudTh>نام</MudTh>
+                    <MudTh>تلفن</MudTh>
+
+                </HeaderContent>
+                <RowTemplate>
+                    @if (context.Is<SaleContact>(out var _contact))
+                    {
+                        <MudTd DataLabel="Nr">
+                            <MudImage Src="/img/Contact_32.png" Style="background-color:blue" />
+                        </MudTd>
+                        <MudTd DataLabel="Sign">
+                            <MudText>@_contact.FullName</MudText>
+                        </MudTd>
+                        <MudTd DataLabel="Name">
+                            <MudText>@_contact.Mobile</MudText>
+                        </MudTd>
+                    }
+                    else if (context.Is<SaleAccount>(out var _account))
+                    {
+                        <MudTd DataLabel="Nr"></MudTd>
+                        <MudTd DataLabel="Sign">
+                            <MudText>@_account.Name</MudText>
+                        </MudTd>
+                        <MudTd DataLabel="Name">
+                            <MudText>@_account.Telephone</MudText>
+                        </MudTd>
+                    }
+
+                </RowTemplate>
+            </MudTable>
+
+
+
+        </MudItem>
+
+    </MudGrid>
+</MudStack>
+
+
+

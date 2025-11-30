@@ -1,0 +1,27 @@
+﻿@page "/testpage/{Id}"
+@using GN.Library.Shared.Entities;
+@using Hajir.Crm.Blazor.Services;
+@inject IBlazorAppServices Api
+
+<h3>صفحه Test</h3>
+
+<p>@Id</p>
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    //public AccountInfoResult Result { get; set; }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Result = await Api.GetInformationsbyAccountId(Id);
+    }
+    //public class AccountInfoResult
+    //{
+    //    public DynamicEntity[] Contacts { get; set; }
+    //    public DynamicEntity[] Quotes { get; set; }
+    //}
+}
+

@@ -454,14 +454,14 @@ class LangchainAgent(BaseAgent):
         )
 
     async def executor(self, ctx: models.SessionContext = None, refresh: bool = False):
-        if ctx is not None:
-            ret = cache.get(ctx.SessionId, value_provider=None,
-                            strategy=CacheStrategy.TTL, ttl_seconds=60)
-            if ret is None:
-                v = await self.create_executor()
-                ret = cache.get(
-                    ctx.SessionId, value_provider=lambda: v,  strategy=CacheStrategy.TTL, ttl_seconds=60)
-            return ret
+        # if ctx is not None:
+        #     ret = cache.get(ctx.SessionId, value_provider=None,
+        #                     strategy=CacheStrategy.TTL, ttl_seconds=60)
+        #     if ret is None:
+        #         v = await self.create_executor(ctx)
+        #         ret = cache.get(
+        #             ctx.SessionId, value_provider=lambda: v,  strategy=CacheStrategy.TTL, ttl_seconds=60)
+        #     return ret
         if self._executor is None:
             self._executor = await self.create_executor(context=ctx)
         return self._executor

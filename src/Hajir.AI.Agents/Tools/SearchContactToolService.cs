@@ -59,6 +59,13 @@ namespace Hajir.AI.Agents.Tools
                     description ="Last name of the contact",
                     type="string",
                     required =false
+                },
+                new ToolParameter
+                {
+                    name="account_name",
+                    description ="Name of the account/company.",
+                    type="string",
+                    required =false
                 }
 
             },
@@ -108,24 +115,33 @@ namespace Hajir.AI.Agents.Tools
             await Task.CompletedTask;
             try
             {
+                var gg = ctx.GetData<ToolInvokeContext>();
                 var phrase = ctx.GetData<ToolInvokeContext>().GetParameterValue<string>("search_phrase");
+                var account = ctx.GetData<ToolInvokeContext>().GetParameterValue<string>("account_name");
                 var result = new List<object>();
                 foreach (var item in (phrase ?? "").Split(' ').Where(x => (!string.IsNullOrWhiteSpace(x))))
                 {
-                    result.AddRange(this.dataServices
+                    var items1 = this.dataServices
                          .GetRepository<XrmContact>()
                          .Queryable
                          .Where(x => x.FirstName.Contains(item) || x.LastName.Contains(item))
-                         .ToArray()
+                         .ToArray();
+                    if (!string.IsNullOrWhiteSpace(account) && items1.Any(x => x.ParentCustomer?.Name?.Contains(account) ?? false))
+                    {
+                        items1 = items1.Where(x => x.ParentCustomer?.Name?.Contains(account) ?? false).ToArray();
+                    }
+                    result.AddRange(items1
                          .Select(x => new
                          {
-                             Id = x.Id.ToString(),
+                             ContactId = x.Id.ToString(),
                              FirstName = x.FirstName,
                              LastName = x.LastName,
                              MobilePhone = x.MobilePhone,
+                             Account = x.ParentCustomer?.Name
                          })
                          .ToArray());
                 }
+
                 await ctx.Reply(result);
 
 
@@ -137,7 +153,6 @@ namespace Hajir.AI.Agents.Tools
             {
 
             }
-
             await ctx.Reply(new Contact[]
             {
 

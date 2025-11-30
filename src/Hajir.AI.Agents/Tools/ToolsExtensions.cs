@@ -50,10 +50,28 @@ namespace Hajir.AI.Agents.Tools
                 .AddHostedService<AccountInformationTool>();
 
         }
+        public static IServiceCollection AddCreateAccountTool(this IServiceCollection services, CreateAccountToolOptions options)
+        {
+            return services.AddSingleton(options)
+                .AddHostedService<CreateAccountTool>();
+
+        }
         public static IServiceCollection AddPriceCaomparisonTool(this IServiceCollection services, ProductPriceComparisonToolOptions options)
         {
             return services.AddSingleton(options)
                 .AddHostedService<ProductPriceComparisonTool>();
+
+        }
+        public static IServiceCollection AddReminderTool(this IServiceCollection services, CreateReminderToolOptions options)
+        {
+            return services.AddSingleton(options)
+                .AddHostedService<CreateReminderTool>();
+
+        }
+        public static IServiceCollection AddMyTasksTool(this IServiceCollection services, MyTasksToolOptions options)
+        {
+            return services.AddSingleton(options)
+                .AddHostedService<MyTasksTool>();
 
         }
     }

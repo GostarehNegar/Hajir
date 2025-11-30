@@ -1,4 +1,5 @@
-﻿using Hajir.Crm.Features.Sales;
+﻿using GN.Library.Shared.Entities;
+using Hajir.Crm.Features.Sales;
 using Hajir.Crm.Products;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace Hajir.Crm.Sales
 {
-    public class SaleQuote : ISaleQuote
+    public class SaleQuote: DynamicEntity, ISaleQuote //bysoheil
     {
         public SaleAccount Customer { get; set; }
         public SaleContact Contact { get; set; }

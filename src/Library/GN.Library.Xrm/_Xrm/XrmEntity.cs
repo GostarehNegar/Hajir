@@ -197,17 +197,17 @@ namespace GN.Library.Xrm
 			}
 		}
 
-
-		public Guid? OwnerId
+        [AttributeLogicalNameAttribute(Schema.Owner)]
+        public Guid? OwnerId
 		{
 			get
 			{
 				return Owner?.Id;
 			}
-			//set
-			//{
-			//    this.Owner = value == null ? null : new EntityReference("systemuser", value.Value);
-			//}
+			set
+			{
+				this.Owner = value == null ? null : new EntityReference("systemuser", value.Value);
+			}
 		}
 
 		public Guid? OwningUserId

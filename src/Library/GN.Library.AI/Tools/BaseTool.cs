@@ -31,6 +31,7 @@ namespace GN.Library.AI.Tools
 
             this.logger = this.serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(this.MetaData.name ?? "NoName");
         }
+        
         private Task HeartBeat(CancellationToken token)
         {
             return Task.Run(async () =>

@@ -101,12 +101,17 @@ namespace Hajir.Crm.Blazor.Components.Sales.Opportunities
         {
             void recalculate(SaleQuoteLine x)
             {
-                x.BaseAmount = x.PricePerUnit * x.Quantity - (x.Discount ?? 0);
+                var discount = x.Discount < 100 ? (x.PricePerUnit * x.Quantity*x.Discount) / 100 : x.Discount;
+                x.BaseAmount = x.PricePerUnit * x.Quantity - (discount ?? 0);
                 if (this.Quote.IsOfficial)
                 {
-                    x.Tax = ((x.PricePerUnit * x.Quantity) * (decimal).1) ?? 0;
+                    x.Tax = ((x.PricePerUnit * x.Quantity)-discount) * (decimal).1 ?? 0;
 
-                };
+                }
+                else
+                {
+                    x.Tax = 0;
+                }
                 x.ExtendedAmount = x.BaseAmount + (x.Tax ?? 0);
             }
             this.Quote.Lines.ToList().ForEach(x => recalculate(x));

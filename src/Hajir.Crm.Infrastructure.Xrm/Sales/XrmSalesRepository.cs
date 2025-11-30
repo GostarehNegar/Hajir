@@ -1,11 +1,13 @@
 ﻿using GN;
 using GN.Library.Pipelines.WithBlockingCollection;
+using GN.Library.Shared.Entities;
 using GN.Library.Xrm;
 using GN.Library.Xrm.StdSolution;
 using Hajir.Crm.Common;
 using Hajir.Crm.Infrastructure.Xrm.Data;
 using Hajir.Crm.Integration;
 using Hajir.Crm.Sales;
+using Hajir.Crm.Sales.PhoneCalls;
 using Hajir.Crm.Sales.PriceLists;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +25,7 @@ using System.Threading.Tasks;
 namespace Hajir.Crm.Infrastructure.Xrm.Sales
 {
     public class XrmSalesRepository
-        : IQuoteRepository, IPriceListRepository
+        : IQuoteRepository, IPriceListRepository, IPhoneCallRepository
     {
         private readonly IXrmDataServices dataServices;
         private readonly ICacheService cache;
@@ -412,6 +414,18 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales
 
         }
 
+        public async Task<SaleAccount> GetAccount(string id)
+        {
+            await Task.CompletedTask;
+            return !string.IsNullOrEmpty(id) && Guid.TryParse(id, out var _id)
+                ? this.dataServices.GetRepository<XrmAccount>()
+                        .Queryable
+                        .FirstOrDefault(x => x.AccountId == _id)?
+                        .ToDynamic()
+                        .To<SaleAccount>()
+                : null;
+
+        }
         public async Task<IEnumerable<SaleContact>> GetAccountContacts(string accountId)
         {
             if (Guid.TryParse(accountId, out var _accountId))
@@ -770,5 +784,152 @@ namespace Hajir.Crm.Infrastructure.Xrm.Sales
             return false;
 
         }
+
+
+
+        public async Task<IEnumerable<SaleContact>> SearchContactsAsync(string searchText, int count)
+        {
+            await Task.CompletedTask;
+
+            return this.dataServices.WithImpersonatedDbContext(db =>
+            {
+
+                var q = db.AddEntity<XrmContact>()
+                          .Query<XrmContact>();
+                searchText.Split(' ')
+                     .Where(x => !string.IsNullOrWhiteSpace(x))
+                     .ToList()
+                     .ForEach(i => q = q.Where(x => x.FirstName.Contains(i) || x.LastName.Contains(i)));
+
+                return q
+                       .Take(count)
+                       .ToArray()
+                       .Select(x => x.ToDynamic().To<SaleContact>()) // new SaleContact() { Id = x.Id.ToString(), Name = x.FullName })
+                       .ToArray();
+
+
+
+            });
+
+
+            //var query = this.dataServices.GetRepository<XrmHajirContact>()
+            //     .Queryable;
+            //searchText.Split(' ')
+            //          .Where(x => !string.IsNullOrWhiteSpace(x))
+            //          .ToList()
+            //          .ForEach(i => query = query.Where(x => x.FirstName.Contains(i) || x.LastName.Contains(i)));
+
+            //return query
+            //       .ToArray()
+            //       .Select(x => new SaleContact() { Id = x.Id.ToString(), Name = x.FullName })
+            //       .ToArray();
+
+        }
+
+        public async Task<IEnumerable<SaleAccount>> SearchAccountAsync(string searchText,int count)
+        {
+            await Task.CompletedTask;
+
+            return this.dataServices.WithImpersonatedDbContext(db =>
+            {
+
+                var q = db.AddEntity<XrmAccount>()
+                    .Query<XrmAccount>();
+                searchText.Split(' ')
+                     .Where(x => !string.IsNullOrWhiteSpace(x))
+                     .ToList()
+                     .ForEach(i => q = q.Where(x => x.Name.Contains(i)));
+
+                return q
+                       .Take(count)
+                       .ToArray()
+                       .Select(x => x.ToDynamic().To<SaleAccount>()) // new SaleContact() { Id = x.Id.ToString(), Name = x.FullName })
+                       .ToArray();
+
+
+
+            });
+
+
+
+
+        }
+
+        public async Task<IEnumerable<SaleQuoteBySoheil>> SearchQuoteAsync(string searchText,int count)
+        {
+            await Task.CompletedTask;
+
+            return this.dataServices.WithImpersonatedDbContext(db =>
+            {
+
+                var q = db.AddEntity<XrmQuote>()
+                    .Query<XrmQuote>();
+                searchText.Split(' ')
+                     .Where(x => !string.IsNullOrWhiteSpace(x))
+                     .ToList()
+                     .ForEach(i => q = q.Where(x => x.QuoteNumber.Contains(i)));
+
+                return q
+                .Take(count)
+                       .ToArray()
+                       .Select(x => x.ToDynamic().To<SaleQuoteBySoheil>()) // new SaleContact() { Id = x.Id.ToString(), Name = x.FullName })
+                       .ToArray();
+
+
+
+            });
+
+
+
+
+        }
+
+        public async Task<IEnumerable<SaleContact>> SearchContactByAccountIdAsync(string id)
+        {
+            await Task.CompletedTask;
+
+            return this.dataServices.WithImpersonatedDbContext(db =>
+            {
+                IEnumerable<DynamicEntity[]> targetEntities = new List<DynamicEntity[]>();
+                var _ = Guid.TryParse(id,out var _id);
+                var q = db.AddEntity<XrmContact>()
+                          .Query<XrmContact>();
+                
+
+
+                 return q.Where(i => i.AccountId == _id)
+                       .ToArray()
+                       .Select(x => x.ToDynamic().To<SaleContact>()) // new SaleContact() { Id = x.Id.ToString(), Name = x.FullName })
+                       .ToArray();
+
+
+
+            });
+        }
+
+        public async Task<IEnumerable<SaleQuoteBySoheil>> SearchQuoteByAccountIdAsync(string id)
+        {
+            await Task.CompletedTask;
+
+            return this.dataServices.WithImpersonatedDbContext(db =>
+            {
+                IEnumerable<DynamicEntity[]> targetEntities = new List<DynamicEntity[]>();
+                var _ = Guid.TryParse(id, out var _id);
+                var q = db.AddEntity<XrmQuote>()
+                          .Query<XrmQuote>();
+
+
+
+                return q.Where(i => i.AccountId == _id)
+                      .ToArray()
+                      .Select(x => x.ToDynamic().To<SaleQuoteBySoheil>()) // new SaleContact() { Id = x.Id.ToString(), Name = x.FullName })
+                      .ToArray();
+
+
+
+            });
+        }
+
+
     }
 }

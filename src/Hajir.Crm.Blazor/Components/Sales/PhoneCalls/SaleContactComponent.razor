@@ -1,0 +1,60 @@
+﻿
+<div class="contact-card hover-effect hover-effect-orange" @onclick="GoToTestPage">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="flex-grow-1">
+                <h4 class="card-title mb-1">@SaleContact.FullName</h4>
+                <p class="card-text text-muted mb-0">@SaleContact.Mobile</p>
+            </div>
+            <div class="ms-3">
+                <img class="rounded-circle contact-img" style="width: 48px; height: 48px; background-color: blueviolet; object-fit: cover;" src="img/contact_32.png" alt="مخاطب" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-effect {
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+    }
+
+        .hover-effect:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15) !important;
+            border-right-color: #6f42c1 !important; /* تغییر رنگ border به بنفش */
+            background-color: #f8f9ff;
+        }
+
+            .hover-effect:hover .card-title {
+                color: #6f42c1; /* تغییر رنگ نام به بنفش */
+            }
+
+            .hover-effect:hover .contact-img {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.3);
+            }
+
+            .hover-effect:hover .card-text {
+                color: #495057 !important; /* تیره شدن شماره موبایل */
+            }
+
+    .hover-effect-green:hover {
+        border-right-color: #198754 !important;
+        background-color: #f0f9f0;
+    }
+
+        .hover-effect-green:hover .card-title {
+            color: #198754;
+        }
+
+    .hover-effect-orange:hover {
+        border-right-color: #fd7e14 !important;
+        background-color: #fff4e6;
+    }
+
+        .hover-effect-orange:hover .card-title {
+            color: #fd7e14;
+        }
+</style>
+<!-- هاور سبز -->

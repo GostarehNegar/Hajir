@@ -7,6 +7,8 @@ using Hajir.Crm.Sales.PriceLists;
 using Hajir.AI.Agents;
 using Hajir.AI.Agents.Tools;
 using GN.Library.Nats;
+using GN.Dynamic.Communication.Messaging.SMS.Providers.MelliPayamak;
+
 namespace Hajir.AI.Service
 {
     public class Program
@@ -36,7 +38,13 @@ namespace Hajir.AI.Service
                  .AddSearchProductTool(new SearchProdcutsToolOptions { })
                  .AddSearchAccountTool(new AccountSearchToolOptions { })
                  .AddAccountInformationTool(new AccountInformationToolOptions { })
-                 .AddPriceCaomparisonTool(new ProductPriceComparisonToolOptions { });
+                 .AddPriceCaomparisonTool(new ProductPriceComparisonToolOptions { })
+                 .AddReminderTool(new CreateReminderToolOptions { })
+                 .AddCreateAccountTool(new CreateAccountToolOptions { })
+                 .AddMyTasksTool(new MyTasksToolOptions { });
+                s.AddSingleton< MelliPayamakSMSProvider>()
+                .AddHostedService<SendSMSTool>();
+
 
             }));
 

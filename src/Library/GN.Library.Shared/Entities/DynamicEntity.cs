@@ -209,6 +209,17 @@ namespace GN.Library.Shared.Entities
 
         }
 
+        public bool Is<T>(out T result) where T : DynamicEntity,new()
+        {
+            if (this == null)
+            {
+                result = null;
+                return false;
+            }
+            result = this.To<T>();
+            return this.LogicalName == new T().LogicalName;
+        }
+
         public virtual void Init()
         {
 

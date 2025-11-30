@@ -1,4 +1,6 @@
 """
+    Version 0.0.3
+        utils
     Version 0.0.2
         * agent health 
     Version 0.0.1
@@ -601,11 +603,11 @@ class Cache:
             if ttl_seconds is None:
                 raise ValueError("ttl_seconds is required for TTL strategy")
             return self._get_ttl(key, value_provider, ttl_seconds, maxsize)
-        elif strategy == CacheStrategy.SLIDING_TTL:
-            if ttl_seconds is None:
-                raise ValueError(
-                    "ttl_seconds is required for SLIDING_TTL strategy")
-            return self._get_sliding_ttl(key, value_provider, ttl_seconds, maxsize)
+        # elif strategy == CacheStrategy.SLIDING_TTL:
+        #     if ttl_seconds is None:
+        #         raise ValueError(
+        #             "ttl_seconds is required for SLIDING_TTL strategy")
+        #     return self._get_sliding_ttl(key, value_provider, ttl_seconds, maxsize)
         elif strategy == CacheStrategy.HYBRID:
             if ttl_seconds is None:
                 raise ValueError("ttl_seconds is required for HYBRID strategy")
@@ -765,4 +767,4 @@ class Cache:
 cache = Cache()
 
 
-# TOOLS
+    

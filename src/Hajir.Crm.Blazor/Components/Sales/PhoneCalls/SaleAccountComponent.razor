@@ -1,0 +1,85 @@
+﻿@inject NavigationManager Navigation
+
+
+<div class="contact-card hover-effect hover-effect-orange" @onclick="GoToTestPage">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center h-100">
+            <div class="flex-grow-1 me-3 min-width-0">
+                <h4 class="card-title mb-1 text-truncate" title="@SaleAccount.Name">@SaleAccount.Name</h4>
+                <p class="card-text text-muted mb-0 text-truncate" title="@SaleAccount.Id">@SaleAccount.Id</p>
+                <p class="card-text text-muted mb-0 text-truncate" title="@SaleAccount.Mobile">@SaleAccount.Mobile موبایل:</p>
+                            <div class="flex-shrink-0">
+                <img class="contact-img" src="img/company-svgrepo-com.svg" alt="شرکت" />
+            </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<style>
+  /* عرض یکسان برای همه کارت‌ها */
+.contact-card {
+    width: 350px;                /* عرض ثابت */
+    height: 150px;               /* ارتفاع ثابت */
+    border: 4px solid var(--bs-primary);
+    border-left: 0;
+    border-top: 0;
+    border-bottom: 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    background: #fff;
+}
+
+/* ردیف کارت‌ها اگر کنار هم هستند */
+.card-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+/* آیکون ثابت */
+.contact-img {
+    width: 48px;
+    height: 48px;
+    background-color: pink;
+    border-radius: 50%;
+    object-fit: cover;
+    transition: all 0.2s ease;
+}
+
+/* برای text-truncate داخل flex */
+.min-width-0 {
+    min-width: 0;
+}
+
+/* Hover عمومی */
+.hover-effect {
+    cursor: pointer;
+}
+
+.hover-effect:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    background-color: #f8f9ff;
+}
+
+/* Hover نارنجی */
+.hover-effect-orange:hover {
+    border-right-color: #fd7e14 !important;
+    background-color: #fff4e6;
+}
+
+.hover-effect-orange:hover .card-title {
+    color: #fd7e14;
+}
+
+.hover-effect-orange:hover .contact-img {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 3px rgba(253,126,20,0.3);
+}
+
+</style>
